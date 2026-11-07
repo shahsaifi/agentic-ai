@@ -409,6 +409,130 @@
       text-decoration: underline;
     }
 
+    /* Stylized Podcast Episode Cards */
+    .pod-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 16px;
+      margin: 18px 0 10px;
+    }
+    .pod-card {
+      background: var(--x-card-bg);
+      border: 1px solid var(--x-border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-family: var(--font-sans);
+      transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+    .pod-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-warm);
+      box-shadow: var(--shadow);
+    }
+    .pod-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .pod-show-info {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+    .pod-artwork {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #D97706 0%, #7C3AED 100%);
+      color: #FFFFFF;
+      font-size: 1.15rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(217, 119, 6, 0.22);
+    }
+    .pod-show-name {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--accent-warm);
+      line-height: 1.25;
+    }
+    .pod-sub {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+    .pod-duration {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--accent-warm-soft);
+      color: var(--accent-warm);
+      padding: 4px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .pod-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 8px;
+      line-height: 1.4;
+    }
+    .pod-title a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .pod-title a:hover {
+      color: var(--accent-warm);
+      text-decoration: underline;
+    }
+    .pod-body {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.58;
+      margin: 0 0 14px;
+    }
+    .pod-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .pod-wave {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      letter-spacing: 2px;
+      color: var(--text-secondary);
+      opacity: 0.75;
+    }
+    .pod-play-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-warm-soft);
+      color: var(--accent-warm) !important;
+      border: 1px solid var(--border);
+      padding: 5px 13px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none !important;
+      transition: all 0.15s ease;
+    }
+    .pod-play-btn:hover {
+      background: var(--accent-warm);
+      color: #FFFFFF !important;
+    }
+
     h1, h2 {
       font-family: var(--font-display);
       font-weight: 600;
@@ -574,7 +698,7 @@
 
     @media (max-width: 640px) {
       .card, .hero, .section-panel { padding: 22px 18px; }
-      .grid, .x-grid { grid-template-columns: 1fr; }
+      .grid, .x-grid, .pod-grid { grid-template-columns: 1fr; }
       h1 { font-size: 1.6rem; }
       .top-nav { position: static; }
     }
@@ -860,18 +984,112 @@
 
 <hr />
 <h2>🎧 AI Podcasts &amp; Audio Deep-Dives (Listen on Your Commute)</h2>
-<ul>
-<li><strong><a href="https://www.youtube.com/watch?v=P735f1xlpL0">Deep Dive: Anthropic S-1 Myths and Mythos — Jamin Ball, Altimeter</a></strong> — <em>Latent Space: The AI Engineer Podcast</em> (🎧 1h 42m)</li>
-<li><strong>Why listen:</strong> Breaks down the unit economics of frontier AI labs, inference margin realities vs. cloud spend, and what developers should expect from enterprise AI pricing.</li>
-<li><strong><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster">Can AI Invent or Just Help Scientists Work Faster? with Richard Socher (#783)</a></strong> — <em>The TWIML AI Podcast</em> (🎧 48m)</li>
-<li><strong>Why listen:</strong> Former Salesforce Chief Scientist Richard Socher explores the boundary between AI as an engineering productivity co-pilot vs. an autonomous scientific hypothesis generator.</li>
-<li><strong><a href="https://share.transistor.fm/s/1b301bdc">Abundant Intelligence at the Midwest AI Summit (Part 2)</a></strong> — <em>Practical AI Podcast</em> (🎧 47m)</li>
-<li><strong>Why listen:</strong> Practical engineering guide on how organizations decide where to give AI agents autonomy, where to set guardrails, and how to design human-in-the-loop checkpoints.</li>
-<li><strong><a href="https://traffic.megaphone.fm/PDP1158596730.mp3">Tokenization, Agentic Trading &amp; Harmonic Reasoning with Vlad Tenev</a></strong> — <em>No Priors: AI Podcast</em> (🎧 54m)</li>
-<li><strong>Why listen:</strong> Covers mathematical reasoning verification (Harmonic) and how autonomous financial/analytical agents are being deployed under strict reliability constraints.</li>
-<li><strong><a href="https://lexfridman.com/math-ai-crisis/">#503 – AI Crisis in Math: Navier-Stokes, Riemann Hypothesis &amp; Complexity Theory</a></strong> — <em>Lex Fridman Podcast</em> (🎧 3h 42m)</li>
-<li><strong>Why listen:</strong> Mathematicians Ankur Moitra, Steven Brunton, and Alex Kontorovich discuss how formal verification (Lean) and reasoning LLMs are reshaping theorem proving and scientific discovery.</li>
-</ul>
+<div class="pod-grid">
+                <article class="pod-card">
+                  <div>
+                    <div class="pod-header">
+                      <div class="pod-show-info">
+                        <div class="pod-artwork">🎙️</div>
+                        <div>
+                          <div class="pod-show-name">Latent Space: The AI Engineer Podcast</div>
+                          <div class="pod-sub">AI Audio Deep-Dive</div>
+                        </div>
+                      </div>
+                      <span class="pod-duration">🎧 1h 42m</span>
+                    </div>
+                    <h4 class="pod-title"><a href="https://www.youtube.com/watch?v=P735f1xlpL0" target="_blank" rel="noopener">Deep Dive: Anthropic S-1 Myths and Mythos — Jamin Ball, Altimeter</a></h4>
+                    <p class="pod-body">Breaks down the unit economics of frontier AI labs, inference margin realities vs. cloud spend, and what developers should expect from enterprise AI pricing.</p>
+                  </div>
+                  <div class="pod-footer">
+                    <span class="pod-wave">ılılılılılılılı</span>
+                    <a class="pod-play-btn" href="https://www.youtube.com/watch?v=P735f1xlpL0" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
+                  </div>
+                </article>
+
+                <article class="pod-card">
+                  <div>
+                    <div class="pod-header">
+                      <div class="pod-show-info">
+                        <div class="pod-artwork">🎙️</div>
+                        <div>
+                          <div class="pod-show-name">The TWIML AI Podcast</div>
+                          <div class="pod-sub">AI Audio Deep-Dive</div>
+                        </div>
+                      </div>
+                      <span class="pod-duration">🎧 48m</span>
+                    </div>
+                    <h4 class="pod-title"><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster" target="_blank" rel="noopener">Can AI Invent or Just Help Scientists Work Faster? with Richard Socher (#783)</a></h4>
+                    <p class="pod-body">Former Salesforce Chief Scientist Richard Socher explores the boundary between AI as an engineering productivity co-pilot vs. an autonomous scientific hypothesis generator.</p>
+                  </div>
+                  <div class="pod-footer">
+                    <span class="pod-wave">ılılılılılılılı</span>
+                    <a class="pod-play-btn" href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
+                  </div>
+                </article>
+
+                <article class="pod-card">
+                  <div>
+                    <div class="pod-header">
+                      <div class="pod-show-info">
+                        <div class="pod-artwork">🎙️</div>
+                        <div>
+                          <div class="pod-show-name">Practical AI Podcast</div>
+                          <div class="pod-sub">AI Audio Deep-Dive</div>
+                        </div>
+                      </div>
+                      <span class="pod-duration">🎧 47m</span>
+                    </div>
+                    <h4 class="pod-title"><a href="https://share.transistor.fm/s/1b301bdc" target="_blank" rel="noopener">Abundant Intelligence at the Midwest AI Summit (Part 2)</a></h4>
+                    <p class="pod-body">Practical engineering guide on how organizations decide where to give AI agents autonomy, where to set guardrails, and how to design human-in-the-loop checkpoints.</p>
+                  </div>
+                  <div class="pod-footer">
+                    <span class="pod-wave">ılılılılılılılı</span>
+                    <a class="pod-play-btn" href="https://share.transistor.fm/s/1b301bdc" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
+                  </div>
+                </article>
+
+                <article class="pod-card">
+                  <div>
+                    <div class="pod-header">
+                      <div class="pod-show-info">
+                        <div class="pod-artwork">🎙️</div>
+                        <div>
+                          <div class="pod-show-name">No Priors: AI Podcast</div>
+                          <div class="pod-sub">AI Audio Deep-Dive</div>
+                        </div>
+                      </div>
+                      <span class="pod-duration">🎧 54m</span>
+                    </div>
+                    <h4 class="pod-title"><a href="https://traffic.megaphone.fm/PDP1158596730.mp3" target="_blank" rel="noopener">Tokenization, Agentic Trading & Harmonic Reasoning with Vlad Tenev</a></h4>
+                    <p class="pod-body">Covers mathematical reasoning verification (Harmonic) and how autonomous financial/analytical agents are being deployed under strict reliability constraints.</p>
+                  </div>
+                  <div class="pod-footer">
+                    <span class="pod-wave">ılılılılılılılı</span>
+                    <a class="pod-play-btn" href="https://traffic.megaphone.fm/PDP1158596730.mp3" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
+                  </div>
+                </article>
+
+                <article class="pod-card">
+                  <div>
+                    <div class="pod-header">
+                      <div class="pod-show-info">
+                        <div class="pod-artwork">🎙️</div>
+                        <div>
+                          <div class="pod-show-name">Lex Fridman Podcast</div>
+                          <div class="pod-sub">AI Audio Deep-Dive</div>
+                        </div>
+                      </div>
+                      <span class="pod-duration">🎧 3h 42m</span>
+                    </div>
+                    <h4 class="pod-title"><a href="https://lexfridman.com/math-ai-crisis/" target="_blank" rel="noopener">#503 – AI Crisis in Math: Navier-Stokes, Riemann Hypothesis & Complexity Theory</a></h4>
+                    <p class="pod-body">Mathematicians Ankur Moitra, Steven Brunton, and Alex Kontorovich discuss how formal verification (Lean) and reasoning LLMs are reshaping theorem proving and scientific discovery.</p>
+                  </div>
+                  <div class="pod-footer">
+                    <span class="pod-wave">ılılılılılılılı</span>
+                    <a class="pod-play-btn" href="https://lexfridman.com/math-ai-crisis/" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
+                  </div>
+                </article>
+                </div>
     </main>
     <footer class="footer">
       Curated by <strong>Generative AI Learning &amp; News Agent</strong> · <a href="index.html">Back to Main Index</a>

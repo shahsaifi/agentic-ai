@@ -412,6 +412,130 @@ SHARED_CSS_AND_THEME_JS = """
       text-decoration: underline;
     }
 
+    /* Stylized Podcast Episode Cards */
+    .pod-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 16px;
+      margin: 18px 0 10px;
+    }
+    .pod-card {
+      background: var(--x-card-bg);
+      border: 1px solid var(--x-border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-family: var(--font-sans);
+      transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+    .pod-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-warm);
+      box-shadow: var(--shadow);
+    }
+    .pod-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .pod-show-info {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+    .pod-artwork {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #D97706 0%, #7C3AED 100%);
+      color: #FFFFFF;
+      font-size: 1.15rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(217, 119, 6, 0.22);
+    }
+    .pod-show-name {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--accent-warm);
+      line-height: 1.25;
+    }
+    .pod-sub {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+    .pod-duration {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--accent-warm-soft);
+      color: var(--accent-warm);
+      padding: 4px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .pod-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 8px;
+      line-height: 1.4;
+    }
+    .pod-title a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .pod-title a:hover {
+      color: var(--accent-warm);
+      text-decoration: underline;
+    }
+    .pod-body {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.58;
+      margin: 0 0 14px;
+    }
+    .pod-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .pod-wave {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      letter-spacing: 2px;
+      color: var(--text-secondary);
+      opacity: 0.75;
+    }
+    .pod-play-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-warm-soft);
+      color: var(--accent-warm) !important;
+      border: 1px solid var(--border);
+      padding: 5px 13px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none !important;
+      transition: all 0.15s ease;
+    }
+    .pod-play-btn:hover {
+      background: var(--accent-warm);
+      color: #FFFFFF !important;
+    }
+
     h1, h2 {
       font-family: var(--font-display);
       font-weight: 600;
@@ -577,7 +701,7 @@ SHARED_CSS_AND_THEME_JS = """
 
     @media (max-width: 640px) {
       .card, .hero, .section-panel { padding: 22px 18px; }
-      .grid, .x-grid { grid-template-columns: 1fr; }
+      .grid, .x-grid, .pod-grid { grid-template-columns: 1fr; }
       h1 { font-size: 1.6rem; }
       .top-nav { position: static; }
     }
@@ -809,18 +933,90 @@ def _render_x_cards_html(x_section_md: str) -> str:
     return f'<div class="x-grid">{"".join(cards_html)}</div>'
 
 
-def _replace_x_section_with_cards(markdown_content: str) -> str:
-    """Replace the raw `## 🔥 Hot on X.com` markdown list with styled Twitter/X Snippet Cards before rendering."""
-    x_md = _extract_section_markdown(markdown_content, "X.com")
-    if not x_md:
-        return markdown_content
+def _render_podcast_cards_html(pod_section_md: str) -> str:
+    """Parse AI Podcast Markdown bullet items and render them as stylized Audio Player Cards."""
+    if not pod_section_md.strip():
+        return ""
 
-    x_cards_html = _render_x_cards_html(x_md)
-    pattern = re.compile(
-        r"(##\s+🔥\s+Hot on X\.com[^\n]*\n)(.*?)(?=\n---\n|\n##\s+|\Z)",
-        re.DOTALL,
-    )
-    return pattern.sub(rf"\1\n{x_cards_html}\n", markdown_content)
+    cards_html: List[str] = []
+    lines = [ln for ln in pod_section_md.splitlines() if ln.strip()]
+
+    idx = 0
+    while idx < len(lines):
+        line = lines[idx].strip()
+        if line.startswith("- **["):
+            m = re.match(r"^-\s+\*\*\[([^\]]+)\]\(([^)]+)\)\*\*(.*)$", line)
+            title = m.group(1) if m else line
+            url = m.group(2) if m else "#"
+            meta_tail = m.group(3) if m else ""
+
+            desc = ""
+            if idx + 1 < len(lines) and not lines[idx + 1].strip().startswith("- **["):
+                desc = lines[idx + 1].strip().lstrip("- ").strip()
+                desc = re.sub(r"^\*\*[^*]+:\*\*\s*", "", desc)
+                desc = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", desc)
+                desc = re.sub(r"`([^`]+)`", r"<code>\1</code>", desc)
+                idx += 1
+
+            show_match = re.search(r"—\s*(?:\*|\*\*)([^*]+)(?:\*|\*\*)", meta_tail)
+            show_name = show_match.group(1).strip() if show_match else "AI Podcast"
+
+            dur_match = re.search(r"🎧\s*([0-9hm:\s]+)", meta_tail + " " + desc)
+            duration_badge = f"🎧 {dur_match.group(1).strip()}" if dur_match else "🎧 Audio Episode"
+
+            cards_html.append(
+                f"""
+                <article class="pod-card">
+                  <div>
+                    <div class="pod-header">
+                      <div class="pod-show-info">
+                        <div class="pod-artwork">🎙️</div>
+                        <div>
+                          <div class="pod-show-name">{show_name}</div>
+                          <div class="pod-sub">AI Audio Deep-Dive</div>
+                        </div>
+                      </div>
+                      <span class="pod-duration">{duration_badge}</span>
+                    </div>
+                    <h4 class="pod-title"><a href="{url}" target="_blank" rel="noopener">{title}</a></h4>
+                    <p class="pod-body">{desc}</p>
+                  </div>
+                  <div class="pod-footer">
+                    <span class="pod-wave">ılılılılılılılı</span>
+                    <a class="pod-play-btn" href="{url}" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
+                  </div>
+                </article>
+                """
+            )
+        idx += 1
+
+    if not cards_html:
+        return markdown.markdown(pod_section_md, extensions=["extra", "sane_lists", "nl2br"])
+
+    return f'<div class="pod-grid">{"".join(cards_html)}</div>'
+
+
+def _replace_x_section_with_cards(markdown_content: str) -> str:
+    """Replace the raw `## 🔥 Hot on X.com` and `## 🎧 AI Podcasts` markdown lists with styled cards before rendering."""
+    x_md = _extract_section_markdown(markdown_content, "X.com")
+    if x_md:
+        x_cards_html = _render_x_cards_html(x_md)
+        pattern_x = re.compile(
+            r"(##\s+🔥\s+Hot on X\.com[^\n]*\n)(.*?)(?=\n---\n|\n##\s+|\Z)",
+            re.DOTALL,
+        )
+        markdown_content = pattern_x.sub(rf"\1\n{x_cards_html}\n", markdown_content)
+
+    pod_md = _extract_section_markdown(markdown_content, "Podcast")
+    if pod_md:
+        pod_cards_html = _render_podcast_cards_html(pod_md)
+        pattern_pod = re.compile(
+            r"(##\s+🎧\s+AI Podcasts[^\n]*\n)(.*?)(?=\n---\n|\n##\s+|\Z)",
+            re.DOTALL,
+        )
+        markdown_content = pattern_pod.sub(rf"\1\n{pod_cards_html}\n", markdown_content)
+
+    return markdown_content
 
 
 def _render_daily_digest_html(
@@ -901,11 +1097,7 @@ def _render_index_portal_html(
     x_pulse_html = _render_x_cards_html(x_pulse_md) or "<p>No X.com highlights extracted for this edition.</p>"
 
     podcasts_md = _extract_section_markdown(latest_md, "Podcast")
-    podcasts_html = (
-        markdown.markdown(podcasts_md, extensions=["extra", "sane_lists", "nl2br"])
-        if podcasts_md
-        else "<p>No podcast episodes extracted for this edition.</p>"
-    )
+    podcasts_html = _render_podcast_cards_html(podcasts_md) or "<p>No podcast episodes extracted for this edition.</p>"
 
     day_cards_html = []
     for idx, d in enumerate(sorted_dates):
