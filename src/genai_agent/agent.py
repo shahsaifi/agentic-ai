@@ -64,13 +64,27 @@ Pick the **single most educational technical concept, architecture, or method** 
 - **Why It Matters in Practice**: How engineers/researchers can apply this.
 
 ## 🏆 Top 10 Ranked by Content & Reach
-Curate the top 10 highest-signal items across Research Papers (arXiv & Hugging Face), AI Lab Releases, and Community Engineering (Hacker News & r/LocalLLaMA).
+Curate the top 10 highest-signal items across Research Papers (arXiv & Hugging Face), AI Lab Releases, and Community Engineering (Hacker News & r/LocalLLaMA). Format each item using this exact structure:
+### 1. [Title](URL)
+**Category Badge** (Source) · **⬆️ Score pts/upvotes**
+- **What happened:** 1–2 sentences summarizing the release, paper, or discussion.
+- **Why it matters:** 1 sentence on the practical takeaway.
+
+---
 
 ## 🔥 Hot on X.com (AI Twitter Pulse)
-Highlight 3–4 viral X.com / AI Twitter threads and discussions from researchers and engineers, with links to the X post and community discussion.
+Highlight 3–4 viral X.com / AI Twitter threads and discussions from researchers and engineers. Format each item using this exact 2-line bullet structure:
+- **[Thread Headline (@handle on X)](URL)** — *X.com Thread* (⬆️ Score pts)
+  - **What's being discussed:** 1–2 sentences summarizing the thread and debate.
+
+---
 
 ## 🎧 AI Podcasts & Audio Deep-Dives
-Include 3–4 relevant, high-signal AI podcast episodes from the collected feed with show name, link, and a 1-sentence summary of why it's worth listening to.
+Include 3–4 relevant, high-signal AI podcast episodes from the collected feed. Format each item using this exact 2-line bullet structure:
+- **[Episode Title](URL)** — *Podcast Show Name* (🎧 Duration)
+  - **Why listen:** 1–2 sentences on what the episode covers.
+
+---
 
 ## 🎯 Today's 15-Minute Learning Challenge
 Propose 1 concrete hands-on mini-exercise or 2 thought-provoking architectural questions based on today's digest to help the reader actively retain what they learned.
@@ -344,11 +358,20 @@ class GenAILearningAgent:
                 breakdown=breakdown,
             )
         else:
-            markdown_content = self.synthesize_with_gemini(
-                items=items,
-                date_str=date_str,
-                use_search_grounding=True,
-            )
+            try:
+                markdown_content = self.synthesize_with_gemini(
+                    items=items,
+                    date_str=date_str,
+                    use_search_grounding=True,
+                )
+            except Exception as exc:
+                logger.warning("Gemini synthesis failed (%s); falling back to Top 10 ranker.", exc)
+                markdown_content = build_fallback_markdown(
+                    items=items,
+                    focus_topics=self.config.focus_topics,
+                    date_str=date_str,
+                    breakdown=breakdown,
+                )
 
         return DigestResult(
             title=title,
