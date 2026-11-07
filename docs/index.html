@@ -3,138 +3,349 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Generative AI Learning & News Digest — 2026-11-07</title>
+  <title>Generative AI Learning &amp; News Hub — Daily Top 10 Index</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --text: #0f172a;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --accent: #2563eb;
+      --bg: #FAF7F2;
+      --bg-elevated: #FFFFFF;
+      --bg-subtle: #F3EFE6;
+      --text: #1C1917;
+      --text-secondary: #57534E;
+      --border: #E7E0D6;
+      --accent: #4F46E5;
+      --accent-soft: #EEF2FF;
+      --accent-warm: #D97706;
+      --gradient: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #D97706 100%);
+      --shadow: 0 4px 20px -2px rgba(28, 25, 23, 0.06), 0 1px 3px -1px rgba(28, 25, 23, 0.04);
     }
+    [data-theme="dark"] {
+      --bg: #0F1117;
+      --bg-elevated: #181B24;
+      --bg-subtle: #212634;
+      --text: #F3F4F6;
+      --text-secondary: #9CA3AF;
+      --border: #2A3040;
+      --accent: #818CF8;
+      --accent-soft: rgba(129, 140, 248, 0.14);
+      --accent-warm: #FBBF24;
+      --shadow: 0 8px 28px -4px rgba(0, 0, 0, 0.45);
+    }
+    * { box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
       color: var(--text);
-      line-height: 1.7;
+      line-height: 1.72;
       margin: 0;
-      padding: 24px 16px;
+      padding: 0 16px 48px;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
     .container {
-      max-width: 860px;
+      max-width: 900px;
       margin: 0 auto;
     }
-    .header-bar {
+    .top-nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      margin-bottom: 16px;
-      padding: 12px 18px;
-      background: var(--card);
+      gap: 12px;
+      padding: 18px 0;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .brand-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--gradient);
+      display: inline-block;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .pill-link {
+      padding: 6px 13px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-decoration: none;
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      transition: all 0.15s ease;
+    }
+    .pill-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .pill-link.active {
+      background: var(--accent);
+      color: #FFFFFF;
+      border-color: var(--accent);
+    }
+    .theme-btn {
+      cursor: pointer;
+      background: var(--bg-elevated);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 13px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      font-family: inherit;
+    }
+    .hero {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--gradient);
+    }
+    .hero-badge {
+      display: inline-block;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 11px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    h1, h2 {
+      font-family: 'Newsreader', Georgia, serif;
+      letter-spacing: -0.015em;
+      line-height: 1.25;
+    }
+    h1 {
+      font-size: 2.15rem;
+      margin: 4px 0 12px;
+    }
+    h2 {
+      font-size: 1.55rem;
+      margin: 34px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 {
+      font-size: 1.12rem;
+      margin: 24px 0 8px;
+      line-height: 1.45;
+      padding: 16px 20px 6px;
+      background: var(--bg-subtle);
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      border: 1px solid var(--border);
+      border-bottom: none;
+    }
+    h3 + p, h3 + p + ul {
+      background: var(--bg-subtle);
+      margin: 0;
+      padding: 4px 20px 14px;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+    }
+    h3 + p + ul {
+      padding-left: 38px;
+      border-bottom: 1px solid var(--border);
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      margin-bottom: 16px;
     }
     .card {
-      background: var(--card);
+      background: var(--bg-elevated);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 32px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      border-radius: 18px;
+      padding: 34px;
+      box-shadow: var(--shadow);
     }
-    h1 { font-size: 1.75rem; margin-top: 0; border-bottom: 2px solid var(--border); padding-bottom: 12px; }
-    h2 { font-size: 1.35rem; margin-top: 28px; color: #1e293b; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
     blockquote {
-      margin: 16px 0;
-      padding: 12px 16px;
-      background: #eff6ff;
+      margin: 16px 0 24px;
+      padding: 14px 20px;
+      background: var(--accent-soft);
       border-left: 4px solid var(--accent);
-      border-radius: 6px;
-      color: #1e3a8a;
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.94rem;
     }
-    ul { padding-left: 22px; }
-    li { margin-bottom: 8px; }
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 28px 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+    }
+    .day-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .day-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+    .day-card h3 {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 6px 0 10px;
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.38rem;
+    }
+    .day-card ul {
+      padding-left: 18px;
+      margin: 8px 0 18px;
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+    }
+    .day-card li { margin-bottom: 6px; }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent);
+      color: #FFFFFF !important;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none !important;
+      align-self: flex-start;
+    }
+    .cta-btn:hover { opacity: 0.92; }
     .footer {
       text-align: center;
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 24px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 36px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+    @media (max-width: 640px) {
+      .card, .hero { padding: 20px; }
+      .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 1.65rem; }
     }
   </style>
+  <script>
+    (function() {
+      const saved = localStorage.getItem('genai_theme');
+      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('genai_theme', next);
+    }
+  </script>
+
 </head>
 <body>
   <div class="container">
-    <div class="header-bar">
-      <div><strong>📚 Digest Archive:</strong> <a href="index.html" style="margin-left:8px;font-weight:600;">Latest</a></div>
-      <div><a href="2026-11-07.html" style="display:inline-block;padding:6px 12px;margin:4px;border-radius:6px;text-decoration:none;font-size:13px;background:#2563eb;color:#ffffff;font-weight:600;">2026-11-07</a><a href="2026-11-06.html" style="display:inline-block;padding:6px 12px;margin:4px;border-radius:6px;text-decoration:none;font-size:13px;background:#f3f4f6;color:#374151;">2026-11-06</a></div>
+    <nav class="top-nav">
+      <a class="brand" href="index.html">
+        <span class="brand-dot"></span>
+        <span>GenAI Learning &amp; News Hub</span>
+      </a>
+      <div class="nav-actions">
+        <a class="pill-link active" href="index.html">📚 All Editions (2)</a>
+        <a class="pill-link" href="2026-11-07.html">Latest (2026-11-07)</a>
+        <button class="theme-btn" onclick="toggleTheme()">🌗 Theme</button>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <span class="hero-badge">🧠 Curated for Fast Daily Learning</span>
+      <h1>Generative AI Daily Top 10 &amp; Audio Hub</h1>
+      <p style="color:var(--text-secondary);font-size:1.03rem;margin:0 0 18px;">
+        Signal over noise: Every edition distills 50+ research papers (Hugging Face &amp; arXiv), AI lab blogs (OpenAI, Google, DeepMind, Anthropic), Hacker News &amp; r/LocalLLaMA engineering threads, and <strong>AI Podcasts</strong> into a <strong>5-minute Top 10 read</strong>.
+      </p>
+      <div style="background:var(--bg-subtle);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:20px;">
+        <div style="font-weight:700;font-size:0.92rem;margin-bottom:6px;color:var(--accent);">🔥 Featured in Latest Edition (2026-11-07):</div>
+        <ul style="margin:0;padding-left:20px;font-size:0.93rem;">
+          <li>Gemini 4 Carbon (#1 on Artificial Analysis Intelligence Index v5)</li><li>Claude Code Privacy Issue & Agent Data-Training Policies</li><li>Ask HN: What's Your Current AI Agentic Setup?</li><li>A Small Model That Can Ask Opus for Help Gives Opus Accuracy at 4× Lower Cost</li>
+        </ul>
+      </div>
+      <a class="cta-btn" href="2026-11-07.html">Open Latest Digest (2026-11-07) →</a>
+    </section>
+
+    <h2>📅 Daily Digest Editions</h2>
+    <div class="grid">
+      
+            <article class="day-card">
+              <div>
+                <span class="hero-badge">✨ Latest Edition · ~4 min read</span>
+                <h3><a href="2026-11-07.html">GenAI Top 10 Digest — 2026-11-07</a></h3>
+                <p style="margin:4px 0 8px;font-size:0.88rem;color:var(--text-secondary);">Top stories ranked by technical substance &amp; community reach:</p>
+                <ul><li>Gemini 4 Carbon (#1 on Artificial Analysis Intelligence Index v5)</li><li>Claude Code Privacy Issue & Agent Data-Training Policies</li><li>Ask HN: What's Your Current AI Agentic Setup?</li></ul>
+              </div>
+              <a class="cta-btn" href="2026-11-07.html">Read 2026-11-07 Digest →</a>
+            </article>
+            
+            <article class="day-card">
+              <div>
+                <span class="hero-badge">📅 Daily Edition · ~4 min read</span>
+                <h3><a href="2026-11-06.html">GenAI Top 10 Digest — 2026-11-06</a></h3>
+                <p style="margin:4px 0 8px;font-size:0.88rem;color:var(--text-secondary);">Top stories ranked by technical substance &amp; community reach:</p>
+                <ul><li>Gemini 4 Carbon (#1 on Artificial Analysis Intelligence Index v5)</li><li>Claude Code Privacy Issue & Agent Data-Training Policies</li><li>Ask HN: What's Your Current AI Agentic Setup?</li></ul>
+              </div>
+              <a class="cta-btn" href="2026-11-06.html">Read 2026-11-06 Digest →</a>
+            </article>
+            
     </div>
-    <main class="card">
-      <h1>🚀 Top 10 Generative AI Learning &amp; News Digest — 2026-11-07</h1>
-<blockquote>
-<p><strong>Curated from 56 live items</strong> across Hugging Face Daily Papers, arXiv, OpenAI/Google/DeepMind Blogs, Hacker News, and r/LocalLLaMA — ranked by <strong>technical substance</strong> and <strong>community reach</strong>.</p>
-</blockquote>
-<hr />
-<h2>⚡ Executive TL;DR (30-Second Read)</h2>
-<ol>
-<li><strong>Frontier Models &amp; Cascading Cost Optimization</strong>: Google's <strong>Gemini 4 Carbon</strong> took #1 on the Artificial Analysis Intelligence Index v5, while <strong>Gemini Omni 1.2 Flash</strong> arrived for long-clip multimodal tasks. Meanwhile, engineers showed how routing a small model to ask a frontier model only when uncertain achieves <strong>frontier accuracy at 4× lower cost</strong>.</li>
-<li><strong>Agent Harnesses Are the New Bottleneck</strong>: Across Lilian Weng's new post, Hugging Face's <strong>Harness-S</strong> paper, and the r/LocalLLaMA <strong>Harness Leaderboard</strong> (Terminal-Bench 2.1), the biggest gains in coding/research agents now come from <strong>harness design</strong> (how tools, memory, and retries are structured around the model).</li>
-<li><strong>Agent Privacy &amp; Security Reckoning</strong>: The top-voted engineering stories on Hacker News this week center on <strong>agent data leakage</strong> (Claude Code leaking email addresses, personal chat history training policies, and OpenAI's sandboxing/privilege reduction in <em>A Thousand Fewer Paths to Root</em>).</li>
-</ol>
-<hr />
-<h2>🧠 Concept of the Day: "Agent Harness Engineering" &amp; Cascaded Routing</h2>
-<ul>
-<li><strong>What is an Agent Harness?</strong> A model is just weights predicting tokens; the <strong>harness</strong> is the runtime loop around it—system prompt, tool definitions, context compaction, error recovery, and verification checks.</li>
-<li><strong>Key Insight from Today's Research (<a href="https://huggingface.co/papers/2611.04277">Harness-S</a> &amp; <a href="https://lilianweng.github.io/posts/2026-07-04-harness/">Lilian Weng</a>)</strong>: Different agent harnesses fail on <em>different</em> tasks (locality &amp; complementarity). Instead of searching for one static prompt/harness, <strong>Harness-S</strong> trains policies across "sibling harnesses" so the agent learns to recover from diverse failure modes.</li>
-<li><strong>Practical Engineering Pattern (<a href="https://hightouch.com/blog/llm-judges-identity-resolution">Cascaded Judge Routing</a>)</strong>: Pair a fast, cheap model for 85% of routine decisions with a confidence/uncertainty trigger that escalates hard edge cases to a frontier reasoning model—cutting production inference costs by <strong>75% (4×)</strong> without losing accuracy.</li>
-</ul>
-<hr />
-<h2>🏆 Top 10 Ranked by Content &amp; Reach</h2>
-<h3>1. <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/">Gemini 4 Carbon (#1 on Artificial Analysis Intelligence Index v5)</a></h3>
-<p><strong>🏢 Model Release + 🔥 Hacker News (⬆️ 1,358 combined pts, 1,051 comments)</strong><br />
-- <strong>What happened:</strong> Google released <strong>Gemini 4 Carbon</strong>, claiming the #1 spot on the independent <a href="https://artificialanalysis.ai/articles/gemini-4-carbon-new-number-1">Artificial Analysis Intelligence Index v5</a>, alongside <strong><a href="https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemini-omni-1-2-flash/">Gemini Omni 1.2 Flash</a></strong> for fast, low-cost long-clip multimodal processing.<br />
-- <strong>Why it matters:</strong> Sets the new frontier baseline for reasoning-to-cost efficiency while expanding native multimodal context windows.</p>
-<h3>2. <a href="https://github.com/anthropics/claude-code/issues/107757">Claude Code Privacy Issue &amp; Agent Data-Training Policies</a></h3>
-<p><strong>🔥 Highest Reach on Hacker News (⬆️ 1,569 pts, 502 comments)</strong><br />
-- <strong>What happened:</strong> Developers discovered that Claude Code could expose user email addresses when fetching external websites, alongside separate high-reach threads on <a href="https://news.ycombinator.com/item?id=50363461">Gemini personal chat training defaults (⬆️ 725)</a> and <a href="https://news.ycombinator.com/item?id=50352757">Codex data-sharing settings (⬆️ 529)</a>.<br />
-- <strong>Why it matters:</strong> When autonomous CLI agents make outbound HTTP requests or git commits, they carry local environment metadata—auditing agent network/tool permissions and enterprise zero-data-retention settings is essential.</p>
-<h3>3. <a href="https://news.ycombinator.com/item?id=50366117">Ask HN: What's Your Current AI Agentic Setup?</a></h3>
-<p><strong>🛠️ Engineering Practice · Hacker News (⬆️ 545 pts, 678 comments)</strong><br />
-- <strong>What happened:</strong> Nearly 700 practitioners shared their real-world daily agent stacks, what actually works in production vs. hype, and how they combine IDE agents, CLI agents, and custom MCP tools.<br />
-- <strong>Why it matters:</strong> High-signal crowd benchmark of practical developer workflows—most effective setups rely on scoped context files, deterministic test loops, and human-in-the-loop plan review.</p>
-<h3>4. <a href="https://hightouch.com/blog/llm-judges-identity-resolution">A Small Model That Can Ask Opus for Help Gives Opus Accuracy at 4× Lower Cost</a></h3>
-<p><strong>🛠️ Production LLM Engineering · Hacker News (⬆️ 447 pts, 100 comments)</strong><br />
-- <strong>What happened:</strong> Hightouch demonstrated a cascaded LLM-judge architecture for entity resolution where a lightweight model handles straightforward pairs and escalates ambiguous cases to a frontier model.<br />
-- <strong>Why it matters:</strong> Directly applicable design pattern for any high-volume LLM pipeline—calibrate confidence thresholds so you only pay frontier token prices on the hardest 15–20% of queries.</p>
-<h3>5. <a href="https://openai.com/index/a-thousand-fewer-paths-to-root/">A Thousand Fewer Paths to Root: Hardening AI Agent Sandboxes</a></h3>
-<p><strong>🏢 AI Security &amp; Infrastructure · OpenAI / Hacker News (⬆️ 486 pts, 363 comments)</strong><br />
-- <strong>What happened:</strong> OpenAI detailed how they systematically eliminated privilege-escalation paths in execution sandboxes used by coding and tool-using agents, paired with their new <a href="https://openai.com/index/partnering-with-hacktron">Hacktron security partnership</a>.<br />
-- <strong>Why it matters:</strong> As agents gain shell and browser execution capabilities, OS-level sandboxing and least-privilege container design become mandatory defense layers.</p>
-<h3>6. <a href="https://huggingface.co/papers/2611.08373">SLA (Scaling Spatial-Language-Action) &amp; VFlash (Flash Primitive Decoding)</a></h3>
-<p><strong>📄 Top Research Papers · Hugging Face Daily Papers (⬆️ 150 &amp; ⬆️ 96 upvotes)</strong><br />
-- <strong>What happened:</strong> Two top-trending embodied AI papers: <strong>SLA</strong> scales 3D spatial grounding for Vision-Language-Action (VLA) models via continual pre-training, while <strong><a href="https://huggingface.co/papers/2611.08449">VFlash</a></strong> decodes visual planning primitives (trajectories &amp; bounding boxes) in parallel rather than slow token-by-token autoregression.<br />
-- <strong>Why it matters:</strong> Bridges the gap between 2D language pre-training and fast, real-time 3D physical control.</p>
-<h3>7. <a href="https://huggingface.co/papers/2611.02075">Decoupled Predictive Decision Making (DPDM): A Shared Conditional Predictor for Agents</a></h3>
-<p><strong>📄 Agent Architecture Paper · Hugging Face Daily Papers (⬆️ 114 upvotes)</strong><br />
-- <strong>What happened:</strong> Introduces <strong>DPDM</strong>, separating an agent's <em>world-state prediction</em> (what will happen if I take action X?) from its <em>policy selection</em>, allowing heterogeneous agents to share a single conditional predictor calibrated on deployment observations.<br />
-- <strong>Why it matters:</strong> Solves a classic failure mode where LLM agents act on static prompt assumptions instead of adapting to live environment feedback.</p>
-<h3>8. <a href="https://huggingface.co/papers/2611.04277">Harness-S, Lilian Weng on Harness Engineering &amp; Terminal-Bench 2.1 Leaderboard</a></h3>
-<p><strong>📄 Research + Blog + Community Benchmark (⬆️ 57 HF upvotes + r/LocalLLaMA)</strong><br />
-- <strong>What happened:</strong> A trifecta on agent harnesses: the <strong><a href="https://huggingface.co/papers/2611.04277">Harness-S paper</a></strong> shows how training across sibling harnesses improves agent generalization; <strong><a href="https://lilianweng.github.io/posts/2026-07-04-harness/">Lilian Weng's Harness Engineering post</a></strong> breaks down self-improvement loops; and r/LocalLLaMA published the <strong><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xpvfx8/harness_leaderboard_kimi_code_hermes_pi_claude/">Harness Leaderboard</a></strong> comparing Kimi Code, Claude Code, Codex, and Hermes on Terminal-Bench 2.1 &amp; Deep SWE 1.1.<br />
-- <strong>Why it matters:</strong> Proves that upgrading the <em>harness</em> (tool feedback, state tracking, retry logic) often yields larger accuracy jumps than swapping the underlying LLM.</p>
-<h3>9. <a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/">Qwen 3.8 27B Interpreting Model Weights &amp; Freehand GUI Control</a></h3>
-<p><strong>🏢 Open-Weights &amp; Local LLMs · Simon Willison &amp; r/LocalLLaMA</strong><br />
-- <strong>What happened:</strong> Simon Willison demonstrated <strong>Qwen 3.8 27B</strong> running locally on a laptop performing <em>Weight-Space Programming</em> (natively reading and interpreting neural network weights), while r/LocalLLaMA showcased <strong><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xpmvf2/we_are_cooked_my_qfn_38_nvfp4_just_drew_a_dog/">QFN 3.8 NVFP4 controlling a VM mouse in Open WebUI 0.13.0</a></strong>.<br />
-- <strong>Why it matters:</strong> 27B–30B class open-weight models running in 4-bit quantization (NVFP4) on consumer hardware are now capable of both fine-grained GUI actuation and weight-space introspection.</p>
-<h3>10. <a href="https://openai.com/index/measuring-how-ai-agents-handle-wet-lab-science">AI Agents in Science: OpenAI BioBasicsBench &amp; DeepMind Agentic Cheminformatics</a></h3>
-<p><strong>🏢 Scientific AI Releases · OpenAI &amp; Google DeepMind</strong><br />
-- <strong>What happened:</strong> OpenAI launched <strong>BioBasicsBench</strong> (100 tasks evaluating how agents interpret raw wet-lab experimental data), while Google DeepMind published <strong><a href="https://deepmind.google/blog/agentic-cheminformatics-with-google-antigravity/">Agentic Cheminformatics with Google Antigravity</a></strong>, showing how modular skills accelerate compound search and macrocycle design.<br />
-- <strong>Why it matters:</strong> Domain-specific <strong>Skills</strong> + rigorous experimental benchmarks are turning general-purpose coding agents into specialized scientific research co-pilots.</p>
-    </main>
+
     <footer class="footer">
-      Generated by <strong>GenAI Learning &amp; News Agent</strong> (Powered by Google Gemini)
+      Powered by <strong>Google Gemini</strong> · Auto-curated Research, Engineering, &amp; AI Podcasts
     </footer>
   </div>
 </body>

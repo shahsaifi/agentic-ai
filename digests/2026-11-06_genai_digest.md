@@ -69,3 +69,19 @@
 **🏢 Scientific AI Releases · OpenAI & Google DeepMind**
 - **What happened:** OpenAI launched **BioBasicsBench** (100 tasks evaluating how agents interpret raw wet-lab experimental data), while Google DeepMind published **[Agentic Cheminformatics with Google Antigravity](https://deepmind.google/blog/agentic-cheminformatics-with-google-antigravity/)**, showing how modular skills accelerate compound search and macrocycle design.
 - **Why it matters:** Domain-specific **Skills** + rigorous experimental benchmarks are turning general-purpose coding agents into specialized scientific research co-pilots.
+
+---
+
+## 🎧 AI Podcasts & Audio Deep-Dives (Listen on Your Commute)
+
+- **[Deep Dive: Anthropic S-1 Myths and Mythos — Jamin Ball, Altimeter](https://www.youtube.com/watch?v=P735f1xlpL0)** — *Latent Space: The AI Engineer Podcast* (🎧 1h 42m)
+  - **Why listen:** Breaks down the unit economics of frontier AI labs, inference margin realities vs. cloud spend, and what developers should expect from enterprise AI pricing.
+- **[Can AI Invent or Just Help Scientists Work Faster? with Richard Socher (#783)](https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster)** — *The TWIML AI Podcast* (🎧 48m)
+  - **Why listen:** Former Salesforce Chief Scientist Richard Socher explores the boundary between AI as an engineering productivity co-pilot vs. an autonomous scientific hypothesis generator.
+- **[Abundant Intelligence at the Midwest AI Summit (Part 2)](https://share.transistor.fm/s/1b301bdc)** — *Practical AI Podcast* (🎧 47m)
+  - **Why listen:** Practical engineering guide on how organizations decide where to give AI agents autonomy, where to set guardrails, and how to design human-in-the-loop checkpoints.
+- **[Tokenization, Agentic Trading & Harmonic Reasoning with Vlad Tenev](https://traffic.megaphone.fm/PDP1158596730.mp3)** — *No Priors: AI Podcast* (🎧 54m)
+  - **Why listen:** Covers mathematical reasoning verification (Harmonic) and how autonomous financial/analytical agents are being deployed under strict reliability constraints.
+- **[#503 – AI Crisis in Math: Navier-Stokes, Riemann Hypothesis & Complexity Theory](https://lexfridman.com/math-ai-crisis/)** — *Lex Fridman Podcast* (🎧 3h 42m)
+  - **Why listen:** Mathematicians Ankur Moitra, Steven Brunton, and Alex Kontorovich discuss how formal verification (Lean) and reasoning LLMs are reshaping theorem proving and scientific discovery.
+

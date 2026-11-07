@@ -11,6 +11,7 @@ class SourceCategory(str, Enum):
     COMMUNITY_NEWS = "community_news"
     COMPANY_BLOG = "company_blog"
     WEB_SEARCH = "web_search"
+    PODCAST = "podcast"
 
 
 @dataclass

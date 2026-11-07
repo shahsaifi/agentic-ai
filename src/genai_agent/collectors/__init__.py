@@ -9,6 +9,7 @@ from genai_agent.collectors.papers import (
     fetch_arxiv_papers,
     fetch_huggingface_daily_papers,
 )
+from genai_agent.collectors.podcasts import fetch_ai_podcasts
 from genai_agent.collectors.web_search import fetch_google_news_rss
 from genai_agent.models import NewsItem
 
@@ -45,6 +46,7 @@ def collect_all_sources(
             limit_per_sub=max(3, max_per_source // 2)
         ),
         "AI Lab & Engineering Blogs": lambda: fetch_ai_company_blogs(max_per_feed=2),
+        "AI Podcasts": lambda: fetch_ai_podcasts(max_per_feed=1),
         "Web News Search": lambda: fetch_google_news_rss(
             topics=focus_topics, days=days, limit=max_per_source
         ),
@@ -53,7 +55,7 @@ def collect_all_sources(
     all_items: List[NewsItem] = []
     breakdown: Dict[str, int] = {}
 
-    with ThreadPoolExecutor(max_workers=6) as executor:
+    with ThreadPoolExecutor(max_workers=7) as executor:
         future_to_name = {executor.submit(fn): name for name, fn in tasks.items()}
         for future in as_completed(future_to_name):
             name = future_to_name[future]

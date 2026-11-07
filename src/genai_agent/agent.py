@@ -10,6 +10,7 @@ from google.genai import types
 from genai_agent.collectors import (
     collect_all_sources,
     fetch_ai_company_blogs,
+    fetch_ai_podcasts,
     fetch_arxiv_papers,
     fetch_google_news_rss,
     fetch_hacker_news_ai,
@@ -73,6 +74,9 @@ Highlight major model releases, API updates, or official blog posts from AI labs
 ## 🛠️ Engineering & Community Pulse (Hacker News & r/LocalLLaMA)
 Highlight 3–5 notable community discussions, open-source tools, local LLM benchmarks, or engineering lessons with links.
 
+## 🎧 AI Podcasts & Audio Deep-Dives
+Include 3–4 relevant, high-signal AI podcast episodes from the collected feed with show name, link, and a 1-sentence summary of why it's worth listening to.
+
 ## 🎯 Today's 15-Minute Learning Challenge
 Propose 1 concrete hands-on mini-exercise or 2 thought-provoking architectural questions based on today's digest to help the reader actively retain what they learned.
 
@@ -89,9 +93,10 @@ def rank_top_items(items: List[NewsItem], top_k: int = 10) -> List[NewsItem]:
         SourceCategory.COMPANY_BLOG: [],
         SourceCategory.COMMUNITY_NEWS: [],
         SourceCategory.WEB_SEARCH: [],
+        SourceCategory.PODCAST: [],
     }
     for item in items:
-        by_cat[item.category].append(item)
+        by_cat.setdefault(item.category, []).append(item)
 
     # Sort each category by engagement score + summary richness
     for cat in by_cat:
@@ -100,7 +105,7 @@ def rank_top_items(items: List[NewsItem], top_k: int = 10) -> List[NewsItem]:
             reverse=True,
         )
 
-    # Pick a balanced Top 10: 4 top papers, 3 top lab blogs, 3 top high-reach community/web stories
+    # Pick a balanced Top 10: 4 community, 4 papers, 2 official lab blogs
     quotas = [
         (SourceCategory.COMMUNITY_NEWS, 4),
         (SourceCategory.RESEARCH_PAPER, 4),
@@ -114,9 +119,11 @@ def rank_top_items(items: List[NewsItem], top_k: int = 10) -> List[NewsItem]:
             selected.append(item)
             used_urls.add(item.url)
 
-    # Fill any remaining slots up to top_k by highest overall score
+    # Fill any remaining slots up to top_k by highest overall score (excluding podcasts, which get their own section)
     if len(selected) < top_k:
-        remaining = [i for i in items if i.url not in used_urls]
+        remaining = [
+            i for i in items if i.url not in used_urls and i.category != SourceCategory.PODCAST
+        ]
         remaining.sort(key=lambda x: ((x.score or 0), len(x.summary or "")), reverse=True)
         selected.extend(remaining[: top_k - len(selected)])
 
@@ -129,8 +136,10 @@ def build_fallback_markdown(
     date_str: str,
     breakdown: Dict[str, int],
 ) -> str:
-    """Generate a concise Top 10 Markdown digest ranked by content substance and community reach."""
+    """Generate a concise Top 10 Markdown digest ranked by content substance and community reach, plus Podcasts."""
     top_items = rank_top_items(items, top_k=10)
+    podcasts = [i for i in items if i.category == SourceCategory.PODCAST]
+
     lines = [
         f"# 🚀 Top 10 Generative AI Learning & News Digest — {date_str}",
         "",
@@ -159,6 +168,19 @@ def build_fallback_markdown(
         if item.summary:
             short_sum = item.summary[:320] + ("..." if len(item.summary) > 320 else "")
             lines.append(f"- **Takeaway:** {short_sum}")
+        lines.append("")
+
+    if podcasts:
+        lines.append("---")
+        lines.append("")
+        lines.append("## 🎧 AI Podcasts & Audio Deep-Dives")
+        lines.append("")
+        for pod in podcasts[:5]:
+            pub_badge = f" (*{pod.published_at}*)" if pod.published_at else ""
+            lines.append(f"- **[{pod.title}]({pod.url})** — **{pod.source}**{pub_badge}")
+            if pod.summary:
+                short_pod = pod.summary[:260] + ("..." if len(pod.summary) > 260 else "")
+                lines.append(f"  - {short_pod}")
         lines.append("")
 
     return "\n".join(lines)

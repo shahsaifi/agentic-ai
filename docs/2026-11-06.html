@@ -3,74 +3,305 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Generative AI Learning & News Digest — 2026-11-06</title>
+  <title>Generative AI Top 10 Digest — 2026-11-06</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --text: #0f172a;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --accent: #2563eb;
+      --bg: #FAF7F2;
+      --bg-elevated: #FFFFFF;
+      --bg-subtle: #F3EFE6;
+      --text: #1C1917;
+      --text-secondary: #57534E;
+      --border: #E7E0D6;
+      --accent: #4F46E5;
+      --accent-soft: #EEF2FF;
+      --accent-warm: #D97706;
+      --gradient: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #D97706 100%);
+      --shadow: 0 4px 20px -2px rgba(28, 25, 23, 0.06), 0 1px 3px -1px rgba(28, 25, 23, 0.04);
     }
+    [data-theme="dark"] {
+      --bg: #0F1117;
+      --bg-elevated: #181B24;
+      --bg-subtle: #212634;
+      --text: #F3F4F6;
+      --text-secondary: #9CA3AF;
+      --border: #2A3040;
+      --accent: #818CF8;
+      --accent-soft: rgba(129, 140, 248, 0.14);
+      --accent-warm: #FBBF24;
+      --shadow: 0 8px 28px -4px rgba(0, 0, 0, 0.45);
+    }
+    * { box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
       color: var(--text);
-      line-height: 1.7;
+      line-height: 1.72;
       margin: 0;
-      padding: 24px 16px;
+      padding: 0 16px 48px;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
     .container {
-      max-width: 860px;
+      max-width: 900px;
       margin: 0 auto;
     }
-    .header-bar {
+    .top-nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      margin-bottom: 16px;
-      padding: 12px 18px;
-      background: var(--card);
+      gap: 12px;
+      padding: 18px 0;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .brand-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--gradient);
+      display: inline-block;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .pill-link {
+      padding: 6px 13px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-decoration: none;
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      transition: all 0.15s ease;
+    }
+    .pill-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .pill-link.active {
+      background: var(--accent);
+      color: #FFFFFF;
+      border-color: var(--accent);
+    }
+    .theme-btn {
+      cursor: pointer;
+      background: var(--bg-elevated);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 13px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      font-family: inherit;
+    }
+    .hero {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--gradient);
+    }
+    .hero-badge {
+      display: inline-block;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 11px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    h1, h2 {
+      font-family: 'Newsreader', Georgia, serif;
+      letter-spacing: -0.015em;
+      line-height: 1.25;
+    }
+    h1 {
+      font-size: 2.15rem;
+      margin: 4px 0 12px;
+    }
+    h2 {
+      font-size: 1.55rem;
+      margin: 34px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 {
+      font-size: 1.12rem;
+      margin: 24px 0 8px;
+      line-height: 1.45;
+      padding: 16px 20px 6px;
+      background: var(--bg-subtle);
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      border: 1px solid var(--border);
+      border-bottom: none;
+    }
+    h3 + p, h3 + p + ul {
+      background: var(--bg-subtle);
+      margin: 0;
+      padding: 4px 20px 14px;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+    }
+    h3 + p + ul {
+      padding-left: 38px;
+      border-bottom: 1px solid var(--border);
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      margin-bottom: 16px;
     }
     .card {
-      background: var(--card);
+      background: var(--bg-elevated);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 32px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      border-radius: 18px;
+      padding: 34px;
+      box-shadow: var(--shadow);
     }
-    h1 { font-size: 1.75rem; margin-top: 0; border-bottom: 2px solid var(--border); padding-bottom: 12px; }
-    h2 { font-size: 1.35rem; margin-top: 28px; color: #1e293b; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
     blockquote {
-      margin: 16px 0;
-      padding: 12px 16px;
-      background: #eff6ff;
+      margin: 16px 0 24px;
+      padding: 14px 20px;
+      background: var(--accent-soft);
       border-left: 4px solid var(--accent);
-      border-radius: 6px;
-      color: #1e3a8a;
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.94rem;
     }
-    ul { padding-left: 22px; }
-    li { margin-bottom: 8px; }
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 28px 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+    }
+    .day-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .day-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+    .day-card h3 {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 6px 0 10px;
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.38rem;
+    }
+    .day-card ul {
+      padding-left: 18px;
+      margin: 8px 0 18px;
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+    }
+    .day-card li { margin-bottom: 6px; }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent);
+      color: #FFFFFF !important;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none !important;
+      align-self: flex-start;
+    }
+    .cta-btn:hover { opacity: 0.92; }
     .footer {
       text-align: center;
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 24px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 36px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+    @media (max-width: 640px) {
+      .card, .hero { padding: 20px; }
+      .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 1.65rem; }
     }
   </style>
+  <script>
+    (function() {
+      const saved = localStorage.getItem('genai_theme');
+      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('genai_theme', next);
+    }
+  </script>
+
 </head>
 <body>
   <div class="container">
-    <div class="header-bar">
-      <div><strong>📚 Digest Archive:</strong> <a href="index.html" style="margin-left:8px;font-weight:600;">Latest</a></div>
-      <div><a href="2026-11-07.html" style="display:inline-block;padding:6px 12px;margin:4px;border-radius:6px;text-decoration:none;font-size:13px;background:#f3f4f6;color:#374151;">2026-11-07</a><a href="2026-11-06.html" style="display:inline-block;padding:6px 12px;margin:4px;border-radius:6px;text-decoration:none;font-size:13px;background:#2563eb;color:#ffffff;font-weight:600;">2026-11-06</a></div>
-    </div>
+    <nav class="top-nav">
+      <a class="brand" href="index.html">
+        <span class="brand-dot"></span>
+        <span>← All Editions (Index)</span>
+      </a>
+      <div class="nav-actions">
+        <a class="pill-link" href="2026-11-07.html">2026-11-07</a><a class="pill-link active" href="2026-11-06.html">2026-11-06</a>
+        <button class="theme-btn" onclick="toggleTheme()">🌗 Theme</button>
+      </div>
+    </nav>
     <main class="card">
       <h1>🚀 Top 10 Generative AI Learning &amp; News Digest — 2026-11-06</h1>
 <blockquote>
@@ -132,9 +363,23 @@
 <p><strong>🏢 Scientific AI Releases · OpenAI &amp; Google DeepMind</strong><br />
 - <strong>What happened:</strong> OpenAI launched <strong>BioBasicsBench</strong> (100 tasks evaluating how agents interpret raw wet-lab experimental data), while Google DeepMind published <strong><a href="https://deepmind.google/blog/agentic-cheminformatics-with-google-antigravity/">Agentic Cheminformatics with Google Antigravity</a></strong>, showing how modular skills accelerate compound search and macrocycle design.<br />
 - <strong>Why it matters:</strong> Domain-specific <strong>Skills</strong> + rigorous experimental benchmarks are turning general-purpose coding agents into specialized scientific research co-pilots.</p>
+<hr />
+<h2>🎧 AI Podcasts &amp; Audio Deep-Dives (Listen on Your Commute)</h2>
+<ul>
+<li><strong><a href="https://www.youtube.com/watch?v=P735f1xlpL0">Deep Dive: Anthropic S-1 Myths and Mythos — Jamin Ball, Altimeter</a></strong> — <em>Latent Space: The AI Engineer Podcast</em> (🎧 1h 42m)</li>
+<li><strong>Why listen:</strong> Breaks down the unit economics of frontier AI labs, inference margin realities vs. cloud spend, and what developers should expect from enterprise AI pricing.</li>
+<li><strong><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster">Can AI Invent or Just Help Scientists Work Faster? with Richard Socher (#783)</a></strong> — <em>The TWIML AI Podcast</em> (🎧 48m)</li>
+<li><strong>Why listen:</strong> Former Salesforce Chief Scientist Richard Socher explores the boundary between AI as an engineering productivity co-pilot vs. an autonomous scientific hypothesis generator.</li>
+<li><strong><a href="https://share.transistor.fm/s/1b301bdc">Abundant Intelligence at the Midwest AI Summit (Part 2)</a></strong> — <em>Practical AI Podcast</em> (🎧 47m)</li>
+<li><strong>Why listen:</strong> Practical engineering guide on how organizations decide where to give AI agents autonomy, where to set guardrails, and how to design human-in-the-loop checkpoints.</li>
+<li><strong><a href="https://traffic.megaphone.fm/PDP1158596730.mp3">Tokenization, Agentic Trading &amp; Harmonic Reasoning with Vlad Tenev</a></strong> — <em>No Priors: AI Podcast</em> (🎧 54m)</li>
+<li><strong>Why listen:</strong> Covers mathematical reasoning verification (Harmonic) and how autonomous financial/analytical agents are being deployed under strict reliability constraints.</li>
+<li><strong><a href="https://lexfridman.com/math-ai-crisis/">#503 – AI Crisis in Math: Navier-Stokes, Riemann Hypothesis &amp; Complexity Theory</a></strong> — <em>Lex Fridman Podcast</em> (🎧 3h 42m)</li>
+<li><strong>Why listen:</strong> Mathematicians Ankur Moitra, Steven Brunton, and Alex Kontorovich discuss how formal verification (Lean) and reasoning LLMs are reshaping theorem proving and scientific discovery.</li>
+</ul>
     </main>
     <footer class="footer">
-      Generated by <strong>GenAI Learning &amp; News Agent</strong> (Powered by Google Gemini)
+      Curated by <strong>Generative AI Learning &amp; News Agent</strong> · <a href="index.html">Back to Main Index</a>
     </footer>
   </div>
 </body>
