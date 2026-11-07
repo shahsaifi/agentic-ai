@@ -1,0 +1,82 @@
+from __future__ import annotations
+
+from datetime import datetime
+from pathlib import Path
+
+from genai_agent.agent import build_fallback_markdown, build_synthesis_prompt
+from genai_agent.collectors import deduplicate_items
+from genai_agent.models import NewsItem, SourceCategory
+from genai_agent.notifiers import chunk_text, render_email_html, save_markdown_digest
+
+
+def test_deduplicate_items():
+    items = [
+        NewsItem(
+            title="Attention Is All You Need",
+            url="https://arxiv.org/abs/1706.03762",
+            source="arXiv",
+            category=SourceCategory.RESEARCH_PAPER,
+        ),
+        NewsItem(
+            title="Attention is all you need!",
+            url="https://arxiv.org/abs/1706.03762/",
+            source="Hugging Face",
+            category=SourceCategory.RESEARCH_PAPER,
+        ),
+        NewsItem(
+            title="Scaling Test-Time Compute",
+            url="https://huggingface.co/papers/2408.03314",
+            source="Hugging Face",
+            category=SourceCategory.RESEARCH_PAPER,
+        ),
+    ]
+    deduped = deduplicate_items(items)
+    assert len(deduped) == 2
+    assert deduped[0].title == "Attention Is All You Need"
+    assert deduped[1].title == "Scaling Test-Time Compute"
+
+
+def test_build_synthesis_prompt_and_fallback():
+    items = [
+        NewsItem(
+            title="DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via RL",
+            url="https://arxiv.org/abs/2501.12948",
+            source="arXiv",
+            category=SourceCategory.RESEARCH_PAPER,
+            summary="Demonstrates pure reinforcement learning for reasoning models.",
+            score=420,
+        )
+    ]
+    prompt = build_synthesis_prompt(items, ["Reasoning Models", "RLHF"], "2026-11-06")
+    assert "DeepSeek-R1" in prompt
+    assert "Reasoning Models" in prompt
+    assert "Concept of the Day" in prompt
+
+    fallback = build_fallback_markdown(
+        items=items,
+        focus_topics=["Reasoning Models"],
+        date_str="2026-11-06",
+        breakdown={"arXiv": 1},
+    )
+    assert "DeepSeek-R1" in fallback
+    assert "https://arxiv.org/abs/2501.12948" in fallback
+
+
+def test_telegram_chunk_text():
+    text = "Paragraph 1\n\n" * 400
+    chunks = chunk_text(text, max_chars=1000)
+    assert len(chunks) > 1
+    assert all(len(c) <= 1000 for c in chunks)
+
+
+def test_save_markdown_and_render_html(tmp_path: Path):
+    md = "# Daily Digest\n\n- **Paper 1**: Great breakthrough."
+    ts = datetime(2026, 11, 6, 17, 30)
+    saved = save_markdown_digest(md, tmp_path, timestamp=ts)
+    assert saved.exists()
+    assert (tmp_path / "latest.md").exists()
+    assert saved.read_text(encoding="utf-8") == md
+
+    html = render_email_html(md, title="Daily Digest")
+    assert "<h1>Daily Digest</h1>" in html
+    assert "<strong>Paper 1</strong>" in html
