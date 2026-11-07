@@ -26,8 +26,9 @@ SHARED_CSS_AND_THEME_JS = """
       --accent-soft: rgba(15, 118, 110, 0.10);
       --accent-warm: #B45309;
       --accent-warm-soft: rgba(180, 83, 9, 0.10);
-      --x-accent: #1D4ED8;
-      --x-bg: rgba(29, 78, 216, 0.06);
+      --x-accent: #1D9BF0;
+      --x-card-bg: #FCFBF8;
+      --x-border: #D6D0C4;
       --gradient: linear-gradient(135deg, #0F766E 0%, #3B82F6 55%, #D97706 100%);
       --shadow: 0 6px 24px -4px rgba(34, 38, 35, 0.06), 0 2px 6px -1px rgba(34, 38, 35, 0.04);
       --font-body: 'Literata', Georgia, serif;
@@ -51,8 +52,9 @@ SHARED_CSS_AND_THEME_JS = """
       --accent-soft: rgba(154, 52, 18, 0.10);
       --accent-warm: #0F766E;
       --accent-warm-soft: rgba(15, 118, 110, 0.10);
-      --x-accent: #7C2D12;
-      --x-bg: rgba(124, 45, 18, 0.07);
+      --x-accent: #0284C7;
+      --x-card-bg: #FDF8EC;
+      --x-border: #D8C8AE;
       --gradient: linear-gradient(135deg, #9A3412 0%, #D97706 55%, #0F766E 100%);
       --shadow: 0 6px 24px -4px rgba(44, 34, 30, 0.07);
     }
@@ -71,8 +73,9 @@ SHARED_CSS_AND_THEME_JS = """
       --accent-soft: rgba(94, 234, 212, 0.12);
       --accent-warm: #FBBF24;
       --accent-warm-soft: rgba(251, 191, 36, 0.12);
-      --x-accent: #60A5FA;
-      --x-bg: rgba(96, 165, 250, 0.10);
+      --x-accent: #38BDF8;
+      --x-card-bg: #161B24;
+      --x-border: #2E3A4C;
       --gradient: linear-gradient(135deg, #2DD4BF 0%, #818CF8 55%, #FBBF24 100%);
       --shadow: 0 10px 30px -6px rgba(0, 0, 0, 0.5);
     }
@@ -108,7 +111,7 @@ SHARED_CSS_AND_THEME_JS = """
     }
 
     .container {
-      max-width: 880px;
+      max-width: 900px;
       margin: 0 auto;
     }
 
@@ -201,7 +204,6 @@ SHARED_CSS_AND_THEME_JS = """
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
 
-    /* Quick Jump Bar inside Digest */
     .jump-bar {
       display: flex;
       flex-wrap: wrap;
@@ -273,11 +275,141 @@ SHARED_CSS_AND_THEME_JS = """
       box-shadow: var(--shadow);
     }
     .section-panel.x-panel {
-      border-left: 5px solid var(--x-accent);
-      background: var(--bg-elevated);
+      border-top: 4px solid var(--x-accent);
     }
     .section-panel.podcast-panel {
-      border-left: 5px solid var(--accent-warm);
+      border-top: 4px solid var(--accent-warm);
+    }
+
+    /* Authentic X / Twitter Post Snippet Cards */
+    .x-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 16px;
+      margin: 18px 0 10px;
+    }
+    .x-tweet-card {
+      background: var(--x-card-bg);
+      border: 1px solid var(--x-border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-family: var(--font-sans);
+      transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+    .x-tweet-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--x-accent);
+      box-shadow: var(--shadow);
+    }
+    .x-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .x-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .x-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--gradient);
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 0.88rem;
+      font-family: var(--font-mono);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .x-name-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .x-verified {
+      color: var(--x-accent);
+      font-size: 0.88rem;
+    }
+    .x-handle {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+    .x-logo {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-decoration: none !important;
+      line-height: 1;
+    }
+    .x-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 8px;
+      line-height: 1.4;
+    }
+    .x-title a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .x-title a:hover {
+      color: var(--x-accent);
+      text-decoration: underline;
+    }
+    .x-body {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.58;
+      margin: 0 0 14px;
+    }
+    .x-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      font-size: 0.76rem;
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+    }
+    .x-metrics {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .x-metric-pill {
+      background: var(--bg-card-inner);
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-weight: 600;
+    }
+    .x-links {
+      display: inline-flex;
+      gap: 10px;
+      font-weight: 700;
+    }
+    .x-links a {
+      color: var(--x-accent);
+      text-decoration: none;
+    }
+    .x-links a:hover {
+      text-decoration: underline;
     }
 
     h1, h2 {
@@ -445,7 +577,7 @@ SHARED_CSS_AND_THEME_JS = """
 
     @media (max-width: 640px) {
       .card, .hero, .section-panel { padding: 22px 18px; }
-      .grid { grid-template-columns: 1fr; }
+      .grid, .x-grid { grid-template-columns: 1fr; }
       h1 { font-size: 1.6rem; }
       .top-nav { position: static; }
     }
@@ -503,7 +635,6 @@ SHARED_CSS_AND_THEME_JS = """
 
     window.addEventListener('DOMContentLoaded', () => {
       updateToolbarState();
-      // Add anchor IDs to h2 sections for quick jumping
       document.querySelectorAll('h2').forEach(h => {
         const text = h.textContent.toLowerCase();
         if (text.includes('tl;dr') || text.includes('executive')) h.id = 'tldr';
@@ -577,15 +708,131 @@ def _extract_section_markdown(markdown_text: str, section_keyword: str) -> str:
     return "\n".join(collected).strip()
 
 
+def _render_x_cards_html(x_section_md: str) -> str:
+    """Parse X.com Markdown bullet items and render them as stylized Twitter/X Snippet Cards."""
+    if not x_section_md.strip():
+        return ""
+
+    cards_html: List[str] = []
+    lines = [ln for ln in x_section_md.splitlines() if ln.strip()]
+
+    idx = 0
+    while idx < len(lines):
+        line = lines[idx].strip()
+        if line.startswith("- **["):
+            m = re.match(r"^-\s+\*\*\[([^\]]+)\]\(([^)]+)\)\*\*(.*)$", line)
+            title = m.group(1) if m else line
+            url = m.group(2) if m else "#"
+            meta_tail = m.group(3) if m else ""
+
+            desc = ""
+            if idx + 1 < len(lines) and not lines[idx + 1].strip().startswith("- **["):
+                desc = lines[idx + 1].strip().lstrip("- ").strip()
+                desc = re.sub(r"^\*\*[^*]+:\*\*\s*", "", desc)
+                desc = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", desc)
+                desc = re.sub(r"`([^`]+)`", r"<code>\1</code>", desc)
+                idx += 1
+
+            # Extract handle from URL or title
+            handle_match = re.search(r"(?:twitter\.com|x\.com)/([A-Za-z0-9_]+)", url)
+            title_handle = re.search(r"@([A-Za-z0-9_]+)", title)
+            if handle_match:
+                handle = f"@{handle_match.group(1)}"
+            elif title_handle:
+                handle = f"@{title_handle.group(1)}"
+            elif "smol.ai" in url or "AINews" in meta_tail:
+                handle = "@swyx · AINews"
+            else:
+                handle = "@AI_Pulse"
+
+            clean_title = re.sub(r"\s*\(@[A-Za-z0-9_]+\s+on\s+X\)", "", title)
+            initials = "".join(ch for ch in handle if ch.isalnum())[:2].upper() or "AI"
+            author_name = (
+                "AINews X Recap"
+                if "smol.ai" in url
+                else (handle.lstrip("@") if handle != "@AI_Pulse" else "AI Researcher Pulse")
+            )
+
+            # Extract HN link & metrics if present
+            hn_match = re.search(r"\[(HN Discussion)\]\(([^)]+)\)", meta_tail)
+            hn_url = hn_match.group(2) if hn_match else ""
+            pts_match = re.search(r"⬆️\s*([0-9,]+\s*pts)", meta_tail)
+            pts_text = f"❤️ {pts_match.group(1)}" if pts_match else "🔥 Trending on X"
+            comments_match = re.search(r"([0-9,]+\s*comments)", meta_tail)
+            comments_text = f"💬 {comments_match.group(1)}" if comments_match else ""
+
+            metric_pills = f'<span class="x-metric-pill">{pts_text}</span>'
+            if comments_text:
+                metric_pills += f'<span class="x-metric-pill">{comments_text}</span>'
+
+            hn_link_html = (
+                f'<a href="{hn_url}" target="_blank" rel="noopener">HN Thread ↗</a>'
+                if hn_url
+                else ""
+            )
+
+            cards_html.append(
+                f"""
+                <article class="x-tweet-card">
+                  <div>
+                    <div class="x-header">
+                      <div class="x-author">
+                        <div class="x-avatar">{initials}</div>
+                        <div>
+                          <div class="x-name-row">
+                            <span>{author_name}</span>
+                            <span class="x-verified" title="Verified AI Thread">✔</span>
+                          </div>
+                          <div class="x-handle">{handle}</div>
+                        </div>
+                      </div>
+                      <a class="x-logo" href="{url}" target="_blank" rel="noopener" title="Open on X">𝕏</a>
+                    </div>
+                    <h4 class="x-title"><a href="{url}" target="_blank" rel="noopener">“{clean_title}”</a></h4>
+                    <p class="x-body">{desc}</p>
+                  </div>
+                  <div class="x-footer">
+                    <div class="x-metrics">{metric_pills}</div>
+                    <div class="x-links">
+                      {hn_link_html}
+                      <a href="{url}" target="_blank" rel="noopener">Post on 𝕏 ↗</a>
+                    </div>
+                  </div>
+                </article>
+                """
+            )
+        idx += 1
+
+    if not cards_html:
+        return markdown.markdown(x_section_md, extensions=["extra", "sane_lists", "nl2br"])
+
+    return f'<div class="x-grid">{"".join(cards_html)}</div>'
+
+
+def _replace_x_section_with_cards(markdown_content: str) -> str:
+    """Replace the raw `## 🔥 Hot on X.com` markdown list with styled Twitter/X Snippet Cards before rendering."""
+    x_md = _extract_section_markdown(markdown_content, "X.com")
+    if not x_md:
+        return markdown_content
+
+    x_cards_html = _render_x_cards_html(x_md)
+    pattern = re.compile(
+        r"(##\s+🔥\s+Hot on X\.com[^\n]*\n)(.*?)(?=\n---\n|\n##\s+|\Z)",
+        re.DOTALL,
+    )
+    return pattern.sub(rf"\1\n{x_cards_html}\n", markdown_content)
+
+
 def _render_daily_digest_html(
     markdown_content: str,
     title: str,
     current_date: str,
     archive_dates: List[str],
 ) -> str:
-    """Render a daily digest page (`YYYY-MM-DD.html`) with quick jump links and eye-friendly controls."""
+    """Render a daily digest page (`YYYY-MM-DD.html`) with stylized X Snippet Cards and eye-friendly controls."""
+    enriched_md = _replace_x_section_with_cards(markdown_content)
     body_html = markdown.markdown(
-        markdown_content,
+        enriched_md,
         extensions=["extra", "sane_lists", "nl2br"],
     )
 
@@ -620,8 +867,8 @@ def _render_daily_digest_html(
       <span class="jump-label">Jump to:</span>
       <a class="pill-link" href="#tldr">⚡ TL;DR</a>
       <a class="pill-link" href="#concept">🧠 Concept Deep-Dive</a>
-      <a class="pill-link" href="#x-pulse">🔥 Hot on X.com</a>
       <a class="pill-link" href="#top10">🏆 Top 10 Ranked</a>
+      <a class="pill-link" href="#x-pulse">🔥 Hot on 𝕏</a>
       <a class="pill-link" href="#podcasts">🎧 AI Podcasts</a>
     </div>
 
@@ -639,7 +886,7 @@ def _render_daily_digest_html(
 def _render_index_portal_html(
     archive_map: Dict[str, str],
 ) -> str:
-    """Render `docs/index.html` with Top 10 previews, 🔥 Hot on X.com highlights, 🎧 Podcasts, and Daily Editions."""
+    """Render `docs/index.html` with Top 10 previews, stylized 𝕏 Snippet Cards, 🎧 Podcasts, and Daily Editions."""
     sorted_dates = sorted(archive_map.keys(), reverse=True)
     latest_date = sorted_dates[0] if sorted_dates else ""
     latest_md = archive_map.get(latest_date, "")
@@ -651,11 +898,7 @@ def _render_index_portal_html(
     )
 
     x_pulse_md = _extract_section_markdown(latest_md, "X.com")
-    x_pulse_html = (
-        markdown.markdown(x_pulse_md, extensions=["extra", "sane_lists", "nl2br"])
-        if x_pulse_md
-        else "<p>No X.com highlights extracted for this edition.</p>"
-    )
+    x_pulse_html = _render_x_cards_html(x_pulse_md) or "<p>No X.com highlights extracted for this edition.</p>"
 
     podcasts_md = _extract_section_markdown(latest_md, "Podcast")
     podcasts_html = (
@@ -708,7 +951,7 @@ def _render_index_portal_html(
       </a>
       <div class="nav-actions">
         <a class="pill-link active" href="index.html">All Editions ({len(sorted_dates)})</a>
-        <a class="pill-link" href="#x-highlights">🔥 X.com Pulse</a>
+        <a class="pill-link" href="#x-highlights">🔥 Hot on 𝕏</a>
         <a class="pill-link" href="#podcast-highlights">🎧 Podcasts</a>
         <a class="pill-link" href="{latest_date}.html">Latest ({latest_date})</a>
         {COMFORT_CONTROLS_HTML}
@@ -717,9 +960,9 @@ def _render_index_portal_html(
 
     <section class="hero">
       <span class="hero-badge">🧠 Eye-Friendly Daily AI Reader</span>
-      <h1>Generative AI Daily Top 10, X Pulse &amp; Audio Hub</h1>
+      <h1>Generative AI Daily Top 10, 𝕏 Pulse &amp; Audio Hub</h1>
       <p style="color:var(--text-secondary);font-size:1.02rem;margin:0 0 18px;">
-        Signal over noise: Every edition distills 60+ research papers (Hugging Face &amp; arXiv), AI lab blogs (OpenAI, Google, DeepMind, Anthropic), Hacker News, r/LocalLLaMA, <strong>viral X.com threads</strong>, and <strong>AI Podcasts</strong> into a calm, <strong>5-minute Top 10 read</strong>.
+        Signal over noise: Every edition distills 60+ research papers (Hugging Face &amp; arXiv), AI lab blogs (OpenAI, Google, DeepMind, Anthropic), Hacker News, r/LocalLLaMA, <strong>viral 𝕏 threads</strong>, and <strong>AI Podcasts</strong> into a calm, <strong>5-minute Top 10 read</strong>.
       </p>
       <div style="background:var(--bg-card-inner);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:12px;padding:16px 22px;margin-bottom:22px;font-family:var(--font-sans);">
         <div style="font-weight:700;font-size:0.9rem;margin-bottom:8px;color:var(--accent);">🏆 Top Headlines in Latest Edition ({latest_date}):</div>
@@ -732,7 +975,7 @@ def _render_index_portal_html(
 
     <section id="x-highlights" class="section-panel x-panel">
       <span class="hero-badge">🔥 Live AI Social Pulse ({latest_date})</span>
-      <h2 style="margin-top:4px;">Hot on X.com (AI Twitter Highlights)</h2>
+      <h2 style="margin-top:4px;margin-bottom:6px;">Hot on 𝕏 (AI Twitter Highlights)</h2>
       {x_pulse_html}
     </section>
 
