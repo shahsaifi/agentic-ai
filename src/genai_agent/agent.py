@@ -82,50 +82,83 @@ Propose 1 concrete hands-on mini-exercise or 2 thought-provoking architectural q
 """
 
 
-def build_fallback_markdown(
-    items: List[NewsItem],
-    focus_topics: List[str],
-    date_str: str,
-    breakdown: Dict[str, int],
-) -> str:
-    """Generate a clean, structured Markdown digest without calling Gemini (for --collect-only or dry runs)."""
-    lines = [
-        f"# 🚀 Generative AI Raw News & Papers Digest — {date_str}",
-        "",
-        f"> **Focus Topics:** {', '.join(focus_topics)}",
-        f"> **Total Items Collected:** {len(items)} (*Collect-Only Mode — set `GEMINI_API_KEY` for AI synthesis & Concept Deep-Dive*)",
-        "",
-    ]
-
-    by_category: Dict[SourceCategory, List[NewsItem]] = {
+def rank_top_items(items: List[NewsItem], top_k: int = 10) -> List[NewsItem]:
+    """Select the top K items balancing reach (upvotes/points) and content substance across categories."""
+    by_cat: Dict[SourceCategory, List[NewsItem]] = {
         SourceCategory.RESEARCH_PAPER: [],
         SourceCategory.COMPANY_BLOG: [],
         SourceCategory.COMMUNITY_NEWS: [],
         SourceCategory.WEB_SEARCH: [],
     }
     for item in items:
-        by_category[item.category].append(item)
+        by_cat[item.category].append(item)
 
-    section_titles = {
-        SourceCategory.RESEARCH_PAPER: "## 📄 Research Papers (Hugging Face & arXiv)",
-        SourceCategory.COMPANY_BLOG: "## 🏢 AI Lab & Engineering Blogs",
-        SourceCategory.COMMUNITY_NEWS: "## 🛠️ Community Pulse (Hacker News & Reddit)",
-        SourceCategory.WEB_SEARCH: "## 🌐 Web News Coverage",
+    # Sort each category by engagement score + summary richness
+    for cat in by_cat:
+        by_cat[cat].sort(
+            key=lambda x: ((x.score or 0), len(x.summary or "")),
+            reverse=True,
+        )
+
+    # Pick a balanced Top 10: 4 top papers, 3 top lab blogs, 3 top high-reach community/web stories
+    quotas = [
+        (SourceCategory.COMMUNITY_NEWS, 4),
+        (SourceCategory.RESEARCH_PAPER, 4),
+        (SourceCategory.COMPANY_BLOG, 2),
+    ]
+    selected: List[NewsItem] = []
+    used_urls = set()
+
+    for cat, quota in quotas:
+        for item in by_cat[cat][:quota]:
+            selected.append(item)
+            used_urls.add(item.url)
+
+    # Fill any remaining slots up to top_k by highest overall score
+    if len(selected) < top_k:
+        remaining = [i for i in items if i.url not in used_urls]
+        remaining.sort(key=lambda x: ((x.score or 0), len(x.summary or "")), reverse=True)
+        selected.extend(remaining[: top_k - len(selected)])
+
+    return selected[:top_k]
+
+
+def build_fallback_markdown(
+    items: List[NewsItem],
+    focus_topics: List[str],
+    date_str: str,
+    breakdown: Dict[str, int],
+) -> str:
+    """Generate a concise Top 10 Markdown digest ranked by content substance and community reach."""
+    top_items = rank_top_items(items, top_k=10)
+    lines = [
+        f"# 🚀 Top 10 Generative AI Learning & News Digest — {date_str}",
+        "",
+        f"> **Focus Topics:** {', '.join(focus_topics)}  ",
+        f"> **Curated:** Top {len(top_items)} of {len(items)} items ranked by technical substance & community reach",
+        "",
+        "## 🏆 Top 10 Must-Read Highlights Today",
+        "",
+    ]
+
+    cat_badges = {
+        SourceCategory.RESEARCH_PAPER: "📄 Research Paper",
+        SourceCategory.COMPANY_BLOG: "🏢 Official Lab Blog",
+        SourceCategory.COMMUNITY_NEWS: "🔥 High-Reach Community",
+        SourceCategory.WEB_SEARCH: "🌐 Industry News",
     }
 
-    for cat, header in section_titles.items():
-        cat_items = by_category.get(cat, [])
-        if not cat_items:
-            continue
-        lines.append(header)
-        lines.append("")
-        for item in cat_items:
-            score_badge = f" (⬆️ {item.score})" if item.score else ""
-            pub_badge = f" — *{item.published_at}*" if item.published_at else ""
-            lines.append(f"- **[{item.title}]({item.url})** [{item.source}]{score_badge}{pub_badge}")
-            if item.summary:
-                short_sum = item.summary[:280] + ("..." if len(item.summary) > 280 else "")
-                lines.append(f"  - {short_sum}")
+    for idx, item in enumerate(top_items, start=1):
+        badge = cat_badges.get(item.category, "📌 News")
+        score_badge = f" · **⬆️ {item.score} pts/upvotes**" if item.score else ""
+        pub_badge = f" · *{item.published_at}*" if item.published_at else ""
+        lines.append(
+            f"### {idx}. [{item.title}]({item.url})\n"
+            f"**{badge}** ({item.source}){score_badge}{pub_badge}"
+        )
+        if item.summary:
+            short_sum = item.summary[:320] + ("..." if len(item.summary) > 320 else "")
+            lines.append(f"- **Takeaway:** {short_sum}")
         lines.append("")
 
     return "\n".join(lines)

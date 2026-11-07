@@ -72,133 +72,66 @@
       <div><a href="2026-11-07.html" style="display:inline-block;padding:6px 12px;margin:4px;border-radius:6px;text-decoration:none;font-size:13px;background:#f3f4f6;color:#374151;">2026-11-07</a><a href="2026-11-06.html" style="display:inline-block;padding:6px 12px;margin:4px;border-radius:6px;text-decoration:none;font-size:13px;background:#2563eb;color:#ffffff;font-weight:600;">2026-11-06</a></div>
     </div>
     <main class="card">
-      <h1>🚀 Generative AI Raw News &amp; Papers Digest — 2026-11-06</h1>
+      <h1>🚀 Top 10 Generative AI Learning &amp; News Digest — 2026-11-06</h1>
 <blockquote>
-<p><strong>Focus Topics:</strong> LLMs, AI Agents, RAG, Multimodal AI, Reasoning Models, Post-Training &amp; RLHF, Inference Optimization<br />
-<strong>Total Items Collected:</strong> 56 (<em>Collect-Only Mode — set <code>GEMINI_API_KEY</code> for AI synthesis &amp; Concept Deep-Dive</em>)</p>
+<p><strong>Curated from 56 live items</strong> across Hugging Face Daily Papers, arXiv, OpenAI/Google/DeepMind Blogs, Hacker News, and r/LocalLLaMA — ranked by <strong>technical substance</strong> and <strong>community reach</strong>.</p>
 </blockquote>
-<h2>📄 Research Papers (Hugging Face &amp; arXiv)</h2>
+<hr />
+<h2>⚡ Executive TL;DR (30-Second Read)</h2>
+<ol>
+<li><strong>Frontier Models &amp; Cascading Cost Optimization</strong>: Google's <strong>Gemini 4 Carbon</strong> took #1 on the Artificial Analysis Intelligence Index v5, while <strong>Gemini Omni 1.2 Flash</strong> arrived for long-clip multimodal tasks. Meanwhile, engineers showed how routing a small model to ask a frontier model only when uncertain achieves <strong>frontier accuracy at 4× lower cost</strong>.</li>
+<li><strong>Agent Harnesses Are the New Bottleneck</strong>: Across Lilian Weng's new post, Hugging Face's <strong>Harness-S</strong> paper, and the r/LocalLLaMA <strong>Harness Leaderboard</strong> (Terminal-Bench 2.1), the biggest gains in coding/research agents now come from <strong>harness design</strong> (how tools, memory, and retries are structured around the model).</li>
+<li><strong>Agent Privacy &amp; Security Reckoning</strong>: The top-voted engineering stories on Hacker News this week center on <strong>agent data leakage</strong> (Claude Code leaking email addresses, personal chat history training policies, and OpenAI's sandboxing/privilege reduction in <em>A Thousand Fewer Paths to Root</em>).</li>
+</ol>
+<hr />
+<h2>🧠 Concept of the Day: "Agent Harness Engineering" &amp; Cascaded Routing</h2>
 <ul>
-<li><strong><a href="https://huggingface.co/papers/2611.06728">Turns Matter: Advancing Streaming Video RL via Turn-Level Credit</a></strong> [Hugging Face Daily Papers] (⬆️ 126) — <em>2026-11-03</em></li>
-<li>Streaming video understanding requires models to repeatedly decide whether to respond or continue observing. Recently, Group Relative Policy Optimization (GRPO) has been applied to this setting, with existing approaches emphasizing reward design while retaining a single trajector...</li>
-<li><strong><a href="https://huggingface.co/papers/2611.02075">Decoupled Predictive Decision Making: A Shared Conditional Predictor for Agents</a></strong> [Hugging Face Daily Papers] (⬆️ 112) — <em>2026-10-31</em></li>
-<li>Agent decisions depend on empirical relationships that deployment observations reveal and task descriptions alone may leave unresolved. We introduce Decoupled Predictive Decision Making (DPDM), an architecture that formulates heterogeneous agent decisions as conditional predictio...</li>
-<li><strong><a href="https://huggingface.co/papers/2611.08449">VFlash: Fast, Accurate Visual Planning via Flash Primitive Decoding</a></strong> [Hugging Face Daily Papers] (⬆️ 56) — <em>2026-11-04</em></li>
-<li>Models for physical AI tasks, such as robotics and autonomous driving, need not reason solely in language. They can use visual plans--points, bounding boxes, and trajectories--to represent spatial goals and anticipate motion. However, autoregressive vision-language models generat...</li>
-<li><strong><a href="https://huggingface.co/papers/2611.06910">FrontierPhysics: Evaluating Agents for End-to-End Physics Research</a></strong> [Hugging Face Daily Papers] (⬆️ 49) — <em>2026-11-03</em></li>
-<li>AI agents are playing an increasingly important role in physics research. However, existing physics benchmarks only evaluate fixed questions, isolated sub-tasks, or paper reproduction with given solutions, and rarely check research quality alongside correctness. We introduce Fron...</li>
-<li><strong><a href="https://huggingface.co/papers/2611.04277">Harness-S: Learning from Sibling Harnesses for Generalizable Agent Training</a></strong> [Hugging Face Daily Papers] (⬆️ 43) — <em>2026-11-02</em></li>
-<li>Harness evolution from a common base exhibits Locality, Complementarity, and Nonstationarity: variants repair different failures, and their utility changes as the policy learns. Rather than seeking a universally superior harness, we introduce Harness-S to selectively rescue failu...</li>
-<li><strong><a href="https://huggingface.co/papers/2611.04408">Halley: A Predictive Control Plane for Optical AI Data Center Networks</a></strong> [Hugging Face Daily Papers] (⬆️ 36) — <em>2026-11-03</em></li>
-<li>A frontier AI model is trained in an AI data center, on tens of thousands of accelerators joined by a dedicated network, and every training step ends with all of them exchanging data at once. Between racks, that network is optical, and each of its four layers, from lasers to swit...</li>
-<li><strong><a href="https://huggingface.co/papers/2611.00883">Random Is Almost Enough? Stable and Low-Cost Benchmark Compression via BestRand</a></strong> [Hugging Face Daily Papers] (⬆️ 35) — <em>2026-10-30</em></li>
-<li>Benchmark compression reduces the often prohibitive time and cost of model evaluation by evaluating models on a small benchmark subset that closely matches full-benchmark results. To quantify estimation error, we derive an accurate analytical approximation to the error distributi...</li>
-<li><strong><a href="https://huggingface.co/papers/2611.06483">What Does Multi-Turn Reinforcement Learning Really Improve in LLM Agents?</a></strong> [Hugging Face Daily Papers] (⬆️ 35) — <em>2026-11-04</em></li>
-<li>While multi-turn agentic reinforcement learning (RL) excels on long-horizon tasks, its performance gains remain highly sensitive to interaction constraints. Evaluating across sampling breadth K and interaction depth T via Pass@(K,T), we show that trajectory-level RL advantages de...</li>
-<li><strong><a href="https://huggingface.co/papers/2611.06741">TailSteer: Trajectory-Tail Steering for Drift-Resistant Multi-turn Image Editing</a></strong> [Hugging Face Daily Papers] (⬆️ 28) — <em>2026-11-03</em></li>
-<li>Strong single-turn editing performance does not guarantee reliable multi-turn interaction: as edited outputs are repeatedly reused, small unintended changes can accumulate into severe visual drift. This long-term drift is often mitigated through training on multi-turn data or cro...</li>
-<li><strong><a href="https://huggingface.co/papers/2611.07392">WeLM-Image: A Unified Image Generation Model towards Visual Intelligence</a></strong> [Hugging Face Daily Papers] (⬆️ 28) — <em>2026-11-04</em></li>
-<li>We present WeLM-Image, a unified image foundation model that integrates multimodal understanding into text-to-image generation, instruction-guided editing, and multi-reference synthesis. Designed for single-GPU deployment in WeChat's large-scale consumer applications, the model p...</li>
-<li><strong><a href="http://arxiv.org/abs/2611.08483v1">SwarmEvolve: Latent Agent Swarms for Evolutionary Discovery and Optimization</a></strong> [arXiv (cs.CL / cs.AI)] — <em>2026-11-05</em></li>
-<li>LLM-guided evolutionary search uses AI agents to improve programs for mathematical and computational problems by iteratively refining solutions and combining high-scoring methods. However, the process is often slow because the LLM generates a long textual chain of thought for eac...</li>
-<li><strong><a href="http://arxiv.org/abs/2611.08433v1">MedGraph: Maintaining Patient State with Graph Memory for Long-Term Medical Dialogue</a></strong> [arXiv (cs.CL / cs.AI)] — <em>2026-11-05</em></li>
-<li>LLM-based medical assistants that follow a patient across visits need a memory that keeps the patient's clinical state correct as it changes. We examine the errors of five memory systems on longitudinal medical dialogue and find three recurring causes: the retrieved evidence give...</li>
-<li><strong><a href="http://arxiv.org/abs/2611.08428v1">The Power of Meta Access in the Software of the Future --- Demonstrated on LLM Chat UIs and Chat AI</a></strong> [arXiv (cs.CL / cs.AI)] — <em>2026-11-05</em></li>
-<li>Chat remains the default surface for many large language model (LLM) tasks, even as agentic tools such as OpenCode excel at coding and automation. Yet the model sees the current dialogue but not the workspace around it. We explore meta access---giving the assistant a structured, ...</li>
-<li><strong><a href="http://arxiv.org/abs/2611.08417v1">Benchmarks as Software: Terminal-Bench and the Case for Continuous Benchmarks</a></strong> [arXiv (cs.CL / cs.AI)] — <em>2026-11-05</em></li>
-<li>Coding agents are among the most economically consequential deployments of LLMs to date, making reliable evaluation increasingly important. Yet even benchmarks that are carefully validated at release can become stale. As models improve, they can discover valid solutions that exis...</li>
-<li><strong><a href="http://arxiv.org/abs/2611.08383v1">FedReason: Large Language Models as Weight-Space Meta-Aggregators for Heterogeneous Federated Learning</a></strong> [arXiv (cs.CL / cs.AI)] — <em>2026-11-05</em></li>
-<li>Federated learning servers combine client models with a fixed aggregation rule, and each rule in common use is designed for one kind of heterogeneity. We study whether a large language model (LLM) that inspects the client models can choose the rule itself, without any training on...</li>
-<li><strong><a href="http://arxiv.org/abs/2611.08341v1">Enhancing Local and Global Structure in Compressed AI Agent Memory</a></strong> [arXiv (cs.CL / cs.AI)] — <em>2026-11-05</em></li>
-<li>AI agents store text as embedding vectors and compress them at scale. A compression is accepted when each item's nearest neighbors survive, but agents also consolidate, delete, and compare memories, tasks that depend on which items lie far apart. We evaluate both ends with two la...</li>
-<li><strong><a href="http://arxiv.org/abs/2611.08334v1">Cultural Adaptation within Repeated Social Interactions</a></strong> [arXiv (cs.CL / cs.AI)] — <em>2026-11-05</em></li>
-<li>Much of human culture is tacit and is typically learned through situated social interaction. As LLMs are deployed as interactive agents across diverse communities, assessing their cultural competence demands moving beyond existing question-answering approaches, shifting from what...</li>
-<li><strong><a href="http://arxiv.org/abs/2611.08315v1">Benchmarking Large Language Models on Heterogeneous Cognitive and Biomedical Knowledge Graphs: The Role of Graph Grounding in Multi-Hop Reasoning and Hallucination Mitigation</a></strong> [arXiv (cs.CL / cs.AI)] — <em>2026-11-05</em></li>
-<li>Large language models (LLMs) are increasingly used in biomedical and cognitive neuroscience, but their ability to reason reliably over heterogeneous knowledge graphs (KGs) remains unclear. We benchmark five LLMs (GPT-5.1, Gemini 2.0 Pro, Llama 3, Qwen, and BioGPT) across five KGs...</li>
-<li><strong><a href="http://arxiv.org/abs/2611.08311v1">LLM-Assisted Label Noise Correction for EEG-Based Sleep Stage Classification</a></strong> [arXiv (cs.CL / cs.AI)] — <em>2026-11-05</em></li>
-<li>Automatic sleep stage classification from electroencephalography (EEG) signals is a critical task in clinical sleep medicine. While deep learning models have shown promising results in this domain, their performance is fundamentally constrained by the quality of training labels, ...</li>
-<li><strong><a href="http://arxiv.org/abs/2611.08308v1">RM-VLM: From Natural-Language Task Descriptions to Vision-Grounded Reward Machines</a></strong> [arXiv (cs.CL / cs.AI)] — <em>2026-11-05</em></li>
-<li>Reward machines (RMs) have been proposed as a reward formulation in reinforcement learning (RL) to capture non-Markovian tasks where credit assignment depends on history. By representing reward functions as automata, RMs expose the task's temporal structure and allow such rewards...</li>
+<li><strong>What is an Agent Harness?</strong> A model is just weights predicting tokens; the <strong>harness</strong> is the runtime loop around it—system prompt, tool definitions, context compaction, error recovery, and verification checks.</li>
+<li><strong>Key Insight from Today's Research (<a href="https://huggingface.co/papers/2611.04277">Harness-S</a> &amp; <a href="https://lilianweng.github.io/posts/2026-07-04-harness/">Lilian Weng</a>)</strong>: Different agent harnesses fail on <em>different</em> tasks (locality &amp; complementarity). Instead of searching for one static prompt/harness, <strong>Harness-S</strong> trains policies across "sibling harnesses" so the agent learns to recover from diverse failure modes.</li>
+<li><strong>Practical Engineering Pattern (<a href="https://hightouch.com/blog/llm-judges-identity-resolution">Cascaded Judge Routing</a>)</strong>: Pair a fast, cheap model for 85% of routine decisions with a confidence/uncertainty trigger that escalates hard edge cases to a frontier reasoning model—cutting production inference costs by <strong>75% (4×)</strong> without losing accuracy.</li>
 </ul>
-<h2>🏢 AI Lab &amp; Engineering Blogs</h2>
-<ul>
-<li><strong><a href="https://openai.com/index/australian-universities-ai-native-graduates">Australian universities are creating AI-native graduates</a></strong> [OpenAI News] — <em>Thu, 05 Nov 2026</em></li>
-<li>Australian universities are expanding access to ChatGPT and bringing AI into teaching and learning to prepare students for an AI-enabled workforce.</li>
-<li><strong><a href="https://openai.com/index/cultfit-builds-with-codex">Cult.fit builds operational muscle with Codex</a></strong> [OpenAI News] — <em>Thu, 05 Nov 2026</em></li>
-<li>Cult.fit is using Codex to help teams across functions build tools, move faster, and change how work gets done.</li>
-<li><strong><a href="https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemini-omni-1-2-flash/">Gemini Omni 1.2 Flash: Fast and cost-effective with longer clips</a></strong> [Google AI Blog] — <em>Thu, 05 Nov 2026</em></li>
-<li>Text "Gemini Introducing Gemini Omni 1.2 Flash" surroudned by images of a beehive, animals in conversation, a squid, and a woman walking down a street</li>
-<li><strong><a href="https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-october-2026/">The latest AI news we announced in October 2026</a></strong> [Google AI Blog] — <em>Mon, 02 Nov 2026</em></li>
-<li>Animated carousel of images from AI posts in October</li>
-<li><strong><a href="https://deepmind.google/blog/agentic-cheminformatics-with-google-antigravity/">Agentic cheminformatics with Google Antigravity</a></strong> [Google DeepMind] — <em>Tue, 03 Nov 2026</em></li>
-<li>Learn how Google Antigravity and our Cheminformatics Skills accelerate drug discovery workflows, search compounds, and propose novel rigidified macrocycles.</li>
-<li><strong><a href="https://huggingface.co/blog/nvidia/cosmos-interactive-world-simulation">New NVIDIA Cosmos 3 Open Models for Interactive World Simulation</a></strong> [Hugging Face Blog] — <em>Thu, 05 Nov 2026</em></li>
-<li><strong><a href="https://huggingface.co/blog/phonon-tts">A Closer Look at Phonon TTS. Launching High-Quality On-Device Speech That Tops the Benchmarks.</a></strong> [Hugging Face Blog] — <em>Thu, 05 Nov 2026</em></li>
-<li><strong><a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/">Qwen 3.8 27B on my laptop can interpret model weights, too</a></strong> [Simon Willison (AI)] — <em>2026-11-03T16:29</em></li>
-<li>Yesterday's hot paper was Sparks of Weight-Space Programming: LLMs can natively read &amp; write neural network weights by Rikiya Takehi, Jayden Teoh, Alex Zhang, and Omar Khattab. The paper (OK, the authors classify is as a "blog post", but it's paper-shaped) found that frontier...</li>
-<li><strong><a href="https://simonwillison.net/2026/Nov/2/llm/">llm 0.37</a></strong> [Simon Willison (AI)] — <em>2026-11-02T23:49</em></li>
-<li>Release: llm 0.37 There's a lot of stuff in this new release of my LLM CLI tool and Python library, representing around two months of accumulated features and fixes. I added gpt-6.1-sol and gpt-6.1-terra , plus a new llm openai endpoint add command to make it easier to configure ...</li>
-<li><strong><a href="https://lilianweng.github.io/posts/2026-07-04-harness/">Harness Engineering for Self-Improvement</a></strong> [Lilian Weng Blog] — <em>Sat, 04 Jul 2026</em></li>
-<li>The concept of recursive self-improvement (RSI) dates back to I. J. Good (1965) , where he defined an &ldquo;ultraintelligent machine&rdquo; as a system that can surpass humans in all intellectual activities and design better machines to improve itself. Yudkowsky (2008) used the ...</li>
-<li><strong><a href="https://lilianweng.github.io/posts/2026-06-24-scaling-laws/">Scaling Laws, Carefully</a></strong> [Lilian Weng Blog] — <em>Wed, 24 Jun 2026</em></li>
-<li>Scaling laws are one of the most critical empirical findings in deep learning. The observation is simple in form: the training loss $L$ decreases predictably as we scale up model size $N$, dataset size $D$, and compute $C$, following a power-law curve, which appears as a straight...</li>
-</ul>
-<h2>🛠️ Community Pulse (Hacker News &amp; Reddit)</h2>
-<ul>
-<li><strong><a href="https://deepmind.google/models/gemini/">Gemini 4 Argon</a></strong> [Hacker News] (⬆️ 1467) — <em>2026-10-13</em></li>
-<li>Hacker News discussion (1467 points, 1047 comments). Discussion: https://news.ycombinator.com/item?id=50073879 | See also: Gemini 4 Argon for Robotics - https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=50074869</li>
-<li><strong><a href="https://github.com/anthropics/claude-code/issues/107757">Claude Code sends your email address to websites</a></strong> [Hacker News] (⬆️ 1105) — <em>2026-11-05</em></li>
-<li>Hacker News discussion (1105 points, 340 comments). Discussion: https://news.ycombinator.com/item?id=50385272</li>
-<li><strong><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/">Gemini 4 Carbon</a></strong> [Hacker News] (⬆️ 1019) — <em>2026-10-28</em></li>
-<li>Hacker News discussion (1019 points, 803 comments). Discussion: https://news.ycombinator.com/item?id=50276792</li>
-<li><strong><a href="https://news.ycombinator.com/item?id=50363461">Tell HN: Gemini trains on chat history, even for subscribers (personal accounts)</a></strong> [Hacker News] (⬆️ 716) — <em>2026-11-04</em></li>
-<li>Hacker News discussion (716 points, 190 comments). Discussion: https://news.ycombinator.com/item?id=50363461 | If you have a personal Google AI subscription, all your saved chat history in Gemini can be used for training and there is no way to opt out unless you turn off chat his...</li>
-<li><strong><a href="https://news.ycombinator.com/item?id=50352757">OpenAI seems to be silently re-enabling model training on Codex chats</a></strong> [Hacker News] (⬆️ 526) — <em>2026-11-03</em></li>
-<li>Hacker News discussion (526 points, 162 comments). Discussion: https://news.ycombinator.com/item?id=50352757 | My company is pretty paranoid about leaking IP to the frontier labs through prompts, so we&#x27;ve all been diligent about disabling data sharing in Codex&#x2F;Claude Co...</li>
-<li><strong><a href="https://news.ycombinator.com/item?id=50366117">Ask HN: What's your current AI agentic setup?</a></strong> [Hacker News] (⬆️ 521) — <em>2026-11-04</em></li>
-<li>Hacker News discussion (521 points, 646 comments). Discussion: https://news.ycombinator.com/item?id=50366117 | I&#x27;m curious how people on HN are using AI day to day, and came up with a list of questions I thought could be interesting to know. No need to answer every question ...</li>
-<li><strong><a href="https://hackertv.org">Show HN: HackerTV – HN's most-recommended Youtube videos as 24/7 TV channels</a></strong> [Hacker News] (⬆️ 481) — <em>2026-11-03</em></li>
-<li>Hacker News discussion (481 points, 82 comments). Discussion: https://news.ycombinator.com/item?id=50346755 | I saw HackerTube ( https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=50319510 ) a few days ago, the YouTube videos HN keeps recommending, pulled from 19 years of commen...</li>
-<li><strong><a href="https://openai.com/index/a-thousand-fewer-paths-to-root/">A thousand fewer paths to root</a></strong> [Hacker News] (⬆️ 479) — <em>2026-11-04</em></li>
-<li>Hacker News discussion (479 points, 356 comments). Discussion: https://news.ycombinator.com/item?id=50372929</li>
-<li><strong><a href="https://markblah.github.io/lemmings/">Lemmings CSS Animation</a></strong> [Hacker News] (⬆️ 404) — <em>2026-11-05</em></li>
-<li>Hacker News discussion (404 points, 77 comments). Discussion: https://news.ycombinator.com/item?id=50375354</li>
-<li><strong><a href="https://openai.com/index/introducing-images-2-6/">Images 2.6</a></strong> [Hacker News] (⬆️ 378) — <em>2026-11-04</em></li>
-<li>Hacker News discussion (378 points, 233 comments). Discussion: https://news.ycombinator.com/item?id=50372945</li>
-<li><strong><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xovnaa/maybe_well_get_cheap_ram_for_christmas_after_all/">Maybe we'll get cheap RAM for Christmas after all!</a></strong> [Reddit r/LocalLLaMA] — <em>2026-11-05</em></li>
-<li>&#32; submitted by &#32; /u/keepthepace [link] &#32; [comments]</li>
-<li><strong><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xossr5/zai_chief_scientist_jie_tang_just_revealed_the/">Z.ai chief scientist Jie Tang just revealed the training pipeline behind the upcoming GLM-5.5 (32B, 122B, and 256B)</a></strong> [Reddit r/LocalLLaMA] — <em>2026-11-05</em></li>
-<li>Smaller GLM models are coming! GLM 5.5 will have a 32B model! &#32; submitted by &#32; /u/wapswaps [link] &#32; [comments]</li>
-<li><strong><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xp32od/introducing_inkling_2_small/">Introducing Inkling 2 Small</a></strong> [Reddit r/LocalLLaMA] — <em>2026-11-06</em></li>
-<li>Today we are introducing our second model generation with Inkling 2 Small. It is a Mixture-of-Experts model with 594B total parameters, 17B active , and supports image inputs and variable effort. Inkling 2 Small far surpasses our previous models’ scores on the Artificial Analysis...</li>
-<li><strong><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xp8as6/asking_questions_to_a_05b_model_is_hillarious/">Asking questions to a 0.5b model is hillarious</a></strong> [Reddit r/LocalLLaMA] — <em>2026-11-06</em></li>
-<li>Yes IK it's supposed to be this dumb, but it's still funny (Qwen2 0.5b Q4_K_M) &#32; submitted by &#32; /u/Pro-editor-1105 [link] &#32; [comments]</li>
-<li><strong><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xozbe6/ccore_glb3dcoder_dataset_is_here_3918_rendered/">CCORE GLB-3D-Coder dataset is here: 3,918 rendered and tested examples across 40 domains</a></strong> [Reddit r/LocalLLaMA] — <em>2026-11-06</em></li>
-<li>CCORE GLB-3D-Coder dataset is here: 3,918 rendered and tested examples across 40 domains As promised in my previous posts, I’m releasing the dataset used to train CCORE GLB-3D-Coder , my small 4B model for creating 3D assets with Three.js and GLB export. The dataset contains 3,91...</li>
-</ul>
-<h2>🌐 Web News Coverage</h2>
-<ul>
-<li><strong><a href="https://news.google.com/rss/articles/CBMia0FVX3lxTE1paEJPaGRFN3dnUmc1d2NfNi1KNGhIMUMtUnVaRXJmaEM3VzM0Yk15ZThHVUlFU29xSS0zR2hIYWxNMV9UaWc4MHZuLU9WSzROMFVyUFpZNmdwQ1cxUjctRVdRUjZTd3FyN29F?oc=5">Faster Retrieval for Better, More Efficient RAG - Apple Machine Learning Research</a></strong> [Web Search (Apple Machine Learning Research)] — <em>Thu, 05 Nov 2026</em></li>
-<li>Recent web news coverage via Apple Machine Learning Research.</li>
-<li><strong><a href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxOeHVleEYtNW83b0ZiS2hlSUdVZmhyeFI1QkdDUUhOLTdINkVhNXNuaDl2YW94RjVkd3FOajA0ekQxUFZiOGQzWXlwcXppR3JWWHhJakYwcXlrWVFnRjhSUmlVSjN2alhCek5TOEpDNjJZY0xoMDVUMWRpY0lsTzV4NEZtXzY4bjZwMUFnZENFUmVMMnpvb1Q0UXhIUEJTVWdtdkQtME95RVk2eU1rMFlaclRPei02UENHNHpV?oc=5">AI agents are a ‘bane’ for some website operators, says Cloudflare - The Register</a></strong> [Web Search (The Register)] — <em>Fri, 06 Nov 2026</em></li>
-<li>Recent web news coverage via The Register.</li>
-<li><strong><a href="https://news.google.com/rss/articles/CBMiogFBVV95cUxNU0hGQkJOajZnVUJ2SVpjcmY2R21BU2FaZVIwY1Y0YmtyLVZPRnhYQi1BUWcwSS11cHBFZV9qM1VnS1JYNlMwZ0xBNlNXb25rWDNJaWJFa1BKZk9IZEQ4dHAxYU8yLUlNSEhaWDZIMW9DUFpTaFZLaVpfT25ENkhzeVlST0FZTjd0RDByMTBWZkFyLXpQNEQ3dG15Y0VFeVN5dmc?oc=5">Airbnb CEO says AI agents like Muse and Instinct are barely bringing in bookings: 'I don't see them as a threat' - Business Insider</a></strong> [Web Search (Business Insider)] — <em>Fri, 06 Nov 2026</em></li>
-<li>Recent web news coverage via Business Insider.</li>
-<li><strong><a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxPOUhPd1o2NjVzTG5lNEM0LXNmM1RNaGV5TG84VFh3dU9qR1FScWFVNXdqdTZoMzAzMXNYZ24ta0luYjYzakxjYXpVbU83OHkzNnRiZDUxYnFmTjZWUDZCaUotU3UtWXJPNFhobExXXzFDcjVFVnc5ck0zYTBqUzJWZjgtXzdxakc3LUwzMERaRmdOU2dyMDJvd0ZEMA?oc=5">Streamhouse wants AI agents to know what’s true right now - IBM</a></strong> [Web Search (IBM)] — <em>Fri, 06 Nov 2026</em></li>
-<li>Recent web news coverage via IBM.</li>
-<li><strong><a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPeHNYdk14VHlfNG9JWjFpZWI2WUhYVkRFUm5ua1BIRlVEOHRETnEzajZnRm8yR0ZCY0thZnJvc210ZmdqN3k2UFFQZy1GbmNoeml3dWxDN042Umd3azZSd1d1RGQyU2hRNE0wYUUzamhkVWtUVkozcmhuekE3THVOeEJZMm5taW94SmFXX0p0WjdHdmstUkJlOEFKU3h1b2pRSE1ydEVR?oc=5">Airbnb CEO: Our Specialized AI Agents Will Handle ‘Every Vertical in Travel’ - Skift</a></strong> [Web Search (Skift)] — <em>Thu, 05 Nov 2026</em></li>
-<li>Recent web news coverage via Skift.</li>
-<li><strong><a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxNSmpjbUlKRk5NNS1ocHJHQkVMNklPamFtSzNjUjhEWWItYndXYk1UbWdjUlB1NXFzc3NQX1Q0MVJnVm95TkZtYUUyZTFCUVA3WjZ1M19MMGNZQ09EeEFuTGZMd3JvV0xWaEl1dnh5Z0lYOTg3MkZhMnVsRnlWMFdoQ0lNMzlvZ1Bka1k0UHdxYUFxSHp3cEZhMmJFNA?oc=5">Perplexity launches its own take on AI agents for work - The Verge</a></strong> [Web Search (The Verge)] — <em>Thu, 05 Nov 2026</em></li>
-<li>Recent web news coverage via The Verge.</li>
-<li><strong><a href="https://news.google.com/rss/articles/CBMieEFVX3lxTFBzZUxjRGJ5S3V3ZXpCcGpSLXdkZGU4NFE4VXRUakgtbkt6UHlnZ3lQT2k2M2VZRTEyUGZVVGc1VXlwZEJpR2tJVXF0YV9pRUtNd0M1bWN5Mi1KMVUwUXpUeGxVUWhOV041Z0FHRFl1OXVBaEt4N1I4S9IBfkFVX3lxTE9DNEZYVVN2WXJWdFhtWXlzQUlBcW1yZHF5c2h4QkdXT19BVGRzYllFMWhfUnhzOFZja192bDVfV1lTWDFWTS1OZXR5eExGWHF2cG1kVFNjWjFEMGhxcDNLSk5qY2hFNkUydERiRDI3R28zUUIwbm4tRFF6ZFd3dw?oc=5">Expedia CEO says AI agents aren't changing booking habits — yet - CNBC</a></strong> [Web Search (CNBC)] — <em>Thu, 05 Nov 2026</em></li>
-<li>Recent web news coverage via CNBC.</li>
-<li><strong><a href="https://news.google.com/rss/articles/CBMiggFBVV95cUxNSjQ4LV94NGNvWkQ0TDdmSVpCZ1o0MzJGY292MzZ5enU0dTdSVzFXY0cwbkk5YWFJNjZSNHRfRnF5Zi0wN3RVRi0zcFF1M2V3M1BxbnVjbkZ2cUVjUW5ZYmlBa2FYSlRzSklyLUVJb0ozQlA5OTRUQzd2cTRBckk1eFFB?oc=5">Some AI agents use personal information to upsell wealthier individuals - Tech Xplore</a></strong> [Web Search (Tech Xplore)] — <em>Thu, 05 Nov 2026</em></li>
-<li>Recent web news coverage via Tech Xplore.</li>
-<li><strong><a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxPb1pqN3NyRG56VVVIMkp5d1dhQzFXY1dKYVF1cm9Uc2RoWW1yaWZLY2ZMUUdPdHI2TkZRQ2ZPRUx1bUNNUkFndms1b0hMWjZ0Qm91dk15Mk5udEc4VjlTN2VtT3ZRNl8zMjg2cFVaOTliUGx2VUtUX1RKb2xvUkt3N2pBOUE1YURQS2hNaWMwMWlIUnRHbV85Q1pPS2dNNVE?oc=5">FinTechs Hand AI Agents the Company Card - PYMNTS.com</a></strong> [Web Search (PYMNTS.com)] — <em>Thu, 05 Nov 2026</em></li>
-<li>Recent web news coverage via PYMNTS.com.</li>
-<li><strong><a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxQSlZ6cW1rX2Y2Ui0xZTFJNzdrYmtQdUJPSVRkcmRJTk8tcWlkTnl2ajNIUW5JZ1NMQ0ZuU3M2ZGk0NlJPSk51T2h3bmtDNDRLUlY2anNtR0c1anlOMEMybER1VWtUZ2JIcWg0QlRIYWUwQUdEdlh6OHV5d2Q3LUhxV2RiWDZfakdUQnBkTWhhR2pqdzJmb3lIX1hMNnFzUFk?oc=5">Chime puts out the welcome mat for external AI agents - American Banker</a></strong> [Web Search (American Banker)] — <em>Thu, 05 Nov 2026</em></li>
-<li>Recent web news coverage via American Banker.</li>
-</ul>
+<hr />
+<h2>🏆 Top 10 Ranked by Content &amp; Reach</h2>
+<h3>1. <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/">Gemini 4 Carbon (#1 on Artificial Analysis Intelligence Index v5)</a></h3>
+<p><strong>🏢 Model Release + 🔥 Hacker News (⬆️ 1,358 combined pts, 1,051 comments)</strong><br />
+- <strong>What happened:</strong> Google released <strong>Gemini 4 Carbon</strong>, claiming the #1 spot on the independent <a href="https://artificialanalysis.ai/articles/gemini-4-carbon-new-number-1">Artificial Analysis Intelligence Index v5</a>, alongside <strong><a href="https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemini-omni-1-2-flash/">Gemini Omni 1.2 Flash</a></strong> for fast, low-cost long-clip multimodal processing.<br />
+- <strong>Why it matters:</strong> Sets the new frontier baseline for reasoning-to-cost efficiency while expanding native multimodal context windows.</p>
+<h3>2. <a href="https://github.com/anthropics/claude-code/issues/107757">Claude Code Privacy Issue &amp; Agent Data-Training Policies</a></h3>
+<p><strong>🔥 Highest Reach on Hacker News (⬆️ 1,569 pts, 502 comments)</strong><br />
+- <strong>What happened:</strong> Developers discovered that Claude Code could expose user email addresses when fetching external websites, alongside separate high-reach threads on <a href="https://news.ycombinator.com/item?id=50363461">Gemini personal chat training defaults (⬆️ 725)</a> and <a href="https://news.ycombinator.com/item?id=50352757">Codex data-sharing settings (⬆️ 529)</a>.<br />
+- <strong>Why it matters:</strong> When autonomous CLI agents make outbound HTTP requests or git commits, they carry local environment metadata—auditing agent network/tool permissions and enterprise zero-data-retention settings is essential.</p>
+<h3>3. <a href="https://news.ycombinator.com/item?id=50366117">Ask HN: What's Your Current AI Agentic Setup?</a></h3>
+<p><strong>🛠️ Engineering Practice · Hacker News (⬆️ 545 pts, 678 comments)</strong><br />
+- <strong>What happened:</strong> Nearly 700 practitioners shared their real-world daily agent stacks, what actually works in production vs. hype, and how they combine IDE agents, CLI agents, and custom MCP tools.<br />
+- <strong>Why it matters:</strong> High-signal crowd benchmark of practical developer workflows—most effective setups rely on scoped context files, deterministic test loops, and human-in-the-loop plan review.</p>
+<h3>4. <a href="https://hightouch.com/blog/llm-judges-identity-resolution">A Small Model That Can Ask Opus for Help Gives Opus Accuracy at 4× Lower Cost</a></h3>
+<p><strong>🛠️ Production LLM Engineering · Hacker News (⬆️ 447 pts, 100 comments)</strong><br />
+- <strong>What happened:</strong> Hightouch demonstrated a cascaded LLM-judge architecture for entity resolution where a lightweight model handles straightforward pairs and escalates ambiguous cases to a frontier model.<br />
+- <strong>Why it matters:</strong> Directly applicable design pattern for any high-volume LLM pipeline—calibrate confidence thresholds so you only pay frontier token prices on the hardest 15–20% of queries.</p>
+<h3>5. <a href="https://openai.com/index/a-thousand-fewer-paths-to-root/">A Thousand Fewer Paths to Root: Hardening AI Agent Sandboxes</a></h3>
+<p><strong>🏢 AI Security &amp; Infrastructure · OpenAI / Hacker News (⬆️ 486 pts, 363 comments)</strong><br />
+- <strong>What happened:</strong> OpenAI detailed how they systematically eliminated privilege-escalation paths in execution sandboxes used by coding and tool-using agents, paired with their new <a href="https://openai.com/index/partnering-with-hacktron">Hacktron security partnership</a>.<br />
+- <strong>Why it matters:</strong> As agents gain shell and browser execution capabilities, OS-level sandboxing and least-privilege container design become mandatory defense layers.</p>
+<h3>6. <a href="https://huggingface.co/papers/2611.08373">SLA (Scaling Spatial-Language-Action) &amp; VFlash (Flash Primitive Decoding)</a></h3>
+<p><strong>📄 Top Research Papers · Hugging Face Daily Papers (⬆️ 150 &amp; ⬆️ 96 upvotes)</strong><br />
+- <strong>What happened:</strong> Two top-trending embodied AI papers: <strong>SLA</strong> scales 3D spatial grounding for Vision-Language-Action (VLA) models via continual pre-training, while <strong><a href="https://huggingface.co/papers/2611.08449">VFlash</a></strong> decodes visual planning primitives (trajectories &amp; bounding boxes) in parallel rather than slow token-by-token autoregression.<br />
+- <strong>Why it matters:</strong> Bridges the gap between 2D language pre-training and fast, real-time 3D physical control.</p>
+<h3>7. <a href="https://huggingface.co/papers/2611.02075">Decoupled Predictive Decision Making (DPDM): A Shared Conditional Predictor for Agents</a></h3>
+<p><strong>📄 Agent Architecture Paper · Hugging Face Daily Papers (⬆️ 114 upvotes)</strong><br />
+- <strong>What happened:</strong> Introduces <strong>DPDM</strong>, separating an agent's <em>world-state prediction</em> (what will happen if I take action X?) from its <em>policy selection</em>, allowing heterogeneous agents to share a single conditional predictor calibrated on deployment observations.<br />
+- <strong>Why it matters:</strong> Solves a classic failure mode where LLM agents act on static prompt assumptions instead of adapting to live environment feedback.</p>
+<h3>8. <a href="https://huggingface.co/papers/2611.04277">Harness-S, Lilian Weng on Harness Engineering &amp; Terminal-Bench 2.1 Leaderboard</a></h3>
+<p><strong>📄 Research + Blog + Community Benchmark (⬆️ 57 HF upvotes + r/LocalLLaMA)</strong><br />
+- <strong>What happened:</strong> A trifecta on agent harnesses: the <strong><a href="https://huggingface.co/papers/2611.04277">Harness-S paper</a></strong> shows how training across sibling harnesses improves agent generalization; <strong><a href="https://lilianweng.github.io/posts/2026-07-04-harness/">Lilian Weng's Harness Engineering post</a></strong> breaks down self-improvement loops; and r/LocalLLaMA published the <strong><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xpvfx8/harness_leaderboard_kimi_code_hermes_pi_claude/">Harness Leaderboard</a></strong> comparing Kimi Code, Claude Code, Codex, and Hermes on Terminal-Bench 2.1 &amp; Deep SWE 1.1.<br />
+- <strong>Why it matters:</strong> Proves that upgrading the <em>harness</em> (tool feedback, state tracking, retry logic) often yields larger accuracy jumps than swapping the underlying LLM.</p>
+<h3>9. <a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/">Qwen 3.8 27B Interpreting Model Weights &amp; Freehand GUI Control</a></h3>
+<p><strong>🏢 Open-Weights &amp; Local LLMs · Simon Willison &amp; r/LocalLLaMA</strong><br />
+- <strong>What happened:</strong> Simon Willison demonstrated <strong>Qwen 3.8 27B</strong> running locally on a laptop performing <em>Weight-Space Programming</em> (natively reading and interpreting neural network weights), while r/LocalLLaMA showcased <strong><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xpmvf2/we_are_cooked_my_qfn_38_nvfp4_just_drew_a_dog/">QFN 3.8 NVFP4 controlling a VM mouse in Open WebUI 0.13.0</a></strong>.<br />
+- <strong>Why it matters:</strong> 27B–30B class open-weight models running in 4-bit quantization (NVFP4) on consumer hardware are now capable of both fine-grained GUI actuation and weight-space introspection.</p>
+<h3>10. <a href="https://openai.com/index/measuring-how-ai-agents-handle-wet-lab-science">AI Agents in Science: OpenAI BioBasicsBench &amp; DeepMind Agentic Cheminformatics</a></h3>
+<p><strong>🏢 Scientific AI Releases · OpenAI &amp; Google DeepMind</strong><br />
+- <strong>What happened:</strong> OpenAI launched <strong>BioBasicsBench</strong> (100 tasks evaluating how agents interpret raw wet-lab experimental data), while Google DeepMind published <strong><a href="https://deepmind.google/blog/agentic-cheminformatics-with-google-antigravity/">Agentic Cheminformatics with Google Antigravity</a></strong>, showing how modular skills accelerate compound search and macrocycle design.<br />
+- <strong>Why it matters:</strong> Domain-specific <strong>Skills</strong> + rigorous experimental benchmarks are turning general-purpose coding agents into specialized scientific research co-pilots.</p>
     </main>
     <footer class="footer">
       Generated by <strong>GenAI Learning &amp; News Agent</strong> (Powered by Google Gemini)
