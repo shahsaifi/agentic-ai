@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 import markdown
 
@@ -489,20 +489,20 @@ COMFORT_CONTROLS_HTML = """
 """
 
 
-def _extract_top_headlines(markdown_text: str, max_items: int = 3) -> List[str]:
-    """Extract the top N numbered headline titles from a digest Markdown file."""
-    headlines: List[str] = []
+def _extract_top_headlines(markdown_text: str, max_items: int = 3) -> List[Tuple[str, str]]:
+    """Extract the top N numbered `(title, url)` pairs from a digest Markdown file."""
+    headlines: List[Tuple[str, str]] = []
     for line in markdown_text.splitlines():
-        m = re.match(r"^###\s+\d+\.\s+\[([^\]]+)\]", line.strip())
+        m = re.match(r"^###\s+\d+\.\s+\[([^\]]+)\]\(([^)]+)\)", line.strip())
         if m:
-            headlines.append(m.group(1))
+            headlines.append((m.group(1), m.group(2)))
             if len(headlines) >= max_items:
                 break
     if not headlines:
         for line in markdown_text.splitlines():
-            m = re.match(r"^-\s+\*\*\[([^\]]+)\]", line.strip())
+            m = re.match(r"^-\s+\*\*\[([^\]]+)\]\(([^)]+)\)", line.strip())
             if m:
-                headlines.append(m.group(1))
+                headlines.append((m.group(1), m.group(2)))
                 if len(headlines) >= max_items:
                     break
     return headlines
@@ -566,15 +566,21 @@ def _render_index_portal_html(
     latest_md = archive_map.get(latest_date, "")
     latest_headlines = _extract_top_headlines(latest_md, max_items=4)
 
-    latest_list_html = "".join(f"<li>{h}</li>" for h in latest_headlines)
+    latest_list_html = "".join(
+        f'<li><a href="{url}" target="_blank" rel="noopener">{title} ↗</a></li>'
+        for title, url in latest_headlines
+    )
 
     day_cards_html = []
     for idx, d in enumerate(sorted_dates):
         md_text = archive_map[d]
         headlines = _extract_top_headlines(md_text, max_items=3)
         hl_items = (
-            "".join(f"<li>{h}</li>" for h in headlines)
-            or "<li>Top 10 curated GenAI papers, lab blogs, X.com threads &amp; podcasts</li>"
+            "".join(
+                f'<li><a href="{url}" target="_blank" rel="noopener">{title} ↗</a></li>'
+                for title, url in headlines
+            )
+            or f'<li><a href="{d}.html">Top 10 curated GenAI papers, lab blogs, X.com threads &amp; podcasts</a></li>'
         )
         badge_label = "✨ Latest Edition" if idx == 0 else "📅 Daily Edition"
         day_cards_html.append(
