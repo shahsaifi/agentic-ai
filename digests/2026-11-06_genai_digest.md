@@ -72,6 +72,19 @@
 
 ---
 
+## 🔥 Hot on X.com (AI Twitter Pulse)
+
+- **[Anthropic Blocks Users for Anything Touching Training Larger Models (@jiahaoshao1 on X)](https://twitter.com/jiahaoshao1/status/2116475922190922088)** — *X.com Thread + [HN Discussion](https://news.ycombinator.com/item?id=50319358)* (⬆️ 494 pts, 271 comments)
+  - **What's being discussed:** Researchers on X sparked a major debate over frontier lab ToS enforcement when using frontier model outputs for synthetic data curation, distillation, or training pipelines.
+- **[Building an AI-Native Engineering Org (@sgondala2 on X)](https://twitter.com/sgondala2/status/2115832070274723875)** — *X.com Thread + [HN Discussion](https://news.ycombinator.com/item?id=50296730)* (⬆️ 195 pts, 203 comments)
+  - **What's being discussed:** Practical breakdown on X of how engineering teams are restructuring code review, PR sizing, and automated verification around autonomous coding agents.
+- **[Anthropic Engineer Warns About the Hidden Cost of Letting AI Do Your Thinking](https://news.google.com/rss/articles/CBMitgFBVV95cUxNWHEtSXVkWjNmTHJwN055ZUVQNjBMTmNHeUdYaEhkSXA5X2NYUGxMem5TWHEzRllRRGt3bzJ3Mk1VV3NZRHJnd29YYWtiVDF5UEIyeTdzcFhfSDlfaTZ2eDNjT2EtR0ItN0dDNUVFN0VMMEtZWFdQY2ktQ2d3UlhTVXdPTEhHZ3B3RlF2ZjFTTFM3V3pFcVVnSGJkV1FuWWJXM0E0T1FPT29ad2lUTmxZQnlkQ3FZZw?oc=5)** — *Trending X Discussion*
+  - **What's being discussed:** Viral thread among AI engineers on preventing "cognitive atrophy" when pair-programming with frontier models—advocating for architectural ownership before delegating implementation.
+- **[AI Twitter/X Daily Recap: 10,000-Agent Math Proof, Meta Muse Agent & Multi-Agent Collusion (`news.smol.ai`)](https://news.smol.ai/issues/26-09-08-navier-stokes/)** — *AINews Curated X Recap*
+  - **What's being discussed:** Full synthesis of the hottest AI researcher threads on X covering massive parallel agent swarms (10,000 agents collaborating over 88 hours) and emergent multi-agent behavior.
+
+---
+
 ## 🎧 AI Podcasts & Audio Deep-Dives (Listen on Your Commute)
 
 - **[Deep Dive: Anthropic S-1 Myths and Mythos — Jamin Ball, Altimeter](https://www.youtube.com/watch?v=P735f1xlpL0)** — *Latent Space: The AI Engineer Podcast* (🎧 1h 42m)

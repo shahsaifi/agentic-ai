@@ -16,6 +16,7 @@ from genai_agent.collectors import (
     fetch_hacker_news_ai,
     fetch_huggingface_daily_papers,
     fetch_reddit_ai,
+    fetch_x_social_pulse,
 )
 from genai_agent.config import AgentConfig
 from genai_agent.models import DigestResult, NewsItem, SourceCategory
@@ -46,7 +47,7 @@ Learner's Focus Topics: {topics_str}
 
 Below are {len(items)} freshly collected items from Hugging Face Daily Papers, arXiv (cs.CL/cs.AI), AI Lab Blogs (OpenAI, Google AI, DeepMind, Hugging Face, Simon Willison, Lilian Weng, LangChain), Hacker News, Reddit (r/LocalLLaMA, r/MachineLearning), and Web News Search.
 
-You also have Google Search Grounding enabled—use it if needed to verify breaking Generative AI releases from the last 48 hours.
+You also have Google Search Grounding enabled—use it (including `site:x.com` queries for breaking AI researcher threads) to verify hot Generative AI releases and discussions from the last 48 hours.
 
 Create a comprehensive, well-structured Markdown digest using the exact sections below:
 
@@ -62,17 +63,11 @@ Pick the **single most educational technical concept, architecture, or method** 
 - **How It Works (Intuition & Mechanism)**: Step-by-step explanation of the method or architecture.
 - **Why It Matters in Practice**: How engineers/researchers can apply this.
 
-## 📄 Research Papers Spotlight (arXiv & Hugging Face)
-Curate the top 4–5 highest-signal papers from the feed. For each paper:
-- **[Paper Title](URL)** (*Source / Authors*)
-  - **Core Idea**: 1–2 sentences on the method.
-  - **Key Takeaway**: What makes it novel or worth reading.
+## 🏆 Top 10 Ranked by Content & Reach
+Curate the top 10 highest-signal items across Research Papers (arXiv & Hugging Face), AI Lab Releases, and Community Engineering (Hacker News & r/LocalLLaMA).
 
-## 🏢 AI Lab Announcements & Ecosystem Releases
-Highlight major model releases, API updates, or official blog posts from AI labs (Google, OpenAI, Anthropic, Meta, Hugging Face, etc.) with links and practical implications.
-
-## 🛠️ Engineering & Community Pulse (Hacker News & r/LocalLLaMA)
-Highlight 3–5 notable community discussions, open-source tools, local LLM benchmarks, or engineering lessons with links.
+## 🔥 Hot on X.com (AI Twitter Pulse)
+Highlight 3–4 viral X.com / AI Twitter threads and discussions from researchers and engineers, with links to the X post and community discussion.
 
 ## 🎧 AI Podcasts & Audio Deep-Dives
 Include 3–4 relevant, high-signal AI podcast episodes from the collected feed with show name, link, and a 1-sentence summary of why it's worth listening to.
@@ -119,10 +114,13 @@ def rank_top_items(items: List[NewsItem], top_k: int = 10) -> List[NewsItem]:
             selected.append(item)
             used_urls.add(item.url)
 
-    # Fill any remaining slots up to top_k by highest overall score (excluding podcasts, which get their own section)
+    # Fill any remaining slots up to top_k by highest overall score (excluding podcasts & X social section)
     if len(selected) < top_k:
         remaining = [
-            i for i in items if i.url not in used_urls and i.category != SourceCategory.PODCAST
+            i
+            for i in items
+            if i.url not in used_urls
+            and i.category not in (SourceCategory.PODCAST, SourceCategory.SOCIAL_X)
         ]
         remaining.sort(key=lambda x: ((x.score or 0), len(x.summary or "")), reverse=True)
         selected.extend(remaining[: top_k - len(selected)])
@@ -136,8 +134,9 @@ def build_fallback_markdown(
     date_str: str,
     breakdown: Dict[str, int],
 ) -> str:
-    """Generate a concise Top 10 Markdown digest ranked by content substance and community reach, plus Podcasts."""
+    """Generate a concise Top 10 Markdown digest ranked by content substance and community reach, plus X Pulse & Podcasts."""
     top_items = rank_top_items(items, top_k=10)
+    x_posts = [i for i in items if i.category == SourceCategory.SOCIAL_X]
     podcasts = [i for i in items if i.category == SourceCategory.PODCAST]
 
     lines = [
@@ -168,6 +167,20 @@ def build_fallback_markdown(
         if item.summary:
             short_sum = item.summary[:320] + ("..." if len(item.summary) > 320 else "")
             lines.append(f"- **Takeaway:** {short_sum}")
+        lines.append("")
+
+    if x_posts:
+        lines.append("---")
+        lines.append("")
+        lines.append("## 🔥 Hot on X.com (AI Twitter Pulse)")
+        lines.append("")
+        for xp in x_posts[:5]:
+            score_badge = f" (⬆️ {xp.score} pts)" if xp.score else ""
+            pub_badge = f" · *{xp.published_at}*" if xp.published_at else ""
+            lines.append(f"- **[{xp.title}]({xp.url})** — **{xp.source}**{score_badge}{pub_badge}")
+            if xp.summary:
+                short_x = xp.summary[:280] + ("..." if len(xp.summary) > 280 else "")
+                lines.append(f"  - {short_x}")
         lines.append("")
 
     if podcasts:
