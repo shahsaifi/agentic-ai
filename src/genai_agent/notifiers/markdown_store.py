@@ -26,6 +26,8 @@ SHARED_CSS_AND_THEME_JS = """
       --accent-soft: rgba(15, 118, 110, 0.10);
       --accent-warm: #B45309;
       --accent-warm-soft: rgba(180, 83, 9, 0.10);
+      --x-accent: #1D4ED8;
+      --x-bg: rgba(29, 78, 216, 0.06);
       --gradient: linear-gradient(135deg, #0F766E 0%, #3B82F6 55%, #D97706 100%);
       --shadow: 0 6px 24px -4px rgba(34, 38, 35, 0.06), 0 2px 6px -1px rgba(34, 38, 35, 0.04);
       --font-body: 'Literata', Georgia, serif;
@@ -49,6 +51,8 @@ SHARED_CSS_AND_THEME_JS = """
       --accent-soft: rgba(154, 52, 18, 0.10);
       --accent-warm: #0F766E;
       --accent-warm-soft: rgba(15, 118, 110, 0.10);
+      --x-accent: #7C2D12;
+      --x-bg: rgba(124, 45, 18, 0.07);
       --gradient: linear-gradient(135deg, #9A3412 0%, #D97706 55%, #0F766E 100%);
       --shadow: 0 6px 24px -4px rgba(44, 34, 30, 0.07);
     }
@@ -67,6 +71,8 @@ SHARED_CSS_AND_THEME_JS = """
       --accent-soft: rgba(94, 234, 212, 0.12);
       --accent-warm: #FBBF24;
       --accent-warm-soft: rgba(251, 191, 36, 0.12);
+      --x-accent: #60A5FA;
+      --x-bg: rgba(96, 165, 250, 0.10);
       --gradient: linear-gradient(135deg, #2DD4BF 0%, #818CF8 55%, #FBBF24 100%);
       --shadow: 0 10px 30px -6px rgba(0, 0, 0, 0.5);
     }
@@ -90,7 +96,6 @@ SHARED_CSS_AND_THEME_JS = """
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Reading Progress Bar */
     #progress-bar {
       position: fixed;
       top: 0;
@@ -103,11 +108,10 @@ SHARED_CSS_AND_THEME_JS = """
     }
 
     .container {
-      max-width: 860px;
+      max-width: 880px;
       margin: 0 auto;
     }
 
-    /* Sticky Comfort Toolbar */
     .top-nav {
       position: sticky;
       top: 10px;
@@ -118,7 +122,7 @@ SHARED_CSS_AND_THEME_JS = """
       flex-wrap: wrap;
       gap: 10px;
       padding: 12px 18px;
-      margin: 14px 0 24px;
+      margin: 14px 0 20px;
       background: var(--bg-elevated);
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -197,7 +201,28 @@ SHARED_CSS_AND_THEME_JS = """
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
 
-    /* Hero & Main Content Cards */
+    /* Quick Jump Bar inside Digest */
+    .jump-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 22px;
+      padding: 12px 16px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-family: var(--font-sans);
+      align-items: center;
+    }
+    .jump-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-right: 4px;
+    }
+
     .hero {
       background: var(--bg-elevated);
       border: 1px solid var(--border);
@@ -239,6 +264,22 @@ SHARED_CSS_AND_THEME_JS = """
       box-shadow: var(--shadow);
     }
 
+    .section-panel {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 32px;
+      margin-top: 26px;
+      box-shadow: var(--shadow);
+    }
+    .section-panel.x-panel {
+      border-left: 5px solid var(--x-accent);
+      background: var(--bg-elevated);
+    }
+    .section-panel.podcast-panel {
+      border-left: 5px solid var(--accent-warm);
+    }
+
     h1, h2 {
       font-family: var(--font-display);
       font-weight: 600;
@@ -252,12 +293,11 @@ SHARED_CSS_AND_THEME_JS = """
     }
     h2 {
       font-size: 1.48rem;
-      margin: 38px 0 16px;
+      margin: 36px 0 16px;
       padding-bottom: 10px;
       border-bottom: 2px solid var(--border);
     }
 
-    /* Top 10 Item Cards */
     h3 {
       font-family: var(--font-display);
       font-size: 1.16rem;
@@ -332,7 +372,6 @@ SHARED_CSS_AND_THEME_JS = """
       margin: 34px 0;
     }
 
-    /* Index Portal Cards */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
@@ -405,7 +444,7 @@ SHARED_CSS_AND_THEME_JS = """
     }
 
     @media (max-width: 640px) {
-      .card, .hero { padding: 22px 18px; }
+      .card, .hero, .section-panel { padding: 22px 18px; }
       .grid { grid-template-columns: 1fr; }
       h1 { font-size: 1.6rem; }
       .top-nav { position: static; }
@@ -464,6 +503,15 @@ SHARED_CSS_AND_THEME_JS = """
 
     window.addEventListener('DOMContentLoaded', () => {
       updateToolbarState();
+      // Add anchor IDs to h2 sections for quick jumping
+      document.querySelectorAll('h2').forEach(h => {
+        const text = h.textContent.toLowerCase();
+        if (text.includes('tl;dr') || text.includes('executive')) h.id = 'tldr';
+        else if (text.includes('concept')) h.id = 'concept';
+        else if (text.includes('top 10')) h.id = 'top10';
+        else if (text.includes('x.com') || text.includes('twitter')) h.id = 'x-pulse';
+        else if (text.includes('podcast') || text.includes('audio')) h.id = 'podcasts';
+      });
       window.addEventListener('scroll', () => {
         const bar = document.getElementById('progress-bar');
         if (!bar) return;
@@ -508,13 +556,34 @@ def _extract_top_headlines(markdown_text: str, max_items: int = 3) -> List[Tuple
     return headlines
 
 
+def _extract_section_markdown(markdown_text: str, section_keyword: str) -> str:
+    """Extract a `## ...` section block matching `section_keyword` from a digest Markdown string."""
+    lines = markdown_text.splitlines()
+    capturing = False
+    collected: List[str] = []
+
+    for line in lines:
+        if line.startswith("## "):
+            if capturing:
+                break
+            if section_keyword.lower() in line.lower():
+                capturing = True
+                continue
+        elif capturing:
+            if line.strip() == "---":
+                break
+            collected.append(line)
+
+    return "\n".join(collected).strip()
+
+
 def _render_daily_digest_html(
     markdown_content: str,
     title: str,
     current_date: str,
     archive_dates: List[str],
 ) -> str:
-    """Render a daily digest page (`YYYY-MM-DD.html`) with eye-friendly themes and typography controls."""
+    """Render a daily digest page (`YYYY-MM-DD.html`) with quick jump links and eye-friendly controls."""
     body_html = markdown.markdown(
         markdown_content,
         extensions=["extra", "sane_lists", "nl2br"],
@@ -546,6 +615,16 @@ def _render_daily_digest_html(
         {COMFORT_CONTROLS_HTML}
       </div>
     </nav>
+
+    <div class="jump-bar">
+      <span class="jump-label">Jump to:</span>
+      <a class="pill-link" href="#tldr">⚡ TL;DR</a>
+      <a class="pill-link" href="#concept">🧠 Concept Deep-Dive</a>
+      <a class="pill-link" href="#x-pulse">🔥 Hot on X.com</a>
+      <a class="pill-link" href="#top10">🏆 Top 10 Ranked</a>
+      <a class="pill-link" href="#podcasts">🎧 AI Podcasts</a>
+    </div>
+
     <main class="card">
       {body_html}
     </main>
@@ -560,7 +639,7 @@ def _render_daily_digest_html(
 def _render_index_portal_html(
     archive_map: Dict[str, str],
 ) -> str:
-    """Render `docs/index.html` as a dedicated Index & Directory page with eye-friendly themes."""
+    """Render `docs/index.html` with Top 10 previews, 🔥 Hot on X.com highlights, 🎧 Podcasts, and Daily Editions."""
     sorted_dates = sorted(archive_map.keys(), reverse=True)
     latest_date = sorted_dates[0] if sorted_dates else ""
     latest_md = archive_map.get(latest_date, "")
@@ -569,6 +648,20 @@ def _render_index_portal_html(
     latest_list_html = "".join(
         f'<li><a href="{url}" target="_blank" rel="noopener">{title} ↗</a></li>'
         for title, url in latest_headlines
+    )
+
+    x_pulse_md = _extract_section_markdown(latest_md, "X.com")
+    x_pulse_html = (
+        markdown.markdown(x_pulse_md, extensions=["extra", "sane_lists", "nl2br"])
+        if x_pulse_md
+        else "<p>No X.com highlights extracted for this edition.</p>"
+    )
+
+    podcasts_md = _extract_section_markdown(latest_md, "Podcast")
+    podcasts_html = (
+        markdown.markdown(podcasts_md, extensions=["extra", "sane_lists", "nl2br"])
+        if podcasts_md
+        else "<p>No podcast episodes extracted for this edition.</p>"
     )
 
     day_cards_html = []
@@ -615,6 +708,8 @@ def _render_index_portal_html(
       </a>
       <div class="nav-actions">
         <a class="pill-link active" href="index.html">All Editions ({len(sorted_dates)})</a>
+        <a class="pill-link" href="#x-highlights">🔥 X.com Pulse</a>
+        <a class="pill-link" href="#podcast-highlights">🎧 Podcasts</a>
         <a class="pill-link" href="{latest_date}.html">Latest ({latest_date})</a>
         {COMFORT_CONTROLS_HTML}
       </div>
@@ -627,12 +722,24 @@ def _render_index_portal_html(
         Signal over noise: Every edition distills 60+ research papers (Hugging Face &amp; arXiv), AI lab blogs (OpenAI, Google, DeepMind, Anthropic), Hacker News, r/LocalLLaMA, <strong>viral X.com threads</strong>, and <strong>AI Podcasts</strong> into a calm, <strong>5-minute Top 10 read</strong>.
       </p>
       <div style="background:var(--bg-card-inner);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:12px;padding:16px 22px;margin-bottom:22px;font-family:var(--font-sans);">
-        <div style="font-weight:700;font-size:0.9rem;margin-bottom:8px;color:var(--accent);">🔥 Featured in Latest Edition ({latest_date}):</div>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:8px;color:var(--accent);">🏆 Top Headlines in Latest Edition ({latest_date}):</div>
         <ul style="margin:0;padding-left:20px;font-size:0.92rem;">
           {latest_list_html}
         </ul>
       </div>
-      <a class="cta-btn" href="{latest_date}.html">Open Latest Digest ({latest_date}) →</a>
+      <a class="cta-btn" href="{latest_date}.html">Open Full {latest_date} Digest →</a>
+    </section>
+
+    <section id="x-highlights" class="section-panel x-panel">
+      <span class="hero-badge">🔥 Live AI Social Pulse ({latest_date})</span>
+      <h2 style="margin-top:4px;">Hot on X.com (AI Twitter Highlights)</h2>
+      {x_pulse_html}
+    </section>
+
+    <section id="podcast-highlights" class="section-panel podcast-panel">
+      <span class="hero-badge">🎧 Audio Deep-Dives ({latest_date})</span>
+      <h2 style="margin-top:4px;">Featured AI Podcast Episodes</h2>
+      {podcasts_html}
     </section>
 
     <h2>📅 Daily Digest Editions</h2>

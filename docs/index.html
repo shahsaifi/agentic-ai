@@ -23,6 +23,8 @@
       --accent-soft: rgba(15, 118, 110, 0.10);
       --accent-warm: #B45309;
       --accent-warm-soft: rgba(180, 83, 9, 0.10);
+      --x-accent: #1D4ED8;
+      --x-bg: rgba(29, 78, 216, 0.06);
       --gradient: linear-gradient(135deg, #0F766E 0%, #3B82F6 55%, #D97706 100%);
       --shadow: 0 6px 24px -4px rgba(34, 38, 35, 0.06), 0 2px 6px -1px rgba(34, 38, 35, 0.04);
       --font-body: 'Literata', Georgia, serif;
@@ -46,6 +48,8 @@
       --accent-soft: rgba(154, 52, 18, 0.10);
       --accent-warm: #0F766E;
       --accent-warm-soft: rgba(15, 118, 110, 0.10);
+      --x-accent: #7C2D12;
+      --x-bg: rgba(124, 45, 18, 0.07);
       --gradient: linear-gradient(135deg, #9A3412 0%, #D97706 55%, #0F766E 100%);
       --shadow: 0 6px 24px -4px rgba(44, 34, 30, 0.07);
     }
@@ -64,6 +68,8 @@
       --accent-soft: rgba(94, 234, 212, 0.12);
       --accent-warm: #FBBF24;
       --accent-warm-soft: rgba(251, 191, 36, 0.12);
+      --x-accent: #60A5FA;
+      --x-bg: rgba(96, 165, 250, 0.10);
       --gradient: linear-gradient(135deg, #2DD4BF 0%, #818CF8 55%, #FBBF24 100%);
       --shadow: 0 10px 30px -6px rgba(0, 0, 0, 0.5);
     }
@@ -87,7 +93,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Reading Progress Bar */
     #progress-bar {
       position: fixed;
       top: 0;
@@ -100,11 +105,10 @@
     }
 
     .container {
-      max-width: 860px;
+      max-width: 880px;
       margin: 0 auto;
     }
 
-    /* Sticky Comfort Toolbar */
     .top-nav {
       position: sticky;
       top: 10px;
@@ -115,7 +119,7 @@
       flex-wrap: wrap;
       gap: 10px;
       padding: 12px 18px;
-      margin: 14px 0 24px;
+      margin: 14px 0 20px;
       background: var(--bg-elevated);
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -194,7 +198,28 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
 
-    /* Hero & Main Content Cards */
+    /* Quick Jump Bar inside Digest */
+    .jump-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 22px;
+      padding: 12px 16px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-family: var(--font-sans);
+      align-items: center;
+    }
+    .jump-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-right: 4px;
+    }
+
     .hero {
       background: var(--bg-elevated);
       border: 1px solid var(--border);
@@ -236,6 +261,22 @@
       box-shadow: var(--shadow);
     }
 
+    .section-panel {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 32px;
+      margin-top: 26px;
+      box-shadow: var(--shadow);
+    }
+    .section-panel.x-panel {
+      border-left: 5px solid var(--x-accent);
+      background: var(--bg-elevated);
+    }
+    .section-panel.podcast-panel {
+      border-left: 5px solid var(--accent-warm);
+    }
+
     h1, h2 {
       font-family: var(--font-display);
       font-weight: 600;
@@ -249,12 +290,11 @@
     }
     h2 {
       font-size: 1.48rem;
-      margin: 38px 0 16px;
+      margin: 36px 0 16px;
       padding-bottom: 10px;
       border-bottom: 2px solid var(--border);
     }
 
-    /* Top 10 Item Cards */
     h3 {
       font-family: var(--font-display);
       font-size: 1.16rem;
@@ -329,7 +369,6 @@
       margin: 34px 0;
     }
 
-    /* Index Portal Cards */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
@@ -402,7 +441,7 @@
     }
 
     @media (max-width: 640px) {
-      .card, .hero { padding: 22px 18px; }
+      .card, .hero, .section-panel { padding: 22px 18px; }
       .grid { grid-template-columns: 1fr; }
       h1 { font-size: 1.6rem; }
       .top-nav { position: static; }
@@ -461,6 +500,15 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       updateToolbarState();
+      // Add anchor IDs to h2 sections for quick jumping
+      document.querySelectorAll('h2').forEach(h => {
+        const text = h.textContent.toLowerCase();
+        if (text.includes('tl;dr') || text.includes('executive')) h.id = 'tldr';
+        else if (text.includes('concept')) h.id = 'concept';
+        else if (text.includes('top 10')) h.id = 'top10';
+        else if (text.includes('x.com') || text.includes('twitter')) h.id = 'x-pulse';
+        else if (text.includes('podcast') || text.includes('audio')) h.id = 'podcasts';
+      });
       window.addEventListener('scroll', () => {
         const bar = document.getElementById('progress-bar');
         if (!bar) return;
@@ -482,6 +530,8 @@
       </a>
       <div class="nav-actions">
         <a class="pill-link active" href="index.html">All Editions (2)</a>
+        <a class="pill-link" href="#x-highlights">🔥 X.com Pulse</a>
+        <a class="pill-link" href="#podcast-highlights">🎧 Podcasts</a>
         <a class="pill-link" href="2026-11-07.html">Latest (2026-11-07)</a>
         
         <div class="comfort-group" title="Eye-friendly color palettes">
@@ -505,12 +555,44 @@
         Signal over noise: Every edition distills 60+ research papers (Hugging Face &amp; arXiv), AI lab blogs (OpenAI, Google, DeepMind, Anthropic), Hacker News, r/LocalLLaMA, <strong>viral X.com threads</strong>, and <strong>AI Podcasts</strong> into a calm, <strong>5-minute Top 10 read</strong>.
       </p>
       <div style="background:var(--bg-card-inner);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:12px;padding:16px 22px;margin-bottom:22px;font-family:var(--font-sans);">
-        <div style="font-weight:700;font-size:0.9rem;margin-bottom:8px;color:var(--accent);">🔥 Featured in Latest Edition (2026-11-07):</div>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:8px;color:var(--accent);">🏆 Top Headlines in Latest Edition (2026-11-07):</div>
         <ul style="margin:0;padding-left:20px;font-size:0.92rem;">
           <li><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/" target="_blank" rel="noopener">Gemini 4 Carbon (#1 on Artificial Analysis Intelligence Index v5) ↗</a></li><li><a href="https://github.com/anthropics/claude-code/issues/107757" target="_blank" rel="noopener">Claude Code Privacy Issue & Agent Data-Training Policies ↗</a></li><li><a href="https://news.ycombinator.com/item?id=50366117" target="_blank" rel="noopener">Ask HN: What's Your Current AI Agentic Setup? ↗</a></li><li><a href="https://hightouch.com/blog/llm-judges-identity-resolution" target="_blank" rel="noopener">A Small Model That Can Ask Opus for Help Gives Opus Accuracy at 4× Lower Cost ↗</a></li>
         </ul>
       </div>
-      <a class="cta-btn" href="2026-11-07.html">Open Latest Digest (2026-11-07) →</a>
+      <a class="cta-btn" href="2026-11-07.html">Open Full 2026-11-07 Digest →</a>
+    </section>
+
+    <section id="x-highlights" class="section-panel x-panel">
+      <span class="hero-badge">🔥 Live AI Social Pulse (2026-11-07)</span>
+      <h2 style="margin-top:4px;">Hot on X.com (AI Twitter Highlights)</h2>
+      <ul>
+<li><strong><a href="https://twitter.com/jiahaoshao1/status/2116475922190922088">Anthropic Blocks Users for Anything Touching Training Larger Models (@jiahaoshao1 on X)</a></strong> — <em>X.com Thread + <a href="https://news.ycombinator.com/item?id=50319358">HN Discussion</a></em> (⬆️ 494 pts, 271 comments)</li>
+<li><strong>What's being discussed:</strong> Researchers on X sparked a major debate over frontier lab ToS enforcement when using frontier model outputs for synthetic data curation, distillation, or training pipelines.</li>
+<li><strong><a href="https://twitter.com/sgondala2/status/2115832070274723875">Building an AI-Native Engineering Org (@sgondala2 on X)</a></strong> — <em>X.com Thread + <a href="https://news.ycombinator.com/item?id=50296730">HN Discussion</a></em> (⬆️ 195 pts, 203 comments)</li>
+<li><strong>What's being discussed:</strong> Practical breakdown on X of how engineering teams are restructuring code review, PR sizing, and automated verification around autonomous coding agents.</li>
+<li><strong><a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxNWHEtSXVkWjNmTHJwN055ZUVQNjBMTmNHeUdYaEhkSXA5X2NYUGxMem5TWHEzRllRRGt3bzJ3Mk1VV3NZRHJnd29YYWtiVDF5UEIyeTdzcFhfSDlfaTZ2eDNjT2EtR0ItN0dDNUVFN0VMMEtZWFdQY2ktQ2d3UlhTVXdPTEhHZ3B3RlF2ZjFTTFM3V3pFcVVnSGJkV1FuWWJXM0E0T1FPT29ad2lUTmxZQnlkQ3FZZw?oc=5">Anthropic Engineer Warns About the Hidden Cost of Letting AI Do Your Thinking</a></strong> — <em>Trending X Discussion</em></li>
+<li><strong>What's being discussed:</strong> Viral thread among AI engineers on preventing "cognitive atrophy" when pair-programming with frontier models—advocating for architectural ownership before delegating implementation.</li>
+<li><strong><a href="https://news.smol.ai/issues/26-09-08-navier-stokes/">AI Twitter/X Daily Recap: 10,000-Agent Math Proof, Meta Muse Agent &amp; Multi-Agent Collusion (<code>news.smol.ai</code>)</a></strong> — <em>AINews Curated X Recap</em></li>
+<li><strong>What's being discussed:</strong> Full synthesis of the hottest AI researcher threads on X covering massive parallel agent swarms (10,000 agents collaborating over 88 hours) and emergent multi-agent behavior.</li>
+</ul>
+    </section>
+
+    <section id="podcast-highlights" class="section-panel podcast-panel">
+      <span class="hero-badge">🎧 Audio Deep-Dives (2026-11-07)</span>
+      <h2 style="margin-top:4px;">Featured AI Podcast Episodes</h2>
+      <ul>
+<li><strong><a href="https://www.youtube.com/watch?v=P735f1xlpL0">Deep Dive: Anthropic S-1 Myths and Mythos — Jamin Ball, Altimeter</a></strong> — <em>Latent Space: The AI Engineer Podcast</em> (🎧 1h 42m)</li>
+<li><strong>Why listen:</strong> Breaks down the unit economics of frontier AI labs, inference margin realities vs. cloud spend, and what developers should expect from enterprise AI pricing.</li>
+<li><strong><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster">Can AI Invent or Just Help Scientists Work Faster? with Richard Socher (#783)</a></strong> — <em>The TWIML AI Podcast</em> (🎧 48m)</li>
+<li><strong>Why listen:</strong> Former Salesforce Chief Scientist Richard Socher explores the boundary between AI as an engineering productivity co-pilot vs. an autonomous scientific hypothesis generator.</li>
+<li><strong><a href="https://share.transistor.fm/s/1b301bdc">Abundant Intelligence at the Midwest AI Summit (Part 2)</a></strong> — <em>Practical AI Podcast</em> (🎧 47m)</li>
+<li><strong>Why listen:</strong> Practical engineering guide on how organizations decide where to give AI agents autonomy, where to set guardrails, and how to design human-in-the-loop checkpoints.</li>
+<li><strong><a href="https://traffic.megaphone.fm/PDP1158596730.mp3">Tokenization, Agentic Trading &amp; Harmonic Reasoning with Vlad Tenev</a></strong> — <em>No Priors: AI Podcast</em> (🎧 54m)</li>
+<li><strong>Why listen:</strong> Covers mathematical reasoning verification (Harmonic) and how autonomous financial/analytical agents are being deployed under strict reliability constraints.</li>
+<li><strong><a href="https://lexfridman.com/math-ai-crisis/">#503 – AI Crisis in Math: Navier-Stokes, Riemann Hypothesis &amp; Complexity Theory</a></strong> — <em>Lex Fridman Podcast</em> (🎧 3h 42m)</li>
+<li><strong>Why listen:</strong> Mathematicians Ankur Moitra, Steven Brunton, and Alex Kontorovich discuss how formal verification (Lean) and reasoning LLMs are reshaping theorem proving and scientific discovery.</li>
+</ul>
     </section>
 
     <h2>📅 Daily Digest Editions</h2>
