@@ -334,15 +334,28 @@ EDITORIAL_CSS_AND_JS = """
     }
     .briefing-reddit {
       margin: 8px 0 10px;
-      padding: 6px 12px;
+      padding: 8px 12px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-left: 3px solid var(--accent);
       font-family: var(--font-sans);
       font-size: 0.83rem;
-      line-height: 1.48;
+      line-height: 1.5;
       color: var(--ink-secondary);
       max-width: 66ch;
+    }
+    .briefing-reddit summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .briefing-reddit summary::-webkit-details-marker {
+      display: none;
     }
     .briefing-reddit strong {
       font-family: var(--font-mono);
@@ -352,8 +365,40 @@ EDITORIAL_CSS_AND_JS = """
       color: var(--accent);
       margin-right: 4px;
     }
+    .reddit-toggle {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .reddit-body {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--ink-secondary);
+    }
+    .reddit-comment {
+      margin-top: 6px;
+      padding-left: 10px;
+      border-left: 2px solid var(--border);
+      font-size: 0.86rem;
+    }
+    .reddit-footer {
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
     .briefing-reddit a {
-      color: var(--ink);
+      color: var(--ink-secondary);
       text-decoration: underline;
       text-decoration-color: var(--border);
       text-underline-offset: 2px;
@@ -1013,6 +1058,63 @@ def _tokenize_for_reddit(text: str) -> set[str]:
     return {w for w in words if w not in _REDDIT_TOPIC_STOPWORDS}
 
 
+_CACHED_REDDIT_COMMENTS: Dict[str, List[Dict[str, str]]] = {}
+
+
+def _extract_reddit_rss_excerpt(raw_html: str, max_chars: int = 230) -> str:
+    """Strip Reddit RSS HTML boilerplate (`submitted by /u/...`, `[link]`, `[comments]`, tags) and return a clean sentence."""
+    if not raw_html:
+        return ""
+    import html as _html
+
+    cleaned = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", raw_html, flags=re.IGNORECASE | re.DOTALL)
+    cleaned = re.sub(r"<[^>]+>", " ", cleaned)
+    cleaned = _html.unescape(cleaned)
+    cleaned = re.sub(r"submitted by\s*/u/\S+.*$", "", cleaned, flags=re.IGNORECASE).strip()
+    cleaned = re.sub(r"\[link\]\s*\[comments\]", "", cleaned, flags=re.IGNORECASE).strip()
+    cleaned = re.sub(r"https?://\S+", "", cleaned).strip()
+    cleaned = " ".join(cleaned.split())
+    return _clean_excerpt(cleaned, max_chars=max_chars)
+
+
+def _fetch_reddit_thread_comments(thread_url: str, max_comments: int = 2) -> List[Dict[str, str]]:
+    """Fetch top community comments from a matched Reddit thread's `.rss` feed at build time."""
+    if not thread_url:
+        return []
+    if thread_url in _CACHED_REDDIT_COMMENTS:
+        return _CACHED_REDDIT_COMMENTS[thread_url]
+
+    comments: List[Dict[str, str]] = []
+    try:
+        import feedparser
+        import httpx
+
+        rss_url = thread_url.rstrip("/") + "/.rss?limit=4"
+        ua = (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+        )
+        with httpx.Client(timeout=4.0, headers={"User-Agent": ua}, follow_redirects=True) as client:
+            resp = client.get(rss_url)
+            if resp.status_code == 200:
+                feed = feedparser.parse(resp.text)
+                for entry in feed.entries[1 : 1 + max_comments]:
+                    author = (entry.get("author") or "reddit").strip()
+                    raw = ""
+                    if entry.get("content"):
+                        raw = entry["content"][0].get("value", "")
+                    if not raw:
+                        raw = entry.get("summary", "")
+                    text = _extract_reddit_rss_excerpt(raw, max_chars=210)
+                    if text and len(text) > 25:
+                        comments.append({"author": author, "text": text})
+    except Exception:
+        pass
+
+    _CACHED_REDDIT_COMMENTS[thread_url] = comments
+    return comments
+
+
 def _get_reddit_topic_pool() -> List[Dict[str, Any]]:
     """Fetch top 100 active discussions across AI subreddits in a single RSS request and cache in memory."""
     global _CACHED_REDDIT_POOL
@@ -1041,6 +1143,12 @@ def _get_reddit_topic_pool() -> List[Dict[str, Any]]:
                     link = (entry.get("link") or "").strip()
                     if not title or not link:
                         continue
+                    raw_body = ""
+                    if entry.get("content"):
+                        raw_body = entry["content"][0].get("value", "")
+                    if not raw_body:
+                        raw_body = entry.get("summary", "")
+                    excerpt = _extract_reddit_rss_excerpt(raw_body, max_chars=230)
                     m = re.search(r"/r/([^/]+)/", link)
                     sub = f"r/{m.group(1)}" if m else "Reddit"
                     _CACHED_REDDIT_POOL.append(
@@ -1048,7 +1156,8 @@ def _get_reddit_topic_pool() -> List[Dict[str, Any]]:
                             "title": title,
                             "url": link,
                             "sub": sub,
-                            "tokens": _tokenize_for_reddit(title),
+                            "excerpt": excerpt,
+                            "tokens": _tokenize_for_reddit(title + " " + excerpt),
                         }
                     )
     except Exception:
@@ -1057,15 +1166,16 @@ def _get_reddit_topic_pool() -> List[Dict[str, Any]]:
 
 
 def _find_reddit_discussion(title: str) -> Tuple[Dict[str, str] | None, str]:
-    """Return `(matched_thread_dict_or_None, topic_search_url)` for a briefing item."""
+    """Return `(matched_thread_dict_or_None, waf_safe_google_reddit_search_url)` for a briefing item."""
     from urllib.parse import quote_plus
 
     clean = re.sub(r"[^A-Za-z0-9\-\s]", " ", title or "")
     words = [w for w in clean.split() if len(w) > 2 and w.lower() not in _REDDIT_TOPIC_STOPWORDS]
     query = " ".join(words[:4]) or (title or "AI")
     search_url = (
-        "https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/"
-        f"?q={quote_plus(query)}&restrict_sr=1&sort=top&t=month"
+        "https://www.google.com/search?q=site:reddit.com+"
+        "%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+"
+        f"{quote_plus(query)}"
     )
 
     pool = _get_reddit_topic_pool()
@@ -1098,6 +1208,7 @@ def _find_reddit_discussion(title: str) -> Tuple[Dict[str, str] | None, str]:
             "title": best_entry["title"],
             "url": best_entry["url"],
             "sub": best_entry["sub"],
+            "excerpt": best_entry.get("excerpt", ""),
         }, search_url
     return None, search_url
 
@@ -1210,37 +1321,54 @@ def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
         reddit_callout_html = ""
         if matched_reddit:
             r_title = matched_reddit["title"]
-            if len(r_title) > 135:
-                r_title = r_title[:132].rsplit(" ", 1)[0] + "..."
-            reddit_callout_html = (
-                f'<div class="briefing-reddit">'
-                f'<strong>Reddit ({matched_reddit["sub"]}):</strong> '
-                f'<a href="{matched_reddit["url"]}" target="_blank" rel="noopener">{r_title} ↗</a>'
+            if len(r_title) > 130:
+                r_title = r_title[:127].rsplit(" ", 1)[0] + "..."
+            op_excerpt = matched_reddit.get("excerpt") or ""
+            top_comments = _fetch_reddit_thread_comments(matched_reddit["url"], max_comments=2)
+
+            body_parts: List[str] = []
+            if op_excerpt and op_excerpt.lower() != matched_reddit["title"].lower():
+                body_parts.append(f'<p style="margin:0 0 6px;">{op_excerpt}</p>')
+            for cm in top_comments:
+                body_parts.append(
+                    f'<div class="reddit-comment"><strong>{cm["author"]}:</strong> {cm["text"]}</div>'
+                )
+            body_parts.append(
+                f'<div class="reddit-footer">'
+                f'<a href="{reddit_search_url}" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a>'
+                f'<a href="{matched_reddit["url"]}" target="_blank" rel="noopener noreferrer">Direct link ({matched_reddit["sub"]}) ↗</a>'
                 f'</div>'
+            )
+            reddit_callout_html = (
+                f'<details class="briefing-reddit">'
+                f'<summary><span><strong>Reddit ({matched_reddit["sub"]}):</strong> {r_title}</span>'
+                f'<span class="reddit-toggle">Read inline ▾</span></summary>'
+                f'<div class="reddit-body">{"".join(body_parts)}</div>'
+                f'</details>'
             )
 
         # Tier 3: Dedicated Action & Discussion Bar below the summary
         action_links: List[str] = []
         source_label = f'Read Source ({it["domain"]}) ↗' if it["domain"] else "Read Source ↗"
-        action_links.append(f'<a href="{it["url"]}" target="_blank" rel="noopener">{source_label}</a>')
+        action_links.append(f'<a href="{it["url"]}" target="_blank" rel="noopener noreferrer">{source_label}</a>')
 
         if it["points"]:
             if it["hn_url"] and it["hn_url"] != it["url"]:
                 action_links.append(
-                    f'<a href="{it["hn_url"]}" target="_blank" rel="noopener">HN Discussion ({it["points"]} pts) ↗</a>'
+                    f'<a href="{it["hn_url"]}" target="_blank" rel="noopener noreferrer">HN Discussion ({it["points"]} pts) ↗</a>'
                 )
             else:
                 action_links.append(f'<span>{it["points"]} pts</span>')
         elif it["hn_url"] and it["hn_url"] != it["url"]:
-            action_links.append(f'<a href="{it["hn_url"]}" target="_blank" rel="noopener">HN Discussion ↗</a>')
+            action_links.append(f'<a href="{it["hn_url"]}" target="_blank" rel="noopener noreferrer">HN Discussion ↗</a>')
 
         if matched_reddit:
             action_links.append(
-                f'<a href="{matched_reddit["url"]}" target="_blank" rel="noopener">{matched_reddit["sub"]} Thread ↗</a>'
+                f'<a href="{reddit_search_url}" target="_blank" rel="noopener noreferrer">{matched_reddit["sub"]} via Google ↗</a>'
             )
         else:
             action_links.append(
-                f'<a href="{reddit_search_url}" target="_blank" rel="noopener">Reddit Topic ↗</a>'
+                f'<a href="{reddit_search_url}" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a>'
             )
 
         rows.append(
@@ -1249,7 +1377,7 @@ def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
               <div class="briefing-num">{it["rank"]}</div>
               <div class="briefing-content">
                 <div class="briefing-meta">{'<span>·</span>'.join(kicker_bits)}</div>
-                <h3><a href="{it["url"]}" target="_blank" rel="noopener">{it["title"]}</a></h3>
+                <h3><a href="{it["url"]}" target="_blank" rel="noopener noreferrer">{it["title"]}</a></h3>
                 {summary_html}
                 {reddit_callout_html}
                 <div class="briefing-actions">{"".join(action_links)}</div>
@@ -1265,9 +1393,9 @@ def _render_notes_column_html(notes: List[Dict[str, str]], action_label: str) ->
         return '<p style="color:var(--ink-muted);font-size:0.9rem;">No entries recorded for this issue.</p>'
     blocks: List[str] = []
     for n in notes:
-        links = [f'<a href="{n["url"]}" target="_blank" rel="noopener">{action_label} ↗</a>']
+        links = [f'<a href="{n["url"]}" target="_blank" rel="noopener noreferrer">{action_label} ↗</a>']
         if n["hn_url"] and n["hn_url"] != n["url"]:
-            links.append(f'<a href="{n["hn_url"]}" target="_blank" rel="noopener">HN Thread ↗</a>')
+            links.append(f'<a href="{n["hn_url"]}" target="_blank" rel="noopener noreferrer">HN Thread ↗</a>')
         body_html = f'<p class="note-body">{n["summary"]}</p>' if n["summary"] else ""
         blocks.append(
             f"""
@@ -1276,7 +1404,7 @@ def _render_notes_column_html(notes: List[Dict[str, str]], action_label: str) ->
                 <strong>{n["kicker"]}</strong>
                 <span>{n["meta"]}</span>
               </div>
-              <h4 class="note-title"><a href="{n["url"]}" target="_blank" rel="noopener">{n["title"]}</a></h4>
+              <h4 class="note-title"><a href="{n["url"]}" target="_blank" rel="noopener noreferrer">{n["title"]}</a></h4>
               {body_html}
               <div class="note-links">{"".join(links)}</div>
             </article>

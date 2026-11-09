@@ -328,15 +328,28 @@
     }
     .briefing-reddit {
       margin: 8px 0 10px;
-      padding: 6px 12px;
+      padding: 8px 12px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-left: 3px solid var(--accent);
       font-family: var(--font-sans);
       font-size: 0.83rem;
-      line-height: 1.48;
+      line-height: 1.5;
       color: var(--ink-secondary);
       max-width: 66ch;
+    }
+    .briefing-reddit summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .briefing-reddit summary::-webkit-details-marker {
+      display: none;
     }
     .briefing-reddit strong {
       font-family: var(--font-mono);
@@ -346,8 +359,40 @@
       color: var(--accent);
       margin-right: 4px;
     }
+    .reddit-toggle {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .reddit-body {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--ink-secondary);
+    }
+    .reddit-comment {
+      margin-top: 6px;
+      padding-left: 10px;
+      border-left: 2px solid var(--border);
+      font-size: 0.86rem;
+    }
+    .reddit-footer {
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
     .briefing-reddit a {
-      color: var(--ink);
+      color: var(--ink-secondary);
       text-decoration: underline;
       text-decoration-color: var(--border);
       text-underline-offset: 2px;
@@ -786,10 +831,10 @@
               <div class="briefing-num">01</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-05</span></div>
-                <h3><a href="https://github.com/anthropics/claude-code/issues/107757" target="_blank" rel="noopener">Claude Code sends your email address to websites</a></h3>
+                <h3><a href="https://github.com/anthropics/claude-code/issues/107757" target="_blank" rel="noopener noreferrer">Claude Code sends your email address to websites</a></h3>
                 <p class="briefing-summary">Bug Description I receive dozens of scam emails per day because claude code divulged my email to arbitrary 3rd parties in the User-Agent request header while conducting web searches without my.</p>
                 
-                <div class="briefing-actions"><a href="https://github.com/anthropics/claude-code/issues/107757" target="_blank" rel="noopener">Read Source (github.com) ↗</a><a href="https://news.ycombinator.com/item?id=50385272" target="_blank" rel="noopener">HN Discussion (1593 pts) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Claude+Code+sends+email&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://github.com/anthropics/claude-code/issues/107757" target="_blank" rel="noopener noreferrer">Read Source (github.com) ↗</a><a href="https://news.ycombinator.com/item?id=50385272" target="_blank" rel="noopener noreferrer">HN Discussion (1593 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Claude+Code+sends+email" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -797,10 +842,10 @@
               <div class="briefing-num">02</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-10-28</span></div>
-                <h3><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/" target="_blank" rel="noopener">Gemini 4 Carbon</a></h3>
+                <h3><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/" target="_blank" rel="noopener noreferrer">Gemini 4 Carbon</a></h3>
                 <p class="briefing-summary">Gemini 4 Carbon is our strongest model with state-of-the-art cybersecurity and long horizon capabilities.</p>
                 
-                <div class="briefing-actions"><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/" target="_blank" rel="noopener">Read Source (blog.google) ↗</a><a href="https://news.ycombinator.com/item?id=50276792" target="_blank" rel="noopener">HN Discussion (1019 pts) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Gemini+Carbon&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/" target="_blank" rel="noopener noreferrer">Read Source (blog.google) ↗</a><a href="https://news.ycombinator.com/item?id=50276792" target="_blank" rel="noopener noreferrer">HN Discussion (1019 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Gemini+Carbon" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -808,10 +853,10 @@
               <div class="briefing-num">03</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-04</span></div>
-                <h3><a href="https://news.ycombinator.com/item?id=50363461" target="_blank" rel="noopener">Tell HN: Gemini trains on chat history, even for subscribers (personal accounts)</a></h3>
+                <h3><a href="https://news.ycombinator.com/item?id=50363461" target="_blank" rel="noopener noreferrer">Tell HN: Gemini trains on chat history, even for subscribers (personal accounts)</a></h3>
                 <p class="briefing-summary">If you have a personal Google AI subscription, all your saved chat history in Gemini can be used for training and there is no way to opt out unless you turn off chat history or use temporary chat sessions.</p>
                 
-                <div class="briefing-actions"><a href="https://news.ycombinator.com/item?id=50363461" target="_blank" rel="noopener">Read Source (news.ycombinator.com) ↗</a><span>730 pts</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Tell+Gemini+trains+chat&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://news.ycombinator.com/item?id=50363461" target="_blank" rel="noopener noreferrer">Read Source (news.ycombinator.com) ↗</a><span>730 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Tell+Gemini+trains+chat" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -819,10 +864,10 @@
               <div class="briefing-num">04</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-07</span></div>
-                <h3><a href="https://8rank.ai/game/apple-intelligence-personal-knowledge-graph" target="_blank" rel="noopener">Every Mac comes with an (undocumented) family member classifier</a></h3>
+                <h3><a href="https://8rank.ai/game/apple-intelligence-personal-knowledge-graph" target="_blank" rel="noopener noreferrer">Every Mac comes with an (undocumented) family member classifier</a></h3>
                 <p class="briefing-summary">Every Mac since macOS 13 (allegedly) ships a pair of daemons whose only purpose in life is to build a graph about who you are, whom you know, how those people are related to you and to each other, how you communicate with them, where you go, what you do and when.</p>
                 
-                <div class="briefing-actions"><a href="https://8rank.ai/game/apple-intelligence-personal-knowledge-graph" target="_blank" rel="noopener">Read Source (8rank.ai) ↗</a><a href="https://news.ycombinator.com/item?id=50403097" target="_blank" rel="noopener">HN Discussion (661 pts) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Every+Mac+comes+undocumented&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://8rank.ai/game/apple-intelligence-personal-knowledge-graph" target="_blank" rel="noopener noreferrer">Read Source (8rank.ai) ↗</a><a href="https://news.ycombinator.com/item?id=50403097" target="_blank" rel="noopener noreferrer">HN Discussion (661 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Every+Mac+comes+undocumented" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -830,10 +875,10 @@
               <div class="briefing-num">05</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-04</span></div>
-                <h3><a href="https://huggingface.co/papers/2611.08449" target="_blank" rel="noopener">VFlash: Fast, Accurate Visual Planning via Flash Primitive Decoding</a></h3>
+                <h3><a href="https://huggingface.co/papers/2611.08449" target="_blank" rel="noopener noreferrer">VFlash: Fast, Accurate Visual Planning via Flash Primitive Decoding</a></h3>
                 <p class="briefing-summary">Models for physical AI tasks, such as robotics and autonomous driving, need not reason solely in language. They can use visual plans--points, bounding boxes, and trajectories--to represent spatial goals and anticipate motion.</p>
                 
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.08449" target="_blank" rel="noopener">Read Source (huggingface.co) ↗</a><span>100 pts</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=VFlash+Fast+Accurate+Visual&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.08449" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>100 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+VFlash+Fast+Accurate+Visual" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -841,10 +886,10 @@
               <div class="briefing-num">06</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-03</span></div>
-                <h3><a href="https://huggingface.co/papers/2611.05376" target="_blank" rel="noopener">From Autonomous Agents to Cognitive Symbionts: Toward AI-Augmented Human Intelligence</a></h3>
+                <h3><a href="https://huggingface.co/papers/2611.05376" target="_blank" rel="noopener noreferrer">From Autonomous Agents to Cognitive Symbionts: Toward AI-Augmented Human Intelligence</a></h3>
                 <p class="briefing-summary">For a decade, progress in artificial intelligence has been measured by how much a machine can do on its own. Large foundation models now write code and run multistep tasks, and personal agents act on a person's behalf.</p>
                 
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.05376" target="_blank" rel="noopener">Read Source (huggingface.co) ↗</a><span>86 pts</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Autonomous+Agents+Cognitive+Symbionts&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.05376" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>86 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Autonomous+Agents+Cognitive+Symbionts" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -852,10 +897,10 @@
               <div class="briefing-num">07</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-04</span></div>
-                <h3><a href="https://huggingface.co/papers/2611.08373" target="_blank" rel="noopener">SLA: Scaling Spatial-Language-Action Model via Continual Pre-training</a></h3>
+                <h3><a href="https://huggingface.co/papers/2611.08373" target="_blank" rel="noopener noreferrer">SLA: Scaling Spatial-Language-Action Model via Continual Pre-training</a></h3>
                 <p class="briefing-summary">Reliable robotic manipulation requires both semantic understanding and precise control in three-dimensional space.</p>
                 
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.08373" target="_blank" rel="noopener">Read Source (huggingface.co) ↗</a><span>82 pts</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=SLA+Scaling+Spatial-Language-Action+Continual&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.08373" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>82 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+SLA+Scaling+Spatial-Language-Action+Continual" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -863,10 +908,10 @@
               <div class="briefing-num">08</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-10-31</span></div>
-                <h3><a href="https://huggingface.co/papers/2611.02075" target="_blank" rel="noopener">Decoupled Predictive Decision Making: A Shared Conditional Predictor for Agents</a></h3>
+                <h3><a href="https://huggingface.co/papers/2611.02075" target="_blank" rel="noopener noreferrer">Decoupled Predictive Decision Making: A Shared Conditional Predictor for Agents</a></h3>
                 <p class="briefing-summary">Agent decisions depend on empirical relationships that deployment observations reveal and task descriptions alone may leave unresolved. We introduce Decoupled Predictive Decision Making (DPDM), an architecture that formulates heterogeneous agent decisions as conditional prediction with a shared pretrained learner.</p>
                 
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.02075" target="_blank" rel="noopener">Read Source (huggingface.co) ↗</a><span>80 pts</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Decoupled+Predictive+Decision+Making&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.02075" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>80 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Decoupled+Predictive+Decision+Making" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -874,10 +919,10 @@
               <div class="briefing-num">09</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>Simon Willison (AI</span><span>·</span><span>2026-11-06</span></div>
-                <h3><a href="https://simonwillison.net/2026/Nov/6/nilay-patel/" target="_blank" rel="noopener">Quoting Nilay Patel</a></h3>
+                <h3><a href="https://simonwillison.net/2026/Nov/6/nilay-patel/" target="_blank" rel="noopener noreferrer">Quoting Nilay Patel</a></h3>
                 <p class="briefing-summary">The products aren't good enough to sell people on the costs. You cannot tell people that you have to listen to the whine of a data center in their backyard for AI overviews and some of the most hilarious deep fake slop in history. It's not worth it. It just isn't worth it to anyone.</p>
                 
-                <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/6/nilay-patel/" target="_blank" rel="noopener">Read Source (simonwillison.net) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Quoting+Nilay+Patel&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/6/nilay-patel/" target="_blank" rel="noopener noreferrer">Read Source (simonwillison.net) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Quoting+Nilay+Patel" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -885,10 +930,10 @@
               <div class="briefing-num">10</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>Simon Willison (AI</span><span>·</span><span>2026-11-03</span></div>
-                <h3><a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/" target="_blank" rel="noopener">Qwen 3.8 27B on my laptop can interpret model weights, too</a></h3>
+                <h3><a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/" target="_blank" rel="noopener noreferrer">Qwen 3.8 27B on my laptop can interpret model weights, too</a></h3>
                 <p class="briefing-summary">Yesterday's hot paper was Sparks of Weight-Space Programming: LLMs can natively read & write neural network weights by Rikiya Takehi, Jayden Teoh, Alex Zhang, and Omar Khattab.</p>
                 
-                <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/" target="_blank" rel="noopener">Read Source (simonwillison.net) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Qwen+27B+laptop+interpret&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/" target="_blank" rel="noopener noreferrer">Read Source (simonwillison.net) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Qwen+27B+laptop+interpret" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             </div>
@@ -905,9 +950,9 @@
                 <strong>@jiahaoshao1</strong>
                 <span>494 pts</span>
               </div>
-              <h4 class="note-title"><a href="https://twitter.com/jiahaoshao1/status/2116475922190922088" target="_blank" rel="noopener">Anthropic blocks users for anything touching training larger models</a></h4>
+              <h4 class="note-title"><a href="https://twitter.com/jiahaoshao1/status/2116475922190922088" target="_blank" rel="noopener noreferrer">Anthropic blocks users for anything touching training larger models</a></h4>
               
-              <div class="note-links"><a href="https://twitter.com/jiahaoshao1/status/2116475922190922088" target="_blank" rel="noopener">Read Thread on X ↗</a><a href="https://news.ycombinator.com/item?id=50319358" target="_blank" rel="noopener">HN Thread ↗</a></div>
+              <div class="note-links"><a href="https://twitter.com/jiahaoshao1/status/2116475922190922088" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a><a href="https://news.ycombinator.com/item?id=50319358" target="_blank" rel="noopener noreferrer">HN Thread ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -915,9 +960,9 @@
                 <strong>@thsottiaux</strong>
                 <span>415 pts</span>
               </div>
-              <h4 class="note-title"><a href="https://twitter.com/thsottiaux/status/2073933490513752151" target="_blank" rel="noopener">GPT-5.6 Sol Ultra will be in Codex</a></h4>
+              <h4 class="note-title"><a href="https://twitter.com/thsottiaux/status/2073933490513752151" target="_blank" rel="noopener noreferrer">GPT-5.6 Sol Ultra will be in Codex</a></h4>
               
-              <div class="note-links"><a href="https://twitter.com/thsottiaux/status/2073933490513752151" target="_blank" rel="noopener">Read Thread on X ↗</a><a href="https://news.ycombinator.com/item?id=48799614" target="_blank" rel="noopener">HN Thread ↗</a></div>
+              <div class="note-links"><a href="https://twitter.com/thsottiaux/status/2073933490513752151" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a><a href="https://news.ycombinator.com/item?id=48799614" target="_blank" rel="noopener noreferrer">HN Thread ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -925,9 +970,9 @@
                 <strong>@sgondala2</strong>
                 <span>195 pts</span>
               </div>
-              <h4 class="note-title"><a href="https://twitter.com/sgondala2/status/2115832070274723875" target="_blank" rel="noopener">Building an AI-native engineering org</a></h4>
+              <h4 class="note-title"><a href="https://twitter.com/sgondala2/status/2115832070274723875" target="_blank" rel="noopener noreferrer">Building an AI-native engineering org</a></h4>
               
-              <div class="note-links"><a href="https://twitter.com/sgondala2/status/2115832070274723875" target="_blank" rel="noopener">Read Thread on X ↗</a><a href="https://news.ycombinator.com/item?id=50296730" target="_blank" rel="noopener">HN Thread ↗</a></div>
+              <div class="note-links"><a href="https://twitter.com/sgondala2/status/2115832070274723875" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a><a href="https://news.ycombinator.com/item?id=50296730" target="_blank" rel="noopener noreferrer">HN Thread ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -935,9 +980,9 @@
                 <strong>AINews · X Recap</strong>
                 <span></span>
               </div>
-              <h4 class="note-title"><a href="https://news.smol.ai/issues/26-09-08-navier-stokes/" target="_blank" rel="noopener">AI Twitter/X Daily Recap: OpenAI reports Navier-Stokes singularity find, a contender for second ever Millenium Prize awarded, overshadowing Cognition's $48B Series E, Mistral's $24B Series D, Meta's Muse agent, and GPT Image 2.5</a></h4>
+              <h4 class="note-title"><a href="https://news.smol.ai/issues/26-09-08-navier-stokes/" target="_blank" rel="noopener noreferrer">AI Twitter/X Daily Recap: OpenAI reports Navier-Stokes singularity find, a contender for second ever Millenium Prize awarded, overshadowing Cognition's $48B Series E, Mistral's $24B Series D, Meta's Muse agent, and GPT Image 2.5</a></h4>
               <p class="note-body">OpenAI announced a proposed Navier–Stokes proof by an internal model "significantly more capable than GPT-6 Astra" using 10,000 agents over 88 hours plus 17 hours of formal verification.</p>
-              <div class="note-links"><a href="https://news.smol.ai/issues/26-09-08-navier-stokes/" target="_blank" rel="noopener">Read Thread on X ↗</a></div>
+              <div class="note-links"><a href="https://news.smol.ai/issues/26-09-08-navier-stokes/" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -945,9 +990,9 @@
                 <strong>AINews · X Recap</strong>
                 <span></span>
               </div>
-              <h4 class="note-title"><a href="https://news.smol.ai/issues/26-09-04-collusionwiki/" target="_blank" rel="noopener">AI Twitter/X Daily Recap: collusion.wiki</a></h4>
+              <h4 class="note-title"><a href="https://news.smol.ai/issues/26-09-04-collusionwiki/" target="_blank" rel="noopener noreferrer">AI Twitter/X Daily Recap: collusion.wiki</a></h4>
               <p class="note-body">OpenAI agents were found colluding via a German-language wiki/forum, exchanging ~18,000 messages and bypassing restrictions by exploiting writable web surfaces like public wikis and CGI endpoints.</p>
-              <div class="note-links"><a href="https://news.smol.ai/issues/26-09-04-collusionwiki/" target="_blank" rel="noopener">Read Thread on X ↗</a></div>
+              <div class="note-links"><a href="https://news.smol.ai/issues/26-09-04-collusionwiki/" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a></div>
             </article>
             </div>
       </section>
@@ -962,9 +1007,9 @@
                 <strong>Generative AI 101</strong>
                 <span>12m</span>
               </div>
-              <h4 class="note-title"><a href="https://generativeai101.podbean.com/e/how-to-evaluate-an-ai-model/" target="_blank" rel="noopener">How to Evaluate an AI Model</a></h4>
+              <h4 class="note-title"><a href="https://generativeai101.podbean.com/e/how-to-evaluate-an-ai-model/" target="_blank" rel="noopener noreferrer">How to Evaluate an AI Model</a></h4>
               <p class="note-body">One AI model can win gold at the International Mathematical Olympiad while another leading model can only read an analog clock about half the time, so what do those record-breaking benchmark scores actually tell you?</p>
-              <div class="note-links"><a href="https://generativeai101.podbean.com/e/how-to-evaluate-an-ai-model/" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://generativeai101.podbean.com/e/how-to-evaluate-an-ai-model/" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -972,9 +1017,9 @@
                 <strong>AI Optic: Anthropic & OpenAI News</strong>
                 <span>14m</span>
               </div>
-              <h4 class="note-title"><a href="https://podcasts.apple.com/sg/podcast/ai-optic-anthropic-openai-news/id1725552927" target="_blank" rel="noopener">The AI Agent Race: Perplexity Teammates, Meta Muse & GPT-6 Cyber</a></h4>
+              <h4 class="note-title"><a href="https://podcasts.apple.com/sg/podcast/ai-optic-anthropic-openai-news/id1725552927" target="_blank" rel="noopener noreferrer">The AI Agent Race: Perplexity Teammates, Meta Muse & GPT-6 Cyber</a></h4>
               <p class="note-body">AI is moving beyond answers and into getting things done. Jaeden Schafer breaks down the latest wave of AI agents, including Perplexity Teammates, Meta Muse’s voice and avatar features, and frontier lab strategy.</p>
-              <div class="note-links"><a href="https://podcasts.apple.com/sg/podcast/ai-optic-anthropic-openai-news/id1725552927" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://podcasts.apple.com/sg/podcast/ai-optic-anthropic-openai-news/id1725552927" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -982,9 +1027,9 @@
                 <strong>AI Today Podcast</strong>
                 <span>29m</span>
               </div>
-              <h4 class="note-title"><a href="https://podcasts.apple.com/sg/podcast/ai-today-podcast/id1279927057" target="_blank" rel="noopener">What Does It Mean to Be AI Literate? With Kathleen Walch</a></h4>
+              <h4 class="note-title"><a href="https://podcasts.apple.com/sg/podcast/ai-today-podcast/id1279927057" target="_blank" rel="noopener noreferrer">What Does It Mean to Be AI Literate? With Kathleen Walch</a></h4>
               <p class="note-body">Host Kathleen Walch explores one of the most discussed yet least defined topics in AI today: AI literacy across practitioners, business leaders, and engineering organizations.</p>
-              <div class="note-links"><a href="https://podcasts.apple.com/sg/podcast/ai-today-podcast/id1279927057" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://podcasts.apple.com/sg/podcast/ai-today-podcast/id1279927057" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -992,9 +1037,9 @@
                 <strong>Latent Space (AI Engineer Podcast)</strong>
                 <span>1h 42m</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=P735f1xlpL0" target="_blank" rel="noopener">Deep Dive: Anthropic S-1 Myths and Mythos — Jamin Ball, Altimeter</a></h4>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=P735f1xlpL0" target="_blank" rel="noopener noreferrer">Deep Dive: Anthropic S-1 Myths and Mythos — Jamin Ball, Altimeter</a></h4>
               <p class="note-body">Deep dive into frontier AI lab economics, enterprise AI margins, and infrastructure scaling with Altimeter's Jamin Ball.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=P735f1xlpL0" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=P735f1xlpL0" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -1002,9 +1047,9 @@
                 <strong>The TWIML AI Podcast</strong>
                 <span>48m</span>
               </div>
-              <h4 class="note-title"><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster" target="_blank" rel="noopener">Can AI Invent or Just Help Scientists Work Faster? with Richard Socher - #783</a></h4>
+              <h4 class="note-title"><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster" target="_blank" rel="noopener noreferrer">Can AI Invent or Just Help Scientists Work Faster? with Richard Socher - #783</a></h4>
               <p class="note-body">AI can help scientists write code, analyze data, and draft papers. But can it generate the ideas that lead to new discoveries? Richard Socher joins to explore autonomous scientific discovery.</p>
-              <div class="note-links"><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             </div>
       </section>

@@ -128,3 +128,26 @@ def test_exclude_previously_published_items(tmp_path: Path):
     assert len(filtered) == 10
     assert all(i.url != "https://example.com/old-story" for i in filtered)
 
+
+def test_reddit_waf_safe_links_and_rss_sanitization():
+    from genai_agent.notifiers.markdown_store import (
+        _extract_reddit_rss_excerpt,
+        _find_reddit_discussion,
+    )
+
+    _, search_url = _find_reddit_discussion("Random Is Almost Enough Benchmark Compression")
+    assert "reddit.com/r/" not in search_url or "/search/" not in search_url
+    assert search_url.startswith("https://www.google.com/search?q=site:reddit.com+")
+
+    raw_rss = (
+        '<table><tr><td><p>When you approve a command in Claude Code, it is saved in settings.local.json.</p>'
+        '</td></tr></table> &#32; submitted by &#32; <a href="https://www.reddit.com/user/test"> /u/test </a> '
+        '<span><a href="https://www.reddit.com/r/ClaudeAI/">[link]</a></span> <span>[comments]</span>'
+    )
+    excerpt = _extract_reddit_rss_excerpt(raw_rss)
+    assert "settings.local.json" in excerpt
+    assert "submitted by" not in excerpt
+    assert "[comments]" not in excerpt
+    assert "<table" not in excerpt
+
+

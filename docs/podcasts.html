@@ -328,15 +328,28 @@
     }
     .briefing-reddit {
       margin: 8px 0 10px;
-      padding: 6px 12px;
+      padding: 8px 12px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-left: 3px solid var(--accent);
       font-family: var(--font-sans);
       font-size: 0.83rem;
-      line-height: 1.48;
+      line-height: 1.5;
       color: var(--ink-secondary);
       max-width: 66ch;
+    }
+    .briefing-reddit summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .briefing-reddit summary::-webkit-details-marker {
+      display: none;
     }
     .briefing-reddit strong {
       font-family: var(--font-mono);
@@ -346,8 +359,40 @@
       color: var(--accent);
       margin-right: 4px;
     }
+    .reddit-toggle {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .reddit-body {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--ink-secondary);
+    }
+    .reddit-comment {
+      margin-top: 6px;
+      padding-left: 10px;
+      border-left: 2px solid var(--border);
+      font-size: 0.86rem;
+    }
+    .reddit-footer {
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
     .briefing-reddit a {
-      color: var(--ink);
+      color: var(--ink-secondary);
       text-decoration: underline;
       text-decoration-color: var(--border);
       text-underline-offset: 2px;
@@ -771,9 +816,9 @@
                 <strong>Wed, 04 Nov 2026</strong>
                 <span>12m</span>
               </div>
-              <h4 class="note-title"><a href="https://generativeai101.podbean.com/e/how-to-evaluate-an-ai-model/" target="_blank" rel="noopener">How to Evaluate an AI Model</a></h4>
+              <h4 class="note-title"><a href="https://generativeai101.podbean.com/e/how-to-evaluate-an-ai-model/" target="_blank" rel="noopener noreferrer">How to Evaluate an AI Model</a></h4>
               <p class="note-body">One AI model can win gold at the International Mathematical Olympiad while another leading model can only read an analog clock about half the time, so what do those record-breaking benchmark scores actually tell you?</p>
-              <div class="note-links"><a href="https://generativeai101.podbean.com/e/how-to-evaluate-an-ai-model/" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://generativeai101.podbean.com/e/how-to-evaluate-an-ai-model/" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -781,9 +826,9 @@
                 <strong>Tue, 03 Nov 2026</strong>
                 <span>12m</span>
               </div>
-              <h4 class="note-title"><a href="https://generativeai101.podbean.com/e/what-is-context-engineering/" target="_blank" rel="noopener">What is Context Engineering?</a></h4>
+              <h4 class="note-title"><a href="https://generativeai101.podbean.com/e/what-is-context-engineering/" target="_blank" rel="noopener noreferrer">What is Context Engineering?</a></h4>
               <p class="note-body">Bigger context windows were supposed to solve everything, but research on “lost in the middle” and context rot shows that AI can have the right answer in front of it and still miss it.</p>
-              <div class="note-links"><a href="https://generativeai101.podbean.com/e/what-is-context-engineering/" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://generativeai101.podbean.com/e/what-is-context-engineering/" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -791,9 +836,9 @@
                 <strong>Mon, 02 Nov 2026</strong>
                 <span>10m</span>
               </div>
-              <h4 class="note-title"><a href="https://generativeai101.podbean.com/e/stop-prompting-ai-start-managing-it/" target="_blank" rel="noopener">Stop Prompting AI. Start Managing It.</a></h4>
+              <h4 class="note-title"><a href="https://generativeai101.podbean.com/e/stop-prompting-ai-start-managing-it/" target="_blank" rel="noopener noreferrer">Stop Prompting AI. Start Managing It.</a></h4>
               <p class="note-body">Generative AI has outgrown the question-and-answer routine, and treating it like a well-read search engine now leaves real value (and real risk) on the table.</p>
-              <div class="note-links"><a href="https://generativeai101.podbean.com/e/stop-prompting-ai-start-managing-it/" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://generativeai101.podbean.com/e/stop-prompting-ai-start-managing-it/" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             </div>
             </section>
@@ -810,9 +855,9 @@
                 <strong>Fri, 06 Nov 2026</strong>
                 <span>14m</span>
               </div>
-              <h4 class="note-title"><a href="https://rss.art19.com/episodes/03d2a7f7-1836-4929-8e07-2852bbc5c9a3.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener">The AI Agent Race: Perplexity Teammates, Meta Muse & GPT-6 Cyber</a></h4>
+              <h4 class="note-title"><a href="https://rss.art19.com/episodes/03d2a7f7-1836-4929-8e07-2852bbc5c9a3.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener noreferrer">The AI Agent Race: Perplexity Teammates, Meta Muse & GPT-6 Cyber</a></h4>
               <p class="note-body">AI is moving beyond answers and into getting things done. Jaeden Schafer breaks down the latest wave of AI agents, including Perplexity Teammates, Meta Muse’s voice and avatar features, and Airbnb’s plans for an AI travel assistant.</p>
-              <div class="note-links"><a href="https://rss.art19.com/episodes/03d2a7f7-1836-4929-8e07-2852bbc5c9a3.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://rss.art19.com/episodes/03d2a7f7-1836-4929-8e07-2852bbc5c9a3.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -820,9 +865,9 @@
                 <strong>Thu, 05 Nov 2026</strong>
                 <span>19m</span>
               </div>
-              <h4 class="note-title"><a href="https://rss.art19.com/episodes/260aa5b3-59a3-49dd-b8a6-a54f2bca3fcc.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener">AI After the Midterms: Data Center Pressure & ChatGPT’s Next Move</a></h4>
+              <h4 class="note-title"><a href="https://rss.art19.com/episodes/260aa5b3-59a3-49dd-b8a6-a54f2bca3fcc.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener noreferrer">AI After the Midterms: Data Center Pressure & ChatGPT’s Next Move</a></h4>
               <p class="note-body">What do the midterms mean for the AI boom? Jaeden breaks down the pressure on data-center stocks, the debate over AI regulation, and the latest developments at Anthropic and OpenAI.</p>
-              <div class="note-links"><a href="https://rss.art19.com/episodes/260aa5b3-59a3-49dd-b8a6-a54f2bca3fcc.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://rss.art19.com/episodes/260aa5b3-59a3-49dd-b8a6-a54f2bca3fcc.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -830,9 +875,9 @@
                 <strong>Tue, 27 Oct 2026</strong>
                 <span>15m</span>
               </div>
-              <h4 class="note-title"><a href="https://rss.art19.com/episodes/23661895-7d30-4a8d-9919-a7f36a24e18f.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener">Anthropic Faces FTC Scrutiny as OpenAI Claims a Major Math Breakthrough</a></h4>
+              <h4 class="note-title"><a href="https://rss.art19.com/episodes/23661895-7d30-4a8d-9919-a7f36a24e18f.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener noreferrer">Anthropic Faces FTC Scrutiny as OpenAI Claims a Major Math Breakthrough</a></h4>
               <p class="note-body">Anthropic faces new scrutiny as the FTC seeks executive testimony in its consumer-harm investigation. Jaeden breaks down the news, the reported $63 billion financing plan for Broadcom chips destined for Anthropic, and OpenAI's claim that an internal model refuted the Exponential Time Hypothesis.</p>
-              <div class="note-links"><a href="https://rss.art19.com/episodes/23661895-7d30-4a8d-9919-a7f36a24e18f.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://rss.art19.com/episodes/23661895-7d30-4a8d-9919-a7f36a24e18f.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             </div>
             </section>
@@ -849,9 +894,9 @@
                 <strong>Wed, 28 Oct 2026</strong>
                 <span>29m</span>
               </div>
-              <h4 class="note-title"><a href="https://www.buzzsprout.com/2502664/episodes/19998084-what-does-it-mean-to-be-ai-literate-with-kathleen-walch.mp3" target="_blank" rel="noopener">What Does It Mean to Be AI Literate? With Kathleen Walch</a></h4>
+              <h4 class="note-title"><a href="https://www.buzzsprout.com/2502664/episodes/19998084-what-does-it-mean-to-be-ai-literate-with-kathleen-walch.mp3" target="_blank" rel="noopener noreferrer">What Does It Mean to Be AI Literate? With Kathleen Walch</a></h4>
               <p class="note-body">In this episode of AI Today, host Kathleen Walch explores one of the most discussed yet least defined topics in AI today: AI literacy.</p>
-              <div class="note-links"><a href="https://www.buzzsprout.com/2502664/episodes/19998084-what-does-it-mean-to-be-ai-literate-with-kathleen-walch.mp3" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://www.buzzsprout.com/2502664/episodes/19998084-what-does-it-mean-to-be-ai-literate-with-kathleen-walch.mp3" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -859,9 +904,9 @@
                 <strong>Wed, 14 Oct 2026</strong>
                 <span>38m</span>
               </div>
-              <h4 class="note-title"><a href="https://www.buzzsprout.com/2502664/episodes/19934605-how-to-lead-through-ai-anxiety-insights-from-ketan-karkhanis.mp3" target="_blank" rel="noopener">How to Lead Through AI Anxiety: Insights from Ketan Karkhanis</a></h4>
+              <h4 class="note-title"><a href="https://www.buzzsprout.com/2502664/episodes/19934605-how-to-lead-through-ai-anxiety-insights-from-ketan-karkhanis.mp3" target="_blank" rel="noopener noreferrer">How to Lead Through AI Anxiety: Insights from Ketan Karkhanis</a></h4>
               <p class="note-body">In this episode of AI Today, host Kathleen Walch welcomes Ketan Karkhanis, CEO of ThoughtSpot, to discuss what it takes for organizations to succeed with AI. Drawing on his experience leading an AI-driven analytics company, Ketan shares insights on building trust, driving adoption, and delivering measurable business outcomes.</p>
-              <div class="note-links"><a href="https://www.buzzsprout.com/2502664/episodes/19934605-how-to-lead-through-ai-anxiety-insights-from-ketan-karkhanis.mp3" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://www.buzzsprout.com/2502664/episodes/19934605-how-to-lead-through-ai-anxiety-insights-from-ketan-karkhanis.mp3" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -869,16 +914,55 @@
                 <strong>Wed, 30 Sep 2026</strong>
                 <span>38m</span>
               </div>
-              <h4 class="note-title"><a href="https://www.buzzsprout.com/2502664/episodes/19826410-ai-success-through-leadership-insights-from-samia-waqar.mp3" target="_blank" rel="noopener">AI Success Through Leadership: Insights from Samia Waqar</a></h4>
+              <h4 class="note-title"><a href="https://www.buzzsprout.com/2502664/episodes/19826410-ai-success-through-leadership-insights-from-samia-waqar.mp3" target="_blank" rel="noopener noreferrer">AI Success Through Leadership: Insights from Samia Waqar</a></h4>
               <p class="note-body">In this episode of AI Today, host Kathleen Walch welcomes Samia Waqar, founder of Role Agnostic Project Leadership (RAPL), CEO of SNS Coaching Consulting Services, and PMI Authorized Instructor with nine PMI certifications including PMI-CPMAI.</p>
-              <div class="note-links"><a href="https://www.buzzsprout.com/2502664/episodes/19826410-ai-success-through-leadership-insights-from-samia-waqar.mp3" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://www.buzzsprout.com/2502664/episodes/19826410-ai-success-through-leadership-insights-from-samia-waqar.mp3" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             </div>
             </section>
             
             <section id="show-4">
               <div class="section-head">
-                <h2>04. The TWIML AI Podcast — Host: Sam Charrington</h2>
+                <h2>04. Latent Space (AI Engineer Podcast) — Host: swyx & Alessio</h2>
+                <span><a href="https://podcasts.apple.com/us/podcast/latent-space-the-ai-engineer-podcast/id1674008350" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">APPLE PODCASTS ↗</a></span>
+              </div>
+              <p style="font-family:var(--font-sans);font-size:0.84rem;color:var(--ink-muted);margin:0 0 8px;">Focus: Deep Technical AI Engineering, Agents, Infra & Research</p>
+              <div class="note-list">
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Sun, 08 Nov 2026</strong>
+                <span>2h 1m</span>
+              </div>
+              <h4 class="note-title"><a href="https://lspace.beehiiv.com/podcast/s/latent_space_the_ai_engineer_podcast/one_million_ai_engineer_special_how_stanford_teaches_ai-native_engineering_mihail_eric_monaco" target="_blank" rel="noopener noreferrer">[One Million AI Engineer Special] How Stanford Teaches AI-Native Engineering — Mihail Eric, Monaco</a></h4>
+              <p class="note-body">What do you assign when a coding agent can finish last year’s homework in one prompt? In the second run of Stanford’s CS146S, Mihail Eric brought open-source maintainers into the course.</p>
+              <div class="note-links"><a href="https://lspace.beehiiv.com/podcast/s/latent_space_the_ai_engineer_podcast/one_million_ai_engineer_special_how_stanford_teaches_ai-native_engineering_mihail_eric_monaco" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Sat, 07 Nov 2026</strong>
+                <span>1h 42m</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=P735f1xlpL0" target="_blank" rel="noopener noreferrer">Deep Dive: Anthropic S-1 Myths and Mythos — Jamin Ball, Altimeter</a></h4>
+              <p class="note-body">Watch the full show on YouTube: https://www.youtube.com/watch?v=P735f1xlpL0</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=P735f1xlpL0" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Fri, 06 Nov 2026</strong>
+                <span>50m</span>
+              </div>
+              <h4 class="note-title"><a href="https://lspace.beehiiv.com/podcast/s/latent_space_the_ai_engineer_podcast/controlling_biology_-_fabian_theis_helmholtz_munich_1" target="_blank" rel="noopener noreferrer">Controlling Biology - Fabian Theis, Helmholtz Munich</a></h4>
+              <p class="note-body">Fabian Theis has been one of the key players in the various iterations of the Virtual Cell concept and initiatives.</p>
+              <div class="note-links"><a href="https://lspace.beehiiv.com/podcast/s/latent_space_the_ai_engineer_podcast/controlling_biology_-_fabian_theis_helmholtz_munich_1" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
+            </article>
+            </div>
+            </section>
+            
+            <section id="show-5">
+              <div class="section-head">
+                <h2>05. The TWIML AI Podcast — Host: Sam Charrington</h2>
                 <span><a href="https://podcasts.apple.com/us/podcast/the-twiml-ai-podcast-formerly-this-week-in-machine-learning/id1116303051" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">APPLE PODCASTS ↗</a></span>
               </div>
               <p style="font-family:var(--font-sans);font-size:0.84rem;color:var(--ink-muted);margin:0 0 8px;">Focus: Academic ML Research & Frontier AI Interviews</p>
@@ -888,9 +972,9 @@
                 <strong>Tue, 03 Nov 2026</strong>
                 <span>48m</span>
               </div>
-              <h4 class="note-title"><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster" target="_blank" rel="noopener">Can AI Invent or Just Help Scientists Work Faster? with Richard Socher - #783</a></h4>
+              <h4 class="note-title"><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster" target="_blank" rel="noopener noreferrer">Can AI Invent or Just Help Scientists Work Faster? with Richard Socher - #783</a></h4>
               <p class="note-body">AI can help scientists write code, analyze data, and draft papers. But can it generate the ideas that lead to new discoveries? Richard Socher, former chief scientist at Salesforce, founder of You.com, and co-founder of Recursive, joins us to explore the move from AI assisting researchers to AI conducting research.</p>
-              <div class="note-links"><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -898,9 +982,9 @@
                 <strong>Wed, 28 Oct 2026</strong>
                 <span>54m</span>
               </div>
-              <h4 class="note-title"><a href="https://twimlai.com/podcast/twimlai/brutal-reality-building-agentic-products-today" target="_blank" rel="noopener">The Brutal Reality of Building Agentic Products Today with Daniel Jeffries - #782</a></h4>
+              <h4 class="note-title"><a href="https://twimlai.com/podcast/twimlai/brutal-reality-building-agentic-products-today" target="_blank" rel="noopener noreferrer">The Brutal Reality of Building Agentic Products Today with Daniel Jeffries - #782</a></h4>
               <p class="note-body">AI agents are becoming accessible to everyone, raising the bar for developers building the next generation of agent products. When capable, general-purpose agents are available out of the box, differentiation increasingly comes down to the architectural decisions and specialized experiences that make an agent uniquely valuable.</p>
-              <div class="note-links"><a href="https://twimlai.com/podcast/twimlai/brutal-reality-building-agentic-products-today" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://twimlai.com/podcast/twimlai/brutal-reality-building-agentic-products-today" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -908,16 +992,16 @@
                 <strong>Wed, 21 Oct 2026</strong>
                 <span>51m</span>
               </div>
-              <h4 class="note-title"><a href="https://twimlai.com/podcast/twimlai/airbnb-building-company-brain-ai-agents" target="_blank" rel="noopener">Airbnb Is Building a ‘Company Brain’ for AI Agents with Ahmad Al-Dahle - #781</a></h4>
+              <h4 class="note-title"><a href="https://twimlai.com/podcast/twimlai/airbnb-building-company-brain-ai-agents" target="_blank" rel="noopener noreferrer">Airbnb Is Building a ‘Company Brain’ for AI Agents with Ahmad Al-Dahle - #781</a></h4>
               <p class="note-body">AI agents need the institutional knowledge experienced employees rely on: why a system works a certain way, which policies apply, and what never made it into the documentation. Capturing that knowledge is hard. Keeping it useful as people and agents add more may be harder.</p>
-              <div class="note-links"><a href="https://twimlai.com/podcast/twimlai/airbnb-building-company-brain-ai-agents" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://twimlai.com/podcast/twimlai/airbnb-building-company-brain-ai-agents" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             </div>
             </section>
             
-            <section id="show-5">
+            <section id="show-6">
               <div class="section-head">
-                <h2>05. Practical AI Podcast — Host: Chris Benson & Daniel Whitenack</h2>
+                <h2>06. Practical AI Podcast — Host: Chris Benson & Daniel Whitenack</h2>
                 <span><a href="https://podcasts.apple.com/us/podcast/practical-ai-machine-learning-data-science-llm/id1406537385" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">APPLE PODCASTS ↗</a></span>
               </div>
               <p style="font-family:var(--font-sans);font-size:0.84rem;color:var(--ink-muted);margin:0 0 8px;">Focus: Making Artificial Intelligence Practical, Productive & Accessible</p>
@@ -927,9 +1011,9 @@
                 <strong>Thu, 05 Nov 2026</strong>
                 <span>47m</span>
               </div>
-              <h4 class="note-title"><a href="https://share.transistor.fm/s/1b301bdc" target="_blank" rel="noopener">Abundant Intelligence at the Midwest AI Summit Part 2</a></h4>
+              <h4 class="note-title"><a href="https://share.transistor.fm/s/1b301bdc" target="_blank" rel="noopener noreferrer">Abundant Intelligence at the Midwest AI Summit Part 2</a></h4>
               <p class="note-body">How do organizations decide what AI should do, where to set boundaries, and when to keep humans in control? In this special episode, we bring you three more talks from the Midwest AI Summit, exploring how organizations are putting AI into practice.</p>
-              <div class="note-links"><a href="https://share.transistor.fm/s/1b301bdc" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://share.transistor.fm/s/1b301bdc" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -937,9 +1021,9 @@
                 <strong>Thu, 29 Oct 2026</strong>
                 <span>54m</span>
               </div>
-              <h4 class="note-title"><a href="https://share.transistor.fm/s/37a0c3e9" target="_blank" rel="noopener">Abundant Intelligence at the Midwest AI Summit</a></h4>
+              <h4 class="note-title"><a href="https://share.transistor.fm/s/37a0c3e9" target="_blank" rel="noopener noreferrer">Abundant Intelligence at the Midwest AI Summit</a></h4>
               <p class="note-body">In this special episode, we bring you highlights from three talks at the Midwest AI Summit. Heidi Porter explores how to build reliable AI-augmented workflows using the right tools, evaluations, and guardrails.</p>
-              <div class="note-links"><a href="https://share.transistor.fm/s/37a0c3e9" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://share.transistor.fm/s/37a0c3e9" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -947,9 +1031,9 @@
                 <strong>Thu, 22 Oct 2026</strong>
                 <span>45m</span>
               </div>
-              <h4 class="note-title"><a href="https://share.transistor.fm/s/9a42098b" target="_blank" rel="noopener">Exploit Development, Agentic Vulnerability Discovery, and Fake PoCs</a></h4>
+              <h4 class="note-title"><a href="https://share.transistor.fm/s/9a42098b" target="_blank" rel="noopener noreferrer">Exploit Development, Agentic Vulnerability Discovery, and Fake PoCs</a></h4>
               <p class="note-body">AI is changing cybersecurity, accelerating vulnerability research and exploit development while raising new questions about reliability, risk, and guardrails.</p>
-              <div class="note-links"><a href="https://share.transistor.fm/s/9a42098b" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://share.transistor.fm/s/9a42098b" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             </div>
             </section>

@@ -328,15 +328,28 @@
     }
     .briefing-reddit {
       margin: 8px 0 10px;
-      padding: 6px 12px;
+      padding: 8px 12px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-left: 3px solid var(--accent);
       font-family: var(--font-sans);
       font-size: 0.83rem;
-      line-height: 1.48;
+      line-height: 1.5;
       color: var(--ink-secondary);
       max-width: 66ch;
+    }
+    .briefing-reddit summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .briefing-reddit summary::-webkit-details-marker {
+      display: none;
     }
     .briefing-reddit strong {
       font-family: var(--font-mono);
@@ -346,8 +359,40 @@
       color: var(--accent);
       margin-right: 4px;
     }
+    .reddit-toggle {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .reddit-body {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--ink-secondary);
+    }
+    .reddit-comment {
+      margin-top: 6px;
+      padding-left: 10px;
+      border-left: 2px solid var(--border);
+      font-size: 0.86rem;
+    }
+    .reddit-footer {
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
     .briefing-reddit a {
-      color: var(--ink);
+      color: var(--ink-secondary);
       text-decoration: underline;
       text-decoration-color: var(--border);
       text-underline-offset: 2px;
@@ -775,10 +820,10 @@
               <div class="briefing-num">01</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-10-30</span></div>
-                <h3><a href="https://huggingface.co/papers/2611.00883" target="_blank" rel="noopener">Random Is Almost Enough? Stable and Low-Cost Benchmark Compression via BestRand</a></h3>
+                <h3><a href="https://huggingface.co/papers/2611.00883" target="_blank" rel="noopener noreferrer">Random Is Almost Enough? Stable and Low-Cost Benchmark Compression via BestRand</a></h3>
                 <p class="briefing-summary">Benchmark compression reduces the often prohibitive time and cost of model evaluation by evaluating models on a small benchmark subset that closely matches full-benchmark results.</p>
                 
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.00883" target="_blank" rel="noopener">Read Source (huggingface.co) ↗</a><span>51 pts</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Random+Stable+Low-Cost+Benchmark&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.00883" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>51 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Random+Stable+Low-Cost+Benchmark" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -786,10 +831,10 @@
               <div class="briefing-num">02</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-04</span></div>
-                <h3><a href="https://huggingface.co/papers/2611.07392" target="_blank" rel="noopener">WeLM-Image: A Unified Image Generation Model towards Visual Intelligence</a></h3>
+                <h3><a href="https://huggingface.co/papers/2611.07392" target="_blank" rel="noopener noreferrer">WeLM-Image: A Unified Image Generation Model towards Visual Intelligence</a></h3>
                 <p class="briefing-summary">We present WeLM-Image, a unified image foundation model that integrates multimodal understanding into text-to-image generation, instruction-guided editing, and multi-reference synthesis.</p>
                 
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.07392" target="_blank" rel="noopener">Read Source (huggingface.co) ↗</a><span>44 pts</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=WeLM-Image+Unified+Image+Generation&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.07392" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>44 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+WeLM-Image+Unified+Image+Generation" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -797,10 +842,10 @@
               <div class="briefing-num">03</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-03</span></div>
-                <h3><a href="https://huggingface.co/papers/2611.06741" target="_blank" rel="noopener">TailSteer: Trajectory-Tail Steering for Drift-Resistant Multi-turn Image Editing</a></h3>
+                <h3><a href="https://huggingface.co/papers/2611.06741" target="_blank" rel="noopener noreferrer">TailSteer: Trajectory-Tail Steering for Drift-Resistant Multi-turn Image Editing</a></h3>
                 <p class="briefing-summary">Strong single-turn editing performance does not guarantee reliable multi-turn interaction: as edited outputs are repeatedly reused, small unintended changes can accumulate into severe visual drift.</p>
                 
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.06741" target="_blank" rel="noopener">Read Source (huggingface.co) ↗</a><span>40 pts</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=TailSteer+Trajectory-Tail+Steering+Drift-Resistant&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.06741" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>40 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+TailSteer+Trajectory-Tail+Steering+Drift-Resistant" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -808,10 +853,10 @@
               <div class="briefing-num">04</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-01</span></div>
-                <h3><a href="https://huggingface.co/papers/2611.03743" target="_blank" rel="noopener">EvoMemState: Evolving Memory State for Personal Agents</a></h3>
+                <h3><a href="https://huggingface.co/papers/2611.03743" target="_blank" rel="noopener noreferrer">EvoMemState: Evolving Memory State for Personal Agents</a></h3>
                 <p class="briefing-summary">Long-term memory enables large language model (LLM) agents to provide continuous personalized assistance by retaining user information across interactions.</p>
                 
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.03743" target="_blank" rel="noopener">Read Source (huggingface.co) ↗</a><span>33 pts</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=EvoMemState+Evolving+Memory+State&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.03743" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>33 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+EvoMemState+Evolving+Memory+State" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -819,10 +864,10 @@
               <div class="briefing-num">05</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-09-30</span></div>
-                <h3><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/" target="_blank" rel="noopener">Gemini 4 Argon</a></h3>
+                <h3><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/" target="_blank" rel="noopener noreferrer">Gemini 4 Argon</a></h3>
                 <p class="briefing-summary">Announcing Gemini 4 Argon, our frontier model for real-world coding, enterprise knowledge work, and cyber defense, rolling out soon.</p>
                 
-                <div class="briefing-actions"><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/" target="_blank" rel="noopener">Read Source (blog.google) ↗</a><a href="https://news.ycombinator.com/item?id=49913571" target="_blank" rel="noopener">HN Discussion (1705 pts) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Gemini+Argon&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/" target="_blank" rel="noopener noreferrer">Read Source (blog.google) ↗</a><a href="https://news.ycombinator.com/item?id=49913571" target="_blank" rel="noopener noreferrer">HN Discussion (1705 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Gemini+Argon" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -830,10 +875,10 @@
               <div class="briefing-num">06</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-08</span></div>
-                <h3><a href="https://caleb.software/posts/claude-to-pi.html" target="_blank" rel="noopener">Goodbye Claude, hello Pi</a></h3>
+                <h3><a href="https://caleb.software/posts/claude-to-pi.html" target="_blank" rel="noopener noreferrer">Goodbye Claude, hello Pi</a></h3>
                 <p class="briefing-summary">I’ve been a longtime Claude Code user, ever since it became available in the Claude Pro subscription plan over a year ago.</p>
                 
-                <div class="briefing-actions"><a href="https://caleb.software/posts/claude-to-pi.html" target="_blank" rel="noopener">Read Source (caleb.software) ↗</a><a href="https://news.ycombinator.com/item?id=50410107" target="_blank" rel="noopener">HN Discussion (709 pts) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Goodbye+Claude+hello&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://caleb.software/posts/claude-to-pi.html" target="_blank" rel="noopener noreferrer">Read Source (caleb.software) ↗</a><a href="https://news.ycombinator.com/item?id=50410107" target="_blank" rel="noopener noreferrer">HN Discussion (709 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Goodbye+Claude+hello" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -841,10 +886,10 @@
               <div class="briefing-num">07</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-08</span></div>
-                <h3><a href="https://www.thestateofai.com/news/goldman-sachs-claude-code-traders-bankers" target="_blank" rel="noopener">Goldman Sachs is pulling Claude Code from its bankers and traders</a></h3>
+                <h3><a href="https://www.thestateofai.com/news/goldman-sachs-claude-code-traders-bankers" target="_blank" rel="noopener noreferrer">Goldman Sachs is pulling Claude Code from its bankers and traders</a></h3>
                 <p class="briefing-summary">Community note: Original source appears to be Bloomberg, with State of AI being some kind of AI-written site run by a spam company.</p>
                 
-                <div class="briefing-actions"><a href="https://www.thestateofai.com/news/goldman-sachs-claude-code-traders-bankers" target="_blank" rel="noopener">Read Source (thestateofai.com) ↗</a><a href="https://news.ycombinator.com/item?id=50415628" target="_blank" rel="noopener">HN Discussion (643 pts) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Goldman+Sachs+pulling+Claude&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://www.thestateofai.com/news/goldman-sachs-claude-code-traders-bankers" target="_blank" rel="noopener noreferrer">Read Source (thestateofai.com) ↗</a><a href="https://news.ycombinator.com/item?id=50415628" target="_blank" rel="noopener noreferrer">HN Discussion (643 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Goldman+Sachs+pulling+Claude" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -852,10 +897,10 @@
               <div class="briefing-num">08</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-07</span></div>
-                <h3><a href="https://apiiro.com/blog/coding-agents-leaking-secrets-github-dont-ask-again" target="_blank" rel="noopener">Claude Code's "Don't Ask Again" exposes passwords in 1,122 public GitHub files</a></h3>
-                <p class="briefing-summary">Community note: > Is it public? > > Search your GitHub organization for .claude/settings.local.json and .claude/settings.json. Each hit is a file anyone can read right now.</p>
+                <h3><a href="https://apiiro.com/blog/coding-agents-leaking-secrets-github-dont-ask-again" target="_blank" rel="noopener noreferrer">Claude Code's "Don't Ask Again" exposes passwords in 1,122 public GitHub files</a></h3>
+                <p class="briefing-summary">Secure everything coding agents build, use, and ship - prevent risk before code exists, AutoFix the backlog, and protect the coding agents and supply chain.</p>
                 
-                <div class="briefing-actions"><a href="https://apiiro.com/blog/coding-agents-leaking-secrets-github-dont-ask-again" target="_blank" rel="noopener">Read Source (apiiro.com) ↗</a><a href="https://news.ycombinator.com/item?id=50407882" target="_blank" rel="noopener">HN Discussion (594 pts) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Claude+Code+Don+Ask&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://apiiro.com/blog/coding-agents-leaking-secrets-github-dont-ask-again" target="_blank" rel="noopener noreferrer">Read Source (apiiro.com) ↗</a><a href="https://news.ycombinator.com/item?id=50407882" target="_blank" rel="noopener noreferrer">HN Discussion (594 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Claude+Code+Don+Ask" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -863,10 +908,10 @@
               <div class="briefing-num">09</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>Lilian Weng Blog</span><span>·</span><span>Wed, 24 Jun 2026</span></div>
-                <h3><a href="https://lilianweng.github.io/posts/2026-06-24-scaling-laws/" target="_blank" rel="noopener">Scaling Laws, Carefully</a></h3>
+                <h3><a href="https://lilianweng.github.io/posts/2026-06-24-scaling-laws/" target="_blank" rel="noopener noreferrer">Scaling Laws, Carefully</a></h3>
                 <p class="briefing-summary">Scaling laws are one of the most critical empirical findings in deep learning.</p>
                 
-                <div class="briefing-actions"><a href="https://lilianweng.github.io/posts/2026-06-24-scaling-laws/" target="_blank" rel="noopener">Read Source (lilianweng.github.io) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Scaling+Laws+Carefully&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://lilianweng.github.io/posts/2026-06-24-scaling-laws/" target="_blank" rel="noopener noreferrer">Read Source (lilianweng.github.io) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Scaling+Laws+Carefully" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -874,10 +919,10 @@
               <div class="briefing-num">10</div>
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>Google AI Blog</span><span>·</span><span>Mon, 02 Nov 2026</span></div>
-                <h3><a href="https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-october-2026/" target="_blank" rel="noopener">The latest AI news we announced in October 2026</a></h3>
+                <h3><a href="https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-october-2026/" target="_blank" rel="noopener noreferrer">The latest AI news we announced in October 2026</a></h3>
                 <p class="briefing-summary">Animated carousel of images from AI posts in October</p>
                 
-                <div class="briefing-actions"><a href="https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-october-2026/" target="_blank" rel="noopener">Read Source (blog.google) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=news+October+2026&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
+                <div class="briefing-actions"><a href="https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-october-2026/" target="_blank" rel="noopener noreferrer">Read Source (blog.google) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+news+October+2026" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             </div>
@@ -894,9 +939,9 @@
                 <strong>@OcanaSantero</strong>
                 <span>143 pts</span>
               </div>
-              <h4 class="note-title"><a href="https://twitter.com/OcanaSantero/status/2115442964574908902" target="_blank" rel="noopener">Last night an AI agent performed brain surgery on a mouse</a></h4>
+              <h4 class="note-title"><a href="https://twitter.com/OcanaSantero/status/2115442964574908902" target="_blank" rel="noopener noreferrer">Last night an AI agent performed brain surgery on a mouse</a></h4>
               
-              <div class="note-links"><a href="https://twitter.com/OcanaSantero/status/2115442964574908902" target="_blank" rel="noopener">Read Thread on X ↗</a><a href="https://news.ycombinator.com/item?id=50336138" target="_blank" rel="noopener">HN Thread ↗</a></div>
+              <div class="note-links"><a href="https://twitter.com/OcanaSantero/status/2115442964574908902" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a><a href="https://news.ycombinator.com/item?id=50336138" target="_blank" rel="noopener noreferrer">HN Thread ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -904,9 +949,9 @@
                 <strong>X Pulse (X)</strong>
                 <span></span>
               </div>
-              <h4 class="note-title"><a href="https://news.google.com/rss/articles/CBMiV0FVX3lxTE4xVHRjckFvN3dmMnFTQVc5dG9WLWhZWlVrSXk3VE5sdGs4ajN4aHgtUzlucjNGREgyLUtlaUNmb3M1X0ZsX05aaDA0UGo2a0hYUHRGbVVPYw?oc=5" target="_blank" rel="noopener">Claude Opus 5.5 Powers Solo 3D Creation in Blender - X</a></h4>
+              <h4 class="note-title"><a href="https://news.google.com/rss/articles/CBMiV0FVX3lxTE4xVHRjckFvN3dmMnFTQVc5dG9WLWhZWlVrSXk3VE5sdGs4ajN4aHgtUzlucjNGREgyLUtlaUNmb3M1X0ZsX05aaDA0UGo2a0hYUHRGbVVPYw?oc=5" target="_blank" rel="noopener noreferrer">Claude Opus 5.5 Powers Solo 3D Creation in Blender - X</a></h4>
               
-              <div class="note-links"><a href="https://news.google.com/rss/articles/CBMiV0FVX3lxTE4xVHRjckFvN3dmMnFTQVc5dG9WLWhZWlVrSXk3VE5sdGs4ajN4aHgtUzlucjNGREgyLUtlaUNmb3M1X0ZsX05aaDA0UGo2a0hYUHRGbVVPYw?oc=5" target="_blank" rel="noopener">Read Thread on X ↗</a></div>
+              <div class="note-links"><a href="https://news.google.com/rss/articles/CBMiV0FVX3lxTE4xVHRjckFvN3dmMnFTQVc5dG9WLWhZWlVrSXk3VE5sdGs4ajN4aHgtUzlucjNGREgyLUtlaUNmb3M1X0ZsX05aaDA0UGo2a0hYUHRGbVVPYw?oc=5" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a></div>
             </article>
             </div>
       </section>
@@ -921,9 +966,9 @@
                 <strong>Practical AI Podcast</strong>
                 <span>47m</span>
               </div>
-              <h4 class="note-title"><a href="https://share.transistor.fm/s/1b301bdc" target="_blank" rel="noopener">Abundant Intelligence at the Midwest AI Summit Part 2</a></h4>
+              <h4 class="note-title"><a href="https://share.transistor.fm/s/1b301bdc" target="_blank" rel="noopener noreferrer">Abundant Intelligence at the Midwest AI Summit Part 2</a></h4>
               <p class="note-body">How do organizations decide what AI should do, where to set boundaries, and when to keep humans in control? In this special episode, we bring you three more talks from the Midwest AI Summit, exploring how organizations are putting AI into practice.</p>
-              <div class="note-links"><a href="https://share.transistor.fm/s/1b301bdc" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+              <div class="note-links"><a href="https://share.transistor.fm/s/1b301bdc" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             </div>
       </section>
