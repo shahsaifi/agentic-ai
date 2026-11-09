@@ -3,9 +3,11 @@ from __future__ import annotations
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 import markdown
+
+from genai_agent.collectors.podcasts import fetch_detailed_podcast_hub
 
 SHARED_CSS_AND_THEME_JS = """
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1054,6 +1056,7 @@ def _render_daily_digest_html(
         <span>← All Editions</span>
       </a>
       <div class="nav-actions">
+        <a class="pill-link" href="podcasts.html">🎙️ Podcasts Hub</a>
         {"".join(date_pills)}
         {COMFORT_CONTROLS_HTML}
       </div>
@@ -1144,7 +1147,7 @@ def _render_index_portal_html(
       <div class="nav-actions">
         <a class="pill-link active" href="index.html">All Editions ({len(sorted_dates)})</a>
         <a class="pill-link" href="#x-highlights">🔥 Hot on 𝕏</a>
-        <a class="pill-link" href="#podcast-highlights">🎧 Podcasts</a>
+        <a class="pill-link" href="podcasts.html">🎙️ Podcasts Hub</a>
         <a class="pill-link" href="{latest_date}.html">Latest ({latest_date})</a>
         {COMFORT_CONTROLS_HTML}
       </div>
@@ -1172,8 +1175,13 @@ def _render_index_portal_html(
     </section>
 
     <section id="podcast-highlights" class="section-panel podcast-panel">
-      <span class="hero-badge">🎧 Audio Deep-Dives ({latest_date})</span>
-      <h2 style="margin-top:4px;">Featured AI Podcast Episodes</h2>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <div>
+          <span class="hero-badge">🎧 Audio Deep-Dives ({latest_date})</span>
+          <h2 style="margin-top:4px;margin-bottom:8px;border:none;padding:0;">Featured AI Podcast Episodes</h2>
+        </div>
+        <a class="cta-btn" href="podcasts.html">🎙️ Open Full Podcasts Hub →</a>
+      </div>
       {podcasts_html}
     </section>
 
@@ -1184,6 +1192,110 @@ def _render_index_portal_html(
 
     <footer class="footer">
       Powered by <strong>Google Gemini</strong> · Designed with low-glare reading palettes (Sage, Sepia, Night) &amp; optical book typography
+    </footer>
+  </div>
+</body>
+</html>"""
+
+
+def _render_podcasts_page_html(
+    shows_data: List[Dict[str, Any]],
+    latest_date: str,
+) -> str:
+    """Render `docs/podcasts.html` featuring latest episode summaries from Generative AI 101, AI Optic, AI Today, and more."""
+    show_sections: List[str] = []
+
+    for idx, show in enumerate(shows_data, start=1):
+        ep_cards: List[str] = []
+        for ep in show.get("episodes", []):
+            pub_text = f" · {ep['published']}" if ep.get("published") else ""
+            ep_cards.append(
+                f"""
+                <article class="pod-card">
+                  <div>
+                    <div class="pod-header">
+                      <div class="pod-show-info">
+                        <div class="pod-artwork">🎙️</div>
+                        <div>
+                          <div class="pod-show-name">{show['name']}</div>
+                          <div class="pod-sub">Host: {show['host']}{pub_text}</div>
+                        </div>
+                      </div>
+                      <span class="pod-duration">🎧 {ep['duration']}</span>
+                    </div>
+                    <h4 class="pod-title"><a href="{ep['url']}" target="_blank" rel="noopener">{ep['title']}</a></h4>
+                    <p class="pod-body">{ep['summary']}</p>
+                  </div>
+                  <div class="pod-footer">
+                    <a class="pill-link" href="{show['apple_url']}" target="_blank" rel="noopener">🍏 Apple Podcasts ↗</a>
+                    <a class="pod-play-btn" href="{ep['url']}" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
+                  </div>
+                </article>
+                """
+            )
+
+        show_sections.append(
+            f"""
+            <section class="section-panel podcast-panel" id="show-{idx}">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:10px;">
+                <div>
+                  <span class="hero-badge">🎙️ Show #{idx} · Host: {show['host']}</span>
+                  <h2 style="margin:2px 0 6px;border:none;padding:0;">{show['name']}</h2>
+                  <p style="margin:0;font-size:0.9rem;color:var(--text-secondary);font-family:var(--font-sans);"><strong>Focus:</strong> {show['focus']}</p>
+                </div>
+                <a class="cta-btn" href="{show['apple_url']}" target="_blank" rel="noopener">🍏 Subscribe on Apple Podcasts ↗</a>
+              </div>
+              <div class="pod-grid">
+                {"".join(ep_cards)}
+              </div>
+            </section>
+            """
+        )
+
+    return f"""<!DOCTYPE html>
+<html lang="en" data-theme="sage">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Generative AI Podcasts Hub — Latest Episode Summaries</title>
+  {SHARED_CSS_AND_THEME_JS}
+</head>
+<body>
+  <div id="progress-bar"></div>
+  <div class="container">
+    <nav class="top-nav">
+      <a class="brand" href="index.html">
+        <span class="brand-dot"></span>
+        <span>← Back to GenAI Hub</span>
+      </a>
+      <div class="nav-actions">
+        <a class="pill-link" href="index.html">All Editions</a>
+        <a class="pill-link active" href="podcasts.html">🎙️ Podcasts Hub</a>
+        <a class="pill-link" href="{latest_date}.html">Latest Digest ({latest_date})</a>
+        {COMFORT_CONTROLS_HTML}
+      </div>
+    </nav>
+
+    <section class="hero">
+      <span class="hero-badge">🎧 Curated AI Audio Learning Hub</span>
+      <h1>Generative AI Podcasts &amp; Episode Summaries</h1>
+      <p style="color:var(--text-secondary);font-size:1.02rem;margin:0 0 16px;">
+        Catch up on the latest episodes and key takeaways from <strong>Generative AI 101</strong>, <strong>AI Optic: Anthropic &amp; OpenAI News</strong>, <strong>AI Today Podcast</strong>, <strong>Latent Space</strong>, <strong>TWIML AI</strong>, and <strong>Practical AI</strong>.
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;font-family:var(--font-sans);">
+        <a class="pill-link" href="#show-1">🎙️ Generative AI 101</a>
+        <a class="pill-link" href="#show-2">🎙️ AI Optic (Anthropic &amp; OpenAI)</a>
+        <a class="pill-link" href="#show-3">🎙️ AI Today Podcast</a>
+        <a class="pill-link" href="#show-4">🎙️ Latent Space</a>
+        <a class="pill-link" href="#show-5">🎙️ TWIML AI</a>
+        <a class="pill-link" href="#show-6">🎙️ Practical AI</a>
+      </div>
+    </section>
+
+    {"".join(show_sections)}
+
+    <footer class="footer">
+      Curated by <strong>Generative AI Learning &amp; News Agent</strong> · <a href="index.html">Back to Main Index</a>
     </footer>
   </div>
 </body>
@@ -1233,5 +1345,18 @@ def save_markdown_digest(
 
     index_html = _render_index_portal_html(archive_map=archive_map)
     (target_docs / "index.html").write_text(index_html, encoding="utf-8")
+
+    # Build dedicated Podcasts Hub page (`docs/podcasts.html`)
+    if docs_dir is None and output_dir.name == "digests":
+        try:
+            shows_data = fetch_detailed_podcast_hub(episodes_per_show=3)
+            latest_d = archive_dates[-1] if archive_dates else date_str
+            podcasts_page_html = _render_podcasts_page_html(
+                shows_data=shows_data,
+                latest_date=latest_d,
+            )
+            (target_docs / "podcasts.html").write_text(podcasts_page_html, encoding="utf-8")
+        except Exception:
+            pass
 
     return dated_path
