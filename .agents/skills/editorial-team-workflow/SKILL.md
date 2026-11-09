@@ -1,40 +1,48 @@
 ---
 name: editorial-team-workflow
 description: >-
-  Multi-agent team workflow for The GenAI Briefing. Use this skill whenever the user asks
-  to add new AI sources, improve synthesis quality, redesign or polish the GitHub Pages
-  frontend (docs/), optimize Mobile Safari readability, or run an end-to-end update using
-  specialized subagents.
+  Engineering organization workflow (Product Manager -> Staff Engineer -> QA/Test Engineer
+  -> Security Engineer) for The GenAI Briefing. Activate this skill whenever implementing
+  new features, sources, UI/readability improvements, or automated releases.
 ---
 
-# GenAI Briefing Multi-Agent Team Workflow
+# Engineering Org Pipeline (`PM → Staff Eng → QA → Security`)
 
-This workspace uses a 4-agent team workflow to evolve and maintain **The GenAI Briefing** (`https://shahsaifi.github.io/agentic-ai/`).
+Use this multi-agent engineering workflow to take any user request from product specification through implementation, automated testing, security review, and deployment without manual file-by-file prompts.
 
-## Team Roster (Define via `define_subagent` & Invoke via `invoke_subagent`)
+## Pipeline Architecture
 
-1. **`source-curator`** (*GenAI Source & Feed Curator*)
-   - **Scope**: `src/genai_agent/collectors/` (`papers.py`, `blogs.py`, `community.py`, `social_x.py`, `podcasts.py`, `web_search.py`).
-   - **Role**: Adds/updates feeds, ensures 200 OK RSS/API reliability on GitHub Actions, and strips raw HTML/scraper boilerplate.
+```text
+[1. product-manager]
+    │  Defines acceptance criteria, UX/readability spec & file tasks
+    ▼
+[2. staff-engineer]
+    │  Implements Python backend (src/genai_agent/) & Editorial HTML/CSS (docs/)
+    ▼
+[3. qa-test-engineer]
+    │  Writes/runs .venv/bin/pytest -q & validates rendered docs/*.html
+    ▼
+[4. security-engineer]
+    │  Audits git diff for secrets, XSS/HTML sanitization & pushes to origin/main
+```
 
-2. **`synthesis-editor`** (*Technical Synthesis & Anti-Slop Editor*)
-   - **Scope**: `src/genai_agent/agent.py`, `digests/`.
-   - **Role**: Maintains `rank_top_items`, `exclude_previously_published_items`, Gemini prompt instructions, and full-sentence excerpt truncation.
+## Subagent Definitions (via `define_subagent` / `invoke_subagent`)
 
-3. **`editorial-designer`** (*Swiss Editorial & Mobile Safari Frontend Engineer*)
-   - **Scope**: `src/genai_agent/notifiers/markdown_store.py`, `docs/`.
-   - **Role**: Maintains the FT / Anthropic / Stripe Press editorial aesthetic (`66ch` measure, high-contrast Paper/Sepia/Ink themes, 3-tier item layout, category filter bar, per-topic Reddit links, and iPhone Mobile Safari support).
+### Stage 1: `product-manager` (Read-Only Spec)
+- **EnableWriteTools**: `false`
+- **Deliverable**: Scoped Product & UX Spec (acceptance criteria, Mobile Safari & `66ch` readability constraints, and exact file targets).
 
-4. **`qa-release-verifier`** (*Test & GitHub Pages Release Engineer*)
-   - **Scope**: `tests/test_agent.py`, git workflow, and GitHub Pages verification.
-   - **Role**: Runs `.venv/bin/pytest -q`, rebuilds `docs/` from `digests/`, ensures zero secrets are staged, and pushes to `origin main`.
+### Stage 2: `staff-engineer` (Implementation)
+- **EnableWriteTools**: `true`
+- **Deliverable**: Code changes in `src/genai_agent/` (`agent.py`, `collectors/`, `notifiers/markdown_store.py`) and regenerated `docs/`.
 
-## Standard Execution Pipeline
+### Stage 3: `qa-test-engineer` (Testing & Verification)
+- **EnableWriteTools**: `true`
+- **Deliverable**: Passing unit tests in `tests/test_agent.py` (`.venv/bin/pytest -q`) and verified HTML output in `docs/`.
 
-1. **Parallel Implementation**: Spawn `source-curator`, `synthesis-editor`, and/or `editorial-designer` via `invoke_subagent` depending on which layers the user request touches.
-2. **Verification & Release**: Once implementation subagents complete, run or delegate to `qa-release-verifier` to execute:
-   ```bash
-   .venv/bin/pytest -q
-   .venv/bin/python -c "from pathlib import Path; from genai_agent.notifiers import save_markdown_digest; out=Path('digests'); save_markdown_digest((out/'latest.md').read_text(), out)"
-   ```
-3. **Commit & Push**: Verify `git status -s` contains zero `.env` or secret files, then `git pull --rebase origin main && git push origin main`.
+### Stage 4: `security-engineer` (Security Gate & Release)
+- **EnableWriteTools**: `true`
+- **Deliverable**:
+  1. Secret scan (`git status -s`, `git diff` — zero `.env` or API keys).
+  2. Input sanitization check on external RSS/HTML feeds (`target="_blank" rel="noopener"`, stripped raw HTML tags).
+  3. Final commit & push (`git pull --rebase origin main && git push origin main`).

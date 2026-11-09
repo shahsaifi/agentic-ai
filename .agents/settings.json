@@ -9,11 +9,13 @@
       "write_file(digests/)",
       "write_file(tests/)",
       "write_file(.agents/)",
+      "write_file(AGENTS.md)",
       "edit_file(src/)",
       "edit_file(docs/)",
       "edit_file(digests/)",
       "edit_file(tests/)",
       "edit_file(.agents/)",
+      "edit_file(AGENTS.md)",
       "command(regex:\\.venv/bin/pytest.*)",
       "command(regex:\\.venv/bin/genai-agent.*)",
       "command(regex:git (status|fetch|pull|add|commit|push|log|diff).*)"
