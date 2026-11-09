@@ -2,9 +2,13 @@
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — 2026-11-06</title>
   
+  <meta name="theme-color" id="meta-theme-color" content="#F6F4EF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="format-detection" content="telephone=no">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
@@ -57,10 +61,16 @@
       --link: #7AA2F7;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
     html {
       font-size: var(--base-size);
       scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      overflow-x: hidden;
     }
     body {
       font-family: var(--font-serif);
@@ -68,14 +78,22 @@
       color: var(--ink);
       line-height: 1.68;
       margin: 0;
-      padding: 0 20px 72px;
+      padding:
+        env(safe-area-inset-top, 0px)
+        max(20px, env(safe-area-inset-right, 20px))
+        calc(72px + env(safe-area-inset-bottom, 0px))
+        max(20px, env(safe-area-inset-left, 20px));
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     .page-wrap {
       max-width: 1020px;
       margin: 0 auto;
+      width: 100%;
     }
 
     /* Editorial Masthead */
@@ -227,6 +245,9 @@
       color: var(--accent);
       padding-top: 3px;
     }
+    .briefing-content {
+      min-width: 0;
+    }
     .briefing-content h3 {
       font-family: var(--font-serif);
       font-size: 1.22rem;
@@ -250,8 +271,9 @@
       margin-bottom: 8px;
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 6px 8px;
       align-items: center;
+      line-height: 1.45;
     }
     .briefing-meta a {
       color: var(--ink-secondary);
@@ -271,6 +293,33 @@
       margin: 0;
       line-height: 1.62;
     }
+    .briefing-reddit {
+      margin-top: 8px;
+      padding-left: 10px;
+      border-left: 2px solid var(--border);
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: var(--ink-secondary);
+    }
+    .briefing-reddit strong {
+      font-family: var(--font-mono);
+      font-size: 0.71rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      margin-right: 4px;
+    }
+    .briefing-reddit a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-decoration-color: var(--border);
+      text-underline-offset: 2px;
+    }
+    .briefing-reddit a:hover {
+      color: var(--accent);
+      text-decoration-color: var(--accent);
+    }
 
     /* Two-Column Editorial Split for X Threads & Podcasts */
     .two-col {
@@ -278,6 +327,9 @@
       grid-template-columns: 1fr 1fr;
       gap: 36px;
       margin-top: 12px;
+    }
+    .two-col > section {
+      min-width: 0;
     }
     .note-list {
       display: flex;
@@ -437,16 +489,146 @@
       text-decoration: underline;
     }
 
+    /* iPhone & Mobile Safari Optimizations */
     @media (max-width: 760px) {
-      .two-col { grid-template-columns: 1fr; gap: 16px; }
-      .masthead-title { font-size: 2.25rem; }
-      .briefing-item { grid-template-columns: 32px 1fr; gap: 10px; }
+      body {
+        padding:
+          env(safe-area-inset-top, 0px)
+          max(16px, env(safe-area-inset-right, 16px))
+          calc(56px + env(safe-area-inset-bottom, 0px))
+          max(16px, env(safe-area-inset-left, 16px));
+        line-height: 1.6;
+      }
+      .masthead {
+        padding-top: 14px;
+        margin-bottom: 22px;
+      }
+      .masthead-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding-bottom: 10px;
+      }
+      .controls {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .ctrl-btn {
+        min-height: 32px;
+        padding: 4px 8px;
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        touch-action: manipulation;
+      }
+      .ctrl-btn.active {
+        border-color: var(--ink);
+        background: var(--surface-alt);
+        text-decoration: none;
+      }
+      .masthead-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 16px 0 14px;
+      }
+      .masthead-title {
+        font-size: 2.2rem;
+        line-height: 1.05;
+      }
+      .masthead-sub {
+        font-size: 0.84rem;
+        line-height: 1.45;
+      }
+      .masthead-nav {
+        padding: 8px 0;
+      }
+      .nav-links {
+        width: 100%;
+        gap: 14px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+        padding-bottom: 2px;
+      }
+      .nav-links a {
+        display: inline-block;
+        padding: 4px 0;
+      }
+      .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        margin: 26px 0 14px;
+      }
+      .briefing-item {
+        grid-template-columns: 28px 1fr;
+        gap: 10px;
+        padding: 15px 0;
+      }
+      .briefing-content h3 {
+        font-size: 1.12rem;
+        line-height: 1.35;
+      }
+      .briefing-summary {
+        font-size: 0.94rem;
+        line-height: 1.56;
+      }
+      .two-col {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .editorial-callout {
+        padding: 14px 16px;
+        margin: 14px 0 20px;
+      }
+      /* Stack Archive Table cleanly on iPhone screens */
+      .archive-table thead {
+        display: none;
+      }
+      .archive-table, .archive-table tbody, .archive-table tr, .archive-table td {
+        display: block;
+        width: 100%;
+      }
+      .archive-table tr {
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .archive-table td {
+        padding: 2px 0;
+        border-bottom: none;
+      }
+      .archive-date {
+        width: auto;
+        margin-bottom: 4px;
+        color: var(--accent);
+      }
+      .footer {
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 40px;
+      }
     }
   </style>
   <script>
+    const THEME_COLORS = {
+      sage: '#F6F4EF',
+      sepia: '#F2E9D8',
+      dark: '#111214'
+    };
+
+    function applyThemeColorMeta(theme) {
+      const meta = document.getElementById('meta-theme-color');
+      if (meta && THEME_COLORS[theme]) {
+        meta.setAttribute('content', THEME_COLORS[theme]);
+      }
+    }
+
     (function() {
       const savedTheme = localStorage.getItem('genai_theme') || 'sage';
       document.documentElement.setAttribute('data-theme', savedTheme);
+      applyThemeColorMeta(savedTheme);
       const savedSize = localStorage.getItem('genai_fontsize');
       if (savedSize) {
         document.documentElement.style.setProperty('--base-size', savedSize + 'px');
@@ -456,6 +638,7 @@
     function setTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('genai_theme', theme);
+      applyThemeColorMeta(theme);
       updateControls();
     }
 
@@ -468,6 +651,7 @@
 
     function updateControls() {
       const theme = document.documentElement.getAttribute('data-theme') || 'sage';
+      applyThemeColorMeta(theme);
       document.querySelectorAll('[data-theme-btn]').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-theme-btn') === theme);
       });
@@ -534,90 +718,100 @@
             <article class="briefing-item">
               <div class="briefing-num">01</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 1,358 combined pts, 1,051 comments</span><span>·</span><span>blog.google</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 1,358 combined pts, 1,051 comments</span><span>·</span><span>blog.google</span><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xr2rqk/artificial_analysis_multimodal_decision_model/" target="_blank" rel="noopener">r/LocalLLaMA Thread ↗</a></div>
                 <h3><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/" target="_blank" rel="noopener">Gemini 4 Carbon (#1 on Artificial Analysis Intelligence Index v5)</a></h3>
                 <p class="briefing-summary">What happened: Google released Gemini 4 Carbon, claiming the #1 spot on the independent Artificial Analysis Intelligence Index v5, alongside Gemini Omni 1.2 Flash for fast, low-cost long-clip multimodal processing.</p>
+                <div class="briefing-reddit"><strong>Reddit (r/LocalLLaMA):</strong> <a href="https://www.reddit.com/r/LocalLLaMA/comments/1xr2rqk/artificial_analysis_multimodal_decision_model/" target="_blank" rel="noopener">Artificial Analysis: multimodal decision model Drex Max ranks #1. Both achieving SOTA and Pareto frontier. ↗</a></div>
               </div>
             </article>
             
             <article class="briefing-item">
               <div class="briefing-num">02</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 1,569 pts, 502 comments</span><span>·</span><span>github.com</span><span>·</span><a href="https://news.ycombinator.com/item?id=50363461" target="_blank" rel="noopener">1,569 pts · HN Discussion ↗</a></div>
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 1,569 pts, 502 comments</span><span>·</span><span>github.com</span><span>·</span><a href="https://news.ycombinator.com/item?id=50363461" target="_blank" rel="noopener">1,569 pts · HN ↗</a><span>·</span><a href="https://www.reddit.com/r/ClaudeAI/comments/1xr3gbs/i_built_an_mcp_with_claude_code_that_lets_claude/" target="_blank" rel="noopener">r/ClaudeAI Thread ↗</a></div>
                 <h3><a href="https://github.com/anthropics/claude-code/issues/107757" target="_blank" rel="noopener">Claude Code Privacy Issue & Agent Data-Training Policies</a></h3>
                 <p class="briefing-summary">What happened: Developers discovered that Claude Code could expose user email addresses when fetching external websites, alongside separate high-reach threads on Gemini personal chat training defaults (⬆️ 725) and Codex data-sharing settings (⬆️ 529).</p>
+                <div class="briefing-reddit"><strong>Reddit (r/ClaudeAI):</strong> <a href="https://www.reddit.com/r/ClaudeAI/comments/1xr3gbs/i_built_an_mcp_with_claude_code_that_lets_claude/" target="_blank" rel="noopener">I built an MCP with Claude Code that lets Claude play PC games in the background. Here it is driving, flying a heli and walking in... ↗</a></div>
               </div>
             </article>
             
             <article class="briefing-item">
               <div class="briefing-num">03</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 545 pts, 678 comments</span><span>·</span><span>545 pts</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 545 pts, 678 comments</span><span>·</span><span>545 pts</span><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Ask+Current+Agentic+Setup&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
                 <h3><a href="https://news.ycombinator.com/item?id=50366117" target="_blank" rel="noopener">Ask HN: What's Your Current AI Agentic Setup?</a></h3>
                 <p class="briefing-summary">What happened: Nearly 700 practitioners shared their real-world daily agent stacks, what actually works in production vs. hype, and how they combine IDE agents, CLI agents, and custom MCP tools.</p>
+                
               </div>
             </article>
             
             <article class="briefing-item">
               <div class="briefing-num">04</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 447 pts, 100 comments</span><span>·</span><span>hightouch.com</span><span>·</span><span>447 pts</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 447 pts, 100 comments</span><span>·</span><span>hightouch.com</span><span>·</span><span>447 pts</span><span>·</span><a href="https://www.reddit.com/r/ClaudeAI/comments/1xr2pir/are_we_not_allowed_to_ask_any_sht_about_biology/" target="_blank" rel="noopener">r/ClaudeAI Thread ↗</a></div>
                 <h3><a href="https://hightouch.com/blog/llm-judges-identity-resolution" target="_blank" rel="noopener">A Small Model That Can Ask Opus for Help Gives Opus Accuracy at 4× Lower Cost</a></h3>
                 <p class="briefing-summary">What happened: Hightouch demonstrated a cascaded LLM-judge architecture for entity resolution where a lightweight model handles straightforward pairs and escalates ambiguous cases to a frontier model.</p>
+                <div class="briefing-reddit"><strong>Reddit (r/ClaudeAI):</strong> <a href="https://www.reddit.com/r/ClaudeAI/comments/1xr2pir/are_we_not_allowed_to_ask_any_sht_about_biology/" target="_blank" rel="noopener">Are we not allowed to ask any sh*t about biology to Opus 5.5? ↗</a></div>
               </div>
             </article>
             
             <article class="briefing-item">
               <div class="briefing-num">05</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 486 pts, 363 comments</span><span>·</span><span>openai.com</span><span>·</span><span>486 pts</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 486 pts, 363 comments</span><span>·</span><span>openai.com</span><span>·</span><span>486 pts</span><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Thousand+Fewer+Paths+Root&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
                 <h3><a href="https://openai.com/index/a-thousand-fewer-paths-to-root/" target="_blank" rel="noopener">A Thousand Fewer Paths to Root: Hardening AI Agent Sandboxes</a></h3>
                 <p class="briefing-summary">What happened: OpenAI detailed how they systematically eliminated privilege-escalation paths in execution sandboxes used by coding and tool-using agents, paired with their new Hacktron security partnership.</p>
+                
               </div>
             </article>
             
             <article class="briefing-item">
               <div class="briefing-num">06</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>⬆️ 150 & ⬆️ 96 upvotes</span><span>·</span><span>huggingface.co</span><span>·</span><span>96 pts</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>⬆️ 150 & ⬆️ 96 upvotes</span><span>·</span><span>huggingface.co</span><span>·</span><span>96 pts</span><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=SLA+Scaling+Spatial-Language-Action+VFlash&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
                 <h3><a href="https://huggingface.co/papers/2611.08373" target="_blank" rel="noopener">SLA (Scaling Spatial-Language-Action) & VFlash (Flash Primitive Decoding)</a></h3>
                 <p class="briefing-summary">What happened: Two top-trending embodied AI papers: SLA scales 3D spatial grounding for Vision-Language-Action (VLA) models via continual pre-training, while VFlash decodes visual planning primitives (trajectories & bounding boxes) in parallel rather than slow token-by-token autoregression.</p>
+                
               </div>
             </article>
             
             <article class="briefing-item">
               <div class="briefing-num">07</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>⬆️ 114 upvotes</span><span>·</span><span>huggingface.co</span><span>·</span><span>114 pts</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>⬆️ 114 upvotes</span><span>·</span><span>huggingface.co</span><span>·</span><span>114 pts</span><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Decoupled+Predictive+Decision+Making&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
                 <h3><a href="https://huggingface.co/papers/2611.02075" target="_blank" rel="noopener">Decoupled Predictive Decision Making (DPDM): A Shared Conditional Predictor for Agents</a></h3>
                 <p class="briefing-summary">What happened: Introduces DPDM, separating an agent's *world-state prediction* (what will happen if I take action X?) from its *policy selection*, allowing heterogeneous agents to share a single conditional predictor calibrated on deployment observations.</p>
+                
               </div>
             </article>
             
             <article class="briefing-item">
               <div class="briefing-num">08</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 57 HF upvotes + r/LocalLLaMA</span><span>·</span><span>huggingface.co</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 57 HF upvotes + r/LocalLLaMA</span><span>·</span><span>huggingface.co</span><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Harness-S+Lilian+Weng+Harness&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
                 <h3><a href="https://huggingface.co/papers/2611.04277" target="_blank" rel="noopener">Harness-S, Lilian Weng on Harness Engineering & Terminal-Bench 2.1 Leaderboard</a></h3>
                 <p class="briefing-summary">What happened: A trifecta on agent harnesses: the Harness-S paper shows how training across sibling harnesses improves agent generalization; Lilian Weng's Harness Engineering post breaks down self-improvement loops;</p>
+                
               </div>
             </article>
             
             <article class="briefing-item">
               <div class="briefing-num">09</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Open-Weights & Local LLMs · Simon Willison & r/LocalLLaMA</span><span>·</span><span>simonwillison.net</span><span>·</span><span>simonwillison.net</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Open-Weights & Local LLMs · Simon Willison & r/LocalLLaMA</span><span>·</span><span>simonwillison.net</span><span>·</span><span>simonwillison.net</span><span>·</span><a href="https://www.reddit.com/r/singularity/comments/1xr6w6w/apple_researchers_use_a_mac_mini_running_qwen/" target="_blank" rel="noopener">r/singularity Thread ↗</a></div>
                 <h3><a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/" target="_blank" rel="noopener">Qwen 3.8 27B Interpreting Model Weights & Freehand GUI Control</a></h3>
                 <p class="briefing-summary">What happened: Simon Willison demonstrated Qwen 3.8 27B running locally on a laptop performing *Weight-Space Programming* (natively reading and interpreting neural network weights), while r/LocalLLaMA showcased QFN 3.8 NVFP4 controlling a VM mouse in Open WebUI 0.13.0.</p>
+                <div class="briefing-reddit"><strong>Reddit (r/singularity):</strong> <a href="https://www.reddit.com/r/singularity/comments/1xr6w6w/apple_researchers_use_a_mac_mini_running_qwen/" target="_blank" rel="noopener">Apple researchers use a Mac mini running Qwen locally to control a Unitree G1 humanoid robot. Trained on 1,000 simulated homes, it... ↗</a></div>
               </div>
             </article>
             
             <article class="briefing-item">
               <div class="briefing-num">10</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Scientific AI Releases · OpenAI & Google DeepMind</span><span>·</span><span>openai.com</span><span>·</span><span>openai.com</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Scientific AI Releases · OpenAI & Google DeepMind</span><span>·</span><span>openai.com</span><span>·</span><span>openai.com</span><span>·</span><a href="https://www.reddit.com/r/singularity/comments/1xqzpba/deepminds_vp_of_science_teases_a_phase_transition/" target="_blank" rel="noopener">r/singularity Thread ↗</a></div>
                 <h3><a href="https://openai.com/index/measuring-how-ai-agents-handle-wet-lab-science" target="_blank" rel="noopener">AI Agents in Science: OpenAI BioBasicsBench & DeepMind Agentic Cheminformatics</a></h3>
                 <p class="briefing-summary">What happened: OpenAI launched BioBasicsBench (100 tasks evaluating how agents interpret raw wet-lab experimental data), while Google DeepMind published Agentic Cheminformatics with Google Antigravity, showing how modular skills accelerate compound search and macrocycle design.</p>
+                <div class="briefing-reddit"><strong>Reddit (r/singularity):</strong> <a href="https://www.reddit.com/r/singularity/comments/1xqzpba/deepminds_vp_of_science_teases_a_phase_transition/" target="_blank" rel="noopener">DeepMind’s VP of Science teases a "phase transition" in scientific discovery. What could it be? ↗</a></div>
               </div>
             </article>
             </div>

@@ -11,6 +11,10 @@ import markdown
 from genai_agent.collectors.podcasts import fetch_detailed_podcast_hub
 
 EDITORIAL_CSS_AND_JS = """
+  <meta name="theme-color" id="meta-theme-color" content="#F6F4EF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="format-detection" content="telephone=no">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
@@ -63,10 +67,16 @@ EDITORIAL_CSS_AND_JS = """
       --link: #7AA2F7;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
     html {
       font-size: var(--base-size);
       scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      overflow-x: hidden;
     }
     body {
       font-family: var(--font-serif);
@@ -74,14 +84,22 @@ EDITORIAL_CSS_AND_JS = """
       color: var(--ink);
       line-height: 1.68;
       margin: 0;
-      padding: 0 20px 72px;
+      padding:
+        env(safe-area-inset-top, 0px)
+        max(20px, env(safe-area-inset-right, 20px))
+        calc(72px + env(safe-area-inset-bottom, 0px))
+        max(20px, env(safe-area-inset-left, 20px));
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     .page-wrap {
       max-width: 1020px;
       margin: 0 auto;
+      width: 100%;
     }
 
     /* Editorial Masthead */
@@ -233,6 +251,9 @@ EDITORIAL_CSS_AND_JS = """
       color: var(--accent);
       padding-top: 3px;
     }
+    .briefing-content {
+      min-width: 0;
+    }
     .briefing-content h3 {
       font-family: var(--font-serif);
       font-size: 1.22rem;
@@ -256,8 +277,9 @@ EDITORIAL_CSS_AND_JS = """
       margin-bottom: 8px;
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 6px 8px;
       align-items: center;
+      line-height: 1.45;
     }
     .briefing-meta a {
       color: var(--ink-secondary);
@@ -277,6 +299,33 @@ EDITORIAL_CSS_AND_JS = """
       margin: 0;
       line-height: 1.62;
     }
+    .briefing-reddit {
+      margin-top: 8px;
+      padding-left: 10px;
+      border-left: 2px solid var(--border);
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: var(--ink-secondary);
+    }
+    .briefing-reddit strong {
+      font-family: var(--font-mono);
+      font-size: 0.71rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      margin-right: 4px;
+    }
+    .briefing-reddit a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-decoration-color: var(--border);
+      text-underline-offset: 2px;
+    }
+    .briefing-reddit a:hover {
+      color: var(--accent);
+      text-decoration-color: var(--accent);
+    }
 
     /* Two-Column Editorial Split for X Threads & Podcasts */
     .two-col {
@@ -284,6 +333,9 @@ EDITORIAL_CSS_AND_JS = """
       grid-template-columns: 1fr 1fr;
       gap: 36px;
       margin-top: 12px;
+    }
+    .two-col > section {
+      min-width: 0;
     }
     .note-list {
       display: flex;
@@ -443,16 +495,146 @@ EDITORIAL_CSS_AND_JS = """
       text-decoration: underline;
     }
 
+    /* iPhone & Mobile Safari Optimizations */
     @media (max-width: 760px) {
-      .two-col { grid-template-columns: 1fr; gap: 16px; }
-      .masthead-title { font-size: 2.25rem; }
-      .briefing-item { grid-template-columns: 32px 1fr; gap: 10px; }
+      body {
+        padding:
+          env(safe-area-inset-top, 0px)
+          max(16px, env(safe-area-inset-right, 16px))
+          calc(56px + env(safe-area-inset-bottom, 0px))
+          max(16px, env(safe-area-inset-left, 16px));
+        line-height: 1.6;
+      }
+      .masthead {
+        padding-top: 14px;
+        margin-bottom: 22px;
+      }
+      .masthead-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding-bottom: 10px;
+      }
+      .controls {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .ctrl-btn {
+        min-height: 32px;
+        padding: 4px 8px;
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        touch-action: manipulation;
+      }
+      .ctrl-btn.active {
+        border-color: var(--ink);
+        background: var(--surface-alt);
+        text-decoration: none;
+      }
+      .masthead-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 16px 0 14px;
+      }
+      .masthead-title {
+        font-size: 2.2rem;
+        line-height: 1.05;
+      }
+      .masthead-sub {
+        font-size: 0.84rem;
+        line-height: 1.45;
+      }
+      .masthead-nav {
+        padding: 8px 0;
+      }
+      .nav-links {
+        width: 100%;
+        gap: 14px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+        padding-bottom: 2px;
+      }
+      .nav-links a {
+        display: inline-block;
+        padding: 4px 0;
+      }
+      .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        margin: 26px 0 14px;
+      }
+      .briefing-item {
+        grid-template-columns: 28px 1fr;
+        gap: 10px;
+        padding: 15px 0;
+      }
+      .briefing-content h3 {
+        font-size: 1.12rem;
+        line-height: 1.35;
+      }
+      .briefing-summary {
+        font-size: 0.94rem;
+        line-height: 1.56;
+      }
+      .two-col {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .editorial-callout {
+        padding: 14px 16px;
+        margin: 14px 0 20px;
+      }
+      /* Stack Archive Table cleanly on iPhone screens */
+      .archive-table thead {
+        display: none;
+      }
+      .archive-table, .archive-table tbody, .archive-table tr, .archive-table td {
+        display: block;
+        width: 100%;
+      }
+      .archive-table tr {
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .archive-table td {
+        padding: 2px 0;
+        border-bottom: none;
+      }
+      .archive-date {
+        width: auto;
+        margin-bottom: 4px;
+        color: var(--accent);
+      }
+      .footer {
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 40px;
+      }
     }
   </style>
   <script>
+    const THEME_COLORS = {
+      sage: '#F6F4EF',
+      sepia: '#F2E9D8',
+      dark: '#111214'
+    };
+
+    function applyThemeColorMeta(theme) {
+      const meta = document.getElementById('meta-theme-color');
+      if (meta && THEME_COLORS[theme]) {
+        meta.setAttribute('content', THEME_COLORS[theme]);
+      }
+    }
+
     (function() {
       const savedTheme = localStorage.getItem('genai_theme') || 'sage';
       document.documentElement.setAttribute('data-theme', savedTheme);
+      applyThemeColorMeta(savedTheme);
       const savedSize = localStorage.getItem('genai_fontsize');
       if (savedSize) {
         document.documentElement.style.setProperty('--base-size', savedSize + 'px');
@@ -462,6 +644,7 @@ EDITORIAL_CSS_AND_JS = """
     function setTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('genai_theme', theme);
+      applyThemeColorMeta(theme);
       updateControls();
     }
 
@@ -474,6 +657,7 @@ EDITORIAL_CSS_AND_JS = """
 
     function updateControls() {
       const theme = document.documentElement.getAttribute('data-theme') || 'sage';
+      applyThemeColorMeta(theme);
       document.querySelectorAll('[data-theme-btn]').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-theme-btn') === theme);
       });
@@ -746,23 +930,151 @@ def _render_masthead(active_page: str, latest_date: str, edition_date: str = "")
     """
 
 
+_REDDIT_TOPIC_STOPWORDS = {
+    "the", "a", "an", "of", "for", "in", "on", "to", "and", "or", "with", "via",
+    "towards", "from", "its", "is", "are", "how", "what", "why", "new", "latest",
+    "announced", "we", "our", "your", "my", "by", "model", "models", "ai", "llm",
+    "llms", "using", "into", "over", "more", "most", "can", "will", "not", "this",
+    "that", "have", "has", "been", "when", "where", "who", "all", "almost", "enough",
+}
+
+_CACHED_REDDIT_POOL: List[Dict[str, Any]] | None = None
+
+
+def _tokenize_for_reddit(text: str) -> set[str]:
+    words = re.findall(r"[a-zA-Z0-9]{3,}", (text or "").lower())
+    return {w for w in words if w not in _REDDIT_TOPIC_STOPWORDS}
+
+
+def _get_reddit_topic_pool() -> List[Dict[str, Any]]:
+    """Fetch top 100 active discussions across AI subreddits in a single RSS request and cache in memory."""
+    global _CACHED_REDDIT_POOL
+    if _CACHED_REDDIT_POOL is not None:
+        return _CACHED_REDDIT_POOL
+    _CACHED_REDDIT_POOL = []
+    try:
+        import feedparser
+        import httpx
+
+        rss_url = (
+            "https://www.reddit.com/r/"
+            "LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity+ArtificialIntelligence/"
+            "hot/.rss?limit=100"
+        )
+        ua = (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+        )
+        with httpx.Client(timeout=8.0, headers={"User-Agent": ua}, follow_redirects=True) as client:
+            resp = client.get(rss_url)
+            if resp.status_code == 200:
+                feed = feedparser.parse(resp.text)
+                for entry in feed.entries:
+                    title = (entry.get("title") or "").strip()
+                    link = (entry.get("link") or "").strip()
+                    if not title or not link:
+                        continue
+                    m = re.search(r"/r/([^/]+)/", link)
+                    sub = f"r/{m.group(1)}" if m else "Reddit"
+                    _CACHED_REDDIT_POOL.append(
+                        {
+                            "title": title,
+                            "url": link,
+                            "sub": sub,
+                            "tokens": _tokenize_for_reddit(title),
+                        }
+                    )
+    except Exception:
+        pass
+    return _CACHED_REDDIT_POOL
+
+
+def _find_reddit_discussion(title: str) -> Tuple[Dict[str, str] | None, str]:
+    """Return `(matched_thread_dict_or_None, topic_search_url)` for a briefing item."""
+    from urllib.parse import quote_plus
+
+    clean = re.sub(r"[^A-Za-z0-9\-\s]", " ", title or "")
+    words = [w for w in clean.split() if len(w) > 2 and w.lower() not in _REDDIT_TOPIC_STOPWORDS]
+    query = " ".join(words[:4]) or (title or "AI")
+    search_url = (
+        "https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/"
+        f"?q={quote_plus(query)}&restrict_sr=1&sort=top&t=month"
+    )
+
+    pool = _get_reddit_topic_pool()
+    if not pool:
+        return None, search_url
+
+    story_tokens = _tokenize_for_reddit(title)
+    if not story_tokens:
+        return None, search_url
+
+    best_entry: Dict[str, Any] | None = None
+    best_score = 0
+    title_low = (title or "").lower()
+
+    for entry in pool:
+        overlap = story_tokens & entry["tokens"]
+        if not overlap:
+            continue
+        score = sum(3 if len(w) >= 6 else 2 for w in overlap)
+        r_low = entry["title"].lower()
+        for phrase in ("claude code", "gemini 4", "gpt-5", "gpt-6", "qwen", "deepseek", "llama", "scaling law"):
+            if phrase in title_low and phrase in r_low:
+                score += 5
+        if score > best_score:
+            best_score = score
+            best_entry = entry
+
+    if best_entry and best_score >= 4:
+        return {
+            "title": best_entry["title"],
+            "url": best_entry["url"],
+            "sub": best_entry["sub"],
+        }, search_url
+    return None, search_url
+
+
 def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
     rows: List[str] = []
     for it in items:
+        matched_reddit, reddit_search_url = _find_reddit_discussion(it["title"])
+
         meta_bits = [f'<span class="briefing-tag">{it["category"]}</span>', f'<span>{it["source"]}</span>']
         if it["domain"] and it["domain"] not in ("news.ycombinator.com",):
             meta_bits.append(f'<span>{it["domain"]}</span>')
         if it["points"]:
             if it["hn_url"] and it["hn_url"] != it["url"]:
-                meta_bits.append(f'<a href="{it["hn_url"]}" target="_blank" rel="noopener">{it["points"]} pts · HN Discussion ↗</a>')
+                meta_bits.append(f'<a href="{it["hn_url"]}" target="_blank" rel="noopener">{it["points"]} pts · HN ↗</a>')
             else:
                 meta_bits.append(f'<span>{it["points"]} pts</span>')
         elif it["hn_url"] and it["hn_url"] != it["url"]:
             meta_bits.append(f'<a href="{it["hn_url"]}" target="_blank" rel="noopener">HN Discussion ↗</a>')
+
+        if matched_reddit:
+            meta_bits.append(
+                f'<a href="{matched_reddit["url"]}" target="_blank" rel="noopener">{matched_reddit["sub"]} Thread ↗</a>'
+            )
+        else:
+            meta_bits.append(
+                f'<a href="{reddit_search_url}" target="_blank" rel="noopener">Reddit Topic ↗</a>'
+            )
+
         if it["date"]:
             meta_bits.append(f'<span>{it["date"]}</span>')
 
         summary_html = f'<p class="briefing-summary">{it["summary"]}</p>' if it["summary"] else ""
+        reddit_callout_html = ""
+        if matched_reddit:
+            r_title = matched_reddit["title"]
+            if len(r_title) > 135:
+                r_title = r_title[:132].rsplit(" ", 1)[0] + "..."
+            reddit_callout_html = (
+                f'<div class="briefing-reddit">'
+                f'<strong>Reddit ({matched_reddit["sub"]}):</strong> '
+                f'<a href="{matched_reddit["url"]}" target="_blank" rel="noopener">{r_title} ↗</a>'
+                f'</div>'
+            )
 
         rows.append(
             f"""
@@ -772,6 +1084,7 @@ def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
                 <div class="briefing-meta">{'<span>·</span>'.join(meta_bits)}</div>
                 <h3><a href="{it["url"]}" target="_blank" rel="noopener">{it["title"]}</a></h3>
                 {summary_html}
+                {reddit_callout_html}
               </div>
             </article>
             """
@@ -841,7 +1154,7 @@ def _render_daily_digest_html(
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — {current_date}</title>
   {EDITORIAL_CSS_AND_JS}
 </head>
@@ -928,7 +1241,7 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — Daily Research, Engineering &amp; Audio Index</title>
   {EDITORIAL_CSS_AND_JS}
 </head>
@@ -1025,7 +1338,7 @@ def _render_podcasts_page_html(
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — Podcasts &amp; Episode Summaries</title>
   {EDITORIAL_CSS_AND_JS}
 </head>
