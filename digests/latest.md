@@ -23,10 +23,10 @@
 - See also: Gemini 4 Argon (High): Intelligence, Performance and Price Analysis - https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=49914236
 
 ### 6. [Goodbye Claude, hello Pi](https://caleb.software/posts/claude-to-pi.html)
-**Engineering** (Hacker News) · `caleb.software` · [708 pts on HN](https://news.ycombinator.com/item?id=50410107) · *2026-11-08*
+**Engineering** (Hacker News) · `caleb.software` · [709 pts on HN](https://news.ycombinator.com/item?id=50410107) · *2026-11-08*
 
 ### 7. [Goldman Sachs is pulling Claude Code from its bankers and traders](https://www.thestateofai.com/news/goldman-sachs-claude-code-traders-bankers)
-**Engineering** (Hacker News) · `thestateofai.com` · [637 pts on HN](https://news.ycombinator.com/item?id=50415628) · *2026-11-08*
+**Engineering** (Hacker News) · `thestateofai.com` · [643 pts on HN](https://news.ycombinator.com/item?id=50415628) · *2026-11-08*
 
 ### 8. [Claude Code's "Don't Ask Again" exposes passwords in 1,122 public GitHub files](https://apiiro.com/blog/coding-agents-leaking-secrets-github-dont-ask-again)
 **Engineering** (Hacker News) · `apiiro.com` · [594 pts on HN](https://news.ycombinator.com/item?id=50407882) · *2026-11-07*
