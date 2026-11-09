@@ -62,18 +62,7 @@
 
 ---
 
-## 🎧 AI Podcasts & Audio Deep-Dives (Listen on Your Commute)
-
-- **[How to Evaluate an AI Model & What Is Context Engineering?](https://generativeai101.podbean.com/e/how-to-evaluate-an-ai-model/)** — *Generative AI 101 (Apple Podcasts)* (🎧 12m)
-  - **Why listen:** Host Emily Laird explains why record-breaking Olympiad benchmark scores often fail in real deployments, how to avoid "lost in the middle" context rot, and why teams must move from prompting AI to managing it.
-- **[The AI Agent Race: Perplexity Teammates, Meta Muse & GPT-6 Cyber](https://podcasts.apple.com/sg/podcast/ai-optic-anthropic-openai-news/id1725552927)** — *AI Optic: Anthropic & OpenAI News* (🎧 14m)
-  - **Why listen:** Jaeden Schafer breaks down the newest wave of autonomous action agents (Perplexity Teammates, Meta Muse voice/avatar agents), data-center power pressures, and Anthropic vs. OpenAI strategy.
-- **[What Does It Mean to Be AI Literate? With Kathleen Walch](https://podcasts.apple.com/sg/podcast/ai-today-podcast/id1279927057)** — *AI Today Podcast* (🎧 29m)
-  - **Why listen:** Explores practical AI literacy across engineering and leadership teams, plus insights from ThoughtSpot CEO Ketan Karkhanis on leading organizations through AI transition.
-- **[Deep Dive: Anthropic S-1 Myths and Mythos — Jamin Ball, Altimeter](https://www.youtube.com/watch?v=P735f1xlpL0)** — *Latent Space: The AI Engineer Podcast* (🎧 1h 42m)
-  - **Why listen:** Breaks down the unit economics of frontier AI labs, inference margin realities vs. cloud spend, and what developers should expect from enterprise AI pricing.
-- **[Can AI Invent or Just Help Scientists Work Faster? with Richard Socher (#783)](https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster)** — *The TWIML AI Podcast* (🎧 48m)
-  - **Why listen:** Former Salesforce Chief Scientist Richard Socher explores the boundary between AI as an engineering productivity co-pilot vs. an autonomous scientific hypothesis generator.
+## 🎧 AI Podcasts & Audio Deep-Dives
 
 - **[Can AI Invent or Just Help Scientists Work Faster? with Richard Socher - #783](https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster)** — **The TWIML AI Podcast** (*Tue, 03 Nov 2026*)
   - 🎧 48m — AI can help scientists write code, analyze data, and draft papers. But can it generate the ideas that lead to new discoveries? Richard Socher, former chief scientist at Salesforce, founder of You.com, and co-founder of Recursive, joins us to explore th...
