@@ -17,6 +17,9 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  TZ: Asia/Singapore
+
 jobs:
   deploy:
     environment:
@@ -27,15 +30,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Set up Python (for scheduled or manual runs)
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+      - name: Set up Python
         uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: "pip"
 
-      - name: Pull latest GenAI news & build HTML digest
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+      - name: Auto-generate today's GenAI digest & HTML pages on GitHub
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_ENABLED: ${{ secrets.TELEGRAM_ENABLED }}
@@ -48,15 +49,25 @@ jobs:
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: |
           pip install .
-          genai-agent --quiet
+          TODAY=$(date +%Y-%m-%d)
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] || [ ! -f "digests/${TODAY}_genai_digest.md" ]; then
+            echo "Generating fresh digest and HTML pages for ${TODAY}..."
+            genai-agent --quiet
+          else
+            echo "Today's digest (${TODAY}) already exists; refreshing HTML pages..."
+            python -c "from pathlib import Path; from datetime import datetime; from genai_agent.notifiers.markdown_store import save_markdown_digest; md = Path('digests/${TODAY}_genai_digest.md').read_text(encoding='utf-8'); save_markdown_digest(md, Path('digests'), timestamp=datetime.now())"
+          fi
 
-      - name: Commit updated daily digest to repository archive
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+      - name: Commit auto-generated pages back to repository
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add digests/ docs/
-          git diff --staged --quiet || (git commit -m "chore(digest): auto-update daily GenAI digest $(date -u +%Y-%m-%d)" && git push origin main)
+          if ! git diff --staged --quiet; then
+            git commit -m "chore(digest): auto-generate daily GenAI digest $(date +%Y-%m-%d)"
+            git pull --rebase origin main
+            git push origin main
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v6
