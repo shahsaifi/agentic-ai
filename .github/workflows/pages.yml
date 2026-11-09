@@ -4,8 +4,8 @@ on:
   push:
     branches: ["main"]
   schedule:
-    # Runs automatically every day at 00:00 UTC (08:00 AM SGT / UTC+8)
-    - cron: "0 0 * * *"
+    # Runs every day at 22:45 UTC (06:45 AM SGT / UTC+8) so the page is live before 7:00 AM SGT
+    - cron: "45 22 * * *"
   workflow_dispatch:
 
 permissions:
