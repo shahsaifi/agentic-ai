@@ -3,7 +3,11 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 
-from genai_agent.agent import build_fallback_markdown, build_synthesis_prompt
+from genai_agent.agent import (
+    build_fallback_markdown,
+    build_synthesis_prompt,
+    exclude_previously_published_items,
+)
 from genai_agent.collectors import deduplicate_items
 from genai_agent.models import NewsItem, SourceCategory
 from genai_agent.notifiers import chunk_text, render_email_html, save_markdown_digest
@@ -80,3 +84,37 @@ def test_save_markdown_and_render_html(tmp_path: Path):
     html = render_email_html(md, title="Daily Digest")
     assert "<h1>Daily Digest</h1>" in html
     assert "<strong>Paper 1</strong>" in html
+
+
+def test_exclude_previously_published_items(tmp_path: Path):
+    prev_md = (
+        "# Digest 2026-11-08\n"
+        "### 1. [Old Repeated Story](https://example.com/old-story)\n"
+    )
+    (tmp_path / "2026-11-08_genai_digest.md").write_text(prev_md, encoding="utf-8")
+
+    candidates = [
+        NewsItem(
+            title="Old Repeated Story",
+            url="https://example.com/old-story",
+            source="HN",
+            category=SourceCategory.COMMUNITY_NEWS,
+        )
+    ] + [
+        NewsItem(
+            title=f"Fresh Story {i}",
+            url=f"https://example.com/fresh-{i}",
+            source="arXiv",
+            category=SourceCategory.RESEARCH_PAPER,
+        )
+        for i in range(10)
+    ]
+
+    filtered = exclude_previously_published_items(
+        items=candidates,
+        output_dir=tmp_path,
+        current_date_str="2026-11-09",
+    )
+    assert len(filtered) == 10
+    assert all(i.url != "https://example.com/old-story" for i in filtered)
+

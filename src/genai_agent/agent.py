@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import logging
+import re
 from datetime import datetime
-from typing import Dict, List
+from pathlib import Path
+from typing import Dict, List, Set
 
 from google import genai
 from google.genai import types
@@ -93,6 +95,50 @@ Propose 1 concrete hands-on mini-exercise or 2 thought-provoking architectural q
 ### Collected Source Material:
 {items_block}
 """
+
+
+def exclude_previously_published_items(
+    items: List[NewsItem],
+    output_dir: Path,
+    current_date_str: str,
+) -> List[NewsItem]:
+    """Filter out items whose URLs or titles were already featured in previous days' digests."""
+    if not output_dir.exists():
+        return items
+
+    seen_urls: Set[str] = set()
+    seen_titles: Set[str] = set()
+
+    for md_path in sorted(output_dir.glob("*_genai_digest.md")):
+        file_date = md_path.name.split("_genai_digest.md")[0]
+        if file_date >= current_date_str:
+            continue
+        try:
+            text = md_path.read_text(encoding="utf-8")
+            for m in re.finditer(r"\[([^\]]+)\]\((https?://[^)]+)\)", text):
+                title_raw, url_raw = m.group(1), m.group(2)
+                norm_url = url_raw.strip().rstrip("/").lower()
+                norm_title = "".join(ch.lower() for ch in title_raw if ch.isalnum())
+                if norm_url:
+                    seen_urls.add(norm_url)
+                if len(norm_title) > 10:
+                    seen_titles.add(norm_title)
+        except Exception:
+            continue
+
+    if not seen_urls and not seen_titles:
+        return items
+
+    fresh_items: List[NewsItem] = []
+    for item in items:
+        norm_url = item.url.strip().rstrip("/").lower()
+        norm_title = "".join(ch.lower() for ch in item.title if ch.isalnum())
+        if norm_url in seen_urls or (len(norm_title) > 10 and norm_title in seen_titles):
+            continue
+        fresh_items.append(item)
+
+    # Ensure we always have enough items if almost everything was filtered
+    return fresh_items if len(fresh_items) >= 8 else items
 
 
 def rank_top_items(items: List[NewsItem], top_k: int = 10) -> List[NewsItem]:
@@ -241,31 +287,38 @@ class GenAILearningAgent:
         )
 
         tools = [types.Tool(google_search=types.GoogleSearch())] if use_search_grounding else None
+        candidate_models = []
+        for m in (self.config.gemini_model, "gemini-2.5-flash", "gemini-2.0-flash"):
+            if m and m not in candidate_models:
+                candidate_models.append(m)
 
-        try:
-            response = client.models.generate_content(
-                model=self.config.gemini_model,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    system_instruction=SYSTEM_INSTRUCTION,
-                    temperature=0.3,
-                    tools=tools,
-                ),
+        last_exc: Exception | None = None
+        for model_name in candidate_models:
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        system_instruction=SYSTEM_INSTRUCTION,
+                        temperature=0.3,
+                        tools=tools,
+                    ),
+                )
+                if response.text:
+                    return response.text.strip()
+            except Exception as exc:
+                last_exc = exc
+                logger.warning("Model %s (grounding=%s) failed: %s", model_name, use_search_grounding, exc)
+
+        if use_search_grounding:
+            logger.warning("Retrying Gemini synthesis without search grounding tool...")
+            return self.synthesize_with_gemini(
+                items=items,
+                date_str=date_str,
+                use_search_grounding=False,
             )
-            if response.text:
-                return response.text.strip()
-        except Exception as exc:
-            if use_search_grounding:
-                logger.warning(
-                    "Search grounding call failed (%s); retrying synthesis without search tool.",
-                    exc,
-                )
-                return self.synthesize_with_gemini(
-                    items=items,
-                    date_str=date_str,
-                    use_search_grounding=False,
-                )
-            raise
+        if last_exc:
+            raise last_exc
 
         raise RuntimeError("Gemini returned an empty response.")
 
@@ -347,7 +400,12 @@ class GenAILearningAgent:
         items, breakdown = collect_all_sources(
             focus_topics=self.config.focus_topics,
             days=self.config.lookback_days,
-            max_per_source=self.config.max_items_per_source,
+            max_per_source=max(self.config.max_items_per_source, 16),
+        )
+        items = exclude_previously_published_items(
+            items=items,
+            output_dir=self.config.digest_output_dir,
+            current_date_str=date_str,
         )
 
         if collect_only or not self.config.gemini_api_key:
