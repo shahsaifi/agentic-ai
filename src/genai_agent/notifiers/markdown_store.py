@@ -716,7 +716,7 @@ def _render_masthead(active_page: str, latest_date: str, edition_date: str = "")
     return f"""
     <header class="masthead">
       <div class="masthead-top">
-        <div>THE GENERATIVE AI TECHNICAL BRIEFING · {issue_label} · SINGAPORE (SGT)</div>
+        <div>THE GENERATIVE AI TECHNICAL BRIEFING · {issue_label}</div>
         <div class="controls">
           <span>PALETTE:</span>
           <button class="ctrl-btn" data-theme-btn="sage" onclick="setTheme('sage')">Paper</button>
@@ -739,7 +739,7 @@ def _render_masthead(active_page: str, latest_date: str, edition_date: str = "")
           <a href="index.html#archive">Archive</a>
         </div>
         <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">
-          AUTO-PUBLISHED DAILY BY 07:00 SGT
+          DAILY EDITION
         </div>
       </nav>
     </header>
@@ -980,7 +980,7 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
     </section>
 
     <footer class="footer">
-      <div>THE GENAI BRIEFING · PUBLISHED DAILY AT 06:45 SGT</div>
+      <div>THE GENAI BRIEFING · PUBLISHED DAILY</div>
       <div><a href="index.html">Front Page</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a></div>
     </footer>
   </div>
