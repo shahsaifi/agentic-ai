@@ -52,7 +52,5 @@
 
 ## Audio & Podcasts
 
-- **[[One Million AI Engineer Special] How Stanford Teaches AI-Native Engineering — Mihail Eric, Monaco](https://lspace.beehiiv.com/podcast/s/latent_space_the_ai_engineer_podcast/one_million_ai_engineer_special_how_stanford_teaches_ai-native_engineering_mihail_eric_monaco)** — **Latent Space (AI Engineer Podcast)** (🎧 2h 1m) · *Sun, 08 Nov 2026*
-  - What do you assign when a coding agent can finish last year’s homework in one prompt? In the second run of Stanford’s CS146S, Mihail Eric brought open-source maintainers into the course. Students have to learn an unfamiliar repo, propose a change, and ...
 - **[Abundant Intelligence at the Midwest AI Summit Part 2](https://share.transistor.fm/s/1b301bdc)** — **Practical AI Podcast** (🎧 47m) · *Thu, 05 Nov 2026*
   - How do organizations decide what AI should do, where to set boundaries, and when to keep humans in control? In this special episode, we bring you three more talks from the Midwest AI Summit, exploring how organizations are putting AI into practice.
