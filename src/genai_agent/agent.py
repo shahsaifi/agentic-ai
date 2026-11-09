@@ -5,6 +5,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Set
+from urllib.parse import urlparse
 
 from google import genai
 from google.genai import types
@@ -25,14 +26,60 @@ from genai_agent.models import DigestResult, NewsItem, SourceCategory
 
 logger = logging.getLogger(__name__)
 
-SYSTEM_INSTRUCTION = """You are a Principal Generative AI Research Scientist and Technical Educator.
-Your goal is to curate the highest-signal Generative AI news, research papers, model releases, and engineering discussions into a clear, deeply educational Daily Learning Digest.
-
-Guidelines:
-1. Prioritize genuine technical substance (new architectures, post-training methods, agentic patterns, inference optimization, multimodal breakthroughs, open-weights releases, and benchmark insights) over marketing hype.
-2. Always include clickable Markdown links `[Title](URL)` for every paper, blog post, or discussion you reference.
-3. Make the digest actively educational: explain *why* a method or release matters and *how* it works under the hood.
+SYSTEM_INSTRUCTION = """You are the Chief Editor of a technical Generative AI research briefing (similar in tone to Anthropic Research notes, Simon Willison's blog, and Distill.pub).
+Rules:
+1. NO emojis, NO marketing hype, NO filler phrases ("In the fast-paced world of AI...", "game-changing", "revolutionary").
+2. Write with high technical density, clarity, and precision.
+3. Always include clickable Markdown links `[Title](URL)` for every paper, blog post, or discussion you reference.
 """
+
+
+def _clean_sentence_excerpt(text: str, max_chars: int = 280) -> str:
+    """Clean boilerplate and truncate on a complete sentence boundary instead of mid-word."""
+    if not text:
+        return ""
+    text = re.sub(r"^🎧\s*[0-9hm:\s]+—\s*", "", text.strip())
+    text = re.sub(
+        r"Hacker News discussion \([^)]+\)\.\s*Discussion:\s*https?://\S+\s*(\|\s*)?",
+        "",
+        text,
+    ).strip()
+    text = re.sub(
+        r"Viral X thread discussed on Hacker News \([^)]+\)\.\s*HN Thread:\s*https?://\S+",
+        "",
+        text,
+    ).strip()
+    text = " ".join(text.split())
+    if not text:
+        return ""
+    if len(text) <= max_chars:
+        return text
+
+    cut = text[:max_chars]
+    # Prefer cutting at the last period, question mark, or semicolon
+    for sep in (". ", "? ", "! ", "; "):
+        pos = cut.rfind(sep)
+        if pos > max_chars // 2:
+            return cut[: pos + 1]
+
+    # Otherwise cut cleanly at the last word boundary
+    last_space = cut.rfind(" ")
+    if last_space > 0:
+        return cut[:last_space].rstrip(",;:-") + "."
+    return cut + "."
+
+
+def _extract_hn_discussion_url(summary: str) -> str:
+    m = re.search(r"https://news\.ycombinator\.com/item\?id=\d+", summary or "")
+    return m.group(0) if m else ""
+
+
+def _domain_of(url: str) -> str:
+    try:
+        host = urlparse(url).netloc.lower()
+        return host[4:] if host.startswith("www.") else host
+    except Exception:
+        return ""
 
 
 def build_synthesis_prompt(
@@ -40,56 +87,48 @@ def build_synthesis_prompt(
     focus_topics: List[str],
     date_str: str,
 ) -> str:
-    """Construct the synthesis prompt with collected items and learning structure."""
+    """Construct the synthesis prompt with collected items and clean editorial structure."""
     items_block = "\n".join(item.to_prompt_block(i + 1) for i, item in enumerate(items))
     topics_str = ", ".join(focus_topics)
 
-    return f"""Today's Date: {date_str}
-Learner's Focus Topics: {topics_str}
+    return f"""Date: {date_str}
+Focus Topics: {topics_str}
 
-Below are {len(items)} freshly collected items from Hugging Face Daily Papers, arXiv (cs.CL/cs.AI), AI Lab Blogs (OpenAI, Google AI, DeepMind, Hugging Face, Simon Willison, Lilian Weng, LangChain), Hacker News, Reddit (r/LocalLLaMA, r/MachineLearning), and Web News Search.
+Below are {len(items)} collected items from Hugging Face Daily Papers, arXiv (cs.CL/cs.AI), AI Lab Blogs (OpenAI, Google AI, DeepMind, Hugging Face, Simon Willison, Lilian Weng), Hacker News, Reddit (r/LocalLLaMA, r/MachineLearning), X.com, and AI Podcasts.
 
-You also have Google Search Grounding enabled—use it (including `site:x.com` queries for breaking AI researcher threads) to verify hot Generative AI releases and discussions from the last 48 hours.
+Write a crisp, high-signal technical briefing using the exact Markdown sections below. Do NOT use emojis in headings or bullets.
 
-Create a comprehensive, well-structured Markdown digest using the exact sections below:
+# Generative AI Technical Briefing — {date_str}
 
-# 🚀 Generative AI Learning & News Digest — {date_str}
+## Executive Summary
+- 3 concise bullet points summarizing the most consequential technical developments today, with inline `[Title](URL)` links.
 
-## ⚡ Executive TL;DR (Top 3 Breakthroughs)
-- 3 concise bullet points summarizing the biggest announcements or research breakthroughs today, with links.
+## Technical Deep-Dive
+Select the single most substantive architecture, training method, or engineering pattern from today's items and explain it rigorously:
+- **Subject**: Name & source `[Title](URL)`
+- **Problem Statement**: What technical bottleneck or limitation does it address?
+- **Mechanism**: How the method or architecture works under the hood.
+- **Engineering Implication**: When and how practitioners should use it.
 
-## 🧠 Concept of the Day (Technical Deep-Dive)
-Pick the **single most educational technical concept, architecture, or method** from today's research papers or engineering posts and teach it clearly:
-- **Concept**: Name & source paper/post link
-- **The Core Problem**: What bottleneck or limitation does it address?
-- **How It Works (Intuition & Mechanism)**: Step-by-step explanation of the method or architecture.
-- **Why It Matters in Practice**: How engineers/researchers can apply this.
-
-## 🏆 Top 10 Ranked by Content & Reach
-Curate the top 10 highest-signal items across Research Papers (arXiv & Hugging Face), AI Lab Releases, and Community Engineering (Hacker News & r/LocalLLaMA). Format each item using this exact structure:
+## Top 10 Ranked Briefing
+Curate the top 10 highest-signal items across Research Papers, Lab Releases, and Engineering Discussions. Format each item using this exact structure:
 ### 1. [Title](URL)
-**Category Badge** (Source) · **⬆️ Score pts/upvotes**
-- **What happened:** 1–2 sentences summarizing the release, paper, or discussion.
-- **Why it matters:** 1 sentence on the practical takeaway.
+**Category** (Source) · **Score pts** · *Date*
+- **Summary:** 2 complete, self-contained sentences explaining the technical contribution and why it matters.
 
 ---
 
-## 🔥 Hot on X.com (AI Twitter Pulse)
-Highlight 3–4 viral X.com / AI Twitter threads and discussions from researchers and engineers. Format each item using this exact 2-line bullet structure:
-- **[Thread Headline (@handle on X)](URL)** — *X.com Thread* (⬆️ Score pts)
-  - **What's being discussed:** 1–2 sentences summarizing the thread and debate.
+## Researcher Threads on X
+Highlight 3–4 notable X.com / AI researcher discussions. Format each item using this exact 2-line bullet structure:
+- **[Thread Headline (@handle)](URL)** — *X.com* (Score pts)
+  - 1–2 complete sentences summarizing the technical argument or debate.
 
 ---
 
-## 🎧 AI Podcasts & Audio Deep-Dives
-Include 3–4 relevant, high-signal AI podcast episodes from the collected feed. Format each item using this exact 2-line bullet structure:
-- **[Episode Title](URL)** — *Podcast Show Name* (🎧 Duration)
-  - **Why listen:** 1–2 sentences on what the episode covers.
-
----
-
-## 🎯 Today's 15-Minute Learning Challenge
-Propose 1 concrete hands-on mini-exercise or 2 thought-provoking architectural questions based on today's digest to help the reader actively retain what they learned.
+## Audio & Podcasts
+Include 3–4 relevant AI podcast episodes from the feed. Format each item using this exact 2-line bullet structure:
+- **[Episode Title](URL)** — *Show Name* (🎧 Duration)
+  - 1–2 complete sentences on the core technical or strategic topic discussed.
 
 ---
 ### Collected Source Material:
@@ -137,7 +176,6 @@ def exclude_previously_published_items(
             continue
         fresh_items.append(item)
 
-    # Ensure we always have enough items if almost everything was filtered
     return fresh_items if len(fresh_items) >= 8 else items
 
 
@@ -149,21 +187,20 @@ def rank_top_items(items: List[NewsItem], top_k: int = 10) -> List[NewsItem]:
         SourceCategory.COMMUNITY_NEWS: [],
         SourceCategory.WEB_SEARCH: [],
         SourceCategory.PODCAST: [],
+        SourceCategory.SOCIAL_X: [],
     }
     for item in items:
         by_cat.setdefault(item.category, []).append(item)
 
-    # Sort each category by engagement score + summary richness
     for cat in by_cat:
         by_cat[cat].sort(
             key=lambda x: ((x.score or 0), len(x.summary or "")),
             reverse=True,
         )
 
-    # Pick a balanced Top 10: 4 community, 4 papers, 2 official lab blogs
     quotas = [
-        (SourceCategory.COMMUNITY_NEWS, 4),
         (SourceCategory.RESEARCH_PAPER, 4),
+        (SourceCategory.COMMUNITY_NEWS, 4),
         (SourceCategory.COMPANY_BLOG, 2),
     ]
     selected: List[NewsItem] = []
@@ -174,7 +211,6 @@ def rank_top_items(items: List[NewsItem], top_k: int = 10) -> List[NewsItem]:
             selected.append(item)
             used_urls.add(item.url)
 
-    # Fill any remaining slots up to top_k by highest overall score (excluding podcasts & X social section)
     if len(selected) < top_k:
         remaining = [
             i
@@ -194,66 +230,78 @@ def build_fallback_markdown(
     date_str: str,
     breakdown: Dict[str, int],
 ) -> str:
-    """Generate a concise Top 10 Markdown digest ranked by content substance and community reach, plus X Pulse & Podcasts."""
+    """Generate a clean, editorial Top 10 Markdown briefing without emoji clutter or raw scraper boilerplate."""
     top_items = rank_top_items(items, top_k=10)
     x_posts = [i for i in items if i.category == SourceCategory.SOCIAL_X]
     podcasts = [i for i in items if i.category == SourceCategory.PODCAST]
 
     lines = [
-        f"# 🚀 Top 10 Generative AI Learning & News Digest — {date_str}",
+        f"# Generative AI Technical Briefing — {date_str}",
         "",
-        f"> **Focus Topics:** {', '.join(focus_topics)}  ",
-        f"> **Curated:** Top {len(top_items)} of {len(items)} items ranked by technical substance & community reach",
-        "",
-        "## 🏆 Top 10 Must-Read Highlights Today",
+        "## Top 10 Ranked Briefing",
         "",
     ]
 
-    cat_badges = {
-        SourceCategory.RESEARCH_PAPER: "📄 Research Paper",
-        SourceCategory.COMPANY_BLOG: "🏢 Official Lab Blog",
-        SourceCategory.COMMUNITY_NEWS: "🔥 High-Reach Community",
-        SourceCategory.WEB_SEARCH: "🌐 Industry News",
+    cat_labels = {
+        SourceCategory.RESEARCH_PAPER: "Research",
+        SourceCategory.COMPANY_BLOG: "Lab Post",
+        SourceCategory.COMMUNITY_NEWS: "Engineering",
+        SourceCategory.WEB_SEARCH: "Report",
     }
 
     for idx, item in enumerate(top_items, start=1):
-        badge = cat_badges.get(item.category, "📌 News")
-        score_badge = f" · **⬆️ {item.score} pts/upvotes**" if item.score else ""
-        pub_badge = f" · *{item.published_at}*" if item.published_at else ""
-        lines.append(
-            f"### {idx}. [{item.title}]({item.url})\n"
-            f"**{badge}** ({item.source}){score_badge}{pub_badge}"
-        )
-        if item.summary:
-            short_sum = item.summary[:320] + ("..." if len(item.summary) > 320 else "")
-            lines.append(f"- **Takeaway:** {short_sum}")
+        label = cat_labels.get(item.category, "Brief")
+        domain = _domain_of(item.url)
+        hn_url = _extract_hn_discussion_url(item.summary)
+        meta_parts = [f"**{label}** ({item.source})"]
+        if domain and domain not in ("news.ycombinator.com", "huggingface.co", "arxiv.org"):
+            meta_parts.append(f"`{domain}`")
+        if item.score:
+            if hn_url and hn_url != item.url:
+                meta_parts.append(f"[{item.score} pts on HN]({hn_url})")
+            else:
+                meta_parts.append(f"{item.score} pts")
+        if item.published_at:
+            meta_parts.append(f"*{item.published_at}*")
+
+        lines.append(f"### {idx}. [{item.title}]({item.url})")
+        lines.append(" · ".join(meta_parts))
+
+        excerpt = _clean_sentence_excerpt(item.summary, max_chars=300)
+        if excerpt:
+            lines.append(f"- {excerpt}")
         lines.append("")
 
     if x_posts:
         lines.append("---")
         lines.append("")
-        lines.append("## 🔥 Hot on X.com (AI Twitter Pulse)")
+        lines.append("## Researcher Threads on X")
         lines.append("")
-        for xp in x_posts[:5]:
-            score_badge = f" (⬆️ {xp.score} pts)" if xp.score else ""
-            pub_badge = f" · *{xp.published_at}*" if xp.published_at else ""
-            lines.append(f"- **[{xp.title}]({xp.url})** — **{xp.source}**{score_badge}{pub_badge}")
-            if xp.summary:
-                short_x = xp.summary[:280] + ("..." if len(xp.summary) > 280 else "")
-                lines.append(f"  - {short_x}")
+        for xp in x_posts[:4]:
+            hn_url = _extract_hn_discussion_url(xp.summary)
+            score_str = f" ({xp.score} pts)" if xp.score else ""
+            pub_str = f" · *{xp.published_at}*" if xp.published_at else ""
+            lines.append(f"- **[{xp.title}]({xp.url})** — *{xp.source}*{score_str}{pub_str}")
+            excerpt = _clean_sentence_excerpt(xp.summary, max_chars=260)
+            if excerpt:
+                lines.append(f"  - {excerpt}")
+            elif hn_url:
+                lines.append(f"  - Active engineering discussion thread on [Hacker News]({hn_url}).")
         lines.append("")
 
     if podcasts:
         lines.append("---")
         lines.append("")
-        lines.append("## 🎧 AI Podcasts & Audio Deep-Dives")
+        lines.append("## Audio & Podcasts")
         lines.append("")
-        for pod in podcasts[:5]:
-            pub_badge = f" (*{pod.published_at}*)" if pod.published_at else ""
-            lines.append(f"- **[{pod.title}]({pod.url})** — **{pod.source}**{pub_badge}")
-            if pod.summary:
-                short_pod = pod.summary[:260] + ("..." if len(pod.summary) > 260 else "")
-                lines.append(f"  - {short_pod}")
+        for pod in podcasts[:4]:
+            dur_m = re.search(r"🎧\s*([0-9hm:\s]+)", pod.summary or "")
+            dur_str = f" (🎧 {dur_m.group(1).strip()})" if dur_m else ""
+            pub_str = f" · *{pod.published_at}*" if pod.published_at else ""
+            lines.append(f"- **[{pod.title}]({pod.url})** — **{pod.source}**{dur_str}{pub_str}")
+            excerpt = _clean_sentence_excerpt(pod.summary, max_chars=260)
+            if excerpt:
+                lines.append(f"  - {excerpt}")
         lines.append("")
 
     return "\n".join(lines)
@@ -300,7 +348,7 @@ class GenAILearningAgent:
                     contents=prompt,
                     config=types.GenerateContentConfig(
                         system_instruction=SYSTEM_INSTRUCTION,
-                        temperature=0.3,
+                        temperature=0.25,
                         tools=tools,
                     ),
                 )
@@ -311,7 +359,6 @@ class GenAILearningAgent:
                 logger.warning("Model %s (grounding=%s) failed: %s", model_name, use_search_grounding, exc)
 
         if use_search_grounding:
-            logger.warning("Retrying Gemini synthesis without search grounding tool...")
             return self.synthesize_with_gemini(
                 items=items,
                 date_str=date_str,
@@ -329,7 +376,7 @@ class GenAILearningAgent:
         days = self.config.lookback_days
         topics = self.config.focus_topics
 
-        def tool_get_huggingface_papers() -> List[ dict ]:
+        def tool_get_huggingface_papers() -> List[dict]:
             """Fetch trending daily AI research papers from Hugging Face."""
             return [i.to_dict() for i in fetch_huggingface_daily_papers(limit=max_items)]
 
@@ -354,12 +401,9 @@ class GenAILearningAgent:
             return [i.to_dict() for i in fetch_google_news_rss(topics=topics, days=days, limit=max_items)]
 
         prompt = (
-            f"Today is {date_str}. The learner's focus topics are: {', '.join(topics)}.\n"
-            "Call all available news and research collector tools to gather the latest papers, "
-            "company blog posts, Hacker News discussions, Reddit threads, and web news. "
-            "Then synthesize the results into the full Generative AI Learning & News Digest "
-            "(including Executive TL;DR, Concept of the Day Deep-Dive, Research Papers Spotlight, "
-            "AI Lab Announcements, Engineering & Community Pulse, and Today's 15-Minute Learning Challenge)."
+            f"Today is {date_str}. Focus topics: {', '.join(topics)}.\n"
+            "Call the collector tools to gather the latest papers, lab blog posts, and community threads, "
+            "then synthesize a clean, emoji-free Generative AI Technical Briefing."
         )
 
         response = client.models.generate_content(
@@ -367,7 +411,7 @@ class GenAILearningAgent:
             contents=prompt,
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_INSTRUCTION,
-                temperature=0.3,
+                temperature=0.25,
                 tools=[
                     tool_get_huggingface_papers,
                     tool_get_arxiv_papers,
@@ -384,7 +428,7 @@ class GenAILearningAgent:
         """Collect sources, synthesize the learning digest, and return a DigestResult."""
         now = datetime.now()
         date_str = now.strftime("%Y-%m-%d")
-        title = f"Generative AI Learning & News Digest — {date_str}"
+        title = f"Generative AI Technical Briefing — {date_str}"
 
         if agentic_tools_mode and not collect_only:
             markdown_content = self.run_agentic_tool_calling(date_str=date_str)

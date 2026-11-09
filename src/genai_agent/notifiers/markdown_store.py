@@ -4,82 +4,63 @@ import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
+from urllib.parse import urlparse
 
 import markdown
 
 from genai_agent.collectors.podcasts import fetch_detailed_podcast_hub
 
-SHARED_CSS_AND_THEME_JS = """
+EDITORIAL_CSS_AND_JS = """
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500;600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
   <style>
-    /* Default: Warm Botanical Sage Paper (Zero Pure-White Glare) */
+    /* Default: Warm Archival Paper (FT / Anthropic / Stripe Press inspired) */
     :root, [data-theme="sage"] {
-      --bg: #EFECE6;
-      --bg-pattern: radial-gradient(rgba(15, 118, 110, 0.05) 1px, transparent 1px);
-      --bg-elevated: #F9F6F0;
-      --bg-card-inner: #F2EFE9;
-      --text: #222623;
-      --text-secondary: #525852;
-      --border: #DCD6CA;
-      --accent: #0F766E;
-      --accent-hover: #0D9488;
-      --accent-soft: rgba(15, 118, 110, 0.10);
-      --accent-warm: #B45309;
-      --accent-warm-soft: rgba(180, 83, 9, 0.10);
-      --x-accent: #1D9BF0;
-      --x-card-bg: #FCFBF8;
-      --x-border: #D6D0C4;
-      --gradient: linear-gradient(135deg, #0F766E 0%, #3B82F6 55%, #D97706 100%);
-      --shadow: 0 6px 24px -4px rgba(34, 38, 35, 0.06), 0 2px 6px -1px rgba(34, 38, 35, 0.04);
-      --font-body: 'Literata', Georgia, serif;
-      --font-sans: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-display: 'Fraunces', Georgia, serif;
+      --bg: #F6F4EF;
+      --surface: #FDFCF9;
+      --surface-alt: #EFECE5;
+      --ink: #141413;
+      --ink-secondary: #4A4843;
+      --ink-muted: #78756E;
+      --border: #DCD7CC;
+      --border-strong: #141413;
+      --accent: #9E2A2B;
+      --accent-hover: #7A1C1D;
+      --link: #1D4ED8;
+      --font-serif: 'Newsreader', Georgia, serif;
+      --font-display: 'Instrument Serif', 'Newsreader', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
-      --base-size: 17.5px;
+      --base-size: 16.5px;
     }
 
-    /* Mode 2: Kindle Warm Sepia Parchment */
     [data-theme="sepia"] {
-      --bg: #F4ECD8;
-      --bg-pattern: radial-gradient(rgba(146, 64, 14, 0.05) 1px, transparent 1px);
-      --bg-elevated: #FAF4E6;
-      --bg-card-inner: #EFE6D2;
-      --text: #2C221E;
-      --text-secondary: #5C4D43;
-      --border: #DFD2BA;
-      --accent: #9A3412;
-      --accent-hover: #B45309;
-      --accent-soft: rgba(154, 52, 18, 0.10);
-      --accent-warm: #0F766E;
-      --accent-warm-soft: rgba(15, 118, 110, 0.10);
-      --x-accent: #0284C7;
-      --x-card-bg: #FDF8EC;
-      --x-border: #D8C8AE;
-      --gradient: linear-gradient(135deg, #9A3412 0%, #D97706 55%, #0F766E 100%);
-      --shadow: 0 6px 24px -4px rgba(44, 34, 30, 0.07);
+      --bg: #F2E9D8;
+      --surface: #F9F3E6;
+      --surface-alt: #E8DEC8;
+      --ink: #251E18;
+      --ink-secondary: #54473C;
+      --ink-muted: #7D6D5F;
+      --border: #D5C7B0;
+      --border-strong: #251E18;
+      --accent: #8C2D19;
+      --accent-hover: #692010;
+      --link: #0F5257;
     }
 
-    /* Mode 3: Low-Blue-Light Nord Midnight Slate */
     [data-theme="dark"] {
-      --bg: #13171F;
-      --bg-pattern: radial-gradient(rgba(94, 234, 212, 0.04) 1px, transparent 1px);
-      --bg-elevated: #1B212C;
-      --bg-card-inner: #232B38;
-      --text: #E2E8F0;
-      --text-secondary: #94A3B8;
-      --border: #2E3846;
-      --accent: #5EEAD4;
-      --accent-hover: #2DD4BF;
-      --accent-soft: rgba(94, 234, 212, 0.12);
-      --accent-warm: #FBBF24;
-      --accent-warm-soft: rgba(251, 191, 36, 0.12);
-      --x-accent: #38BDF8;
-      --x-card-bg: #161B24;
-      --x-border: #2E3A4C;
-      --gradient: linear-gradient(135deg, #2DD4BF 0%, #818CF8 55%, #FBBF24 100%);
-      --shadow: 0 10px 30px -6px rgba(0, 0, 0, 0.5);
+      --bg: #111214;
+      --surface: #18191C;
+      --surface-alt: #202226;
+      --ink: #ECEAE4;
+      --ink-secondary: #A6A39B;
+      --ink-muted: #706E68;
+      --border: #2B2D31;
+      --border-strong: #ECEAE4;
+      --accent: #E07A5F;
+      --accent-hover: #F29C85;
+      --link: #7AA2F7;
     }
 
     * { box-sizing: border-box; }
@@ -88,624 +69,384 @@ SHARED_CSS_AND_THEME_JS = """
       scroll-behavior: smooth;
     }
     body {
-      font-family: var(--font-body);
+      font-family: var(--font-serif);
       background-color: var(--bg);
-      background-image: var(--bg-pattern);
-      background-size: 24px 24px;
-      color: var(--text);
-      line-height: 1.78;
-      letter-spacing: 0.005em;
+      color: var(--ink);
+      line-height: 1.68;
       margin: 0;
-      padding: 0 16px 64px;
-      transition: background-color 0.25s ease, color 0.25s ease;
+      padding: 0 20px 72px;
       -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
-    #progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 0%;
-      height: 4px;
-      background: var(--gradient);
-      z-index: 1000;
-      transition: width 0.1s ease-out;
-    }
-
-    .container {
-      max-width: 900px;
+    .page-wrap {
+      max-width: 1020px;
       margin: 0 auto;
     }
 
-    .top-nav {
-      position: sticky;
-      top: 10px;
-      z-index: 100;
+    /* Editorial Masthead */
+    .masthead {
+      padding-top: 20px;
+      margin-bottom: 32px;
+    }
+    .masthead-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
-      padding: 12px 18px;
-      margin: 14px 0 20px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      font-family: var(--font-sans);
-    }
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      font-size: 0.96rem;
-      color: var(--text);
-      text-decoration: none;
-    }
-    .brand-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 4px;
-      background: var(--gradient);
-      display: inline-block;
-      transform: rotate(45deg);
-    }
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .pill-link {
-      padding: 5px 12px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      font-family: var(--font-mono);
-      text-decoration: none;
-      background: var(--bg-card-inner);
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
-      transition: all 0.15s ease;
-    }
-    .pill-link:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      text-decoration: none;
-    }
-    .pill-link.active {
-      background: var(--accent);
-      color: var(--bg-elevated);
-      border-color: var(--accent);
-    }
-    .comfort-group {
-      display: inline-flex;
-      align-items: center;
-      background: var(--bg-card-inner);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 2px;
-      gap: 2px;
-    }
-    .comfort-btn {
-      cursor: pointer;
-      background: transparent;
-      color: var(--text-secondary);
-      border: none;
-      border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      font-family: var(--font-sans);
-      transition: all 0.15s ease;
-    }
-    .comfort-btn:hover, .comfort-btn.active {
-      background: var(--bg-elevated);
-      color: var(--accent);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    }
-
-    .jump-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 22px;
-      padding: 12px 16px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      font-family: var(--font-sans);
-      align-items: center;
-    }
-    .jump-label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-secondary);
-      margin-right: 4px;
-    }
-
-    .hero {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 36px;
-      margin-bottom: 28px;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 5px;
-      background: var(--gradient);
-    }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      padding: 5px 12px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-
-    .card {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 40px 44px;
-      box-shadow: var(--shadow);
-    }
-
-    .section-panel {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 28px 32px;
-      margin-top: 26px;
-      box-shadow: var(--shadow);
-    }
-    .section-panel.x-panel {
-      border-top: 4px solid var(--x-accent);
-    }
-    .section-panel.podcast-panel {
-      border-top: 4px solid var(--accent-warm);
-    }
-
-    /* Authentic X / Twitter Post Snippet Cards */
-    .x-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 16px;
-      margin: 18px 0 10px;
-    }
-    .x-tweet-card {
-      background: var(--x-card-bg);
-      border: 1px solid var(--x-border);
-      border-radius: 16px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      font-family: var(--font-sans);
-      transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
-    }
-    .x-tweet-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--x-accent);
-      box-shadow: var(--shadow);
-    }
-    .x-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    .x-author {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .x-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--gradient);
-      color: #FFFFFF;
-      font-weight: 700;
-      font-size: 0.88rem;
-      font-family: var(--font-mono);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .x-name-row {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-weight: 700;
-      font-size: 0.92rem;
-      color: var(--text);
-      line-height: 1.2;
-    }
-    .x-verified {
-      color: var(--x-accent);
-      font-size: 0.88rem;
-    }
-    .x-handle {
-      font-size: 0.78rem;
-      color: var(--text-secondary);
-      font-family: var(--font-mono);
-    }
-    .x-logo {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      text-decoration: none !important;
-      line-height: 1;
-    }
-    .x-title {
-      font-size: 0.98rem;
-      font-weight: 700;
-      color: var(--text);
-      margin: 0 0 8px;
-      line-height: 1.4;
-    }
-    .x-title a {
-      color: var(--text);
-      text-decoration: none;
-    }
-    .x-title a:hover {
-      color: var(--x-accent);
-      text-decoration: underline;
-    }
-    .x-body {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      line-height: 1.58;
-      margin: 0 0 14px;
-    }
-    .x-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-      font-size: 0.76rem;
-      font-family: var(--font-mono);
-      color: var(--text-secondary);
-    }
-    .x-metrics {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .x-metric-pill {
-      background: var(--bg-card-inner);
-      padding: 3px 9px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      font-weight: 600;
-    }
-    .x-links {
-      display: inline-flex;
-      gap: 10px;
-      font-weight: 700;
-    }
-    .x-links a {
-      color: var(--x-accent);
-      text-decoration: none;
-    }
-    .x-links a:hover {
-      text-decoration: underline;
-    }
-
-    /* Stylized Podcast Episode Cards */
-    .pod-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 16px;
-      margin: 18px 0 10px;
-    }
-    .pod-card {
-      background: var(--x-card-bg);
-      border: 1px solid var(--x-border);
-      border-radius: 16px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      font-family: var(--font-sans);
-      transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
-    }
-    .pod-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent-warm);
-      box-shadow: var(--shadow);
-    }
-    .pod-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .pod-show-info {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-    }
-    .pod-artwork {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #D97706 0%, #7C3AED 100%);
-      color: #FFFFFF;
-      font-size: 1.15rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      box-shadow: 0 3px 10px rgba(217, 119, 6, 0.22);
-    }
-    .pod-show-name {
-      font-weight: 700;
-      font-size: 0.88rem;
-      color: var(--accent-warm);
-      line-height: 1.25;
-    }
-    .pod-sub {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      font-family: var(--font-mono);
-    }
-    .pod-duration {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      font-weight: 600;
-      background: var(--accent-warm-soft);
-      color: var(--accent-warm);
-      padding: 4px 10px;
-      border-radius: 999px;
-      white-space: nowrap;
-    }
-    .pod-title {
-      font-size: 0.98rem;
-      font-weight: 700;
-      color: var(--text);
-      margin: 0 0 8px;
-      line-height: 1.4;
-    }
-    .pod-title a {
-      color: var(--text);
-      text-decoration: none;
-    }
-    .pod-title a:hover {
-      color: var(--accent-warm);
-      text-decoration: underline;
-    }
-    .pod-body {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      line-height: 1.58;
-      margin: 0 0 14px;
-    }
-    .pod-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
-    .pod-wave {
-      font-family: var(--font-mono);
-      font-size: 0.76rem;
-      letter-spacing: 2px;
-      color: var(--text-secondary);
-      opacity: 0.75;
-    }
-    .pod-play-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--accent-warm-soft);
-      color: var(--accent-warm) !important;
-      border: 1px solid var(--border);
-      padding: 5px 13px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-decoration: none !important;
-      transition: all 0.15s ease;
-    }
-    .pod-play-btn:hover {
-      background: var(--accent-warm);
-      color: #FFFFFF !important;
-    }
-
-    h1, h2 {
-      font-family: var(--font-display);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      line-height: 1.28;
-      color: var(--text);
-    }
-    h1 {
-      font-size: 2.05rem;
-      margin: 4px 0 16px;
-    }
-    h2 {
-      font-size: 1.48rem;
-      margin: 36px 0 16px;
+      gap: 12px;
       padding-bottom: 10px;
-      border-bottom: 2px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
     }
-
-    h3 {
-      font-family: var(--font-display);
-      font-size: 1.16rem;
-      font-weight: 600;
-      margin: 24px 0 0;
-      line-height: 1.42;
-      padding: 18px 22px 8px;
-      background: var(--bg-card-inner);
-      border-top-left-radius: 14px;
-      border-top-right-radius: 14px;
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--accent);
-      border-bottom: none;
+    .controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
     }
-    h3 + p {
-      font-family: var(--font-sans);
-      font-size: 0.86rem;
-      color: var(--text-secondary);
-      background: var(--bg-card-inner);
-      margin: 0;
-      padding: 2px 22px 10px;
-      border-left: 4px solid var(--accent);
-      border-right: 1px solid var(--border);
-    }
-    h3 + p + ul {
-      background: var(--bg-card-inner);
-      margin: 0 0 18px 0;
-      padding: 4px 24px 18px 40px;
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--accent);
-      border-top: none;
-      border-bottom-left-radius: 14px;
-      border-bottom-right-radius: 14px;
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: underline;
-      text-decoration-thickness: 1.5px;
-      text-underline-offset: 3px;
-      transition: color 0.15s ease;
-    }
-    a:hover {
-      color: var(--accent-hover);
-    }
-
-    blockquote {
-      font-family: var(--font-sans);
-      margin: 18px 0 26px;
-      padding: 16px 22px;
-      background: var(--accent-soft);
-      border-left: 4px solid var(--accent);
-      border-radius: 12px;
-      color: var(--text);
-      font-size: 0.92rem;
-      line-height: 1.65;
-    }
-
-    ul, ol {
-      padding-left: 24px;
-    }
-    li {
-      margin-bottom: 10px;
-    }
-    li strong {
-      font-family: var(--font-sans);
-    }
-
-    hr {
-      border: none;
-      border-top: 1px dashed var(--border);
-      margin: 34px 0;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
-      gap: 20px;
-      margin-top: 18px;
-    }
-    .day-card {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 26px;
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.18s ease, border-color 0.18s ease;
-    }
-    .day-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--accent);
-    }
-    .day-card h3 {
+    .ctrl-btn {
       background: none;
       border: none;
-      padding: 0;
-      margin: 6px 0 10px;
-      font-family: var(--font-display);
-      font-size: 1.35rem;
+      padding: 2px 4px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      cursor: pointer;
     }
-    .day-card h3 a {
+    .ctrl-btn:hover, .ctrl-btn.active {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      font-weight: 600;
+    }
+
+    .masthead-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 22px 0 18px;
+      border-bottom: 2px solid var(--border-strong);
+    }
+    .masthead-title {
+      font-family: var(--font-display);
+      font-size: 3.1rem;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .masthead-title a {
+      color: var(--ink);
       text-decoration: none;
     }
-    .day-card ul {
-      padding-left: 18px;
-      margin: 8px 0 20px;
-      color: var(--text-secondary);
-      font-size: 0.9rem;
+    .masthead-sub {
       font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--ink-secondary);
+      margin: 0;
     }
-    .day-card li { margin-bottom: 7px; }
 
-    .cta-btn {
-      display: inline-flex;
+    .masthead-nav {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 8px;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
       font-family: var(--font-sans);
-      background: var(--accent);
-      color: var(--bg-elevated) !important;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      text-decoration: none !important;
-      align-self: flex-start;
-      transition: transform 0.15s ease, opacity 0.15s ease;
+      font-size: 0.8rem;
+      font-weight: 500;
     }
-    .cta-btn:hover {
-      opacity: 0.92;
-      transform: translateX(2px);
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .nav-links a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 5px;
+      text-decoration-thickness: 1.5px;
+    }
+
+    /* Section Headers */
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-top: 1px solid var(--border-strong);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 0;
+      margin: 36px 0 20px;
+    }
+    .section-head h2 {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0;
+      color: var(--ink);
+    }
+    .section-head span {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+
+    /* Editorial Briefing Ledger (Top 10 List) */
+    .briefing-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .briefing-item {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .briefing-item:last-child {
+      border-bottom: none;
+    }
+    .briefing-num {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+      padding-top: 3px;
+    }
+    .briefing-content h3 {
+      font-family: var(--font-serif);
+      font-size: 1.22rem;
+      font-weight: 600;
+      line-height: 1.35;
+      margin: 0 0 6px;
+    }
+    .briefing-content h3 a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .briefing-content h3 a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .briefing-meta {
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .briefing-meta a {
+      color: var(--ink-secondary);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .briefing-tag {
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .briefing-summary {
+      font-family: var(--font-serif);
+      font-size: 0.98rem;
+      color: var(--ink-secondary);
+      margin: 0;
+      line-height: 1.62;
+    }
+
+    /* Two-Column Editorial Split for X Threads & Podcasts */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      margin-top: 12px;
+    }
+    .note-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .note-item {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .note-item:last-child {
+      border-bottom: none;
+    }
+    .note-kicker {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+      margin-bottom: 4px;
+    }
+    .note-kicker strong {
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .note-title {
+      font-family: var(--font-sans);
+      font-size: 0.96rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 0 0 6px;
+    }
+    .note-title a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .note-title a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .note-body {
+      font-family: var(--font-serif);
+      font-size: 0.92rem;
+      color: var(--ink-secondary);
+      margin: 0 0 8px;
+      line-height: 1.55;
+    }
+    .note-links {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      display: flex;
+      gap: 14px;
+    }
+    .note-links a {
+      color: var(--ink-secondary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .note-links a:hover {
+      color: var(--ink);
+    }
+
+    /* Archive Table */
+    .archive-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+    }
+    .archive-table th {
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+      padding: 8px 12px 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .archive-table td {
+      padding: 14px 12px 14px 0;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .archive-date {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 600;
+      white-space: nowrap;
+      width: 130px;
+    }
+    .archive-date a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .archive-date a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .archive-leads {
+      color: var(--ink-secondary);
+      line-height: 1.5;
+    }
+    .archive-leads a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-decoration-color: var(--border);
+      text-underline-offset: 3px;
+    }
+    .archive-leads a:hover {
+      text-decoration-color: var(--ink);
+    }
+
+    /* Callout Box for Executive Summary / Concept Deep-Dive */
+    .editorial-callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 20px 24px;
+      margin: 20px 0 28px;
+    }
+    .editorial-callout h3 {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin: 0 0 10px;
+    }
+    .editorial-callout ul, .editorial-callout p {
+      margin: 0;
+      font-size: 0.96rem;
+      color: var(--ink-secondary);
+    }
+    .editorial-callout li {
+      margin-bottom: 8px;
     }
 
     .footer {
-      text-align: center;
-      font-family: var(--font-sans);
-      font-size: 0.84rem;
-      color: var(--text-secondary);
-      margin-top: 42px;
-      padding-top: 20px;
+      margin-top: 56px;
+      padding-top: 18px;
       border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+    .footer a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
     }
 
-    @media (max-width: 640px) {
-      .card, .hero, .section-panel { padding: 22px 18px; }
-      .grid, .x-grid, .pod-grid { grid-template-columns: 1fr; }
-      h1 { font-size: 1.6rem; }
-      .top-nav { position: static; }
+    @media (max-width: 760px) {
+      .two-col { grid-template-columns: 1fr; gap: 16px; }
+      .masthead-title { font-size: 2.25rem; }
+      .briefing-item { grid-template-columns: 32px 1fr; gap: 10px; }
     }
   </style>
   <script>
@@ -716,109 +457,195 @@ SHARED_CSS_AND_THEME_JS = """
       if (savedSize) {
         document.documentElement.style.setProperty('--base-size', savedSize + 'px');
       }
-      const savedFont = localStorage.getItem('genai_fontfamily');
-      if (savedFont === 'sans') {
-        document.documentElement.style.setProperty('--font-body', "var(--font-sans)");
-      }
     })();
 
     function setTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('genai_theme', theme);
-      updateToolbarState();
-    }
-
-    function toggleFontFamily() {
-      const current = localStorage.getItem('genai_fontfamily') || 'serif';
-      const next = current === 'serif' ? 'sans' : 'serif';
-      localStorage.setItem('genai_fontfamily', next);
-      if (next === 'sans') {
-        document.documentElement.style.setProperty('--font-body', "var(--font-sans)");
-      } else {
-        document.documentElement.style.setProperty('--font-body', "'Literata', Georgia, serif");
-      }
-      updateToolbarState();
+      updateControls();
     }
 
     function adjustFontSize(delta) {
-      const current = parseFloat(localStorage.getItem('genai_fontsize') || '17.5');
-      const next = Math.min(22, Math.max(15, current + delta));
+      const current = parseFloat(localStorage.getItem('genai_fontsize') || '16.5');
+      const next = Math.min(20, Math.max(14.5, current + delta));
       localStorage.setItem('genai_fontsize', next);
       document.documentElement.style.setProperty('--base-size', next + 'px');
     }
 
-    function updateToolbarState() {
+    function updateControls() {
       const theme = document.documentElement.getAttribute('data-theme') || 'sage';
       document.querySelectorAll('[data-theme-btn]').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-theme-btn') === theme);
       });
-      const font = localStorage.getItem('genai_fontfamily') || 'serif';
-      const fontBtn = document.getElementById('font-toggle-btn');
-      if (fontBtn) {
-        fontBtn.textContent = font === 'serif' ? 'Aa Serif' : 'Aa Sans';
-      }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      updateToolbarState();
-      document.querySelectorAll('h2').forEach(h => {
-        const text = h.textContent.toLowerCase();
-        if (text.includes('tl;dr') || text.includes('executive')) h.id = 'tldr';
-        else if (text.includes('concept')) h.id = 'concept';
-        else if (text.includes('top 10')) h.id = 'top10';
-        else if (text.includes('x.com') || text.includes('twitter')) h.id = 'x-pulse';
-        else if (text.includes('podcast') || text.includes('audio')) h.id = 'podcasts';
-      });
-      window.addEventListener('scroll', () => {
-        const bar = document.getElementById('progress-bar');
-        if (!bar) return;
-        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
-      });
-    });
+    window.addEventListener('DOMContentLoaded', updateControls);
   </script>
 """
 
-COMFORT_CONTROLS_HTML = """
-        <div class="comfort-group" title="Eye-friendly color palettes">
-          <button class="comfort-btn" data-theme-btn="sage" onclick="setTheme('sage')">🌿 Sage</button>
-          <button class="comfort-btn" data-theme-btn="sepia" onclick="setTheme('sepia')">📜 Sepia</button>
-          <button class="comfort-btn" data-theme-btn="dark" onclick="setTheme('dark')">🌙 Night</button>
-        </div>
-        <div class="comfort-group" title="Reading font &amp; size">
-          <button class="comfort-btn" id="font-toggle-btn" onclick="toggleFontFamily()">Aa Serif</button>
-          <button class="comfort-btn" onclick="adjustFontSize(-1)">A-</button>
-          <button class="comfort-btn" onclick="adjustFontSize(1)">A+</button>
-        </div>
-"""
+
+def _strip_emojis(text: str) -> str:
+    """Remove decorative emoji prefixes from legacy markdown headings and badges."""
+    return re.sub(
+        r"[🚀⚡🧠📄🏢🛠️🔥🏆🎧🎯✨📅⬆️🎙️🍏📌🌐]+\s*",
+        "",
+        text or "",
+    ).strip()
 
 
-def _extract_top_headlines(markdown_text: str, max_items: int = 3) -> List[Tuple[str, str]]:
-    """Extract the top N numbered `(title, url)` pairs from a digest Markdown file."""
-    headlines: List[Tuple[str, str]] = []
-    for line in markdown_text.splitlines():
-        m = re.match(r"^###\s+\d+\.\s+\[([^\]]+)\]\(([^)]+)\)", line.strip())
+def _clean_excerpt(text: str, max_chars: int = 300) -> str:
+    """Clean raw scraper boilerplate and cut on a full sentence boundary."""
+    if not text:
+        return ""
+    import html as _html
+
+    text = _html.unescape(text).strip()
+    text = re.sub(r"^\*\*Takeaway:\*\*\s*", "", text)
+    text = re.sub(r"^\*\*Summary:\*\*\s*", "", text)
+    text = re.sub(r"^🎧\s*[0-9hm:\s]+—\s*", "", text)
+    text = re.sub(
+        r"Hacker News discussion \([^)]+\)\.\s*Discussion:\s*https?://\S+\s*(\|\s*)?",
+        "",
+        text,
+    ).strip()
+    text = re.sub(
+        r"See also:\s*[^|]+-\s*https?://news\.ycombinator\.com/\S+",
+        "",
+        text,
+    ).strip(" |")
+    text = re.sub(
+        r"Viral X thread discussed on Hacker News \([^)]+\)\.\s*HN Thread:\s*https?://\S+",
+        "",
+        text,
+    ).strip()
+    text = re.sub(
+        r"^Active engineering discussion thread on \[Hacker News\]\([^)]+\)\.?$",
+        "",
+        text,
+    ).strip()
+    text = re.sub(r"\[([^\]]+)\]\((https?://[^)]+)\)", r"\1", text)
+    text = re.sub(
+        r"^Trending AI discussion on X covered by [^.]+\.?$",
+        "",
+        text,
+    ).strip()
+    text = re.sub(r"\*\*", "", text)
+    text = " ".join(text.split())
+    if not text:
+        return ""
+
+    # If legacy text was sliced mid-word/mid-sentence with '...', trim back to the last full sentence
+    if text.endswith("..."):
+        without_dots = text[:-3].rstrip()
+        best_sep = -1
+        for sep in (". ", "? ", "! "):
+            pos = without_dots.rfind(sep)
+            if pos > best_sep:
+                best_sep = pos
+        if best_sep > 40:
+            text = without_dots[: best_sep + 1]
+        else:
+            last_sp = without_dots.rfind(" ")
+            text = (without_dots[:last_sp].rstrip(",;:-") + ".") if last_sp > 0 else without_dots + "."
+
+    if len(text) <= max_chars:
+        return text
+    cut = text[:max_chars]
+    for sep in (". ", "? ", "! ", "; "):
+        pos = cut.rfind(sep)
+        if pos > max_chars // 2:
+            return cut[: pos + 1]
+    last_space = cut.rfind(" ")
+    return (cut[:last_space].rstrip(",;:-") + ".") if last_space > 0 else cut
+
+
+def _domain_of(url: str) -> str:
+    try:
+        host = urlparse(url).netloc.lower()
+        return host[4:] if host.startswith("www.") else host
+    except Exception:
+        return ""
+
+
+def _parse_top10_items(markdown_text: str) -> List[Dict[str, str]]:
+    """Parse numbered `### 1. [Title](URL)` items from a digest Markdown file into structured dicts."""
+    lines = markdown_text.splitlines()
+    items: List[Dict[str, str]] = []
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
+        m = re.match(r"^###\s+(\d+)\.\s+\[(.+)\]\((https?://[^)]+)\)", line)
         if m:
-            headlines.append((m.group(1), m.group(2)))
-            if len(headlines) >= max_items:
-                break
-    if not headlines:
-        for line in markdown_text.splitlines():
-            m = re.match(r"^-\s+\*\*\[([^\]]+)\]\(([^)]+)\)", line.strip())
-            if m:
-                headlines.append((m.group(1), m.group(2)))
-                if len(headlines) >= max_items:
+            rank = int(m.group(1))
+            title = _strip_emojis(m.group(2))
+            url = m.group(3).strip()
+            meta_line = ""
+            bullets: List[str] = []
+            i += 1
+            while i < len(lines):
+                sub = lines[i].strip()
+                if sub.startswith("### ") or sub.startswith("## ") or sub == "---":
                     break
-    return headlines
+                if not sub:
+                    i += 1
+                    continue
+                if not meta_line and not sub.startswith("- "):
+                    meta_line = sub
+                elif sub.startswith("- "):
+                    bullets.append(sub[2:].strip())
+                i += 1
+
+            # Extract HN discussion URL and points if present
+            hn_match = re.search(
+                r"https://news\.ycombinator\.com/item\?id=\d+",
+                meta_line + " " + " ".join(bullets),
+            )
+            hn_url = hn_match.group(0) if hn_match else ""
+            pts_match = re.search(r"(\d[\d,]*)\s*(?:pts|points|upvotes)", meta_line + " " + " ".join(bullets))
+            pts = pts_match.group(1) if pts_match else ""
+
+            cat_match = re.search(r"\*\*([^*]+)\*\*", meta_line)
+            cat_raw = _strip_emojis(cat_match.group(1)) if cat_match else "Briefing"
+            if "Community" in cat_raw or "Hacker News" in meta_line:
+                category = "Engineering"
+            elif "Paper" in cat_raw or "arXiv" in meta_line or "Hugging Face" in meta_line:
+                category = "Research"
+            elif "Blog" in cat_raw or "Lab" in cat_raw:
+                category = "Lab Release"
+            else:
+                category = cat_raw
+
+            src_match = re.search(r"\(([^)]+)\)", meta_line)
+            source = src_match.group(1) if src_match else _domain_of(url)
+
+            date_match = re.search(r"\*([0-9]{4}-[0-9]{2}-[0-9]{2}|[A-Za-z]{3},\s+[0-9]{2}\s+[A-Za-z]{3}\s+[0-9]{4})", meta_line)
+            pub_date = date_match.group(1) if date_match else ""
+
+            combined_summary = _clean_excerpt(" ".join(bullets), max_chars=340)
+
+            items.append(
+                {
+                    "rank": f"{rank:02d}",
+                    "title": title,
+                    "url": url,
+                    "domain": _domain_of(url),
+                    "category": category,
+                    "source": source,
+                    "points": pts,
+                    "hn_url": hn_url,
+                    "date": pub_date,
+                    "summary": combined_summary,
+                }
+            )
+            continue
+        i += 1
+    return items
 
 
 def _extract_section_markdown(markdown_text: str, section_keyword: str) -> str:
-    """Extract a `## ...` section block matching `section_keyword` from a digest Markdown string."""
     lines = markdown_text.splitlines()
     capturing = False
     collected: List[str] = []
-
     for line in lines:
         if line.startswith("## "):
             if capturing:
@@ -830,203 +657,151 @@ def _extract_section_markdown(markdown_text: str, section_keyword: str) -> str:
             if line.strip() == "---":
                 break
             collected.append(line)
-
     return "\n".join(collected).strip()
 
 
-def _render_x_cards_html(x_section_md: str) -> str:
-    """Parse X.com Markdown bullet items and render them as stylized Twitter/X Snippet Cards."""
-    if not x_section_md.strip():
-        return ""
-
-    cards_html: List[str] = []
-    lines = [ln for ln in x_section_md.splitlines() if ln.strip()]
-
+def _parse_bullet_notes(section_md: str, kind: str = "x") -> List[Dict[str, str]]:
+    """Parse 2-line markdown bullets from X or Podcast sections into structured notes."""
+    notes: List[Dict[str, str]] = []
+    lines = [ln for ln in section_md.splitlines() if ln.strip()]
     idx = 0
     while idx < len(lines):
         line = lines[idx].strip()
         if line.startswith("- **["):
-            m = re.match(r"^-\s+\*\*\[([^\]]+)\]\(([^)]+)\)\*\*(.*)$", line)
-            title = m.group(1) if m else line
-            url = m.group(2) if m else "#"
-            meta_tail = m.group(3) if m else ""
+            m = re.match(r"^-\s+\*\*\[(.+)\]\((https?://[^)]+)\)\*\*(.*)$", line)
+            title = _strip_emojis(m.group(1)) if m else line
+            url = m.group(2).strip() if m else "#"
+            tail = m.group(3) if m else ""
 
             desc = ""
             if idx + 1 < len(lines) and not lines[idx + 1].strip().startswith("- **["):
                 desc = lines[idx + 1].strip().lstrip("- ").strip()
-                desc = re.sub(r"^\*\*[^*]+:\*\*\s*", "", desc)
-                desc = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", desc)
-                desc = re.sub(r"`([^`]+)`", r"<code>\1</code>", desc)
                 idx += 1
 
-            # Extract handle from URL or title
-            handle_match = re.search(r"(?:twitter\.com|x\.com)/([A-Za-z0-9_]+)", url)
-            title_handle = re.search(r"@([A-Za-z0-9_]+)", title)
-            if handle_match:
-                handle = f"@{handle_match.group(1)}"
-            elif title_handle:
-                handle = f"@{title_handle.group(1)}"
-            elif "smol.ai" in url or "AINews" in meta_tail:
-                handle = "@swyx · AINews"
+            hn_m = re.search(r"https://news\.ycombinator\.com/item\?id=\d+", tail + " " + desc)
+            hn_url = hn_m.group(0) if hn_m else ""
+
+            pts_m = re.search(r"(\d[\d,]*)\s*pts", tail + " " + desc)
+            pts = f"{pts_m.group(1)} pts" if pts_m else ""
+
+            dur_m = re.search(r"🎧\s*([0-9hm:\s]+)", tail + " " + desc)
+            dur = dur_m.group(1).strip() if dur_m else ""
+
+            handle_m = re.search(r"(?:twitter\.com|x\.com)/([A-Za-z0-9_]+)", url)
+            if handle_m:
+                kicker = f"@{handle_m.group(1)}"
+            elif "smol.ai" in url:
+                kicker = "AINews · X Recap"
             else:
-                handle = "@AI_Pulse"
+                show_m = re.search(r"—\s*(?:\*|\*\*)([^*]+)(?:\*|\*\*)", tail)
+                kicker = _strip_emojis(show_m.group(1)) if show_m else _domain_of(url)
 
-            clean_title = re.sub(r"\s*\(@[A-Za-z0-9_]+\s+on\s+X\)", "", title)
-            initials = "".join(ch for ch in handle if ch.isalnum())[:2].upper() or "AI"
-            author_name = (
-                "AINews X Recap"
-                if "smol.ai" in url
-                else (handle.lstrip("@") if handle != "@AI_Pulse" else "AI Researcher Pulse")
-            )
-
-            # Extract HN link & metrics if present
-            hn_match = re.search(r"\[(HN Discussion)\]\(([^)]+)\)", meta_tail)
-            hn_url = hn_match.group(2) if hn_match else ""
-            pts_match = re.search(r"⬆️\s*([0-9,]+\s*pts)", meta_tail)
-            pts_text = f"❤️ {pts_match.group(1)}" if pts_match else "🔥 Trending on X"
-            comments_match = re.search(r"([0-9,]+\s*comments)", meta_tail)
-            comments_text = f"💬 {comments_match.group(1)}" if comments_match else ""
-
-            metric_pills = f'<span class="x-metric-pill">{pts_text}</span>'
-            if comments_text:
-                metric_pills += f'<span class="x-metric-pill">{comments_text}</span>'
-
-            hn_link_html = (
-                f'<a href="{hn_url}" target="_blank" rel="noopener">HN Thread ↗</a>'
-                if hn_url
-                else ""
-            )
-
-            cards_html.append(
-                f"""
-                <article class="x-tweet-card">
-                  <div>
-                    <div class="x-header">
-                      <div class="x-author">
-                        <div class="x-avatar">{initials}</div>
-                        <div>
-                          <div class="x-name-row">
-                            <span>{author_name}</span>
-                            <span class="x-verified" title="Verified AI Thread">✔</span>
-                          </div>
-                          <div class="x-handle">{handle}</div>
-                        </div>
-                      </div>
-                      <a class="x-logo" href="{url}" target="_blank" rel="noopener" title="Open on X">𝕏</a>
-                    </div>
-                    <h4 class="x-title"><a href="{url}" target="_blank" rel="noopener">“{clean_title}”</a></h4>
-                    <p class="x-body">{desc}</p>
-                  </div>
-                  <div class="x-footer">
-                    <div class="x-metrics">{metric_pills}</div>
-                    <div class="x-links">
-                      {hn_link_html}
-                      <a href="{url}" target="_blank" rel="noopener">Post on 𝕏 ↗</a>
-                    </div>
-                  </div>
-                </article>
-                """
+            clean_desc = _clean_excerpt(desc, max_chars=260)
+            notes.append(
+                {
+                    "title": title,
+                    "url": url,
+                    "kicker": kicker,
+                    "meta": dur if kind == "podcast" else pts,
+                    "hn_url": hn_url,
+                    "summary": clean_desc,
+                }
             )
         idx += 1
-
-    if not cards_html:
-        return markdown.markdown(x_section_md, extensions=["extra", "sane_lists", "nl2br"])
-
-    return f'<div class="x-grid">{"".join(cards_html)}</div>'
+    return notes
 
 
-def _render_podcast_cards_html(pod_section_md: str) -> str:
-    """Parse AI Podcast Markdown bullet items and render them as stylized Audio Player Cards."""
-    if not pod_section_md.strip():
-        return ""
-
-    cards_html: List[str] = []
-    lines = [ln for ln in pod_section_md.splitlines() if ln.strip()]
-
-    idx = 0
-    while idx < len(lines):
-        line = lines[idx].strip()
-        if line.startswith("- **["):
-            m = re.match(r"^-\s+\*\*\[([^\]]+)\]\(([^)]+)\)\*\*(.*)$", line)
-            title = m.group(1) if m else line
-            url = m.group(2) if m else "#"
-            meta_tail = m.group(3) if m else ""
-
-            desc = ""
-            if idx + 1 < len(lines) and not lines[idx + 1].strip().startswith("- **["):
-                desc = lines[idx + 1].strip().lstrip("- ").strip()
-                desc = re.sub(r"^\*\*[^*]+:\*\*\s*", "", desc)
-                desc = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", desc)
-                desc = re.sub(r"`([^`]+)`", r"<code>\1</code>", desc)
-                idx += 1
-
-            show_match = re.search(r"—\s*(?:\*|\*\*)([^*]+)(?:\*|\*\*)", meta_tail)
-            show_name = show_match.group(1).strip() if show_match else "AI Podcast"
-
-            date_match = re.search(r"\(\*([^*]+)\*\)", meta_tail)
-            pub_date = date_match.group(1).strip() if date_match else ""
-
-            dur_match = re.search(r"🎧\s*([0-9hm:\s]+)", meta_tail + " " + desc)
-            duration_badge = f"🎧 {dur_match.group(1).strip()}" if dur_match else "🎧 Audio"
-
-            # Remove duplicate leading duration prefix from body text
-            desc = re.sub(r"^🎧\s*[0-9hm:\s]+—\s*", "", desc)
-
-            sub_label = f"{show_name} · {pub_date}" if pub_date else show_name
-
-            cards_html.append(
-                f"""
-                <article class="pod-card">
-                  <div>
-                    <div class="pod-header">
-                      <div class="pod-show-info">
-                        <div class="pod-artwork">🎙️</div>
-                        <div>
-                          <div class="pod-show-name">{show_name}</div>
-                          <div class="pod-sub">{sub_label}</div>
-                        </div>
-                      </div>
-                      <span class="pod-duration">{duration_badge}</span>
-                    </div>
-                    <h4 class="pod-title"><a href="{url}" target="_blank" rel="noopener">{title}</a></h4>
-                    <p class="pod-body">{desc}</p>
-                  </div>
-                  <div class="pod-footer">
-                    <span class="pod-wave">{show_name}</span>
-                    <a class="pod-play-btn" href="{url}" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
-                  </div>
-                </article>
-                """
-            )
-        idx += 1
-
-    if not cards_html:
-        return markdown.markdown(pod_section_md, extensions=["extra", "sane_lists", "nl2br"])
-
-    return f'<div class="pod-grid">{"".join(cards_html)}</div>'
+def _render_masthead(active_page: str, latest_date: str, edition_date: str = "") -> str:
+    issue_label = f"ISSUE {edition_date or latest_date}" if (edition_date or latest_date) else "DAILY EDITION"
+    return f"""
+    <header class="masthead">
+      <div class="masthead-top">
+        <div>THE GENERATIVE AI TECHNICAL BRIEFING · {issue_label} · SINGAPORE (SGT)</div>
+        <div class="controls">
+          <span>PALETTE:</span>
+          <button class="ctrl-btn" data-theme-btn="sage" onclick="setTheme('sage')">Paper</button>
+          <button class="ctrl-btn" data-theme-btn="sepia" onclick="setTheme('sepia')">Sepia</button>
+          <button class="ctrl-btn" data-theme-btn="dark" onclick="setTheme('dark')">Ink</button>
+          <span>·</span>
+          <button class="ctrl-btn" onclick="adjustFontSize(-0.5)">A-</button>
+          <button class="ctrl-btn" onclick="adjustFontSize(0.5)">A+</button>
+        </div>
+      </div>
+      <div class="masthead-title-row">
+        <h1 class="masthead-title"><a href="index.html">The GenAI Briefing</a></h1>
+        <p class="masthead-sub">Curated research papers, frontier lab engineering, researcher threads &amp; audio briefings.</p>
+      </div>
+      <nav class="masthead-nav">
+        <div class="nav-links">
+          <a href="index.html" class="{'active' if active_page == 'index' else ''}">Front Page</a>
+          <a href="{latest_date}.html" class="{'active' if active_page == 'daily' else ''}">Latest Issue ({latest_date})</a>
+          <a href="podcasts.html" class="{'active' if active_page == 'podcasts' else ''}">Podcasts Index</a>
+          <a href="index.html#archive">Archive</a>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">
+          AUTO-PUBLISHED DAILY BY 07:00 SGT
+        </div>
+      </nav>
+    </header>
+    """
 
 
-def _replace_x_section_with_cards(markdown_content: str) -> str:
-    """Replace the raw `## 🔥 Hot on X.com` and `## 🎧 AI Podcasts` markdown lists with styled cards before rendering."""
-    x_md = _extract_section_markdown(markdown_content, "X.com")
-    if x_md:
-        x_cards_html = _render_x_cards_html(x_md)
-        pattern_x = re.compile(
-            r"(##\s+🔥\s+Hot on X\.com[^\n]*\n)(.*?)(?=\n---\n|\n##\s+|\Z)",
-            re.DOTALL,
+def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
+    rows: List[str] = []
+    for it in items:
+        meta_bits = [f'<span class="briefing-tag">{it["category"]}</span>', f'<span>{it["source"]}</span>']
+        if it["domain"] and it["domain"] not in ("news.ycombinator.com",):
+            meta_bits.append(f'<span>{it["domain"]}</span>')
+        if it["points"]:
+            if it["hn_url"] and it["hn_url"] != it["url"]:
+                meta_bits.append(f'<a href="{it["hn_url"]}" target="_blank" rel="noopener">{it["points"]} pts · HN Discussion ↗</a>')
+            else:
+                meta_bits.append(f'<span>{it["points"]} pts</span>')
+        elif it["hn_url"] and it["hn_url"] != it["url"]:
+            meta_bits.append(f'<a href="{it["hn_url"]}" target="_blank" rel="noopener">HN Discussion ↗</a>')
+        if it["date"]:
+            meta_bits.append(f'<span>{it["date"]}</span>')
+
+        summary_html = f'<p class="briefing-summary">{it["summary"]}</p>' if it["summary"] else ""
+
+        rows.append(
+            f"""
+            <article class="briefing-item">
+              <div class="briefing-num">{it["rank"]}</div>
+              <div class="briefing-content">
+                <div class="briefing-meta">{'<span>·</span>'.join(meta_bits)}</div>
+                <h3><a href="{it["url"]}" target="_blank" rel="noopener">{it["title"]}</a></h3>
+                {summary_html}
+              </div>
+            </article>
+            """
         )
-        markdown_content = pattern_x.sub(rf"\1\n{x_cards_html}\n", markdown_content)
+    return f'<div class="briefing-list">{"".join(rows)}</div>'
 
-    pod_md = _extract_section_markdown(markdown_content, "Podcast")
-    if pod_md:
-        pod_cards_html = _render_podcast_cards_html(pod_md)
-        pattern_pod = re.compile(
-            r"(##\s+🎧\s+AI Podcasts[^\n]*\n)(.*?)(?=\n---\n|\n##\s+|\Z)",
-            re.DOTALL,
+
+def _render_notes_column_html(notes: List[Dict[str, str]], action_label: str) -> str:
+    if not notes:
+        return '<p style="color:var(--ink-muted);font-size:0.9rem;">No entries recorded for this issue.</p>'
+    blocks: List[str] = []
+    for n in notes:
+        links = [f'<a href="{n["url"]}" target="_blank" rel="noopener">{action_label} ↗</a>']
+        if n["hn_url"] and n["hn_url"] != n["url"]:
+            links.append(f'<a href="{n["hn_url"]}" target="_blank" rel="noopener">HN Thread ↗</a>')
+        body_html = f'<p class="note-body">{n["summary"]}</p>' if n["summary"] else ""
+        blocks.append(
+            f"""
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>{n["kicker"]}</strong>
+                <span>{n["meta"]}</span>
+              </div>
+              <h4 class="note-title"><a href="{n["url"]}" target="_blank" rel="noopener">{n["title"]}</a></h4>
+              {body_html}
+              <div class="note-links">{"".join(links)}</div>
+            </article>
+            """
         )
-        markdown_content = pattern_pod.sub(rf"\1\n{pod_cards_html}\n", markdown_content)
-
-    return markdown_content
+    return f'<div class="note-list">{"".join(blocks)}</div>'
 
 
 def _render_daily_digest_html(
@@ -1035,104 +810,117 @@ def _render_daily_digest_html(
     current_date: str,
     archive_dates: List[str],
 ) -> str:
-    """Render a daily digest page (`YYYY-MM-DD.html`) with stylized X Snippet Cards and eye-friendly controls."""
-    enriched_md = _replace_x_section_with_cards(markdown_content)
-    body_html = markdown.markdown(
-        enriched_md,
-        extensions=["extra", "sane_lists", "nl2br"],
-    )
+    """Render an individual daily briefing page (`YYYY-MM-DD.html`) in clean editorial style."""
+    latest_date = sorted(archive_dates, reverse=True)[0] if archive_dates else current_date
+    top10_items = _parse_top10_items(markdown_content)
+    x_md = _extract_section_markdown(markdown_content, "X") or _extract_section_markdown(markdown_content, "Twitter")
+    pod_md = _extract_section_markdown(markdown_content, "Podcast") or _extract_section_markdown(markdown_content, "Audio")
+    tldr_md = _extract_section_markdown(markdown_content, "TL;DR") or _extract_section_markdown(markdown_content, "Executive Summary")
+    concept_md = _extract_section_markdown(markdown_content, "Concept") or _extract_section_markdown(markdown_content, "Deep-Dive")
 
-    date_pills = []
-    for d in sorted(archive_dates, reverse=True):
-        active_cls = "pill-link active" if d == current_date else "pill-link"
-        date_pills.append(f'<a class="{active_cls}" href="{d}.html">{d}</a>')
+    tldr_html = ""
+    if tldr_md:
+        rendered_tldr = markdown.markdown(_strip_emojis(tldr_md), extensions=["extra", "sane_lists"])
+        tldr_html = f'<div class="editorial-callout"><h3>Executive Summary</h3>{rendered_tldr}</div>'
+
+    concept_html = ""
+    if concept_md:
+        rendered_concept = markdown.markdown(_strip_emojis(concept_md), extensions=["extra", "sane_lists"])
+        concept_html = f'<div class="editorial-callout"><h3>Technical Deep-Dive</h3>{rendered_concept}</div>'
+
+    top10_html = _render_top10_ledger_html(top10_items)
+    x_html = _render_notes_column_html(_parse_bullet_notes(x_md, kind="x"), "Read Thread on X")
+    pod_html = _render_notes_column_html(_parse_bullet_notes(pod_md, kind="podcast"), "Listen Episode")
+
+    date_links = " · ".join(
+        f'<a href="{d}.html" style="font-weight:{"700" if d == current_date else "400"};color:var(--ink);">{d}</a>'
+        for d in sorted(archive_dates, reverse=True)
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{title}</title>
-  {SHARED_CSS_AND_THEME_JS}
+  <title>The GenAI Briefing — {current_date}</title>
+  {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
-  <div id="progress-bar"></div>
-  <div class="container">
-    <nav class="top-nav">
-      <a class="brand" href="index.html">
-        <span class="brand-dot"></span>
-        <span>← All Editions</span>
-      </a>
-      <div class="nav-actions">
-        <a class="pill-link" href="podcasts.html">🎙️ Podcasts Hub</a>
-        {"".join(date_pills)}
-        {COMFORT_CONTROLS_HTML}
-      </div>
-    </nav>
+  <div class="page-wrap">
+    {_render_masthead(active_page="daily", latest_date=latest_date, edition_date=current_date)}
 
-    <div class="jump-bar">
-      <span class="jump-label">Jump to:</span>
-      <a class="pill-link" href="#tldr">⚡ TL;DR</a>
-      <a class="pill-link" href="#concept">🧠 Concept Deep-Dive</a>
-      <a class="pill-link" href="#top10">🏆 Top 10 Ranked</a>
-      <a class="pill-link" href="#x-pulse">🔥 Hot on 𝕏</a>
-      <a class="pill-link" href="#podcasts">🎧 AI Podcasts</a>
+    <div style="font-family:var(--font-mono);font-size:0.74rem;color:var(--ink-muted);margin-bottom:20px;">
+      ISSUES: {date_links}
     </div>
 
-    <main class="card">
-      {body_html}
-    </main>
+    {tldr_html}
+    {concept_html}
+
+    <div class="section-head">
+      <h2>I. Top 10 Technical Briefing — {current_date}</h2>
+      <span>RANKED BY SUBSTANCE &amp; COMMUNITY REACH</span>
+    </div>
+    {top10_html}
+
+    <div class="two-col">
+      <section>
+        <div class="section-head">
+          <h2>II. Researcher Threads on X</h2>
+          <span>SOCIAL PULSE</span>
+        </div>
+        {x_html}
+      </section>
+      <section>
+        <div class="section-head">
+          <h2>III. Audio &amp; Podcast Briefings</h2>
+          <span><a href="podcasts.html" style="color:var(--accent);text-decoration:none;">ALL SHOWS →</a></span>
+        </div>
+        {pod_html}
+      </section>
+    </div>
+
     <footer class="footer">
-      Curated by <strong>Generative AI Learning &amp; News Agent</strong> · <a href="index.html">Back to Main Index</a>
+      <div>THE GENAI BRIEFING · ISSUE {current_date}</div>
+      <div><a href="index.html">Front Page</a> · <a href="podcasts.html">Podcasts Index</a></div>
     </footer>
   </div>
 </body>
 </html>"""
 
 
-def _render_index_portal_html(
-    archive_map: Dict[str, str],
-) -> str:
-    """Render `docs/index.html` with Top 10 previews, stylized 𝕏 Snippet Cards, 🎧 Podcasts, and Daily Editions."""
+def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
+    """Render `docs/index.html` as a high-density, editorial front page + archive ledger."""
     sorted_dates = sorted(archive_map.keys(), reverse=True)
     latest_date = sorted_dates[0] if sorted_dates else ""
     latest_md = archive_map.get(latest_date, "")
-    latest_headlines = _extract_top_headlines(latest_md, max_items=4)
 
-    latest_list_html = "".join(
-        f'<li><a href="{url}" target="_blank" rel="noopener">{title} ↗</a></li>'
-        for title, url in latest_headlines
-    )
+    top10_items = _parse_top10_items(latest_md)
+    x_md = _extract_section_markdown(latest_md, "X") or _extract_section_markdown(latest_md, "Twitter")
+    pod_md = _extract_section_markdown(latest_md, "Podcast") or _extract_section_markdown(latest_md, "Audio")
+    tldr_md = _extract_section_markdown(latest_md, "TL;DR") or _extract_section_markdown(latest_md, "Executive Summary")
 
-    x_pulse_md = _extract_section_markdown(latest_md, "X.com")
-    x_pulse_html = _render_x_cards_html(x_pulse_md) or "<p>No X.com highlights extracted for this edition.</p>"
+    tldr_html = ""
+    if tldr_md:
+        rendered_tldr = markdown.markdown(_strip_emojis(tldr_md), extensions=["extra", "sane_lists"])
+        tldr_html = f'<div class="editorial-callout"><h3>Executive Summary — {latest_date}</h3>{rendered_tldr}</div>'
 
-    podcasts_md = _extract_section_markdown(latest_md, "Podcast")
-    podcasts_html = _render_podcast_cards_html(podcasts_md) or "<p>No podcast episodes extracted for this edition.</p>"
+    top10_html = _render_top10_ledger_html(top10_items)
+    x_html = _render_notes_column_html(_parse_bullet_notes(x_md, kind="x"), "Read Thread on X")
+    pod_html = _render_notes_column_html(_parse_bullet_notes(pod_md, kind="podcast"), "Listen Episode")
 
-    day_cards_html = []
-    for idx, d in enumerate(sorted_dates):
-        md_text = archive_map[d]
-        headlines = _extract_top_headlines(md_text, max_items=3)
-        hl_items = (
-            "".join(
-                f'<li><a href="{url}" target="_blank" rel="noopener">{title} ↗</a></li>'
-                for title, url in headlines
-            )
-            or f'<li><a href="{d}.html">Top 10 curated GenAI papers, lab blogs, X.com threads &amp; podcasts</a></li>'
+    archive_rows: List[str] = []
+    for d in sorted_dates:
+        items_d = _parse_top10_items(archive_map[d])
+        leads = " · ".join(
+            f'<a href="{it["url"]}" target="_blank" rel="noopener">{it["title"]}</a>'
+            for it in items_d[:3]
         )
-        badge_label = "✨ Latest Edition" if idx == 0 else "📅 Daily Edition"
-        day_cards_html.append(
+        archive_rows.append(
             f"""
-            <article class="day-card">
-              <div>
-                <span class="hero-badge">{badge_label} · 5 min read</span>
-                <h3><a href="{d}.html">GenAI Top 10 Digest — {d}</a></h3>
-                <p style="margin:4px 0 8px;font-size:0.86rem;color:var(--text-secondary);font-family:var(--font-sans);">Top stories ranked by technical substance &amp; community reach:</p>
-                <ul>{hl_items}</ul>
-              </div>
-              <a class="cta-btn" href="{d}.html">Read {d} Digest →</a>
-            </article>
+            <tr>
+              <td class="archive-date"><a href="{d}.html">{d} →</a></td>
+              <td class="archive-leads">{leads}</td>
+            </tr>
             """
         )
 
@@ -1141,65 +929,59 @@ def _render_index_portal_html(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Generative AI Learning &amp; News Hub — Daily Top 10 Index</title>
-  {SHARED_CSS_AND_THEME_JS}
+  <title>The GenAI Briefing — Daily Research, Engineering &amp; Audio Index</title>
+  {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
-  <div id="progress-bar"></div>
-  <div class="container">
-    <nav class="top-nav">
-      <a class="brand" href="index.html">
-        <span class="brand-dot"></span>
-        <span>GenAI Learning Hub</span>
-      </a>
-      <div class="nav-actions">
-        <a class="pill-link active" href="index.html">All Editions ({len(sorted_dates)})</a>
-        <a class="pill-link" href="#x-highlights">🔥 Hot on 𝕏</a>
-        <a class="pill-link" href="podcasts.html">🎙️ Podcasts Hub</a>
-        <a class="pill-link" href="{latest_date}.html">Latest ({latest_date})</a>
-        {COMFORT_CONTROLS_HTML}
-      </div>
-    </nav>
+  <div class="page-wrap">
+    {_render_masthead(active_page="index", latest_date=latest_date, edition_date=latest_date)}
 
-    <section class="hero">
-      <span class="hero-badge">🧠 Eye-Friendly Daily AI Reader</span>
-      <h1>Generative AI Daily Top 10, 𝕏 Pulse &amp; Audio Hub</h1>
-      <p style="color:var(--text-secondary);font-size:1.02rem;margin:0 0 18px;">
-        Signal over noise: Every edition distills 60+ research papers (Hugging Face &amp; arXiv), AI lab blogs (OpenAI, Google, DeepMind, Anthropic), Hacker News, r/LocalLLaMA, <strong>viral 𝕏 threads</strong>, and <strong>AI Podcasts</strong> into a calm, <strong>5-minute Top 10 read</strong>.
-      </p>
-      <div style="background:var(--bg-card-inner);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:12px;padding:16px 22px;margin-bottom:22px;font-family:var(--font-sans);">
-        <div style="font-weight:700;font-size:0.9rem;margin-bottom:8px;color:var(--accent);">🏆 Top Headlines in Latest Edition ({latest_date}):</div>
-        <ul style="margin:0;padding-left:20px;font-size:0.92rem;">
-          {latest_list_html}
-        </ul>
-      </div>
-      <a class="cta-btn" href="{latest_date}.html">Open Full {latest_date} Digest →</a>
-    </section>
+    {tldr_html}
 
-    <section id="x-highlights" class="section-panel x-panel">
-      <span class="hero-badge">🔥 Live AI Social Pulse ({latest_date})</span>
-      <h2 style="margin-top:4px;margin-bottom:6px;">Hot on 𝕏 (AI Twitter Highlights)</h2>
-      {x_pulse_html}
-    </section>
+    <div class="section-head">
+      <h2>I. Lead Briefing — {latest_date} (Top 10)</h2>
+      <span><a href="{latest_date}.html" style="color:var(--accent);text-decoration:none;">PERMALINK ({latest_date}) →</a></span>
+    </div>
+    {top10_html}
 
-    <section id="podcast-highlights" class="section-panel podcast-panel">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-        <div>
-          <span class="hero-badge">🎧 Audio Deep-Dives ({latest_date})</span>
-          <h2 style="margin-top:4px;margin-bottom:8px;border:none;padding:0;">Featured AI Podcast Episodes</h2>
+    <div class="two-col">
+      <section id="x-highlights">
+        <div class="section-head">
+          <h2>II. Researcher Threads on X</h2>
+          <span>CURATED THREADS</span>
         </div>
-        <a class="cta-btn" href="podcasts.html">🎙️ Open Full Podcasts Hub →</a>
-      </div>
-      {podcasts_html}
-    </section>
-
-    <h2>📅 Daily Digest Editions</h2>
-    <div class="grid">
-      {"".join(day_cards_html)}
+        {x_html}
+      </section>
+      <section id="podcast-highlights">
+        <div class="section-head">
+          <h2>III. Audio &amp; Podcast Briefings</h2>
+          <span><a href="podcasts.html" style="color:var(--accent);text-decoration:none;">FULL PODCAST DIRECTORY →</a></span>
+        </div>
+        {pod_html}
+      </section>
     </div>
 
+    <section id="archive">
+      <div class="section-head">
+        <h2>IV. Past Issues Archive</h2>
+        <span>{len(sorted_dates)} EDITIONS PUBLISHED</span>
+      </div>
+      <table class="archive-table">
+        <thead>
+          <tr>
+            <th>Issue Date</th>
+            <th>Lead Technical Stories</th>
+          </tr>
+        </thead>
+        <tbody>
+          {"".join(archive_rows)}
+        </tbody>
+      </table>
+    </section>
+
     <footer class="footer">
-      Powered by <strong>Google Gemini</strong> · Designed with low-glare reading palettes (Sage, Sepia, Night) &amp; optical book typography
+      <div>THE GENAI BRIEFING · PUBLISHED DAILY AT 06:45 SGT</div>
+      <div><a href="index.html">Front Page</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a></div>
     </footer>
   </div>
 </body>
@@ -1210,52 +992,31 @@ def _render_podcasts_page_html(
     shows_data: List[Dict[str, Any]],
     latest_date: str,
 ) -> str:
-    """Render `docs/podcasts.html` featuring latest episode summaries from Generative AI 101, AI Optic, AI Today, and more."""
-    show_sections: List[str] = []
-
+    """Render `docs/podcasts.html` in the same clean editorial layout."""
+    show_blocks: List[str] = []
     for idx, show in enumerate(shows_data, start=1):
-        ep_cards: List[str] = []
+        ep_notes: List[Dict[str, str]] = []
         for ep in show.get("episodes", []):
-            pub_text = f" · {ep['published']}" if ep.get("published") else ""
-            ep_cards.append(
-                f"""
-                <article class="pod-card">
-                  <div>
-                    <div class="pod-header">
-                      <div class="pod-show-info">
-                        <div class="pod-artwork">🎙️</div>
-                        <div>
-                          <div class="pod-show-name">{show['name']}</div>
-                          <div class="pod-sub">Host: {show['host']}{pub_text}</div>
-                        </div>
-                      </div>
-                      <span class="pod-duration">🎧 {ep['duration']}</span>
-                    </div>
-                    <h4 class="pod-title"><a href="{ep['url']}" target="_blank" rel="noopener">{ep['title']}</a></h4>
-                    <p class="pod-body">{ep['summary']}</p>
-                  </div>
-                  <div class="pod-footer">
-                    <a class="pill-link" href="{show['apple_url']}" target="_blank" rel="noopener">🍏 Apple Podcasts ↗</a>
-                    <a class="pod-play-btn" href="{ep['url']}" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
-                  </div>
-                </article>
-                """
+            ep_notes.append(
+                {
+                    "title": _strip_emojis(ep["title"]),
+                    "url": ep["url"],
+                    "kicker": ep.get("published") or show["name"],
+                    "meta": ep.get("duration", ""),
+                    "hn_url": "",
+                    "summary": _clean_excerpt(ep.get("summary", ""), max_chars=340),
+                }
             )
-
-        show_sections.append(
+        notes_html = _render_notes_column_html(ep_notes, "Listen Episode")
+        show_blocks.append(
             f"""
-            <section class="section-panel podcast-panel" id="show-{idx}">
-              <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:10px;">
-                <div>
-                  <span class="hero-badge">🎙️ Show #{idx} · Host: {show['host']}</span>
-                  <h2 style="margin:2px 0 6px;border:none;padding:0;">{show['name']}</h2>
-                  <p style="margin:0;font-size:0.9rem;color:var(--text-secondary);font-family:var(--font-sans);"><strong>Focus:</strong> {show['focus']}</p>
-                </div>
-                <a class="cta-btn" href="{show['apple_url']}" target="_blank" rel="noopener">🍏 Subscribe on Apple Podcasts ↗</a>
+            <section id="show-{idx}">
+              <div class="section-head">
+                <h2>0{idx}. {show["name"]} — Host: {show["host"]}</h2>
+                <span><a href="{show["apple_url"]}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">APPLE PODCASTS ↗</a></span>
               </div>
-              <div class="pod-grid">
-                {"".join(ep_cards)}
-              </div>
+              <p style="font-family:var(--font-sans);font-size:0.84rem;color:var(--ink-muted);margin:0 0 8px;">Focus: {show["focus"]}</p>
+              {notes_html}
             </section>
             """
         )
@@ -1265,45 +1026,16 @@ def _render_podcasts_page_html(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Generative AI Podcasts Hub — Latest Episode Summaries</title>
-  {SHARED_CSS_AND_THEME_JS}
+  <title>The GenAI Briefing — Podcasts &amp; Episode Summaries</title>
+  {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
-  <div id="progress-bar"></div>
-  <div class="container">
-    <nav class="top-nav">
-      <a class="brand" href="index.html">
-        <span class="brand-dot"></span>
-        <span>← Back to GenAI Hub</span>
-      </a>
-      <div class="nav-actions">
-        <a class="pill-link" href="index.html">All Editions</a>
-        <a class="pill-link active" href="podcasts.html">🎙️ Podcasts Hub</a>
-        <a class="pill-link" href="{latest_date}.html">Latest Digest ({latest_date})</a>
-        {COMFORT_CONTROLS_HTML}
-      </div>
-    </nav>
-
-    <section class="hero">
-      <span class="hero-badge">🎧 Curated AI Audio Learning Hub</span>
-      <h1>Generative AI Podcasts &amp; Episode Summaries</h1>
-      <p style="color:var(--text-secondary);font-size:1.02rem;margin:0 0 16px;">
-        Catch up on the latest episodes and key takeaways from <strong>Generative AI 101</strong>, <strong>AI Optic: Anthropic &amp; OpenAI News</strong>, <strong>AI Today Podcast</strong>, <strong>Latent Space</strong>, <strong>TWIML AI</strong>, and <strong>Practical AI</strong>.
-      </p>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;font-family:var(--font-sans);">
-        <a class="pill-link" href="#show-1">🎙️ Generative AI 101</a>
-        <a class="pill-link" href="#show-2">🎙️ AI Optic (Anthropic &amp; OpenAI)</a>
-        <a class="pill-link" href="#show-3">🎙️ AI Today Podcast</a>
-        <a class="pill-link" href="#show-4">🎙️ Latent Space</a>
-        <a class="pill-link" href="#show-5">🎙️ TWIML AI</a>
-        <a class="pill-link" href="#show-6">🎙️ Practical AI</a>
-      </div>
-    </section>
-
-    {"".join(show_sections)}
-
+  <div class="page-wrap">
+    {_render_masthead(active_page="podcasts", latest_date=latest_date)}
+    {"".join(show_blocks)}
     <footer class="footer">
-      Curated by <strong>Generative AI Learning &amp; News Agent</strong> · <a href="index.html">Back to Main Index</a>
+      <div>THE GENAI BRIEFING · AUDIO &amp; PODCASTS DIRECTORY</div>
+      <div><a href="index.html">Front Page</a> · <a href="{latest_date}.html">Latest Issue</a></div>
     </footer>
   </div>
 </body>
@@ -1316,7 +1048,7 @@ def save_markdown_digest(
     timestamp: datetime | None = None,
     docs_dir: Path | None = None,
 ) -> Path:
-    """Save the digest to a dated Markdown file, update `latest.md`, and build GitHub Pages HTML (`index.html` directory + `<date>.html` pages)."""
+    """Save the digest to a dated Markdown file, update `latest.md`, and build GitHub Pages HTML (`index.html`, `<date>.html`, `podcasts.html`)."""
     ts = timestamp or datetime.now()
     date_str = ts.strftime("%Y-%m-%d")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -1342,7 +1074,7 @@ def save_markdown_digest(
     for arch_date, md_path in archive_files.items():
         md_text = md_path.read_text(encoding="utf-8")
         archive_map[arch_date] = md_text
-        arch_title = f"Generative AI Top 10 Digest — {arch_date}"
+        arch_title = f"The GenAI Briefing — {arch_date}"
         arch_html = _render_daily_digest_html(
             markdown_content=md_text,
             title=arch_title,
@@ -1354,7 +1086,6 @@ def save_markdown_digest(
     index_html = _render_index_portal_html(archive_map=archive_map)
     (target_docs / "index.html").write_text(index_html, encoding="utf-8")
 
-    # Build dedicated Podcasts Hub page (`docs/podcasts.html`)
     if docs_dir is None and output_dir.name == "digests":
         try:
             shows_data = fetch_detailed_podcast_hub(episodes_per_show=3)

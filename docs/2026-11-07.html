@@ -3,78 +3,58 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Generative AI Top 10 Digest — 2026-11-07</title>
+  <title>The GenAI Briefing — 2026-11-07</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500;600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
   <style>
-    /* Default: Warm Botanical Sage Paper (Zero Pure-White Glare) */
+    /* Default: Warm Archival Paper (FT / Anthropic / Stripe Press inspired) */
     :root, [data-theme="sage"] {
-      --bg: #EFECE6;
-      --bg-pattern: radial-gradient(rgba(15, 118, 110, 0.05) 1px, transparent 1px);
-      --bg-elevated: #F9F6F0;
-      --bg-card-inner: #F2EFE9;
-      --text: #222623;
-      --text-secondary: #525852;
-      --border: #DCD6CA;
-      --accent: #0F766E;
-      --accent-hover: #0D9488;
-      --accent-soft: rgba(15, 118, 110, 0.10);
-      --accent-warm: #B45309;
-      --accent-warm-soft: rgba(180, 83, 9, 0.10);
-      --x-accent: #1D9BF0;
-      --x-card-bg: #FCFBF8;
-      --x-border: #D6D0C4;
-      --gradient: linear-gradient(135deg, #0F766E 0%, #3B82F6 55%, #D97706 100%);
-      --shadow: 0 6px 24px -4px rgba(34, 38, 35, 0.06), 0 2px 6px -1px rgba(34, 38, 35, 0.04);
-      --font-body: 'Literata', Georgia, serif;
-      --font-sans: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-display: 'Fraunces', Georgia, serif;
+      --bg: #F6F4EF;
+      --surface: #FDFCF9;
+      --surface-alt: #EFECE5;
+      --ink: #141413;
+      --ink-secondary: #4A4843;
+      --ink-muted: #78756E;
+      --border: #DCD7CC;
+      --border-strong: #141413;
+      --accent: #9E2A2B;
+      --accent-hover: #7A1C1D;
+      --link: #1D4ED8;
+      --font-serif: 'Newsreader', Georgia, serif;
+      --font-display: 'Instrument Serif', 'Newsreader', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
-      --base-size: 17.5px;
+      --base-size: 16.5px;
     }
 
-    /* Mode 2: Kindle Warm Sepia Parchment */
     [data-theme="sepia"] {
-      --bg: #F4ECD8;
-      --bg-pattern: radial-gradient(rgba(146, 64, 14, 0.05) 1px, transparent 1px);
-      --bg-elevated: #FAF4E6;
-      --bg-card-inner: #EFE6D2;
-      --text: #2C221E;
-      --text-secondary: #5C4D43;
-      --border: #DFD2BA;
-      --accent: #9A3412;
-      --accent-hover: #B45309;
-      --accent-soft: rgba(154, 52, 18, 0.10);
-      --accent-warm: #0F766E;
-      --accent-warm-soft: rgba(15, 118, 110, 0.10);
-      --x-accent: #0284C7;
-      --x-card-bg: #FDF8EC;
-      --x-border: #D8C8AE;
-      --gradient: linear-gradient(135deg, #9A3412 0%, #D97706 55%, #0F766E 100%);
-      --shadow: 0 6px 24px -4px rgba(44, 34, 30, 0.07);
+      --bg: #F2E9D8;
+      --surface: #F9F3E6;
+      --surface-alt: #E8DEC8;
+      --ink: #251E18;
+      --ink-secondary: #54473C;
+      --ink-muted: #7D6D5F;
+      --border: #D5C7B0;
+      --border-strong: #251E18;
+      --accent: #8C2D19;
+      --accent-hover: #692010;
+      --link: #0F5257;
     }
 
-    /* Mode 3: Low-Blue-Light Nord Midnight Slate */
     [data-theme="dark"] {
-      --bg: #13171F;
-      --bg-pattern: radial-gradient(rgba(94, 234, 212, 0.04) 1px, transparent 1px);
-      --bg-elevated: #1B212C;
-      --bg-card-inner: #232B38;
-      --text: #E2E8F0;
-      --text-secondary: #94A3B8;
-      --border: #2E3846;
-      --accent: #5EEAD4;
-      --accent-hover: #2DD4BF;
-      --accent-soft: rgba(94, 234, 212, 0.12);
-      --accent-warm: #FBBF24;
-      --accent-warm-soft: rgba(251, 191, 36, 0.12);
-      --x-accent: #38BDF8;
-      --x-card-bg: #161B24;
-      --x-border: #2E3A4C;
-      --gradient: linear-gradient(135deg, #2DD4BF 0%, #818CF8 55%, #FBBF24 100%);
-      --shadow: 0 10px 30px -6px rgba(0, 0, 0, 0.5);
+      --bg: #111214;
+      --surface: #18191C;
+      --surface-alt: #202226;
+      --ink: #ECEAE4;
+      --ink-secondary: #A6A39B;
+      --ink-muted: #706E68;
+      --border: #2B2D31;
+      --border-strong: #ECEAE4;
+      --accent: #E07A5F;
+      --accent-hover: #F29C85;
+      --link: #7AA2F7;
     }
 
     * { box-sizing: border-box; }
@@ -83,624 +63,384 @@
       scroll-behavior: smooth;
     }
     body {
-      font-family: var(--font-body);
+      font-family: var(--font-serif);
       background-color: var(--bg);
-      background-image: var(--bg-pattern);
-      background-size: 24px 24px;
-      color: var(--text);
-      line-height: 1.78;
-      letter-spacing: 0.005em;
+      color: var(--ink);
+      line-height: 1.68;
       margin: 0;
-      padding: 0 16px 64px;
-      transition: background-color 0.25s ease, color 0.25s ease;
+      padding: 0 20px 72px;
       -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
-    #progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 0%;
-      height: 4px;
-      background: var(--gradient);
-      z-index: 1000;
-      transition: width 0.1s ease-out;
-    }
-
-    .container {
-      max-width: 900px;
+    .page-wrap {
+      max-width: 1020px;
       margin: 0 auto;
     }
 
-    .top-nav {
-      position: sticky;
-      top: 10px;
-      z-index: 100;
+    /* Editorial Masthead */
+    .masthead {
+      padding-top: 20px;
+      margin-bottom: 32px;
+    }
+    .masthead-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
-      padding: 12px 18px;
-      margin: 14px 0 20px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      font-family: var(--font-sans);
-    }
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      font-size: 0.96rem;
-      color: var(--text);
-      text-decoration: none;
-    }
-    .brand-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 4px;
-      background: var(--gradient);
-      display: inline-block;
-      transform: rotate(45deg);
-    }
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .pill-link {
-      padding: 5px 12px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      font-family: var(--font-mono);
-      text-decoration: none;
-      background: var(--bg-card-inner);
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
-      transition: all 0.15s ease;
-    }
-    .pill-link:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      text-decoration: none;
-    }
-    .pill-link.active {
-      background: var(--accent);
-      color: var(--bg-elevated);
-      border-color: var(--accent);
-    }
-    .comfort-group {
-      display: inline-flex;
-      align-items: center;
-      background: var(--bg-card-inner);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 2px;
-      gap: 2px;
-    }
-    .comfort-btn {
-      cursor: pointer;
-      background: transparent;
-      color: var(--text-secondary);
-      border: none;
-      border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      font-family: var(--font-sans);
-      transition: all 0.15s ease;
-    }
-    .comfort-btn:hover, .comfort-btn.active {
-      background: var(--bg-elevated);
-      color: var(--accent);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    }
-
-    .jump-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 22px;
-      padding: 12px 16px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      font-family: var(--font-sans);
-      align-items: center;
-    }
-    .jump-label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-secondary);
-      margin-right: 4px;
-    }
-
-    .hero {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 36px;
-      margin-bottom: 28px;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 5px;
-      background: var(--gradient);
-    }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      padding: 5px 12px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-
-    .card {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 40px 44px;
-      box-shadow: var(--shadow);
-    }
-
-    .section-panel {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 28px 32px;
-      margin-top: 26px;
-      box-shadow: var(--shadow);
-    }
-    .section-panel.x-panel {
-      border-top: 4px solid var(--x-accent);
-    }
-    .section-panel.podcast-panel {
-      border-top: 4px solid var(--accent-warm);
-    }
-
-    /* Authentic X / Twitter Post Snippet Cards */
-    .x-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 16px;
-      margin: 18px 0 10px;
-    }
-    .x-tweet-card {
-      background: var(--x-card-bg);
-      border: 1px solid var(--x-border);
-      border-radius: 16px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      font-family: var(--font-sans);
-      transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
-    }
-    .x-tweet-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--x-accent);
-      box-shadow: var(--shadow);
-    }
-    .x-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    .x-author {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .x-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--gradient);
-      color: #FFFFFF;
-      font-weight: 700;
-      font-size: 0.88rem;
-      font-family: var(--font-mono);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .x-name-row {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-weight: 700;
-      font-size: 0.92rem;
-      color: var(--text);
-      line-height: 1.2;
-    }
-    .x-verified {
-      color: var(--x-accent);
-      font-size: 0.88rem;
-    }
-    .x-handle {
-      font-size: 0.78rem;
-      color: var(--text-secondary);
-      font-family: var(--font-mono);
-    }
-    .x-logo {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      text-decoration: none !important;
-      line-height: 1;
-    }
-    .x-title {
-      font-size: 0.98rem;
-      font-weight: 700;
-      color: var(--text);
-      margin: 0 0 8px;
-      line-height: 1.4;
-    }
-    .x-title a {
-      color: var(--text);
-      text-decoration: none;
-    }
-    .x-title a:hover {
-      color: var(--x-accent);
-      text-decoration: underline;
-    }
-    .x-body {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      line-height: 1.58;
-      margin: 0 0 14px;
-    }
-    .x-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-      font-size: 0.76rem;
-      font-family: var(--font-mono);
-      color: var(--text-secondary);
-    }
-    .x-metrics {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .x-metric-pill {
-      background: var(--bg-card-inner);
-      padding: 3px 9px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      font-weight: 600;
-    }
-    .x-links {
-      display: inline-flex;
-      gap: 10px;
-      font-weight: 700;
-    }
-    .x-links a {
-      color: var(--x-accent);
-      text-decoration: none;
-    }
-    .x-links a:hover {
-      text-decoration: underline;
-    }
-
-    /* Stylized Podcast Episode Cards */
-    .pod-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 16px;
-      margin: 18px 0 10px;
-    }
-    .pod-card {
-      background: var(--x-card-bg);
-      border: 1px solid var(--x-border);
-      border-radius: 16px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      font-family: var(--font-sans);
-      transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
-    }
-    .pod-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent-warm);
-      box-shadow: var(--shadow);
-    }
-    .pod-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .pod-show-info {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-    }
-    .pod-artwork {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #D97706 0%, #7C3AED 100%);
-      color: #FFFFFF;
-      font-size: 1.15rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      box-shadow: 0 3px 10px rgba(217, 119, 6, 0.22);
-    }
-    .pod-show-name {
-      font-weight: 700;
-      font-size: 0.88rem;
-      color: var(--accent-warm);
-      line-height: 1.25;
-    }
-    .pod-sub {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      font-family: var(--font-mono);
-    }
-    .pod-duration {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      font-weight: 600;
-      background: var(--accent-warm-soft);
-      color: var(--accent-warm);
-      padding: 4px 10px;
-      border-radius: 999px;
-      white-space: nowrap;
-    }
-    .pod-title {
-      font-size: 0.98rem;
-      font-weight: 700;
-      color: var(--text);
-      margin: 0 0 8px;
-      line-height: 1.4;
-    }
-    .pod-title a {
-      color: var(--text);
-      text-decoration: none;
-    }
-    .pod-title a:hover {
-      color: var(--accent-warm);
-      text-decoration: underline;
-    }
-    .pod-body {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      line-height: 1.58;
-      margin: 0 0 14px;
-    }
-    .pod-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
-    .pod-wave {
-      font-family: var(--font-mono);
-      font-size: 0.76rem;
-      letter-spacing: 2px;
-      color: var(--text-secondary);
-      opacity: 0.75;
-    }
-    .pod-play-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--accent-warm-soft);
-      color: var(--accent-warm) !important;
-      border: 1px solid var(--border);
-      padding: 5px 13px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-decoration: none !important;
-      transition: all 0.15s ease;
-    }
-    .pod-play-btn:hover {
-      background: var(--accent-warm);
-      color: #FFFFFF !important;
-    }
-
-    h1, h2 {
-      font-family: var(--font-display);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      line-height: 1.28;
-      color: var(--text);
-    }
-    h1 {
-      font-size: 2.05rem;
-      margin: 4px 0 16px;
-    }
-    h2 {
-      font-size: 1.48rem;
-      margin: 36px 0 16px;
+      gap: 12px;
       padding-bottom: 10px;
-      border-bottom: 2px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
     }
-
-    h3 {
-      font-family: var(--font-display);
-      font-size: 1.16rem;
-      font-weight: 600;
-      margin: 24px 0 0;
-      line-height: 1.42;
-      padding: 18px 22px 8px;
-      background: var(--bg-card-inner);
-      border-top-left-radius: 14px;
-      border-top-right-radius: 14px;
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--accent);
-      border-bottom: none;
+    .controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
     }
-    h3 + p {
-      font-family: var(--font-sans);
-      font-size: 0.86rem;
-      color: var(--text-secondary);
-      background: var(--bg-card-inner);
-      margin: 0;
-      padding: 2px 22px 10px;
-      border-left: 4px solid var(--accent);
-      border-right: 1px solid var(--border);
-    }
-    h3 + p + ul {
-      background: var(--bg-card-inner);
-      margin: 0 0 18px 0;
-      padding: 4px 24px 18px 40px;
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--accent);
-      border-top: none;
-      border-bottom-left-radius: 14px;
-      border-bottom-right-radius: 14px;
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: underline;
-      text-decoration-thickness: 1.5px;
-      text-underline-offset: 3px;
-      transition: color 0.15s ease;
-    }
-    a:hover {
-      color: var(--accent-hover);
-    }
-
-    blockquote {
-      font-family: var(--font-sans);
-      margin: 18px 0 26px;
-      padding: 16px 22px;
-      background: var(--accent-soft);
-      border-left: 4px solid var(--accent);
-      border-radius: 12px;
-      color: var(--text);
-      font-size: 0.92rem;
-      line-height: 1.65;
-    }
-
-    ul, ol {
-      padding-left: 24px;
-    }
-    li {
-      margin-bottom: 10px;
-    }
-    li strong {
-      font-family: var(--font-sans);
-    }
-
-    hr {
-      border: none;
-      border-top: 1px dashed var(--border);
-      margin: 34px 0;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
-      gap: 20px;
-      margin-top: 18px;
-    }
-    .day-card {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 26px;
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.18s ease, border-color 0.18s ease;
-    }
-    .day-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--accent);
-    }
-    .day-card h3 {
+    .ctrl-btn {
       background: none;
       border: none;
-      padding: 0;
-      margin: 6px 0 10px;
-      font-family: var(--font-display);
-      font-size: 1.35rem;
+      padding: 2px 4px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      cursor: pointer;
     }
-    .day-card h3 a {
+    .ctrl-btn:hover, .ctrl-btn.active {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      font-weight: 600;
+    }
+
+    .masthead-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 22px 0 18px;
+      border-bottom: 2px solid var(--border-strong);
+    }
+    .masthead-title {
+      font-family: var(--font-display);
+      font-size: 3.1rem;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .masthead-title a {
+      color: var(--ink);
       text-decoration: none;
     }
-    .day-card ul {
-      padding-left: 18px;
-      margin: 8px 0 20px;
-      color: var(--text-secondary);
-      font-size: 0.9rem;
+    .masthead-sub {
       font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--ink-secondary);
+      margin: 0;
     }
-    .day-card li { margin-bottom: 7px; }
 
-    .cta-btn {
-      display: inline-flex;
+    .masthead-nav {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 8px;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
       font-family: var(--font-sans);
-      background: var(--accent);
-      color: var(--bg-elevated) !important;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      text-decoration: none !important;
-      align-self: flex-start;
-      transition: transform 0.15s ease, opacity 0.15s ease;
+      font-size: 0.8rem;
+      font-weight: 500;
     }
-    .cta-btn:hover {
-      opacity: 0.92;
-      transform: translateX(2px);
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .nav-links a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 5px;
+      text-decoration-thickness: 1.5px;
+    }
+
+    /* Section Headers */
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-top: 1px solid var(--border-strong);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 0;
+      margin: 36px 0 20px;
+    }
+    .section-head h2 {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0;
+      color: var(--ink);
+    }
+    .section-head span {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+
+    /* Editorial Briefing Ledger (Top 10 List) */
+    .briefing-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .briefing-item {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .briefing-item:last-child {
+      border-bottom: none;
+    }
+    .briefing-num {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+      padding-top: 3px;
+    }
+    .briefing-content h3 {
+      font-family: var(--font-serif);
+      font-size: 1.22rem;
+      font-weight: 600;
+      line-height: 1.35;
+      margin: 0 0 6px;
+    }
+    .briefing-content h3 a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .briefing-content h3 a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .briefing-meta {
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .briefing-meta a {
+      color: var(--ink-secondary);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .briefing-tag {
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .briefing-summary {
+      font-family: var(--font-serif);
+      font-size: 0.98rem;
+      color: var(--ink-secondary);
+      margin: 0;
+      line-height: 1.62;
+    }
+
+    /* Two-Column Editorial Split for X Threads & Podcasts */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      margin-top: 12px;
+    }
+    .note-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .note-item {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .note-item:last-child {
+      border-bottom: none;
+    }
+    .note-kicker {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+      margin-bottom: 4px;
+    }
+    .note-kicker strong {
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .note-title {
+      font-family: var(--font-sans);
+      font-size: 0.96rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 0 0 6px;
+    }
+    .note-title a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .note-title a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .note-body {
+      font-family: var(--font-serif);
+      font-size: 0.92rem;
+      color: var(--ink-secondary);
+      margin: 0 0 8px;
+      line-height: 1.55;
+    }
+    .note-links {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      display: flex;
+      gap: 14px;
+    }
+    .note-links a {
+      color: var(--ink-secondary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .note-links a:hover {
+      color: var(--ink);
+    }
+
+    /* Archive Table */
+    .archive-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+    }
+    .archive-table th {
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+      padding: 8px 12px 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .archive-table td {
+      padding: 14px 12px 14px 0;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .archive-date {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 600;
+      white-space: nowrap;
+      width: 130px;
+    }
+    .archive-date a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .archive-date a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .archive-leads {
+      color: var(--ink-secondary);
+      line-height: 1.5;
+    }
+    .archive-leads a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-decoration-color: var(--border);
+      text-underline-offset: 3px;
+    }
+    .archive-leads a:hover {
+      text-decoration-color: var(--ink);
+    }
+
+    /* Callout Box for Executive Summary / Concept Deep-Dive */
+    .editorial-callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 20px 24px;
+      margin: 20px 0 28px;
+    }
+    .editorial-callout h3 {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin: 0 0 10px;
+    }
+    .editorial-callout ul, .editorial-callout p {
+      margin: 0;
+      font-size: 0.96rem;
+      color: var(--ink-secondary);
+    }
+    .editorial-callout li {
+      margin-bottom: 8px;
     }
 
     .footer {
-      text-align: center;
-      font-family: var(--font-sans);
-      font-size: 0.84rem;
-      color: var(--text-secondary);
-      margin-top: 42px;
-      padding-top: 20px;
+      margin-top: 56px;
+      padding-top: 18px;
       border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+    .footer a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
     }
 
-    @media (max-width: 640px) {
-      .card, .hero, .section-panel { padding: 22px 18px; }
-      .grid, .x-grid, .pod-grid { grid-template-columns: 1fr; }
-      h1 { font-size: 1.6rem; }
-      .top-nav { position: static; }
+    @media (max-width: 760px) {
+      .two-col { grid-template-columns: 1fr; gap: 16px; }
+      .masthead-title { font-size: 2.25rem; }
+      .briefing-item { grid-template-columns: 32px 1fr; gap: 10px; }
     }
   </style>
   <script>
@@ -711,389 +451,247 @@
       if (savedSize) {
         document.documentElement.style.setProperty('--base-size', savedSize + 'px');
       }
-      const savedFont = localStorage.getItem('genai_fontfamily');
-      if (savedFont === 'sans') {
-        document.documentElement.style.setProperty('--font-body', "var(--font-sans)");
-      }
     })();
 
     function setTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('genai_theme', theme);
-      updateToolbarState();
-    }
-
-    function toggleFontFamily() {
-      const current = localStorage.getItem('genai_fontfamily') || 'serif';
-      const next = current === 'serif' ? 'sans' : 'serif';
-      localStorage.setItem('genai_fontfamily', next);
-      if (next === 'sans') {
-        document.documentElement.style.setProperty('--font-body', "var(--font-sans)");
-      } else {
-        document.documentElement.style.setProperty('--font-body', "'Literata', Georgia, serif");
-      }
-      updateToolbarState();
+      updateControls();
     }
 
     function adjustFontSize(delta) {
-      const current = parseFloat(localStorage.getItem('genai_fontsize') || '17.5');
-      const next = Math.min(22, Math.max(15, current + delta));
+      const current = parseFloat(localStorage.getItem('genai_fontsize') || '16.5');
+      const next = Math.min(20, Math.max(14.5, current + delta));
       localStorage.setItem('genai_fontsize', next);
       document.documentElement.style.setProperty('--base-size', next + 'px');
     }
 
-    function updateToolbarState() {
+    function updateControls() {
       const theme = document.documentElement.getAttribute('data-theme') || 'sage';
       document.querySelectorAll('[data-theme-btn]').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-theme-btn') === theme);
       });
-      const font = localStorage.getItem('genai_fontfamily') || 'serif';
-      const fontBtn = document.getElementById('font-toggle-btn');
-      if (fontBtn) {
-        fontBtn.textContent = font === 'serif' ? 'Aa Serif' : 'Aa Sans';
-      }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      updateToolbarState();
-      document.querySelectorAll('h2').forEach(h => {
-        const text = h.textContent.toLowerCase();
-        if (text.includes('tl;dr') || text.includes('executive')) h.id = 'tldr';
-        else if (text.includes('concept')) h.id = 'concept';
-        else if (text.includes('top 10')) h.id = 'top10';
-        else if (text.includes('x.com') || text.includes('twitter')) h.id = 'x-pulse';
-        else if (text.includes('podcast') || text.includes('audio')) h.id = 'podcasts';
-      });
-      window.addEventListener('scroll', () => {
-        const bar = document.getElementById('progress-bar');
-        if (!bar) return;
-        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
-      });
-    });
+    window.addEventListener('DOMContentLoaded', updateControls);
   </script>
 
 </head>
 <body>
-  <div id="progress-bar"></div>
-  <div class="container">
-    <nav class="top-nav">
-      <a class="brand" href="index.html">
-        <span class="brand-dot"></span>
-        <span>← All Editions</span>
-      </a>
-      <div class="nav-actions">
-        <a class="pill-link" href="podcasts.html">🎙️ Podcasts Hub</a>
-        <a class="pill-link" href="2026-11-09.html">2026-11-09</a><a class="pill-link" href="2026-11-08.html">2026-11-08</a><a class="pill-link active" href="2026-11-07.html">2026-11-07</a><a class="pill-link" href="2026-11-06.html">2026-11-06</a>
-        
-        <div class="comfort-group" title="Eye-friendly color palettes">
-          <button class="comfort-btn" data-theme-btn="sage" onclick="setTheme('sage')">🌿 Sage</button>
-          <button class="comfort-btn" data-theme-btn="sepia" onclick="setTheme('sepia')">📜 Sepia</button>
-          <button class="comfort-btn" data-theme-btn="dark" onclick="setTheme('dark')">🌙 Night</button>
+  <div class="page-wrap">
+    
+    <header class="masthead">
+      <div class="masthead-top">
+        <div>THE GENERATIVE AI TECHNICAL BRIEFING · ISSUE 2026-11-07 · SINGAPORE (SGT)</div>
+        <div class="controls">
+          <span>PALETTE:</span>
+          <button class="ctrl-btn" data-theme-btn="sage" onclick="setTheme('sage')">Paper</button>
+          <button class="ctrl-btn" data-theme-btn="sepia" onclick="setTheme('sepia')">Sepia</button>
+          <button class="ctrl-btn" data-theme-btn="dark" onclick="setTheme('dark')">Ink</button>
+          <span>·</span>
+          <button class="ctrl-btn" onclick="adjustFontSize(-0.5)">A-</button>
+          <button class="ctrl-btn" onclick="adjustFontSize(0.5)">A+</button>
         </div>
-        <div class="comfort-group" title="Reading font &amp; size">
-          <button class="comfort-btn" id="font-toggle-btn" onclick="toggleFontFamily()">Aa Serif</button>
-          <button class="comfort-btn" onclick="adjustFontSize(-1)">A-</button>
-          <button class="comfort-btn" onclick="adjustFontSize(1)">A+</button>
-        </div>
-
       </div>
-    </nav>
+      <div class="masthead-title-row">
+        <h1 class="masthead-title"><a href="index.html">The GenAI Briefing</a></h1>
+        <p class="masthead-sub">Curated research papers, frontier lab engineering, researcher threads &amp; audio briefings.</p>
+      </div>
+      <nav class="masthead-nav">
+        <div class="nav-links">
+          <a href="index.html" class="">Front Page</a>
+          <a href="2026-11-09.html" class="active">Latest Issue (2026-11-09)</a>
+          <a href="podcasts.html" class="">Podcasts Index</a>
+          <a href="index.html#archive">Archive</a>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">
+          AUTO-PUBLISHED DAILY BY 07:00 SGT
+        </div>
+      </nav>
+    </header>
+    
 
-    <div class="jump-bar">
-      <span class="jump-label">Jump to:</span>
-      <a class="pill-link" href="#tldr">⚡ TL;DR</a>
-      <a class="pill-link" href="#concept">🧠 Concept Deep-Dive</a>
-      <a class="pill-link" href="#top10">🏆 Top 10 Ranked</a>
-      <a class="pill-link" href="#x-pulse">🔥 Hot on 𝕏</a>
-      <a class="pill-link" href="#podcasts">🎧 AI Podcasts</a>
+    <div style="font-family:var(--font-mono);font-size:0.74rem;color:var(--ink-muted);margin-bottom:20px;">
+      ISSUES: <a href="2026-11-09.html" style="font-weight:400;color:var(--ink);">2026-11-09</a> · <a href="2026-11-08.html" style="font-weight:400;color:var(--ink);">2026-11-08</a> · <a href="2026-11-07.html" style="font-weight:700;color:var(--ink);">2026-11-07</a> · <a href="2026-11-06.html" style="font-weight:400;color:var(--ink);">2026-11-06</a>
     </div>
 
-    <main class="card">
-      <h1>🚀 Top 10 Generative AI Learning &amp; News Digest — 2026-11-07</h1>
-<blockquote>
-<p><strong>Curated from 56 live items</strong> across Hugging Face Daily Papers, arXiv, OpenAI/Google/DeepMind Blogs, Hacker News, and r/LocalLLaMA — ranked by <strong>technical substance</strong> and <strong>community reach</strong>.</p>
-</blockquote>
-<hr />
-<h2>⚡ Executive TL;DR (30-Second Read)</h2>
-<ol>
+    <div class="editorial-callout"><h3>Executive Summary</h3><ol>
 <li><strong>Frontier Models &amp; Cascading Cost Optimization</strong>: Google's <strong>Gemini 4 Carbon</strong> took #1 on the Artificial Analysis Intelligence Index v5, while <strong>Gemini Omni 1.2 Flash</strong> arrived for long-clip multimodal tasks. Meanwhile, engineers showed how routing a small model to ask a frontier model only when uncertain achieves <strong>frontier accuracy at 4× lower cost</strong>.</li>
 <li><strong>Agent Harnesses Are the New Bottleneck</strong>: Across Lilian Weng's new post, Hugging Face's <strong>Harness-S</strong> paper, and the r/LocalLLaMA <strong>Harness Leaderboard</strong> (Terminal-Bench 2.1), the biggest gains in coding/research agents now come from <strong>harness design</strong> (how tools, memory, and retries are structured around the model).</li>
 <li><strong>Agent Privacy &amp; Security Reckoning</strong>: The top-voted engineering stories on Hacker News this week center on <strong>agent data leakage</strong> (Claude Code leaking email addresses, personal chat history training policies, and OpenAI's sandboxing/privilege reduction in <em>A Thousand Fewer Paths to Root</em>).</li>
-</ol>
-<hr />
-<h2>🧠 Concept of the Day: "Agent Harness Engineering" &amp; Cascaded Routing</h2>
-<ul>
+</ol></div>
+    <div class="editorial-callout"><h3>Technical Deep-Dive</h3><ul>
 <li><strong>What is an Agent Harness?</strong> A model is just weights predicting tokens; the <strong>harness</strong> is the runtime loop around it—system prompt, tool definitions, context compaction, error recovery, and verification checks.</li>
 <li><strong>Key Insight from Today's Research (<a href="https://huggingface.co/papers/2611.04277">Harness-S</a> &amp; <a href="https://lilianweng.github.io/posts/2026-07-04-harness/">Lilian Weng</a>)</strong>: Different agent harnesses fail on <em>different</em> tasks (locality &amp; complementarity). Instead of searching for one static prompt/harness, <strong>Harness-S</strong> trains policies across "sibling harnesses" so the agent learns to recover from diverse failure modes.</li>
 <li><strong>Practical Engineering Pattern (<a href="https://hightouch.com/blog/llm-judges-identity-resolution">Cascaded Judge Routing</a>)</strong>: Pair a fast, cheap model for 85% of routine decisions with a confidence/uncertainty trigger that escalates hard edge cases to a frontier reasoning model—cutting production inference costs by <strong>75% (4×)</strong> without losing accuracy.</li>
-</ul>
-<hr />
-<h2>🏆 Top 10 Ranked by Content &amp; Reach</h2>
-<h3>1. <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/">Gemini 4 Carbon (#1 on Artificial Analysis Intelligence Index v5)</a></h3>
-<p><strong>🏢 Model Release + 🔥 Hacker News (⬆️ 1,358 combined pts, 1,051 comments)</strong><br />
-- <strong>What happened:</strong> Google released <strong>Gemini 4 Carbon</strong>, claiming the #1 spot on the independent <a href="https://artificialanalysis.ai/articles/gemini-4-carbon-new-number-1">Artificial Analysis Intelligence Index v5</a>, alongside <strong><a href="https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemini-omni-1-2-flash/">Gemini Omni 1.2 Flash</a></strong> for fast, low-cost long-clip multimodal processing.<br />
-- <strong>Why it matters:</strong> Sets the new frontier baseline for reasoning-to-cost efficiency while expanding native multimodal context windows.</p>
-<h3>2. <a href="https://github.com/anthropics/claude-code/issues/107757">Claude Code Privacy Issue &amp; Agent Data-Training Policies</a></h3>
-<p><strong>🔥 Highest Reach on Hacker News (⬆️ 1,569 pts, 502 comments)</strong><br />
-- <strong>What happened:</strong> Developers discovered that Claude Code could expose user email addresses when fetching external websites, alongside separate high-reach threads on <a href="https://news.ycombinator.com/item?id=50363461">Gemini personal chat training defaults (⬆️ 725)</a> and <a href="https://news.ycombinator.com/item?id=50352757">Codex data-sharing settings (⬆️ 529)</a>.<br />
-- <strong>Why it matters:</strong> When autonomous CLI agents make outbound HTTP requests or git commits, they carry local environment metadata—auditing agent network/tool permissions and enterprise zero-data-retention settings is essential.</p>
-<h3>3. <a href="https://news.ycombinator.com/item?id=50366117">Ask HN: What's Your Current AI Agentic Setup?</a></h3>
-<p><strong>🛠️ Engineering Practice · Hacker News (⬆️ 545 pts, 678 comments)</strong><br />
-- <strong>What happened:</strong> Nearly 700 practitioners shared their real-world daily agent stacks, what actually works in production vs. hype, and how they combine IDE agents, CLI agents, and custom MCP tools.<br />
-- <strong>Why it matters:</strong> High-signal crowd benchmark of practical developer workflows—most effective setups rely on scoped context files, deterministic test loops, and human-in-the-loop plan review.</p>
-<h3>4. <a href="https://hightouch.com/blog/llm-judges-identity-resolution">A Small Model That Can Ask Opus for Help Gives Opus Accuracy at 4× Lower Cost</a></h3>
-<p><strong>🛠️ Production LLM Engineering · Hacker News (⬆️ 447 pts, 100 comments)</strong><br />
-- <strong>What happened:</strong> Hightouch demonstrated a cascaded LLM-judge architecture for entity resolution where a lightweight model handles straightforward pairs and escalates ambiguous cases to a frontier model.<br />
-- <strong>Why it matters:</strong> Directly applicable design pattern for any high-volume LLM pipeline—calibrate confidence thresholds so you only pay frontier token prices on the hardest 15–20% of queries.</p>
-<h3>5. <a href="https://openai.com/index/a-thousand-fewer-paths-to-root/">A Thousand Fewer Paths to Root: Hardening AI Agent Sandboxes</a></h3>
-<p><strong>🏢 AI Security &amp; Infrastructure · OpenAI / Hacker News (⬆️ 486 pts, 363 comments)</strong><br />
-- <strong>What happened:</strong> OpenAI detailed how they systematically eliminated privilege-escalation paths in execution sandboxes used by coding and tool-using agents, paired with their new <a href="https://openai.com/index/partnering-with-hacktron">Hacktron security partnership</a>.<br />
-- <strong>Why it matters:</strong> As agents gain shell and browser execution capabilities, OS-level sandboxing and least-privilege container design become mandatory defense layers.</p>
-<h3>6. <a href="https://huggingface.co/papers/2611.08373">SLA (Scaling Spatial-Language-Action) &amp; VFlash (Flash Primitive Decoding)</a></h3>
-<p><strong>📄 Top Research Papers · Hugging Face Daily Papers (⬆️ 150 &amp; ⬆️ 96 upvotes)</strong><br />
-- <strong>What happened:</strong> Two top-trending embodied AI papers: <strong>SLA</strong> scales 3D spatial grounding for Vision-Language-Action (VLA) models via continual pre-training, while <strong><a href="https://huggingface.co/papers/2611.08449">VFlash</a></strong> decodes visual planning primitives (trajectories &amp; bounding boxes) in parallel rather than slow token-by-token autoregression.<br />
-- <strong>Why it matters:</strong> Bridges the gap between 2D language pre-training and fast, real-time 3D physical control.</p>
-<h3>7. <a href="https://huggingface.co/papers/2611.02075">Decoupled Predictive Decision Making (DPDM): A Shared Conditional Predictor for Agents</a></h3>
-<p><strong>📄 Agent Architecture Paper · Hugging Face Daily Papers (⬆️ 114 upvotes)</strong><br />
-- <strong>What happened:</strong> Introduces <strong>DPDM</strong>, separating an agent's <em>world-state prediction</em> (what will happen if I take action X?) from its <em>policy selection</em>, allowing heterogeneous agents to share a single conditional predictor calibrated on deployment observations.<br />
-- <strong>Why it matters:</strong> Solves a classic failure mode where LLM agents act on static prompt assumptions instead of adapting to live environment feedback.</p>
-<h3>8. <a href="https://huggingface.co/papers/2611.04277">Harness-S, Lilian Weng on Harness Engineering &amp; Terminal-Bench 2.1 Leaderboard</a></h3>
-<p><strong>📄 Research + Blog + Community Benchmark (⬆️ 57 HF upvotes + r/LocalLLaMA)</strong><br />
-- <strong>What happened:</strong> A trifecta on agent harnesses: the <strong><a href="https://huggingface.co/papers/2611.04277">Harness-S paper</a></strong> shows how training across sibling harnesses improves agent generalization; <strong><a href="https://lilianweng.github.io/posts/2026-07-04-harness/">Lilian Weng's Harness Engineering post</a></strong> breaks down self-improvement loops; and r/LocalLLaMA published the <strong><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xpvfx8/harness_leaderboard_kimi_code_hermes_pi_claude/">Harness Leaderboard</a></strong> comparing Kimi Code, Claude Code, Codex, and Hermes on Terminal-Bench 2.1 &amp; Deep SWE 1.1.<br />
-- <strong>Why it matters:</strong> Proves that upgrading the <em>harness</em> (tool feedback, state tracking, retry logic) often yields larger accuracy jumps than swapping the underlying LLM.</p>
-<h3>9. <a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/">Qwen 3.8 27B Interpreting Model Weights &amp; Freehand GUI Control</a></h3>
-<p><strong>🏢 Open-Weights &amp; Local LLMs · Simon Willison &amp; r/LocalLLaMA</strong><br />
-- <strong>What happened:</strong> Simon Willison demonstrated <strong>Qwen 3.8 27B</strong> running locally on a laptop performing <em>Weight-Space Programming</em> (natively reading and interpreting neural network weights), while r/LocalLLaMA showcased <strong><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xpmvf2/we_are_cooked_my_qfn_38_nvfp4_just_drew_a_dog/">QFN 3.8 NVFP4 controlling a VM mouse in Open WebUI 0.13.0</a></strong>.<br />
-- <strong>Why it matters:</strong> 27B–30B class open-weight models running in 4-bit quantization (NVFP4) on consumer hardware are now capable of both fine-grained GUI actuation and weight-space introspection.</p>
-<h3>10. <a href="https://openai.com/index/measuring-how-ai-agents-handle-wet-lab-science">AI Agents in Science: OpenAI BioBasicsBench &amp; DeepMind Agentic Cheminformatics</a></h3>
-<p><strong>🏢 Scientific AI Releases · OpenAI &amp; Google DeepMind</strong><br />
-- <strong>What happened:</strong> OpenAI launched <strong>BioBasicsBench</strong> (100 tasks evaluating how agents interpret raw wet-lab experimental data), while Google DeepMind published <strong><a href="https://deepmind.google/blog/agentic-cheminformatics-with-google-antigravity/">Agentic Cheminformatics with Google Antigravity</a></strong>, showing how modular skills accelerate compound search and macrocycle design.<br />
-- <strong>Why it matters:</strong> Domain-specific <strong>Skills</strong> + rigorous experimental benchmarks are turning general-purpose coding agents into specialized scientific research co-pilots.</p>
-<hr />
-<h2>🔥 Hot on X.com (AI Twitter Pulse)</h2>
-<div class="x-grid">
-                <article class="x-tweet-card">
-                  <div>
-                    <div class="x-header">
-                      <div class="x-author">
-                        <div class="x-avatar">JI</div>
-                        <div>
-                          <div class="x-name-row">
-                            <span>jiahaoshao1</span>
-                            <span class="x-verified" title="Verified AI Thread">✔</span>
-                          </div>
-                          <div class="x-handle">@jiahaoshao1</div>
-                        </div>
-                      </div>
-                      <a class="x-logo" href="https://twitter.com/jiahaoshao1/status/2116475922190922088" target="_blank" rel="noopener" title="Open on X">𝕏</a>
-                    </div>
-                    <h4 class="x-title"><a href="https://twitter.com/jiahaoshao1/status/2116475922190922088" target="_blank" rel="noopener">“Anthropic Blocks Users for Anything Touching Training Larger Models”</a></h4>
-                    <p class="x-body">Researchers on X sparked a major debate over frontier lab ToS enforcement when using frontier model outputs for synthetic data curation, distillation, or training pipelines.</p>
-                  </div>
-                  <div class="x-footer">
-                    <div class="x-metrics"><span class="x-metric-pill">❤️ 494 pts</span><span class="x-metric-pill">💬 271 comments</span></div>
-                    <div class="x-links">
-                      <a href="https://news.ycombinator.com/item?id=50319358" target="_blank" rel="noopener">HN Thread ↗</a>
-                      <a href="https://twitter.com/jiahaoshao1/status/2116475922190922088" target="_blank" rel="noopener">Post on 𝕏 ↗</a>
-                    </div>
-                  </div>
-                </article>
+</ul></div>
 
-                <article class="x-tweet-card">
-                  <div>
-                    <div class="x-header">
-                      <div class="x-author">
-                        <div class="x-avatar">SG</div>
-                        <div>
-                          <div class="x-name-row">
-                            <span>sgondala2</span>
-                            <span class="x-verified" title="Verified AI Thread">✔</span>
-                          </div>
-                          <div class="x-handle">@sgondala2</div>
-                        </div>
-                      </div>
-                      <a class="x-logo" href="https://twitter.com/sgondala2/status/2115832070274723875" target="_blank" rel="noopener" title="Open on X">𝕏</a>
-                    </div>
-                    <h4 class="x-title"><a href="https://twitter.com/sgondala2/status/2115832070274723875" target="_blank" rel="noopener">“Building an AI-Native Engineering Org”</a></h4>
-                    <p class="x-body">Practical breakdown on X of how engineering teams are restructuring code review, PR sizing, and automated verification around autonomous coding agents.</p>
-                  </div>
-                  <div class="x-footer">
-                    <div class="x-metrics"><span class="x-metric-pill">❤️ 195 pts</span><span class="x-metric-pill">💬 203 comments</span></div>
-                    <div class="x-links">
-                      <a href="https://news.ycombinator.com/item?id=50296730" target="_blank" rel="noopener">HN Thread ↗</a>
-                      <a href="https://twitter.com/sgondala2/status/2115832070274723875" target="_blank" rel="noopener">Post on 𝕏 ↗</a>
-                    </div>
-                  </div>
-                </article>
+    <div class="section-head">
+      <h2>I. Top 10 Technical Briefing — 2026-11-07</h2>
+      <span>RANKED BY SUBSTANCE &amp; COMMUNITY REACH</span>
+    </div>
+    <div class="briefing-list">
+            <article class="briefing-item">
+              <div class="briefing-num">01</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 1,358 combined pts, 1,051 comments</span><span>·</span><span>blog.google</span></div>
+                <h3><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/" target="_blank" rel="noopener">Gemini 4 Carbon (#1 on Artificial Analysis Intelligence Index v5)</a></h3>
+                <p class="briefing-summary">What happened: Google released Gemini 4 Carbon, claiming the #1 spot on the independent Artificial Analysis Intelligence Index v5, alongside Gemini Omni 1.2 Flash for fast, low-cost long-clip multimodal processing.</p>
+              </div>
+            </article>
+            
+            <article class="briefing-item">
+              <div class="briefing-num">02</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 1,569 pts, 502 comments</span><span>·</span><span>github.com</span><span>·</span><a href="https://news.ycombinator.com/item?id=50363461" target="_blank" rel="noopener">1,569 pts · HN Discussion ↗</a></div>
+                <h3><a href="https://github.com/anthropics/claude-code/issues/107757" target="_blank" rel="noopener">Claude Code Privacy Issue & Agent Data-Training Policies</a></h3>
+                <p class="briefing-summary">What happened: Developers discovered that Claude Code could expose user email addresses when fetching external websites, alongside separate high-reach threads on Gemini personal chat training defaults (⬆️ 725) and Codex data-sharing settings (⬆️ 529).</p>
+              </div>
+            </article>
+            
+            <article class="briefing-item">
+              <div class="briefing-num">03</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 545 pts, 678 comments</span><span>·</span><span>545 pts</span></div>
+                <h3><a href="https://news.ycombinator.com/item?id=50366117" target="_blank" rel="noopener">Ask HN: What's Your Current AI Agentic Setup?</a></h3>
+                <p class="briefing-summary">What happened: Nearly 700 practitioners shared their real-world daily agent stacks, what actually works in production vs. hype, and how they combine IDE agents, CLI agents, and custom MCP tools.</p>
+              </div>
+            </article>
+            
+            <article class="briefing-item">
+              <div class="briefing-num">04</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 447 pts, 100 comments</span><span>·</span><span>hightouch.com</span><span>·</span><span>447 pts</span></div>
+                <h3><a href="https://hightouch.com/blog/llm-judges-identity-resolution" target="_blank" rel="noopener">A Small Model That Can Ask Opus for Help Gives Opus Accuracy at 4× Lower Cost</a></h3>
+                <p class="briefing-summary">What happened: Hightouch demonstrated a cascaded LLM-judge architecture for entity resolution where a lightweight model handles straightforward pairs and escalates ambiguous cases to a frontier model.</p>
+              </div>
+            </article>
+            
+            <article class="briefing-item">
+              <div class="briefing-num">05</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 486 pts, 363 comments</span><span>·</span><span>openai.com</span><span>·</span><span>486 pts</span></div>
+                <h3><a href="https://openai.com/index/a-thousand-fewer-paths-to-root/" target="_blank" rel="noopener">A Thousand Fewer Paths to Root: Hardening AI Agent Sandboxes</a></h3>
+                <p class="briefing-summary">What happened: OpenAI detailed how they systematically eliminated privilege-escalation paths in execution sandboxes used by coding and tool-using agents, paired with their new Hacktron security partnership.</p>
+              </div>
+            </article>
+            
+            <article class="briefing-item">
+              <div class="briefing-num">06</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>⬆️ 150 & ⬆️ 96 upvotes</span><span>·</span><span>huggingface.co</span><span>·</span><span>96 pts</span></div>
+                <h3><a href="https://huggingface.co/papers/2611.08373" target="_blank" rel="noopener">SLA (Scaling Spatial-Language-Action) & VFlash (Flash Primitive Decoding)</a></h3>
+                <p class="briefing-summary">What happened: Two top-trending embodied AI papers: SLA scales 3D spatial grounding for Vision-Language-Action (VLA) models via continual pre-training, while VFlash decodes visual planning primitives (trajectories & bounding boxes) in parallel rather than slow token-by-token autoregression.</p>
+              </div>
+            </article>
+            
+            <article class="briefing-item">
+              <div class="briefing-num">07</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>⬆️ 114 upvotes</span><span>·</span><span>huggingface.co</span><span>·</span><span>114 pts</span></div>
+                <h3><a href="https://huggingface.co/papers/2611.02075" target="_blank" rel="noopener">Decoupled Predictive Decision Making (DPDM): A Shared Conditional Predictor for Agents</a></h3>
+                <p class="briefing-summary">What happened: Introduces DPDM, separating an agent's *world-state prediction* (what will happen if I take action X?) from its *policy selection*, allowing heterogeneous agents to share a single conditional predictor calibrated on deployment observations.</p>
+              </div>
+            </article>
+            
+            <article class="briefing-item">
+              <div class="briefing-num">08</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 57 HF upvotes + r/LocalLLaMA</span><span>·</span><span>huggingface.co</span></div>
+                <h3><a href="https://huggingface.co/papers/2611.04277" target="_blank" rel="noopener">Harness-S, Lilian Weng on Harness Engineering & Terminal-Bench 2.1 Leaderboard</a></h3>
+                <p class="briefing-summary">What happened: A trifecta on agent harnesses: the Harness-S paper shows how training across sibling harnesses improves agent generalization; Lilian Weng's Harness Engineering post breaks down self-improvement loops;</p>
+              </div>
+            </article>
+            
+            <article class="briefing-item">
+              <div class="briefing-num">09</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Open-Weights & Local LLMs · Simon Willison & r/LocalLLaMA</span><span>·</span><span>simonwillison.net</span><span>·</span><span>simonwillison.net</span></div>
+                <h3><a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/" target="_blank" rel="noopener">Qwen 3.8 27B Interpreting Model Weights & Freehand GUI Control</a></h3>
+                <p class="briefing-summary">What happened: Simon Willison demonstrated Qwen 3.8 27B running locally on a laptop performing *Weight-Space Programming* (natively reading and interpreting neural network weights), while r/LocalLLaMA showcased QFN 3.8 NVFP4 controlling a VM mouse in Open WebUI 0.13.0.</p>
+              </div>
+            </article>
+            
+            <article class="briefing-item">
+              <div class="briefing-num">10</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Scientific AI Releases · OpenAI & Google DeepMind</span><span>·</span><span>openai.com</span><span>·</span><span>openai.com</span></div>
+                <h3><a href="https://openai.com/index/measuring-how-ai-agents-handle-wet-lab-science" target="_blank" rel="noopener">AI Agents in Science: OpenAI BioBasicsBench & DeepMind Agentic Cheminformatics</a></h3>
+                <p class="briefing-summary">What happened: OpenAI launched BioBasicsBench (100 tasks evaluating how agents interpret raw wet-lab experimental data), while Google DeepMind published Agentic Cheminformatics with Google Antigravity, showing how modular skills accelerate compound search and macrocycle design.</p>
+              </div>
+            </article>
+            </div>
 
-                <article class="x-tweet-card">
-                  <div>
-                    <div class="x-header">
-                      <div class="x-author">
-                        <div class="x-avatar">AI</div>
-                        <div>
-                          <div class="x-name-row">
-                            <span>AI Researcher Pulse</span>
-                            <span class="x-verified" title="Verified AI Thread">✔</span>
-                          </div>
-                          <div class="x-handle">@AI_Pulse</div>
-                        </div>
-                      </div>
-                      <a class="x-logo" href="https://news.google.com/rss/articles/CBMitgFBVV95cUxNWHEtSXVkWjNmTHJwN055ZUVQNjBMTmNHeUdYaEhkSXA5X2NYUGxMem5TWHEzRllRRGt3bzJ3Mk1VV3NZRHJnd29YYWtiVDF5UEIyeTdzcFhfSDlfaTZ2eDNjT2EtR0ItN0dDNUVFN0VMMEtZWFdQY2ktQ2d3UlhTVXdPTEhHZ3B3RlF2ZjFTTFM3V3pFcVVnSGJkV1FuWWJXM0E0T1FPT29ad2lUTmxZQnlkQ3FZZw?oc=5" target="_blank" rel="noopener" title="Open on X">𝕏</a>
-                    </div>
-                    <h4 class="x-title"><a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxNWHEtSXVkWjNmTHJwN055ZUVQNjBMTmNHeUdYaEhkSXA5X2NYUGxMem5TWHEzRllRRGt3bzJ3Mk1VV3NZRHJnd29YYWtiVDF5UEIyeTdzcFhfSDlfaTZ2eDNjT2EtR0ItN0dDNUVFN0VMMEtZWFdQY2ktQ2d3UlhTVXdPTEhHZ3B3RlF2ZjFTTFM3V3pFcVVnSGJkV1FuWWJXM0E0T1FPT29ad2lUTmxZQnlkQ3FZZw?oc=5" target="_blank" rel="noopener">“Anthropic Engineer Warns About the Hidden Cost of Letting AI Do Your Thinking”</a></h4>
-                    <p class="x-body">Viral thread among AI engineers on preventing "cognitive atrophy" when pair-programming with frontier models—advocating for architectural ownership before delegating implementation.</p>
-                  </div>
-                  <div class="x-footer">
-                    <div class="x-metrics"><span class="x-metric-pill">🔥 Trending on X</span></div>
-                    <div class="x-links">
+    <div class="two-col">
+      <section>
+        <div class="section-head">
+          <h2>II. Researcher Threads on X</h2>
+          <span>SOCIAL PULSE</span>
+        </div>
+        <p style="color:var(--ink-muted);font-size:0.9rem;">No entries recorded for this issue.</p>
+      </section>
+      <section>
+        <div class="section-head">
+          <h2>III. Audio &amp; Podcast Briefings</h2>
+          <span><a href="podcasts.html" style="color:var(--accent);text-decoration:none;">ALL SHOWS →</a></span>
+        </div>
+        <div class="note-list">
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Generative AI 101 (Apple Podcasts)</strong>
+                <span>12m</span>
+              </div>
+              <h4 class="note-title"><a href="https://generativeai101.podbean.com/e/how-to-evaluate-an-ai-model/" target="_blank" rel="noopener">How to Evaluate an AI Model & What Is Context Engineering?</a></h4>
+              <p class="note-body">Why listen: Host Emily Laird explains why record-breaking Olympiad benchmark scores often fail in real deployments, how to avoid "lost in the middle" context rot, and why teams must move from prompting AI to managing it.</p>
+              <div class="note-links"><a href="https://generativeai101.podbean.com/e/how-to-evaluate-an-ai-model/" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>AI Optic: Anthropic & OpenAI News</strong>
+                <span>14m</span>
+              </div>
+              <h4 class="note-title"><a href="https://podcasts.apple.com/sg/podcast/ai-optic-anthropic-openai-news/id1725552927" target="_blank" rel="noopener">The AI Agent Race: Perplexity Teammates, Meta Muse & GPT-6 Cyber</a></h4>
+              <p class="note-body">Why listen: Jaeden Schafer breaks down the newest wave of autonomous action agents (Perplexity Teammates, Meta Muse voice/avatar agents), data-center power pressures, and Anthropic vs. OpenAI strategy.</p>
+              <div class="note-links"><a href="https://podcasts.apple.com/sg/podcast/ai-optic-anthropic-openai-news/id1725552927" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>AI Today Podcast</strong>
+                <span>29m</span>
+              </div>
+              <h4 class="note-title"><a href="https://podcasts.apple.com/sg/podcast/ai-today-podcast/id1279927057" target="_blank" rel="noopener">What Does It Mean to Be AI Literate? With Kathleen Walch</a></h4>
+              <p class="note-body">Why listen: Explores practical AI literacy across engineering and leadership teams, plus insights from ThoughtSpot CEO Ketan Karkhanis on leading organizations through AI transition.</p>
+              <div class="note-links"><a href="https://podcasts.apple.com/sg/podcast/ai-today-podcast/id1279927057" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Latent Space: The AI Engineer Podcast</strong>
+                <span>1h 42m</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=P735f1xlpL0" target="_blank" rel="noopener">Deep Dive: Anthropic S-1 Myths and Mythos — Jamin Ball, Altimeter</a></h4>
+              <p class="note-body">Why listen: Breaks down the unit economics of frontier AI labs, inference margin realities vs. cloud spend, and what developers should expect from enterprise AI pricing.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=P735f1xlpL0" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>The TWIML AI Podcast</strong>
+                <span>48m</span>
+              </div>
+              <h4 class="note-title"><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster" target="_blank" rel="noopener">Can AI Invent or Just Help Scientists Work Faster? with Richard Socher (#783)</a></h4>
+              <p class="note-body">Why listen: Former Salesforce Chief Scientist Richard Socher explores the boundary between AI as an engineering productivity co-pilot vs. an autonomous scientific hypothesis generator.</p>
+              <div class="note-links"><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster" target="_blank" rel="noopener">Listen Episode ↗</a></div>
+            </article>
+            </div>
+      </section>
+    </div>
 
-                      <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxNWHEtSXVkWjNmTHJwN055ZUVQNjBMTmNHeUdYaEhkSXA5X2NYUGxMem5TWHEzRllRRGt3bzJ3Mk1VV3NZRHJnd29YYWtiVDF5UEIyeTdzcFhfSDlfaTZ2eDNjT2EtR0ItN0dDNUVFN0VMMEtZWFdQY2ktQ2d3UlhTVXdPTEhHZ3B3RlF2ZjFTTFM3V3pFcVVnSGJkV1FuWWJXM0E0T1FPT29ad2lUTmxZQnlkQ3FZZw?oc=5" target="_blank" rel="noopener">Post on 𝕏 ↗</a>
-                    </div>
-                  </div>
-                </article>
-
-                <article class="x-tweet-card">
-                  <div>
-                    <div class="x-header">
-                      <div class="x-author">
-                        <div class="x-avatar">SW</div>
-                        <div>
-                          <div class="x-name-row">
-                            <span>AINews X Recap</span>
-                            <span class="x-verified" title="Verified AI Thread">✔</span>
-                          </div>
-                          <div class="x-handle">@swyx · AINews</div>
-                        </div>
-                      </div>
-                      <a class="x-logo" href="https://news.smol.ai/issues/26-09-08-navier-stokes/" target="_blank" rel="noopener" title="Open on X">𝕏</a>
-                    </div>
-                    <h4 class="x-title"><a href="https://news.smol.ai/issues/26-09-08-navier-stokes/" target="_blank" rel="noopener">“AI Twitter/X Daily Recap: 10,000-Agent Math Proof, Meta Muse Agent & Multi-Agent Collusion (`news.smol.ai`)”</a></h4>
-                    <p class="x-body">Full synthesis of the hottest AI researcher threads on X covering massive parallel agent swarms (10,000 agents collaborating over 88 hours) and emergent multi-agent behavior.</p>
-                  </div>
-                  <div class="x-footer">
-                    <div class="x-metrics"><span class="x-metric-pill">🔥 Trending on X</span></div>
-                    <div class="x-links">
-
-                      <a href="https://news.smol.ai/issues/26-09-08-navier-stokes/" target="_blank" rel="noopener">Post on 𝕏 ↗</a>
-                    </div>
-                  </div>
-                </article>
-                </div>
-
-<hr />
-<h2>🎧 AI Podcasts &amp; Audio Deep-Dives (Listen on Your Commute)</h2>
-<div class="pod-grid">
-                <article class="pod-card">
-                  <div>
-                    <div class="pod-header">
-                      <div class="pod-show-info">
-                        <div class="pod-artwork">🎙️</div>
-                        <div>
-                          <div class="pod-show-name">Generative AI 101 (Apple Podcasts)</div>
-                          <div class="pod-sub">Generative AI 101 (Apple Podcasts)</div>
-                        </div>
-                      </div>
-                      <span class="pod-duration">🎧 12m</span>
-                    </div>
-                    <h4 class="pod-title"><a href="https://generativeai101.podbean.com/e/how-to-evaluate-an-ai-model/" target="_blank" rel="noopener">How to Evaluate an AI Model & What Is Context Engineering?</a></h4>
-                    <p class="pod-body">Host Emily Laird explains why record-breaking Olympiad benchmark scores often fail in real deployments, how to avoid "lost in the middle" context rot, and why teams must move from prompting AI to managing it.</p>
-                  </div>
-                  <div class="pod-footer">
-                    <span class="pod-wave">Generative AI 101 (Apple Podcasts)</span>
-                    <a class="pod-play-btn" href="https://generativeai101.podbean.com/e/how-to-evaluate-an-ai-model/" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
-                  </div>
-                </article>
-
-                <article class="pod-card">
-                  <div>
-                    <div class="pod-header">
-                      <div class="pod-show-info">
-                        <div class="pod-artwork">🎙️</div>
-                        <div>
-                          <div class="pod-show-name">AI Optic: Anthropic & OpenAI News</div>
-                          <div class="pod-sub">AI Optic: Anthropic & OpenAI News</div>
-                        </div>
-                      </div>
-                      <span class="pod-duration">🎧 14m</span>
-                    </div>
-                    <h4 class="pod-title"><a href="https://podcasts.apple.com/sg/podcast/ai-optic-anthropic-openai-news/id1725552927" target="_blank" rel="noopener">The AI Agent Race: Perplexity Teammates, Meta Muse & GPT-6 Cyber</a></h4>
-                    <p class="pod-body">Jaeden Schafer breaks down the newest wave of autonomous action agents (Perplexity Teammates, Meta Muse voice/avatar agents), data-center power pressures, and Anthropic vs. OpenAI strategy.</p>
-                  </div>
-                  <div class="pod-footer">
-                    <span class="pod-wave">AI Optic: Anthropic & OpenAI News</span>
-                    <a class="pod-play-btn" href="https://podcasts.apple.com/sg/podcast/ai-optic-anthropic-openai-news/id1725552927" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
-                  </div>
-                </article>
-
-                <article class="pod-card">
-                  <div>
-                    <div class="pod-header">
-                      <div class="pod-show-info">
-                        <div class="pod-artwork">🎙️</div>
-                        <div>
-                          <div class="pod-show-name">AI Today Podcast</div>
-                          <div class="pod-sub">AI Today Podcast</div>
-                        </div>
-                      </div>
-                      <span class="pod-duration">🎧 29m</span>
-                    </div>
-                    <h4 class="pod-title"><a href="https://podcasts.apple.com/sg/podcast/ai-today-podcast/id1279927057" target="_blank" rel="noopener">What Does It Mean to Be AI Literate? With Kathleen Walch</a></h4>
-                    <p class="pod-body">Explores practical AI literacy across engineering and leadership teams, plus insights from ThoughtSpot CEO Ketan Karkhanis on leading organizations through AI transition.</p>
-                  </div>
-                  <div class="pod-footer">
-                    <span class="pod-wave">AI Today Podcast</span>
-                    <a class="pod-play-btn" href="https://podcasts.apple.com/sg/podcast/ai-today-podcast/id1279927057" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
-                  </div>
-                </article>
-
-                <article class="pod-card">
-                  <div>
-                    <div class="pod-header">
-                      <div class="pod-show-info">
-                        <div class="pod-artwork">🎙️</div>
-                        <div>
-                          <div class="pod-show-name">Latent Space: The AI Engineer Podcast</div>
-                          <div class="pod-sub">Latent Space: The AI Engineer Podcast</div>
-                        </div>
-                      </div>
-                      <span class="pod-duration">🎧 1h 42m</span>
-                    </div>
-                    <h4 class="pod-title"><a href="https://www.youtube.com/watch?v=P735f1xlpL0" target="_blank" rel="noopener">Deep Dive: Anthropic S-1 Myths and Mythos — Jamin Ball, Altimeter</a></h4>
-                    <p class="pod-body">Breaks down the unit economics of frontier AI labs, inference margin realities vs. cloud spend, and what developers should expect from enterprise AI pricing.</p>
-                  </div>
-                  <div class="pod-footer">
-                    <span class="pod-wave">Latent Space: The AI Engineer Podcast</span>
-                    <a class="pod-play-btn" href="https://www.youtube.com/watch?v=P735f1xlpL0" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
-                  </div>
-                </article>
-
-                <article class="pod-card">
-                  <div>
-                    <div class="pod-header">
-                      <div class="pod-show-info">
-                        <div class="pod-artwork">🎙️</div>
-                        <div>
-                          <div class="pod-show-name">The TWIML AI Podcast</div>
-                          <div class="pod-sub">The TWIML AI Podcast</div>
-                        </div>
-                      </div>
-                      <span class="pod-duration">🎧 48m</span>
-                    </div>
-                    <h4 class="pod-title"><a href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster" target="_blank" rel="noopener">Can AI Invent or Just Help Scientists Work Faster? with Richard Socher (#783)</a></h4>
-                    <p class="pod-body">Former Salesforce Chief Scientist Richard Socher explores the boundary between AI as an engineering productivity co-pilot vs. an autonomous scientific hypothesis generator.</p>
-                  </div>
-                  <div class="pod-footer">
-                    <span class="pod-wave">The TWIML AI Podcast</span>
-                    <a class="pod-play-btn" href="https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
-                  </div>
-                </article>
-                </div>
-    </main>
     <footer class="footer">
-      Curated by <strong>Generative AI Learning &amp; News Agent</strong> · <a href="index.html">Back to Main Index</a>
+      <div>THE GENAI BRIEFING · ISSUE 2026-11-07</div>
+      <div><a href="index.html">Front Page</a> · <a href="podcasts.html">Podcasts Index</a></div>
     </footer>
   </div>
 </body>

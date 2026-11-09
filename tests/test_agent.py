@@ -54,16 +54,26 @@ def test_build_synthesis_prompt_and_fallback():
     prompt = build_synthesis_prompt(items, ["Reasoning Models", "RLHF"], "2026-11-06")
     assert "DeepSeek-R1" in prompt
     assert "Reasoning Models" in prompt
-    assert "Concept of the Day" in prompt
+    assert "Technical Deep-Dive" in prompt
 
+    hn_item = NewsItem(
+        title="Show HN: Local LLM Runtime in Pure C",
+        url="https://example.com/local-llm",
+        source="Hacker News",
+        category=SourceCategory.COMMUNITY_NEWS,
+        summary="Hacker News discussion (850 points, 310 comments). Discussion: https://news.ycombinator.com/item?id=999999",
+        score=850,
+    )
     fallback = build_fallback_markdown(
-        items=items,
+        items=[items[0], hn_item],
         focus_topics=["Reasoning Models"],
         date_str="2026-11-06",
-        breakdown={"arXiv": 1},
+        breakdown={"arXiv": 1, "Hacker News": 1},
     )
     assert "DeepSeek-R1" in fallback
     assert "https://arxiv.org/abs/2501.12948" in fallback
+    assert "Discussion: https://news.ycombinator.com" not in fallback
+    assert "[850 pts on HN](https://news.ycombinator.com/item?id=999999)" in fallback
 
 
 def test_telegram_chunk_text():
