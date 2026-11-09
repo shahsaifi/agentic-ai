@@ -963,8 +963,16 @@ def _render_podcast_cards_html(pod_section_md: str) -> str:
             show_match = re.search(r"—\s*(?:\*|\*\*)([^*]+)(?:\*|\*\*)", meta_tail)
             show_name = show_match.group(1).strip() if show_match else "AI Podcast"
 
+            date_match = re.search(r"\(\*([^*]+)\*\)", meta_tail)
+            pub_date = date_match.group(1).strip() if date_match else ""
+
             dur_match = re.search(r"🎧\s*([0-9hm:\s]+)", meta_tail + " " + desc)
-            duration_badge = f"🎧 {dur_match.group(1).strip()}" if dur_match else "🎧 Audio Episode"
+            duration_badge = f"🎧 {dur_match.group(1).strip()}" if dur_match else "🎧 Audio"
+
+            # Remove duplicate leading duration prefix from body text
+            desc = re.sub(r"^🎧\s*[0-9hm:\s]+—\s*", "", desc)
+
+            sub_label = f"{show_name} · {pub_date}" if pub_date else show_name
 
             cards_html.append(
                 f"""
@@ -975,7 +983,7 @@ def _render_podcast_cards_html(pod_section_md: str) -> str:
                         <div class="pod-artwork">🎙️</div>
                         <div>
                           <div class="pod-show-name">{show_name}</div>
-                          <div class="pod-sub">AI Audio Deep-Dive</div>
+                          <div class="pod-sub">{sub_label}</div>
                         </div>
                       </div>
                       <span class="pod-duration">{duration_badge}</span>
@@ -984,7 +992,7 @@ def _render_podcast_cards_html(pod_section_md: str) -> str:
                     <p class="pod-body">{desc}</p>
                   </div>
                   <div class="pod-footer">
-                    <span class="pod-wave">ılılılılılılılı</span>
+                    <span class="pod-wave">{show_name}</span>
                     <a class="pod-play-btn" href="{url}" target="_blank" rel="noopener">▶ Listen Episode ↗</a>
                   </div>
                 </article>

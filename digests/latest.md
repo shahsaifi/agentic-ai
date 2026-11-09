@@ -64,11 +64,13 @@
 
 ## 🎧 AI Podcasts & Audio Deep-Dives
 
+- **[How to Evaluate an AI Model](https://generativeai101.podbean.com/e/how-to-evaluate-an-ai-model/)** — **Generative AI 101** (*Wed, 04 Nov 2026*)
+  - 🎧 12m — One AI model can win gold at the International Mathematical Olympiad while another leading model can only read an analog clock about half the time, so what do those record-breaking benchmark scores actually tell you? Host Emily Laird breaks down practical model evaluation.
+- **[The AI Agent Race: Perplexity Teammates, Meta Muse & GPT-6 Cyber](https://podcasts.apple.com/sg/podcast/ai-optic-anthropic-openai-news/id1725552927)** — **AI Optic: Anthropic & OpenAI News** (*Fri, 06 Nov 2026*)
+  - 🎧 14m — AI is moving beyond answers and into getting things done. Jaeden Schafer breaks down the latest wave of AI agents, including Perplexity Teammates, Meta Muse’s voice and avatar features, and frontier lab strategy.
+- **[What Does It Mean to Be AI Literate? With Kathleen Walch](https://podcasts.apple.com/sg/podcast/ai-today-podcast/id1279927057)** — **AI Today Podcast** (*Wed, 28 Oct 2026*)
+  - 🎧 29m — Host Kathleen Walch explores one of the most discussed yet least defined topics in AI today: AI literacy across practitioners, business leaders, and engineering organizations.
+- **[Deep Dive: Anthropic S-1 Myths and Mythos — Jamin Ball, Altimeter](https://www.youtube.com/watch?v=P735f1xlpL0)** — **Latent Space (AI Engineer Podcast)** (*Sat, 07 Nov 2026*)
+  - 🎧 1h 42m — Deep dive into frontier AI lab economics, enterprise AI margins, and infrastructure scaling with Altimeter's Jamin Ball.
 - **[Can AI Invent or Just Help Scientists Work Faster? with Richard Socher - #783](https://twimlai.com/podcast/twimlai/can-ai-invent-just-help-scientists-work-faster)** — **The TWIML AI Podcast** (*Tue, 03 Nov 2026*)
-  - 🎧 48m — AI can help scientists write code, analyze data, and draft papers. But can it generate the ideas that lead to new discoveries? Richard Socher, former chief scientist at Salesforce, founder of You.com, and co-founder of Recursive, joins us to explore th...
-- **[Abundant Intelligence at the Midwest AI Summit Part 2](https://share.transistor.fm/s/1b301bdc)** — **Practical AI Podcast** (*Thu, 05 Nov 2026*)
-  - 🎧 47m — How do organizations decide what AI should do, where to set boundaries, and when to keep humans in control? In this special episode, we bring you three more talks from the Midwest AI Summit, exploring how organizations are putting AI into practice. Don...
-- **[Tokenization, Agentic Trading, Harmonic: Robinhood's Mission to Expand Ownership with CEO Vlad Tenev](https://traffic.megaphone.fm/PDP1158596730.mp3)** — **No Priors: AI Podcast** (*Thu, 05 Nov 2026*)
-  - 🎧 54m — What does it mean to build wealth as an individual investor in today’s society, especially as gains continue to get concentrated into smaller groups of VCs or institutional investors? Robinhood’s CEO and co-founder Vlad Tenev has a vision that can be s...
-- **[#503 – AI Crisis in Math: Navier-Stokes, Riemann Hypothesis & Complexity Theory](https://lexfridman.com/math-ai-crisis/?utm_source=rss&utm_medium=rss&utm_campaign=math-ai-crisis)** — **Lex Fridman Podcast** (*Mon, 26 Oct 2026*)
-  - 🎧 3:42:40 — Ankur Moitra, Steven Brunton and Alex Kontorovich are three mathematicians who can speak to this incredible moment in the history of mathematics, when AI solved some of its hardest problems: Navier-Stokes, the quasi-Riemann hypothesis, the unique g...
+  - 🎧 48m — AI can help scientists write code, analyze data, and draft papers. But can it generate the ideas that lead to new discoveries? Richard Socher joins to explore autonomous scientific discovery.
