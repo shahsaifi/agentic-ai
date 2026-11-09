@@ -18,8 +18,8 @@
 - **Takeaway:** Hacker News discussion (734 points, 201 comments). Discussion: https://news.ycombinator.com/item?id=50363461 | If you have a personal Google AI subscription, all your saved chat history in Gemini can be used for training and there is no way to opt out unless you turn off chat history or use temporary chat sessions. The...
 
 ### 4. [Goodbye Claude, hello Pi](https://caleb.software/posts/claude-to-pi.html)
-**🔥 High-Reach Community** (Hacker News) · **⬆️ 696 pts/upvotes** · *2026-11-08*
-- **Takeaway:** Hacker News discussion (696 points, 429 comments). Discussion: https://news.ycombinator.com/item?id=50410107
+**🔥 High-Reach Community** (Hacker News) · **⬆️ 700 pts/upvotes** · *2026-11-08*
+- **Takeaway:** Hacker News discussion (700 points, 432 comments). Discussion: https://news.ycombinator.com/item?id=50410107
 
 ### 5. [From Autonomous Agents to Cognitive Symbionts: Toward AI-Augmented Human Intelligence](https://huggingface.co/papers/2611.05376)
 **📄 Research Paper** (Hugging Face Daily Papers) · **⬆️ 118 pts/upvotes** · *2026-11-03*
