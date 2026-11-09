@@ -24,11 +24,11 @@ EDITORIAL_CSS_AND_JS = """
       --bg: #F6F4EF;
       --surface: #FDFCF9;
       --surface-alt: #EFECE5;
-      --ink: #141413;
-      --ink-secondary: #4A4843;
-      --ink-muted: #78756E;
+      --ink: #121211;
+      --ink-secondary: #2B2926;
+      --ink-muted: #6B6860;
       --border: #DCD7CC;
-      --border-strong: #141413;
+      --border-strong: #121211;
       --accent: #9E2A2B;
       --accent-hover: #7A1C1D;
       --link: #1D4ED8;
@@ -36,18 +36,18 @@ EDITORIAL_CSS_AND_JS = """
       --font-display: 'Instrument Serif', 'Newsreader', Georgia, serif;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
-      --base-size: 16.5px;
+      --base-size: 17px;
     }
 
     [data-theme="sepia"] {
       --bg: #F2E9D8;
       --surface: #F9F3E6;
       --surface-alt: #E8DEC8;
-      --ink: #251E18;
-      --ink-secondary: #54473C;
-      --ink-muted: #7D6D5F;
+      --ink: #221B15;
+      --ink-secondary: #382E26;
+      --ink-muted: #6E5F52;
       --border: #D5C7B0;
-      --border-strong: #251E18;
+      --border-strong: #221B15;
       --accent: #8C2D19;
       --accent-hover: #692010;
       --link: #0F5257;
@@ -57,11 +57,11 @@ EDITORIAL_CSS_AND_JS = """
       --bg: #111214;
       --surface: #18191C;
       --surface-alt: #202226;
-      --ink: #ECEAE4;
-      --ink-secondary: #A6A39B;
-      --ink-muted: #706E68;
+      --ink: #F2F0EA;
+      --ink-secondary: #D0CDC4;
+      --ink-muted: #8A877F;
       --border: #2B2D31;
-      --border-strong: #ECEAE4;
+      --border-strong: #F2F0EA;
       --accent: #E07A5F;
       --accent-hover: #F29C85;
       --link: #7AA2F7;
@@ -82,7 +82,7 @@ EDITORIAL_CSS_AND_JS = """
       font-family: var(--font-serif);
       background-color: var(--bg);
       color: var(--ink);
-      line-height: 1.68;
+      line-height: 1.72;
       margin: 0;
       padding:
         env(safe-area-inset-top, 0px)
@@ -97,7 +97,7 @@ EDITORIAL_CSS_AND_JS = """
     }
 
     .page-wrap {
-      max-width: 1020px;
+      max-width: 900px;
       margin: 0 auto;
       width: 100%;
     }
@@ -229,6 +229,35 @@ EDITORIAL_CSS_AND_JS = """
       color: var(--ink-muted);
     }
 
+    /* Category Filter Bar */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 8px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-pill {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 5px 11px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink-secondary);
+      cursor: pointer;
+      border-radius: 3px;
+      touch-action: manipulation;
+    }
+    .filter-pill:hover, .filter-pill.active {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+      font-weight: 600;
+    }
+
     /* Editorial Briefing Ledger (Top 10 List) */
     .briefing-list {
       display: flex;
@@ -238,7 +267,7 @@ EDITORIAL_CSS_AND_JS = """
       display: grid;
       grid-template-columns: 44px 1fr;
       gap: 16px;
-      padding: 18px 0;
+      padding: 22px 0;
       border-bottom: 1px solid var(--border);
     }
     .briefing-item:last-child {
@@ -246,20 +275,22 @@ EDITORIAL_CSS_AND_JS = """
     }
     .briefing-num {
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       font-weight: 600;
       color: var(--accent);
-      padding-top: 3px;
+      padding-top: 2px;
     }
     .briefing-content {
       min-width: 0;
     }
     .briefing-content h3 {
       font-family: var(--font-serif);
-      font-size: 1.22rem;
+      font-size: 1.28rem;
       font-weight: 600;
-      line-height: 1.35;
-      margin: 0 0 6px;
+      line-height: 1.34;
+      letter-spacing: -0.01em;
+      margin: 0 0 8px;
+      max-width: 62ch;
     }
     .briefing-content h3 a {
       color: var(--ink);
@@ -272,41 +303,46 @@ EDITORIAL_CSS_AND_JS = """
     }
     .briefing-meta {
       font-family: var(--font-mono);
-      font-size: 0.73rem;
+      font-size: 0.72rem;
       color: var(--ink-muted);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       display: flex;
       flex-wrap: wrap;
       gap: 6px 8px;
       align-items: center;
-      line-height: 1.45;
-    }
-    .briefing-meta a {
-      color: var(--ink-secondary);
-      text-decoration: underline;
-      text-underline-offset: 2px;
+      line-height: 1.4;
     }
     .briefing-tag {
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
       font-weight: 600;
       color: var(--accent);
     }
     .briefing-summary {
       font-family: var(--font-serif);
-      font-size: 0.98rem;
+      font-size: 1.02rem;
       color: var(--ink-secondary);
-      margin: 0;
-      line-height: 1.62;
+      margin: 0 0 10px;
+      line-height: 1.68;
+      max-width: 66ch;
+    }
+    .briefing-summary var {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 600;
+      color: var(--ink);
     }
     .briefing-reddit {
-      margin-top: 8px;
-      padding-left: 10px;
-      border-left: 2px solid var(--border);
+      margin: 8px 0 10px;
+      padding: 6px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
       font-family: var(--font-sans);
-      font-size: 0.82rem;
-      line-height: 1.45;
+      font-size: 0.83rem;
+      line-height: 1.48;
       color: var(--ink-secondary);
+      max-width: 66ch;
     }
     .briefing-reddit strong {
       font-family: var(--font-mono);
@@ -325,6 +361,24 @@ EDITORIAL_CSS_AND_JS = """
     .briefing-reddit a:hover {
       color: var(--accent);
       text-decoration-color: var(--accent);
+    }
+    .briefing-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+    }
+    .briefing-actions a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1px;
+    }
+    .briefing-actions a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
     }
 
     /* Two-Column Editorial Split for X Threads & Podcasts */
@@ -663,6 +717,16 @@ EDITORIAL_CSS_AND_JS = """
       });
     }
 
+    function filterBriefing(cat) {
+      document.querySelectorAll('[data-filter-pill]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-filter-pill') === cat);
+      });
+      document.querySelectorAll('.briefing-item').forEach(item => {
+        const itemCat = item.getAttribute('data-category') || '';
+        item.style.display = (cat === 'all' || itemCat === cat) ? '' : 'none';
+      });
+    }
+
     window.addEventListener('DOMContentLoaded', updateControls);
   </script>
 """
@@ -735,10 +799,13 @@ def _clean_excerpt(text: str, max_chars: int = 300) -> str:
     if len(text) <= max_chars:
         return text
     cut = text[:max_chars]
-    for sep in (". ", "? ", "! ", "; "):
+    best_sep = -1
+    for sep in (". ", "? ", "! "):
         pos = cut.rfind(sep)
-        if pos > max_chars // 2:
-            return cut[: pos + 1]
+        if pos > best_sep:
+            best_sep = pos
+    if best_sep > 45:
+        return cut[: best_sep + 1]
     last_space = cut.rfind(" ")
     return (cut[:last_space].rstrip(",;:-") + ".") if last_space > 0 else cut
 
@@ -1035,35 +1102,111 @@ def _find_reddit_discussion(title: str) -> Tuple[Dict[str, str] | None, str]:
     return None, search_url
 
 
+_CACHED_URL_SUMMARIES: Dict[str, str] = {}
+
+
+def _format_inline_math(text: str) -> str:
+    """Convert raw inline LaTeX variables like `$L$` into clean typographic `<var>L</var>` tags."""
+    if not text:
+        return ""
+    return re.sub(r"\$([A-Za-z0-9_^{}\-]+)\$", r"<var>\1</var>", text)
+
+
+def _enrich_missing_summary(title: str, url: str, hn_url: str) -> str:
+    """Fetch a clean 1-2 sentence summary from article metadata or HN discussion when a story has no summary."""
+    cache_key = url or hn_url or title
+    if cache_key in _CACHED_URL_SUMMARIES:
+        return _CACHED_URL_SUMMARIES[cache_key]
+
+    import html as _html
+
+    ua = (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+    )
+    extracted = ""
+    try:
+        import httpx
+
+        if url and not url.startswith("https://news.ycombinator.com"):
+            with httpx.Client(timeout=4.5, headers={"User-Agent": ua}, follow_redirects=True) as client:
+                resp = client.get(url)
+                if resp.status_code == 200:
+                    head = resp.text[:30000]
+                    for pat in (
+                        r'<meta[^>]+property=["\']og:description["\'][^>]+content=["\']([^"\']+)["\']',
+                        r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:description["\']',
+                        r'<meta[^>]+name=["\']description["\'][^>]+content=["\']([^"\']+)["\']',
+                        r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+name=["\']description["\']',
+                    ):
+                        m = re.search(pat, head, flags=re.IGNORECASE)
+                        if m:
+                            cand = _html.unescape(m.group(1)).strip()
+                            if len(cand) > 45:
+                                extracted = cand
+                                break
+                    if not extracted:
+                        for pm in re.finditer(r"<p[^>]*>(.*?)</p>", head, flags=re.IGNORECASE | re.DOTALL):
+                            txt = re.sub(r"<[^>]+>", " ", pm.group(1))
+                            txt = " ".join(_html.unescape(txt).split())
+                            if len(txt) > 65 and not txt.lower().startswith(("cookie", "subscribe", "sign in")):
+                                extracted = txt
+                                break
+
+        if not extracted and hn_url:
+            id_m = re.search(r"id=(\d+)", hn_url)
+            if id_m:
+                with httpx.Client(timeout=4.0, follow_redirects=True) as client:
+                    r_hn = client.get(f"https://hn.algolia.com/api/v1/items/{id_m.group(1)}")
+                    if r_hn.status_code == 200:
+                        data = r_hn.json()
+                        for ch in data.get("children", [])[:4]:
+                            raw_c = ch.get("text") or ""
+                            clean_c = re.sub(r"<[^>]+>", " ", raw_c)
+                            clean_c = re.sub(r"via\s+https?://\S+", "", _html.unescape(clean_c))
+                            clean_c = re.sub(r"https?://\S+", "", clean_c)
+                            clean_c = re.sub(r"\s+,", ",", clean_c)
+                            clean_c = " ".join(clean_c.split())
+                            if len(clean_c) > 60:
+                                extracted = f"Community note: {clean_c}"
+                                break
+    except Exception:
+        pass
+
+    final_summary = _clean_excerpt(extracted, max_chars=280) if extracted else ""
+    _CACHED_URL_SUMMARIES[cache_key] = final_summary
+    return final_summary
+
+
 def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
     rows: List[str] = []
+    cat_counts: Dict[str, int] = {}
+    for it in items:
+        cat_counts[it["category"]] = cat_counts.get(it["category"], 0) + 1
+
+    filter_pills = [
+        f'<button class="filter-pill active" data-filter-pill="all" onclick="filterBriefing(\'all\')">All ({len(items)})</button>'
+    ]
+    for cat_name in ("Research", "Engineering", "Lab Release"):
+        if cat_counts.get(cat_name):
+            filter_pills.append(
+                f'<button class="filter-pill" data-filter-pill="{cat_name}" onclick="filterBriefing(\'{cat_name}\')">{cat_name} ({cat_counts[cat_name]})</button>'
+            )
+    filter_bar_html = f'<div class="filter-bar">{"".join(filter_pills)}</div>'
+
     for it in items:
         matched_reddit, reddit_search_url = _find_reddit_discussion(it["title"])
 
-        meta_bits = [f'<span class="briefing-tag">{it["category"]}</span>', f'<span>{it["source"]}</span>']
-        if it["domain"] and it["domain"] not in ("news.ycombinator.com",):
-            meta_bits.append(f'<span>{it["domain"]}</span>')
-        if it["points"]:
-            if it["hn_url"] and it["hn_url"] != it["url"]:
-                meta_bits.append(f'<a href="{it["hn_url"]}" target="_blank" rel="noopener">{it["points"]} pts · HN ↗</a>')
-            else:
-                meta_bits.append(f'<span>{it["points"]} pts</span>')
-        elif it["hn_url"] and it["hn_url"] != it["url"]:
-            meta_bits.append(f'<a href="{it["hn_url"]}" target="_blank" rel="noopener">HN Discussion ↗</a>')
-
-        if matched_reddit:
-            meta_bits.append(
-                f'<a href="{matched_reddit["url"]}" target="_blank" rel="noopener">{matched_reddit["sub"]} Thread ↗</a>'
-            )
-        else:
-            meta_bits.append(
-                f'<a href="{reddit_search_url}" target="_blank" rel="noopener">Reddit Topic ↗</a>'
-            )
-
+        # Tier 1: Clean, uncluttered kicker above the headline
+        kicker_bits = [f'<span class="briefing-tag">{it["category"]}</span>', f'<span>{it["source"]}</span>']
         if it["date"]:
-            meta_bits.append(f'<span>{it["date"]}</span>')
+            kicker_bits.append(f'<span>{it["date"]}</span>')
 
-        summary_html = f'<p class="briefing-summary">{it["summary"]}</p>' if it["summary"] else ""
+        # Tier 2: Substantive summary (auto-enriched if empty) + formatted inline math
+        raw_summary = it["summary"] or _enrich_missing_summary(it["title"], it["url"], it["hn_url"])
+        formatted_summary = _format_inline_math(raw_summary)
+        summary_html = f'<p class="briefing-summary">{formatted_summary}</p>' if formatted_summary else ""
+
         reddit_callout_html = ""
         if matched_reddit:
             r_title = matched_reddit["title"]
@@ -1076,20 +1219,45 @@ def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
                 f'</div>'
             )
 
+        # Tier 3: Dedicated Action & Discussion Bar below the summary
+        action_links: List[str] = []
+        source_label = f'Read Source ({it["domain"]}) ↗' if it["domain"] else "Read Source ↗"
+        action_links.append(f'<a href="{it["url"]}" target="_blank" rel="noopener">{source_label}</a>')
+
+        if it["points"]:
+            if it["hn_url"] and it["hn_url"] != it["url"]:
+                action_links.append(
+                    f'<a href="{it["hn_url"]}" target="_blank" rel="noopener">HN Discussion ({it["points"]} pts) ↗</a>'
+                )
+            else:
+                action_links.append(f'<span>{it["points"]} pts</span>')
+        elif it["hn_url"] and it["hn_url"] != it["url"]:
+            action_links.append(f'<a href="{it["hn_url"]}" target="_blank" rel="noopener">HN Discussion ↗</a>')
+
+        if matched_reddit:
+            action_links.append(
+                f'<a href="{matched_reddit["url"]}" target="_blank" rel="noopener">{matched_reddit["sub"]} Thread ↗</a>'
+            )
+        else:
+            action_links.append(
+                f'<a href="{reddit_search_url}" target="_blank" rel="noopener">Reddit Topic ↗</a>'
+            )
+
         rows.append(
             f"""
-            <article class="briefing-item">
+            <article class="briefing-item" data-category="{it["category"]}">
               <div class="briefing-num">{it["rank"]}</div>
               <div class="briefing-content">
-                <div class="briefing-meta">{'<span>·</span>'.join(meta_bits)}</div>
+                <div class="briefing-meta">{'<span>·</span>'.join(kicker_bits)}</div>
                 <h3><a href="{it["url"]}" target="_blank" rel="noopener">{it["title"]}</a></h3>
                 {summary_html}
                 {reddit_callout_html}
+                <div class="briefing-actions">{"".join(action_links)}</div>
               </div>
             </article>
             """
         )
-    return f'<div class="briefing-list">{"".join(rows)}</div>'
+    return f'{filter_bar_html}<div class="briefing-list">{"".join(rows)}</div>'
 
 
 def _render_notes_column_html(notes: List[Dict[str, str]], action_label: str) -> str:

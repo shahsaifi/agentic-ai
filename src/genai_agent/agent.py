@@ -56,11 +56,14 @@ def _clean_sentence_excerpt(text: str, max_chars: int = 280) -> str:
         return text
 
     cut = text[:max_chars]
-    # Prefer cutting at the last period, question mark, or semicolon
-    for sep in (". ", "? ", "! ", "; "):
+    # Prefer cutting at the last period, question mark, or exclamation mark
+    best_sep = -1
+    for sep in (". ", "? ", "! "):
         pos = cut.rfind(sep)
-        if pos > max_chars // 2:
-            return cut[: pos + 1]
+        if pos > best_sep:
+            best_sep = pos
+    if best_sep > 45:
+        return cut[: best_sep + 1]
 
     # Otherwise cut cleanly at the last word boundary
     last_space = cut.rfind(" ")

@@ -18,11 +18,11 @@
       --bg: #F6F4EF;
       --surface: #FDFCF9;
       --surface-alt: #EFECE5;
-      --ink: #141413;
-      --ink-secondary: #4A4843;
-      --ink-muted: #78756E;
+      --ink: #121211;
+      --ink-secondary: #2B2926;
+      --ink-muted: #6B6860;
       --border: #DCD7CC;
-      --border-strong: #141413;
+      --border-strong: #121211;
       --accent: #9E2A2B;
       --accent-hover: #7A1C1D;
       --link: #1D4ED8;
@@ -30,18 +30,18 @@
       --font-display: 'Instrument Serif', 'Newsreader', Georgia, serif;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
-      --base-size: 16.5px;
+      --base-size: 17px;
     }
 
     [data-theme="sepia"] {
       --bg: #F2E9D8;
       --surface: #F9F3E6;
       --surface-alt: #E8DEC8;
-      --ink: #251E18;
-      --ink-secondary: #54473C;
-      --ink-muted: #7D6D5F;
+      --ink: #221B15;
+      --ink-secondary: #382E26;
+      --ink-muted: #6E5F52;
       --border: #D5C7B0;
-      --border-strong: #251E18;
+      --border-strong: #221B15;
       --accent: #8C2D19;
       --accent-hover: #692010;
       --link: #0F5257;
@@ -51,11 +51,11 @@
       --bg: #111214;
       --surface: #18191C;
       --surface-alt: #202226;
-      --ink: #ECEAE4;
-      --ink-secondary: #A6A39B;
-      --ink-muted: #706E68;
+      --ink: #F2F0EA;
+      --ink-secondary: #D0CDC4;
+      --ink-muted: #8A877F;
       --border: #2B2D31;
-      --border-strong: #ECEAE4;
+      --border-strong: #F2F0EA;
       --accent: #E07A5F;
       --accent-hover: #F29C85;
       --link: #7AA2F7;
@@ -76,7 +76,7 @@
       font-family: var(--font-serif);
       background-color: var(--bg);
       color: var(--ink);
-      line-height: 1.68;
+      line-height: 1.72;
       margin: 0;
       padding:
         env(safe-area-inset-top, 0px)
@@ -91,7 +91,7 @@
     }
 
     .page-wrap {
-      max-width: 1020px;
+      max-width: 900px;
       margin: 0 auto;
       width: 100%;
     }
@@ -223,6 +223,35 @@
       color: var(--ink-muted);
     }
 
+    /* Category Filter Bar */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 8px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-pill {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 5px 11px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink-secondary);
+      cursor: pointer;
+      border-radius: 3px;
+      touch-action: manipulation;
+    }
+    .filter-pill:hover, .filter-pill.active {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+      font-weight: 600;
+    }
+
     /* Editorial Briefing Ledger (Top 10 List) */
     .briefing-list {
       display: flex;
@@ -232,7 +261,7 @@
       display: grid;
       grid-template-columns: 44px 1fr;
       gap: 16px;
-      padding: 18px 0;
+      padding: 22px 0;
       border-bottom: 1px solid var(--border);
     }
     .briefing-item:last-child {
@@ -240,20 +269,22 @@
     }
     .briefing-num {
       font-family: var(--font-mono);
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       font-weight: 600;
       color: var(--accent);
-      padding-top: 3px;
+      padding-top: 2px;
     }
     .briefing-content {
       min-width: 0;
     }
     .briefing-content h3 {
       font-family: var(--font-serif);
-      font-size: 1.22rem;
+      font-size: 1.28rem;
       font-weight: 600;
-      line-height: 1.35;
-      margin: 0 0 6px;
+      line-height: 1.34;
+      letter-spacing: -0.01em;
+      margin: 0 0 8px;
+      max-width: 62ch;
     }
     .briefing-content h3 a {
       color: var(--ink);
@@ -266,41 +297,46 @@
     }
     .briefing-meta {
       font-family: var(--font-mono);
-      font-size: 0.73rem;
+      font-size: 0.72rem;
       color: var(--ink-muted);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       display: flex;
       flex-wrap: wrap;
       gap: 6px 8px;
       align-items: center;
-      line-height: 1.45;
-    }
-    .briefing-meta a {
-      color: var(--ink-secondary);
-      text-decoration: underline;
-      text-underline-offset: 2px;
+      line-height: 1.4;
     }
     .briefing-tag {
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
       font-weight: 600;
       color: var(--accent);
     }
     .briefing-summary {
       font-family: var(--font-serif);
-      font-size: 0.98rem;
+      font-size: 1.02rem;
       color: var(--ink-secondary);
-      margin: 0;
-      line-height: 1.62;
+      margin: 0 0 10px;
+      line-height: 1.68;
+      max-width: 66ch;
+    }
+    .briefing-summary var {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 600;
+      color: var(--ink);
     }
     .briefing-reddit {
-      margin-top: 8px;
-      padding-left: 10px;
-      border-left: 2px solid var(--border);
+      margin: 8px 0 10px;
+      padding: 6px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
       font-family: var(--font-sans);
-      font-size: 0.82rem;
-      line-height: 1.45;
+      font-size: 0.83rem;
+      line-height: 1.48;
       color: var(--ink-secondary);
+      max-width: 66ch;
     }
     .briefing-reddit strong {
       font-family: var(--font-mono);
@@ -319,6 +355,24 @@
     .briefing-reddit a:hover {
       color: var(--accent);
       text-decoration-color: var(--accent);
+    }
+    .briefing-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+    }
+    .briefing-actions a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1px;
+    }
+    .briefing-actions a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
     }
 
     /* Two-Column Editorial Split for X Threads & Podcasts */
@@ -657,6 +711,16 @@
       });
     }
 
+    function filterBriefing(cat) {
+      document.querySelectorAll('[data-filter-pill]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-filter-pill') === cat);
+      });
+      document.querySelectorAll('.briefing-item').forEach(item => {
+        const itemCat = item.getAttribute('data-category') || '';
+        item.style.display = (cat === 'all' || itemCat === cat) ? '' : 'none';
+      });
+    }
+
     window.addEventListener('DOMContentLoaded', updateControls);
   </script>
 
@@ -717,104 +781,114 @@
       <h2>I. Top 10 Technical Briefing — 2026-11-08</h2>
       <span>RANKED BY SUBSTANCE &amp; COMMUNITY REACH</span>
     </div>
-    <div class="briefing-list">
-            <article class="briefing-item">
+    <div class="filter-bar"><button class="filter-pill active" data-filter-pill="all" onclick="filterBriefing('all')">All (10)</button><button class="filter-pill" data-filter-pill="Research" onclick="filterBriefing('Research')">Research (4)</button><button class="filter-pill" data-filter-pill="Engineering" onclick="filterBriefing('Engineering')">Engineering (4)</button><button class="filter-pill" data-filter-pill="Lab Release" onclick="filterBriefing('Lab Release')">Lab Release (2)</button></div><div class="briefing-list">
+            <article class="briefing-item" data-category="Engineering">
               <div class="briefing-num">01</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>github.com</span><span>·</span><a href="https://news.ycombinator.com/item?id=50385272" target="_blank" rel="noopener">1593 pts · HN ↗</a><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Claude+Code+sends+email&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a><span>·</span><span>2026-11-05</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-05</span></div>
                 <h3><a href="https://github.com/anthropics/claude-code/issues/107757" target="_blank" rel="noopener">Claude Code sends your email address to websites</a></h3>
-                
-                
+                <p class="briefing-summary">Bug Description I receive dozens of scam emails per day because claude code divulged my email to arbitrary 3rd parties in the User-Agent request header while conducting web searches without my.</p>
+                <div class="briefing-reddit"><strong>Reddit (r/ClaudeAI):</strong> <a href="https://www.reddit.com/r/ClaudeAI/comments/1xr3gbs/i_built_an_mcp_with_claude_code_that_lets_claude/" target="_blank" rel="noopener">I built an MCP with Claude Code that lets Claude play PC games in the background. Here it is driving, flying a heli and walking in... ↗</a></div>
+                <div class="briefing-actions"><a href="https://github.com/anthropics/claude-code/issues/107757" target="_blank" rel="noopener">Read Source (github.com) ↗</a><a href="https://news.ycombinator.com/item?id=50385272" target="_blank" rel="noopener">HN Discussion (1593 pts) ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1xr3gbs/i_built_an_mcp_with_claude_code_that_lets_claude/" target="_blank" rel="noopener">r/ClaudeAI Thread ↗</a></div>
               </div>
             </article>
             
-            <article class="briefing-item">
+            <article class="briefing-item" data-category="Engineering">
               <div class="briefing-num">02</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>blog.google</span><span>·</span><a href="https://news.ycombinator.com/item?id=50276792" target="_blank" rel="noopener">1019 pts · HN ↗</a><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Gemini+Carbon&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a><span>·</span><span>2026-10-28</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-10-28</span></div>
                 <h3><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/" target="_blank" rel="noopener">Gemini 4 Carbon</a></h3>
+                <p class="briefing-summary">Gemini 4 Carbon is our strongest model with state-of-the-art cybersecurity and long horizon capabilities.</p>
                 
-                
+                <div class="briefing-actions"><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/" target="_blank" rel="noopener">Read Source (blog.google) ↗</a><a href="https://news.ycombinator.com/item?id=50276792" target="_blank" rel="noopener">HN Discussion (1019 pts) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Gemini+Carbon&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
               </div>
             </article>
             
-            <article class="briefing-item">
+            <article class="briefing-item" data-category="Engineering">
               <div class="briefing-num">03</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>730 pts</span><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Tell+Gemini+trains+chat&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a><span>·</span><span>2026-11-04</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-04</span></div>
                 <h3><a href="https://news.ycombinator.com/item?id=50363461" target="_blank" rel="noopener">Tell HN: Gemini trains on chat history, even for subscribers (personal accounts)</a></h3>
                 <p class="briefing-summary">If you have a personal Google AI subscription, all your saved chat history in Gemini can be used for training and there is no way to opt out unless you turn off chat history or use temporary chat sessions.</p>
                 
+                <div class="briefing-actions"><a href="https://news.ycombinator.com/item?id=50363461" target="_blank" rel="noopener">Read Source (news.ycombinator.com) ↗</a><span>730 pts</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Tell+Gemini+trains+chat&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
               </div>
             </article>
             
-            <article class="briefing-item">
+            <article class="briefing-item" data-category="Engineering">
               <div class="briefing-num">04</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>8rank.ai</span><span>·</span><a href="https://news.ycombinator.com/item?id=50403097" target="_blank" rel="noopener">661 pts · HN ↗</a><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Every+Mac+comes+undocumented&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a><span>·</span><span>2026-11-07</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-07</span></div>
                 <h3><a href="https://8rank.ai/game/apple-intelligence-personal-knowledge-graph" target="_blank" rel="noopener">Every Mac comes with an (undocumented) family member classifier</a></h3>
+                <p class="briefing-summary">Every Mac since macOS 13 (allegedly) ships a pair of daemons whose only purpose in life is to build a graph about who you are, whom you know, how those people are related to you and to each other, how you communicate with them, where you go, what you do and when.</p>
                 
-                
+                <div class="briefing-actions"><a href="https://8rank.ai/game/apple-intelligence-personal-knowledge-graph" target="_blank" rel="noopener">Read Source (8rank.ai) ↗</a><a href="https://news.ycombinator.com/item?id=50403097" target="_blank" rel="noopener">HN Discussion (661 pts) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Every+Mac+comes+undocumented&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
               </div>
             </article>
             
-            <article class="briefing-item">
+            <article class="briefing-item" data-category="Research">
               <div class="briefing-num">05</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>huggingface.co</span><span>·</span><span>100 pts</span><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=VFlash+Fast+Accurate+Visual&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a><span>·</span><span>2026-11-04</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-04</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.08449" target="_blank" rel="noopener">VFlash: Fast, Accurate Visual Planning via Flash Primitive Decoding</a></h3>
                 <p class="briefing-summary">Models for physical AI tasks, such as robotics and autonomous driving, need not reason solely in language. They can use visual plans--points, bounding boxes, and trajectories--to represent spatial goals and anticipate motion.</p>
                 
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.08449" target="_blank" rel="noopener">Read Source (huggingface.co) ↗</a><span>100 pts</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=VFlash+Fast+Accurate+Visual&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
               </div>
             </article>
             
-            <article class="briefing-item">
+            <article class="briefing-item" data-category="Research">
               <div class="briefing-num">06</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>huggingface.co</span><span>·</span><span>86 pts</span><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Autonomous+Agents+Cognitive+Symbionts&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a><span>·</span><span>2026-11-03</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-03</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.05376" target="_blank" rel="noopener">From Autonomous Agents to Cognitive Symbionts: Toward AI-Augmented Human Intelligence</a></h3>
                 <p class="briefing-summary">For a decade, progress in artificial intelligence has been measured by how much a machine can do on its own. Large foundation models now write code and run multistep tasks, and personal agents act on a person's behalf.</p>
                 
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.05376" target="_blank" rel="noopener">Read Source (huggingface.co) ↗</a><span>86 pts</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Autonomous+Agents+Cognitive+Symbionts&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
               </div>
             </article>
             
-            <article class="briefing-item">
+            <article class="briefing-item" data-category="Research">
               <div class="briefing-num">07</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>huggingface.co</span><span>·</span><span>82 pts</span><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=SLA+Scaling+Spatial-Language-Action+Continual&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a><span>·</span><span>2026-11-04</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-04</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.08373" target="_blank" rel="noopener">SLA: Scaling Spatial-Language-Action Model via Continual Pre-training</a></h3>
                 <p class="briefing-summary">Reliable robotic manipulation requires both semantic understanding and precise control in three-dimensional space.</p>
                 
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.08373" target="_blank" rel="noopener">Read Source (huggingface.co) ↗</a><span>82 pts</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=SLA+Scaling+Spatial-Language-Action+Continual&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
               </div>
             </article>
             
-            <article class="briefing-item">
+            <article class="briefing-item" data-category="Research">
               <div class="briefing-num">08</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>huggingface.co</span><span>·</span><span>80 pts</span><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Decoupled+Predictive+Decision+Making&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a><span>·</span><span>2026-10-31</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-10-31</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.02075" target="_blank" rel="noopener">Decoupled Predictive Decision Making: A Shared Conditional Predictor for Agents</a></h3>
                 <p class="briefing-summary">Agent decisions depend on empirical relationships that deployment observations reveal and task descriptions alone may leave unresolved. We introduce Decoupled Predictive Decision Making (DPDM), an architecture that formulates heterogeneous agent decisions as conditional prediction with a shared pretrained learner.</p>
                 
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.02075" target="_blank" rel="noopener">Read Source (huggingface.co) ↗</a><span>80 pts</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Decoupled+Predictive+Decision+Making&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
               </div>
             </article>
             
-            <article class="briefing-item">
+            <article class="briefing-item" data-category="Lab Release">
               <div class="briefing-num">09</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>Simon Willison (AI</span><span>·</span><span>simonwillison.net</span><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Quoting+Nilay+Patel&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a><span>·</span><span>2026-11-06</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>Simon Willison (AI</span><span>·</span><span>2026-11-06</span></div>
                 <h3><a href="https://simonwillison.net/2026/Nov/6/nilay-patel/" target="_blank" rel="noopener">Quoting Nilay Patel</a></h3>
                 <p class="briefing-summary">The products aren't good enough to sell people on the costs. You cannot tell people that you have to listen to the whine of a data center in their backyard for AI overviews and some of the most hilarious deep fake slop in history. It's not worth it. It just isn't worth it to anyone.</p>
                 
+                <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/6/nilay-patel/" target="_blank" rel="noopener">Read Source (simonwillison.net) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Quoting+Nilay+Patel&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a></div>
               </div>
             </article>
             
-            <article class="briefing-item">
+            <article class="briefing-item" data-category="Lab Release">
               <div class="briefing-num">10</div>
               <div class="briefing-content">
-                <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>Simon Willison (AI</span><span>·</span><span>simonwillison.net</span><span>·</span><a href="https://www.reddit.com/r/LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity/search/?q=Qwen+27B+laptop+interpret&restrict_sr=1&sort=top&t=month" target="_blank" rel="noopener">Reddit Topic ↗</a><span>·</span><span>2026-11-03</span></div>
+                <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>Simon Willison (AI</span><span>·</span><span>2026-11-03</span></div>
                 <h3><a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/" target="_blank" rel="noopener">Qwen 3.8 27B on my laptop can interpret model weights, too</a></h3>
                 <p class="briefing-summary">Yesterday's hot paper was Sparks of Weight-Space Programming: LLMs can natively read & write neural network weights by Rikiya Takehi, Jayden Teoh, Alex Zhang, and Omar Khattab.</p>
-                
+                <div class="briefing-reddit"><strong>Reddit (r/LocalLLaMA):</strong> <a href="https://www.reddit.com/r/LocalLLaMA/comments/1xr3ifw/the_qwen_flash_next_alibaba_url_thing_happened_to/" target="_blank" rel="noopener">The Qwen Flash Next alibaba URL thing happened to me too just now ↗</a></div>
+                <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/" target="_blank" rel="noopener">Read Source (simonwillison.net) ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xr3ifw/the_qwen_flash_next_alibaba_url_thing_happened_to/" target="_blank" rel="noopener">r/LocalLLaMA Thread ↗</a></div>
               </div>
             </article>
             </div>

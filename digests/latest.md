@@ -33,7 +33,7 @@
 
 ### 9. [Scaling Laws, Carefully](https://lilianweng.github.io/posts/2026-06-24-scaling-laws/)
 **Lab Post** (Lilian Weng Blog) · `lilianweng.github.io` · *Wed, 24 Jun 2026*
-- Scaling laws are one of the most critical empirical findings in deep learning. The observation is simple in form: the training loss $L$ decreases predictably as we scale up model size $N$, dataset size $D$, and compute $C$, following a power-law curve, which appears as a straight line on a log-log.
+- Scaling laws are one of the most critical empirical findings in deep learning. The observation is simple in form: the training loss $L$ decreases predictably as we scale up model size $N$, dataset size $D$, and compute $C$, following a power-law curve, which appears as a straight line on a log-log plot.
 
 ### 10. [The latest AI news we announced in October 2026](https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-october-2026/)
 **Lab Post** (Google AI Blog) · `blog.google` · *Mon, 02 Nov 2026*
