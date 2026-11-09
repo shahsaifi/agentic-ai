@@ -50,11 +50,11 @@ jobs:
         run: |
           pip install .
           TODAY=$(date +%Y-%m-%d)
-          if [ "$GITHUB_EVENT_NAME" = "schedule" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] || [ ! -f "digests/${TODAY}_genai_digest.md" ]; then
-            echo "Generating fresh digest and HTML pages for ${TODAY}..."
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] || [ ! -f "digests/${TODAY}_genai_digest.md" ] || ( [ -n "$GEMINI_API_KEY" ] && ! grep -q "Executive TL;DR" "digests/${TODAY}_genai_digest.md" ); then
+            echo "Generating fresh Gemini-synthesized digest and HTML pages for ${TODAY}..."
             genai-agent --quiet
           else
-            echo "Today's digest (${TODAY}) already exists; refreshing HTML pages..."
+            echo "Today's Gemini digest (${TODAY}) already exists; refreshing HTML pages..."
             python -c "from pathlib import Path; from datetime import datetime; from genai_agent.notifiers.markdown_store import save_markdown_digest; md = Path('digests/${TODAY}_genai_digest.md').read_text(encoding='utf-8'); save_markdown_digest(md, Path('digests'), timestamp=datetime.now())"
           fi
 
