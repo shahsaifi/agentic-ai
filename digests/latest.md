@@ -1,58 +1,52 @@
-# Generative AI Technical Briefing — 2026-11-12
+# Generative AI Technical Briefing — 2026-11-13
 
 ## Top 10 Ranked Briefing
 
-### 1. [Tree-Ising: Repairing Language Models with Bit-Level Ising Edits](https://huggingface.co/papers/2611.14210)
-**Research** (Hugging Face Daily Papers) · 77 pts · *2026-11-09*
-- Weight-space programming, introduced in recent MIT work by Takehi et al., enables a frontier LLM agent to read a network's weights and write a repair.
+### 1. [One Table, Many Queries: Benchmarking Generalist Tabular Models Across Generation, Imputation, and Prediction](https://huggingface.co/papers/2611.13001)
+**Research** (Hugging Face Daily Papers) · 40 pts · *2026-11-07*
+- Generation, imputation, and prediction query different aspects of the same tabular distribution, but are usually evaluated separately. This leaves unclear which capabilities they share, how their training objectives interact, and whether one model can perform all three well.
 
-### 2. [Few-Step Streaming Video Generation via Condition Shifting](https://huggingface.co/papers/2611.14033)
-**Research** (Hugging Face Daily Papers) · 67 pts · *2026-11-09*
-- Few-step sampling reduces the cost of streaming video generation. Distribution Matching Distillation (DMD) supervises few-step generators with a separate fake-score network, which adds training memory and computation and must track the evolving generator.
+### 2. [Scaling Mathematical Proof Supervision from Structured Textbooks](https://huggingface.co/papers/2610.40394)
+**Research** (Hugging Face Daily Papers) · 40 pts · *2026-10-28*
+- Mathematical supervision for language models is typically flattened into isolated problem-solution pairs, discarding the curricular organization and evidential structure of the original sources.
 
-### 3. [World In-Context Learning for Agentic Robot Manipulation](https://huggingface.co/papers/2611.12885)
-**Research** (Hugging Face Daily Papers) · 65 pts · *2026-11-08*
-- Trained action policies write manipulation skill into network weights, tying what is learned to the distribution it is learned from.
+### 3. [SteerDistill: Quantizing LLM Agents via Closed-Loop Teacher Steering](https://huggingface.co/papers/2611.13410)
+**Research** (Hugging Face Daily Papers) · 32 pts · *2026-11-09*
+- Low-bit quantization reduces the inference cost of LLM agents but can compromise task success. Examining failed rollouts, we find that quantized agents overlook task requirements or environmental conditions, producing environment transitions that diverge from successful full-precision references.
 
-### 4. [Don't Just Trust Your Memory: Evidence-Linked Memory Reduces Memory-Induced Degradation in LLM Agents](https://huggingface.co/papers/2611.14320)
-**Research** (Hugging Face Daily Papers) · 57 pts · *2026-11-09*
-- External memory enables LLM agents to improve from experience by distilling trajectories of past tasks into concise lessons for new tasks.
+### 4. [MACaQ: Fast, Model Agnostic Calibrated Quantization for Low-Precision Weights and Activations](https://huggingface.co/papers/2611.10649)
+**Research** (Hugging Face Daily Papers) · 30 pts · *2026-11-06*
+- Weight-activation quantization can reduce the memory and compute cost of neural-network inference, but recent methods often require expensive optimization and architecture-specific propagation of basis transforms across layers.
 
-### 5. [My AI agents found an unmapped Maya site?](https://pietromiotti.com/latest/maya-site)
-**Engineering** (Hacker News) · `pietromiotti.com` · [939 pts on HN](https://news.ycombinator.com/item?id=50452455) · *2026-11-11*
+### 5. [Jensen Huang resigns](https://apnews.com/article/nvidia-megaspeed-china-singapore-huang-5403f152a601cf82ce939f1d24fffa0f)
+**Engineering** (Hacker News) · `apnews.com` · [3048 pts on HN](https://news.ycombinator.com/item?id=50467087) · *2026-11-12*
+- https:&#x2F;&#x2F;nvidianews.nvidia.com&#x2F;news&#x2F;nvidia-announces-ceo-tran... https:&#x2F;&#x2F;www.reuters.com&#x2F;business&#x2F;retail-consumer&#x2F;nvidia-ceo-... , https:&#x2F;&#x2F;www.reuters.com&#x2F;live&#x2F;nvidia-live-board-meets-fate-ce...
 
-### 6. [AWS emulator](https://github.com/aws/aws-emulator)
-**Engineering** (Hacker News) · `github.com` · [717 pts on HN](https://news.ycombinator.com/item?id=50456631) · *2026-11-11*
-- https:&#x2F;&#x2F;www.aboutamazon.com&#x2F;news&#x2F;aws&#x2F;how-autonomous-ai-agent... https:&#x2F;&#x2F;www.allthingsdistributed.com&#x2F;2026&#x2F;11&#x2F;aws-emulator-an...
+### 6. [United Airlines bans AI agents from booking flights on behalf of travelers](https://www.cbsnews.com/news/united-airlines-bans-ai-agents-booking-flights/)
+**Engineering** (Hacker News) · `cbsnews.com` · [661 pts on HN](https://news.ycombinator.com/item?id=50458900) · *2026-11-11*
 
-### 7. [Apple has new Mac app coming to make running local AI models easy](https://9to5mac.com/2026/11/10/apple-has-new-mac-app-coming-to-make-running-local-ai-models-easy/)
-**Engineering** (Hacker News) · `9to5mac.com` · [518 pts on HN](https://news.ycombinator.com/item?id=50446520) · *2026-11-10*
+### 7. [Gemini 4 Hydrogen](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/)
+**Engineering** (Hacker News) · `blog.google` · [476 pts on HN](https://news.ycombinator.com/item?id=50471431) · *2026-11-12*
 
-### 8. [A false smoke alarm almost drowned Jane Street's only NYC datacenter](https://michael.bacarella.com/2026/11/10/false-smoke-alarm-jane-street-datacenter/)
-**Engineering** (Hacker News) · `michael.bacarella.com` · [430 pts on HN](https://news.ycombinator.com/item?id=50455394) · *2026-11-11*
+### 8. [Show HN: Get your coding agent off ~2019 JavaScript, onto modern web primitives](https://github.com/GoogleChrome/modern-web-guidance)
+**Engineering** (Hacker News) · `github.com` · [434 pts on HN](https://news.ycombinator.com/item?id=50443812) · *2026-11-10*
+- Browsers natively handle a lot of what used to take 50 lines of JS (or a dependency): `CSS.highlights` for text range highlighting without &lt;span&gt;s everywhere, `&lt;dialog&gt;` and showModal() give you backdrops and ideal focus management, `field-sizing` to auto-grow textareas as the user.
 
-### 9. [Gemini Decisions API](https://simonwillison.net/2026/Nov/11/gemini-decisions-api/)
-**Lab Post** (Simon Willison (AI)) · `simonwillison.net` · *2026-11-11T22:03*
-- Gemini Decisions API Google join Jev and OpenAI in the decision model category with "Gemini Decision 1". This new model API is almost identical to Jev: it supports the same three types of questions (yes/no, choice, and rubric-scoring) and even reuses Jev's term "Noul" for a yes/no question.
+### 9. [llm-gemini 0.37](https://simonwillison.net/2026/Nov/12/llm-gemini/)
+**Lab Post** (Simon Willison (AI)) · `simonwillison.net` · *2026-11-12T22:55*
+- Release: llm-gemini 0.37 Google launched Gemini 4 Hydrogen today - the lowest cost member of the Gemini 4 family. It's actually not too far off the price of its much bigger siblings, Carbon and Argon. I'm finding Gemini 4's pricing really confusing.
 
-### 10. [ChatGPT Plus for veterans and servicemembers](https://openai.com/index/chatgpt-plus-for-veterans)
-**Lab Post** (OpenAI News) · `openai.com` · *Wed, 11 Nov 2026*
-- More than 20,000 veterans and transitioning service members have claimed a free year of ChatGPT Plus. See how they use it to prepare for civilian careers.
+### 10. [How Amplitude ships product improvements in 1–2 days with OpenAI](https://openai.com/business/customer-stories/amplitude)
+**Lab Post** (OpenAI News) · `openai.com` · *Thu, 12 Nov 2026*
+- Built primarily on OpenAI models, Amplitude’s proactive product agent, Wave, identifies what to build, helps teams ship changes with coding agents, and measures the impact.
 
 ---
 
 ## Researcher Threads on X
 
-- **[Nvidia prepares to fire CEO Jensen Huang, WSJ reports](https://twitter.com/watcherguru/status/2120645607866188008)** — *X.com (via Hacker News)* (225 pts) · *2026-11-11*
-  - Active engineering discussion thread on [Hacker News](https://news.ycombinator.com/item?id=50459776).
-- **[Is Your Altcoin on the List? Crypto Exchange Gemini Names 2026’s 10 Biggest Losers - BeInCrypto](https://news.google.com/rss/articles/CBMiakFVX3lxTE40Z0huRHpoOFVMb1oxREZNaGNLWjJFUExKVUp3MEV4dWlvTGNiTFdBY0lMa2JSNldvYklhYkQ5RHF5X1dpNDRhYkR4cUlxSFY5dEYtRWl1U2Jpcm9qR0VQZUlIc25kSXBjRGc?oc=5)** — *X Pulse (BeInCrypto)* · *Wed, 11 Nov 2026*
-  - Trending AI discussion on X covered by BeInCrypto.
-
----
-
-## Audio & Podcasts
-
-- **[When AI Tells You What You Want to Hear](https://generativeai101.podbean.com/e/when-ai-tells-you-what-you-want-to-hear/)** — **Generative AI 101** (🎧 12m) · *Wed, 11 Nov 2026*
-  - Your AI chatbot thinks your ideas are brilliant. That might be the problem.
-- **[The Rise of AI Agents: Insights from Mark Howard](https://www.buzzsprout.com/2502664/episodes/20059572-the-rise-of-ai-agents-insights-from-mark-howard.mp3)** — **AI Today Podcast** (🎧 39m) · *Wed, 11 Nov 2026*
-  - In this episode of AI Today, host Kathleen Walch welcomes Mark Howard, COO of TIME, to discuss how AI agents are reshaping the internet and what organizations must do to remain visible in an increasingly agent-driven world.
+- **[Claude Fable 5.2](https://twitter.com/claudeai/status/2119867114450268322)** — *X.com (via Hacker News)* (33 pts) · *2026-11-09*
+  - Active engineering discussion thread on [Hacker News](https://news.ycombinator.com/item?id=50429947).
+- **[GPT-6 Cyber](https://twitter.com/OpenAI/status/2118390190246879554)** — *X.com (via Hacker News)* (22 pts) · *2026-11-05*
+  - Active engineering discussion thread on [Hacker News](https://news.ycombinator.com/item?id=50381914).
+- **[Introducing Gemini 4 Hydrogen for Agentic Workflows - Google DeepMind](https://news.google.com/rss/articles/CBMia0FVX3lxTE5tcFA0eUdfTldGdV9NTDA4bkVfbVljVVZfaHg4OExYbXptenFGT3otNU40YXZQWE9ka3V3cGw1Z01EaDR6bFpUMHlGV0IyTG5tVDdrZU9jQnZJcm1nTm5UY0dQamlVRG1BYldB?oc=5)** — *X Pulse (Google DeepMind)* · *Thu, 12 Nov 2026*
+  - Trending AI discussion on X covered by Google DeepMind.
