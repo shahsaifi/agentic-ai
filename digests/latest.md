@@ -22,7 +22,7 @@
 **Engineering** (Hacker News) · `antigravity.google` · [495 pts on HN](https://news.ycombinator.com/item?id=50472260) · *2026-11-12*
 
 ### 6. [Elevated errors on claude.ai, Claude Code, and platform.claude.com](https://status.claude.com/incidents/nn11wk485zfn)
-**Engineering** (Hacker News) · `status.claude.com` · [482 pts on HN](https://news.ycombinator.com/item?id=50481187) · *2026-11-13*
+**Engineering** (Hacker News) · `status.claude.com` · [484 pts on HN](https://news.ycombinator.com/item?id=50481187) · *2026-11-13*
 
 ### 7. [I'm making LLMs work on small and old devices](https://github.com/hyperionaidev/smolmaxxing/)
 **Engineering** (Hacker News) · `github.com` · [465 pts on HN](https://news.ycombinator.com/item?id=50468888) · *2026-11-12*
@@ -42,6 +42,10 @@
 
 ## Audio & Podcasts
 
+- **[OpenAI Launches ChatGPT Wallet and More AI News](https://rss.art19.com/episodes/cbfe9d2b-cab0-43a2-b79f-21bae8e0894a.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb)** — **AI Optic: Anthropic & OpenAI News** (🎧 15m) · *Sat, 14 Nov 2026*
+  - Show Links • Get the top 80+ AI Models for $8.99 at AI Box: https://aibox.ai • How I Grow and Scale My Business with AI: https://www.skool.com/aihustle • Get the AI Chat Daily Newsletter: https://www.aichatdaily.com/newsletter In this episode, we explore the.
+- **[Designing for Agents — Zeno Rocha, Resend](https://lspace.beehiiv.com/podcast/s/latent_space_the_ai_engineer_podcast/designing_for_agents_zeno_rocha_resend)** — **Latent Space (AI Engineer Podcast)** (🎧 1h 25m) · *Tue, 10 Nov 2026*
+  - swyx had already connected Cloudflare email. Then a coding agent opened a pull request that quietly chose Resend for him. Zeno Rocha, Resend’s founder and CEO, explains what answer engine optimization (AEO) looks like from the receiving end of that rec...
 - **[Implementing Federated Learning to enhance Agentic AI](https://share.transistor.fm/s/58a69653)** — **Practical AI Podcast** (🎧 43m) · *Fri, 13 Nov 2026*
   - How can AI models learn from private data without compromising privacy? Chris is joined by Lorenzo Sani, Research Scientist at Flower Labs and PhD researcher at Cambridge, to explore federated learning and privacy-preserving AI.
 
@@ -49,19 +53,5 @@
 
 ## Tech Talks & Keynotes
 
-- **[Building and Deploying Python AI Agents with ADK, Gemini, and MCP](https://www.youtube.com/watch?v=h_r3NsfrrRI)** — **Google Cloud Tech** · *2026-11-11*
-  - Walkthrough of Google Cloud's Agent Development Kit (ADK) for Python, demonstrating how to connect Gemini reasoning models to external enterprise tools via Model Context Protocol (MCP) servers and deploy multi-agent workflows on Vertex AI.
-- **[LangChain vs LangGraph: Architecting Stateful Multi-Agent Workflows & RAG](https://www.youtube.com/watch?v=qAF1NjEVHhY)** — **IBM Technology** · *2026-11-10*
-  - Architectural comparison of directed acyclic chains in LangChain versus cyclic, stateful graph execution in LangGraph for building fault-tolerant multi-agent orchestration and corrective retrieval-augmented generation.
-- **[AI and Software Engineering: Production LLM Workflows & Agentic Tooling](https://www.youtube.com/watch?v=5wks1W-auKY)** — **The Pragmatic Engineer** · *2026-11-09*
-  - Gergely Orosz examines how engineering organizations integrate coding agents, automated PR verification, context indexing, and deterministic evaluation harnesses into high-velocity production software pipelines.
-- **[Building Enterprise AI Workflows with IBM Granite & watsonx.ai Flows Engine](https://www.youtube.com/watch?v=-WXzgIFcNK0)** — **IBM Developer** · *2026-11-08*
-  - Technical deep-dive into building low-latency enterprise RAG and tool-calling pipelines using open-weight IBM Granite foundation models and declarative flow orchestration in watsonx.ai.
-- **[Stanford CS25: Transformers United — Frontier Reasoning & Post-Training Architectures](https://www.youtube.com/watch?v=XfpMkf4rD6E)** — **Stanford Online (CS25)** · *2026-11-07*
-  - Stanford CS25 seminar examining how scaling test-time compute, reinforcement fine-tuning, and verifier-guided search enable transformer architectures to solve complex mathematical and multi-step reasoning problems.
-- **[RAG From Scratch: Query Translation, Routing, RAPTOR & Corrective RAG](https://www.youtube.com/watch?v=sVcwVQRHIc8)** — **LangChain** · *2026-11-06*
-  - End-to-end engineering tutorial covering multi-query decomposition, semantic routing, hierarchical RAPTOR indexing, and self-reflective Corrective RAG (CRAG) grading loops.
-- **[Deep Dive into LLMs like ChatGPT: Pretraining, Supervised Finetuning & RLHF](https://www.youtube.com/watch?v=7xTGNNLPyMI)** — **Andrej Karpathy** · *2026-10-28*
-  - Comprehensive technical walkthrough of the full Large Language Model training pipeline, covering internet-scale tokenization, distributed pretraining, supervised instruction tuning, and reinforcement learning from human and verifiable rewards.
-- **[Building Effective AI Agents: Architecture Patterns & Production Evals](https://www.youtube.com/watch?v=d5EltXhbcfA)** — **Anthropic** · *2026-11-04*
-  - Engineering breakdown of composable agent workflows versus autonomous multi-step loops, detailing tool-use sandboxing, context window management, and deterministic evaluation harnesses.
+- **[No AI, 52 min. Build all Linux Files utils in C by Hand](https://www.youtube.com/watch?v=gQRmSlcTq9c)** — **YouTube (via Hacker News)** · *2026-10-29*
+  - High-signal technical lecture on No AI, 52 min. Build all Linux Files utils in C by Hand, highlighted by the AI engineering community on Hacker News (159 pts).
