@@ -50,6 +50,7 @@ def _clean_sentence_excerpt(text: str, max_chars: int = 280) -> str:
         "",
         text,
     ).strip()
+    text = re.sub(r"\s*HN Thread:\s*https?://\S+", "", text).strip()
     text = " ".join(text.split())
     if not text:
         return ""
@@ -180,12 +181,35 @@ def exclude_previously_published_items(
         return items
 
     fresh_items: List[NewsItem] = []
+    fresh_urls: Set[str] = set()
     for item in items:
         norm_url = item.url.strip().rstrip("/").lower()
         norm_title = "".join(ch.lower() for ch in item.title if ch.isalnum())
         if norm_url in seen_urls or (len(norm_title) > 10 and norm_title in seen_titles):
             continue
         fresh_items.append(item)
+        fresh_urls.add(norm_url)
+
+    # Preserve minimum category quotas for dedicated sections (X threads, Podcasts, Tech Talks)
+    min_section_quotas = {
+        SourceCategory.SOCIAL_X: 4,
+        SourceCategory.PODCAST: 3,
+        SourceCategory.TECH_TALK: 8,
+    }
+    for cat, min_count in min_section_quotas.items():
+        current_cat_items = [i for i in fresh_items if i.category == cat]
+        if len(current_cat_items) < min_count:
+            for candidate in items:
+                if candidate.category != cat:
+                    continue
+                norm_url = candidate.url.strip().rstrip("/").lower()
+                if norm_url in fresh_urls:
+                    continue
+                fresh_items.append(candidate)
+                fresh_urls.add(norm_url)
+                current_cat_items.append(candidate)
+                if len(current_cat_items) >= min_count:
+                    break
 
     return fresh_items if len(fresh_items) >= 8 else items
 
@@ -300,7 +324,13 @@ def build_fallback_markdown(
             if excerpt:
                 lines.append(f"  - {excerpt}")
             elif hn_url:
-                lines.append(f"  - Active engineering discussion thread on [Hacker News]({hn_url}).")
+                lines.append(
+                    f"  - Researcher and engineering discussion examining {xp.title}, with active debate on [Hacker News]({hn_url})."
+                )
+            else:
+                lines.append(
+                    f"  - Technical discussion on X examining {xp.title} and its implications for production AI systems."
+                )
         lines.append("")
 
     if podcasts:

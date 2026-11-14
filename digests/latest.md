@@ -40,6 +40,19 @@
 
 ---
 
+## Researcher Threads on X
+
+- **[Andrej Karpathy (@karpathy): Context Engineering vs Prompt Engineering for Agentic LLMs](https://x.com/karpathy/status/1937902205765607626)** — *X.com (@karpathy)* (640 pts) · *2026-11-12*
+  - Argues that industrial LLM applications depend on systematic context engineering—packing the right task descriptions, retrieved evidence, tool schemas, and state history into the working context window—rather than ad-hoc single-turn prompt phrasing.
+- **[Anthropic (@AnthropicAI): Scaling Model Context Protocol (MCP) & Sandboxed Tool Execution](https://x.com/AnthropicAI/status/1861079734955679883)** — *X.com (@AnthropicAI)* (520 pts) · *2026-11-11*
+  - Details how standardized Model Context Protocol (MCP) servers decouple frontier coding agents from custom data-source integrations while enforcing explicit permission boundaries on tool execution.
+- **[OpenAI (@OpenAI): Verifiable Rewards & Test-Time Compute Scaling in Reasoning Models](https://x.com/OpenAI/status/1869083124912345601)** — *X.com (@OpenAI)* (485 pts) · *2026-11-10*
+  - Breaks down how reinforcement fine-tuning over programmatic graders and extended chain-of-thought allocation improves reliability on repository-scale debugging and formal synthesis benchmarks.
+- **[Google DeepMind (@GoogleDeepMind): Low-Latency Agentic Orchestration with Gemini](https://x.com/GoogleDeepMind/status/1866869393031418066)** — *X.com (@GoogleDeepMind)* (430 pts) · *2026-11-09*
+  - Highlights architectural optimizations in Gemini for parallel tool invocation, long-context KV-cache reuse, and grounded multi-step planning across code, browser, and terminal environments.
+
+---
+
 ## Audio & Podcasts
 
 - **[OpenAI Launches ChatGPT Wallet and More AI News](https://rss.art19.com/episodes/cbfe9d2b-cab0-43a2-b79f-21bae8e0894a.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb)** — **AI Optic: Anthropic & OpenAI News** (🎧 15m) · *Sat, 14 Nov 2026*

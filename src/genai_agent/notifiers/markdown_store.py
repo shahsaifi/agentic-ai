@@ -10,6 +10,7 @@ from urllib.parse import urlparse
 import markdown
 
 from genai_agent.collectors.podcasts import fetch_detailed_podcast_hub
+from genai_agent.collectors.social_x import CURATED_FALLBACK_X_THREADS
 from genai_agent.collectors.tech_talks import (
     CURATED_FALLBACK_TECH_TALKS,
     fetch_detailed_tech_talks_hub,
@@ -817,6 +818,7 @@ def _clean_excerpt(text: str, max_chars: int = 300) -> str:
         "",
         text,
     ).strip()
+    text = re.sub(r"\s*HN Thread:\s*https?://\S+", "", text).strip()
     text = re.sub(
         r"^Active engineering discussion thread on \[Hacker News\]\([^)]+\)\.?$",
         "",
@@ -1040,6 +1042,28 @@ def _default_tech_talk_notes(limit: int = 8) -> List[Dict[str, str]]:
                 "meta": talk.get("published_at", "YouTube"),
                 "hn_url": "",
                 "summary": _clean_excerpt(talk.get("summary", ""), max_chars=280),
+            }
+        )
+    return notes
+
+
+def _default_x_thread_notes(limit: int = 4) -> List[Dict[str, str]]:
+    """Build curated researcher thread notes on X when a digest has fewer than 3 X entries."""
+    notes: List[Dict[str, str]] = []
+    for item in CURATED_FALLBACK_X_THREADS[:limit]:
+        url = item["url"]
+        handle_m = re.search(r"(?:twitter\.com|x\.com)/([A-Za-z0-9_]+)", url)
+        kicker = f"@{handle_m.group(1)}" if handle_m else item.get("source", "X.com")
+        score = item.get("score")
+        meta = f"{score} pts" if score else item.get("published_at", "X.com")
+        notes.append(
+            {
+                "title": _strip_emojis(item["title"]),
+                "url": url,
+                "kicker": kicker,
+                "meta": meta,
+                "hn_url": "",
+                "summary": _clean_excerpt(item.get("summary", ""), max_chars=280),
             }
         )
     return notes
@@ -1529,6 +1553,23 @@ def _render_bullet_notes_html(
                 if len(notes) >= limit:
                     break
         notes = notes[:limit]
+    elif kind == "x":
+        for n in notes:
+            if not n.get("summary"):
+                n["summary"] = (
+                    f"Researcher and engineering discussion on X examining {n['title']} "
+                    "and its implications for frontier AI systems."
+                )
+        if len(notes) < 3:
+            seen_urls = {n["url"].strip().rstrip("/").lower() for n in notes}
+            for fb_note in _default_x_thread_notes(limit=max(limit, 4)):
+                norm = fb_note["url"].strip().rstrip("/").lower()
+                if norm not in seen_urls:
+                    seen_urls.add(norm)
+                    notes.append(fb_note)
+                if len(notes) >= limit:
+                    break
+        notes = notes[:limit]
     action_map = {
         "x": "Read Thread on X",
         "podcast": "Listen Episode",
@@ -1568,7 +1609,7 @@ def _render_daily_digest_html(
         concept_html = f'<div class="editorial-callout"><h3>Technical Deep-Dive</h3>{rendered_concept}</div>'
 
     top10_html = _render_top10_ledger_html(top10_items)
-    x_html = _render_notes_column_html(_parse_bullet_notes(x_md, kind="x"), "Read Thread on X")
+    x_html = _render_bullet_notes_html(x_md, kind="x", limit=4)
     pod_html = _render_notes_column_html(_parse_bullet_notes(pod_md, kind="podcast"), "Listen Episode")
     talks_html = _render_bullet_notes_html(talks_md, kind="tech_talk")
 
@@ -1658,7 +1699,7 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
         tldr_html = f'<div class="editorial-callout"><h3>Executive Summary — {latest_date}</h3>{rendered_tldr}</div>'
 
     top10_html = _render_top10_ledger_html(top10_items)
-    x_html = _render_notes_column_html(_parse_bullet_notes(x_md, kind="x"), "Read Thread on X")
+    x_html = _render_bullet_notes_html(x_md, kind="x", limit=4)
     pod_html = _render_notes_column_html(_parse_bullet_notes(pod_md, kind="podcast"), "Listen Episode")
     talks_html = _render_bullet_notes_html(talks_md, kind="tech_talk")
 

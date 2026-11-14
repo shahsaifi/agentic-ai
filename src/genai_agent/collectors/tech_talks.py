@@ -470,12 +470,20 @@ def _strip_youtube_boilerplate(text: str, max_chars: int = 300) -> str:
     return cut + "."
 
 
+_NEGATIVE_AI_TALK_RE = re.compile(
+    r"\b(no\s+ai|without\s+ai|zero\s+ai|not\s+ai|ban\s+ai)\b",
+    re.IGNORECASE,
+)
+
+
 def _matches_focus_topics(text: str, focus_topics: List[str] | None) -> bool:
     """Return True if text matches AI technical talk keywords or user focus topics."""
-    if AI_TALK_KEYWORDS.search(text or ""):
+    if not text or _NEGATIVE_AI_TALK_RE.search(text):
+        return False
+    if AI_TALK_KEYWORDS.search(text):
         return True
     if focus_topics:
-        low = (text or "").lower()
+        low = text.lower()
         return any(t.lower() in low for t in focus_topics if t)
     return False
 

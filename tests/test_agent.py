@@ -97,36 +97,75 @@ def test_save_markdown_and_render_html(tmp_path: Path):
 
 
 def test_exclude_previously_published_items(tmp_path: Path):
-    prev_md = (
-        "# Digest 2026-11-08\n"
-        "### 1. [Old Repeated Story](https://example.com/old-story)\n"
-    )
-    (tmp_path / "2026-11-08_genai_digest.md").write_text(prev_md, encoding="utf-8")
-
-    candidates = [
-        NewsItem(
-            title="Old Repeated Story",
-            url="https://example.com/old-story",
-            source="HN",
-            category=SourceCategory.COMMUNITY_NEWS,
-        )
-    ] + [
-        NewsItem(
-            title=f"Fresh Story {i}",
-            url=f"https://example.com/fresh-{i}",
-            source="arXiv",
-            category=SourceCategory.RESEARCH_PAPER,
-        )
-        for i in range(10)
+    prev_lines = [
+        "# Digest 2026-11-08",
+        "### 1. [Old Repeated Story](https://example.com/old-story)",
     ]
+    for i in range(4):
+        prev_lines.append(f"- **[Old X Thread {i}](https://x.com/researcher/status/{100 + i})** — *X.com*")
+    for i in range(3):
+        prev_lines.append(f"- **[Old Podcast {i}](https://example.com/pod-{i})** — *Podcast*")
+    for i in range(8):
+        prev_lines.append(f"- **[Old Tech Talk {i}](https://www.youtube.com/watch?v=talk00{i})** — **Channel**")
+    (tmp_path / "2026-11-08_genai_digest.md").write_text("\n".join(prev_lines), encoding="utf-8")
+
+    candidates = (
+        [
+            NewsItem(
+                title="Old Repeated Story",
+                url="https://example.com/old-story",
+                source="HN",
+                category=SourceCategory.COMMUNITY_NEWS,
+            )
+        ]
+        + [
+            NewsItem(
+                title=f"Fresh Story {i}",
+                url=f"https://example.com/fresh-{i}",
+                source="arXiv",
+                category=SourceCategory.RESEARCH_PAPER,
+            )
+            for i in range(10)
+        ]
+        + [
+            NewsItem(
+                title=f"Old X Thread {i}",
+                url=f"https://x.com/researcher/status/{100 + i}",
+                source="X",
+                category=SourceCategory.SOCIAL_X,
+            )
+            for i in range(4)
+        ]
+        + [
+            NewsItem(
+                title=f"Old Podcast {i}",
+                url=f"https://example.com/pod-{i}",
+                source="Latent Space",
+                category=SourceCategory.PODCAST,
+            )
+            for i in range(3)
+        ]
+        + [
+            NewsItem(
+                title=f"Old Tech Talk {i}",
+                url=f"https://www.youtube.com/watch?v=talk00{i}",
+                source="Google Cloud Tech",
+                category=SourceCategory.TECH_TALK,
+            )
+            for i in range(8)
+        ]
+    )
 
     filtered = exclude_previously_published_items(
         items=candidates,
         output_dir=tmp_path,
         current_date_str="2026-11-09",
     )
-    assert len(filtered) == 10
     assert all(i.url != "https://example.com/old-story" for i in filtered)
+    assert sum(1 for i in filtered if i.category == SourceCategory.SOCIAL_X) == 4
+    assert sum(1 for i in filtered if i.category == SourceCategory.PODCAST) == 3
+    assert sum(1 for i in filtered if i.category == SourceCategory.TECH_TALK) == 8
+
 
 
 def test_reddit_waf_safe_links_and_rss_sanitization():
@@ -156,9 +195,14 @@ def test_tech_talks_collector_and_boilerplate_sanitization(monkeypatch):
     from genai_agent.collectors.tech_talks import (
         FEATURED_TECH_TALK_CHANNELS,
         _is_valid_youtube_url,
+        _matches_focus_topics,
         _strip_youtube_boilerplate,
         fetch_ai_tech_talks,
     )
+
+    assert not _matches_focus_topics("No AI, 52 min. Build all Linux Files utils in C by Hand", [])
+    assert _matches_focus_topics("Deep Dive into LLM Reasoning and RLHF", [])
+
 
     expected_channels = {
         "Google Cloud Tech": "UCJS9pqu9BzkAMNTmzNMNhvg",
@@ -259,9 +303,12 @@ def test_tech_talks_prompt_fallback_and_html_rendering(tmp_path: Path):
         assert "Tech Talks Index" in content
         assert '<a href="#tech-talks">Tech Talks</a>' not in content
         assert "Watch on YouTube ↗" in content
+        assert "Read Thread on X ↗" in content
+        assert "No entries recorded for this issue." not in content.split("II. Researcher Threads on X", 1)[1].split("III. Audio", 1)[0]
         assert 'target="_blank" rel="noopener noreferrer"' in content
         assert "viewport-fit=cover" in content
         assert "max-width: 66ch;" in content
+
 
     tech_talks_html = docs_dir / "tech-talks.html"
     assert tech_talks_html.exists()
@@ -327,11 +374,18 @@ def test_published_docs_html_integrity():
         assert "Tech Talks Index" in text
         assert '<a href="#tech-talks">Tech Talks</a>' not in text
         assert "Watch on YouTube ↗" in text
+        assert "Read Thread on X ↗" in text
         assert "viewport-fit=cover" in text
         assert "max-width: 66ch;" in text
         tech_talks_section = text.split('id="tech-talks"', 1)[1].split("</section>", 1)[0]
         for channel in required_channels:
             assert channel in tech_talks_section
+
+    for latest_page in ("index.html", "2026-11-14.html"):
+        latest_text = (repo_docs / latest_page).read_text(encoding="utf-8")
+        assert "Read Thread on X ↗" in latest_text
+        assert "No entries recorded for this issue." not in latest_text
+
 
     for nav_page in ("tech-talks.html", "index.html", "podcasts.html", "2026-11-14.html"):
         nav_path = repo_docs / nav_page

@@ -10,7 +10,10 @@ from genai_agent.collectors.papers import (
     fetch_huggingface_daily_papers,
 )
 from genai_agent.collectors.podcasts import fetch_ai_podcasts
-from genai_agent.collectors.social_x import fetch_x_social_pulse
+from genai_agent.collectors.social_x import (
+    CURATED_FALLBACK_X_THREADS,
+    fetch_x_social_pulse,
+)
 from genai_agent.collectors.tech_talks import (
     fetch_ai_tech_talks,
     fetch_detailed_tech_talks_hub,
@@ -51,7 +54,7 @@ def collect_all_sources(
             limit_per_sub=max(3, max_per_source // 2)
         ),
         "AI Lab & Engineering Blogs": lambda: fetch_ai_company_blogs(max_per_feed=2),
-        "X.com / AI Twitter Pulse": lambda: fetch_x_social_pulse(days=days, limit=6),
+        "X.com / AI Twitter Pulse": lambda: fetch_x_social_pulse(days=days, limit=10),
         "AI Podcasts": lambda: fetch_ai_podcasts(max_per_feed=1),
         "YouTube Tech Talks": lambda: fetch_ai_tech_talks(focus_topics=focus_topics, limit=8),
         "Web News Search": lambda: fetch_google_news_rss(
@@ -85,6 +88,7 @@ __all__ = [
     "fetch_ai_company_blogs",
     "fetch_ai_podcasts",
     "fetch_x_social_pulse",
+    "CURATED_FALLBACK_X_THREADS",
     "fetch_ai_tech_talks",
     "fetch_detailed_tech_talks_hub",
     "fetch_google_news_rss",
