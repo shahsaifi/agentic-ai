@@ -3,7 +3,7 @@
 ## Top 10 Ranked Briefing
 
 ### 1. [SO-Arena: Benchmarking the Capability Spectrum and Reliability of System One Models](https://huggingface.co/papers/2611.15777)
-**Research** (Hugging Face Daily Papers) · 74 pts · *2026-11-10*
+**Research** (Hugging Face Daily Papers) · 76 pts · *2026-11-10*
 - System One models promise fast, general-purpose decision-making without lengthy token generation. However, understanding their capability spectrum and decision reliability requires more than aggregate performance on current benchmarks.
 
 ### 2. [BirdDreams: Joint Perspective and BEV Video Generation for a Plausible, Reactive Driving World Model](https://huggingface.co/papers/2611.14815)
@@ -15,7 +15,7 @@
 - Video generation models produce visually realistic videos but still struggle with physical dynamics and causal consistency. Learning from generated videos requires fine-grained physical supervision, yet reliable quality judgments, correction pairs, and controlled variations are difficult to obtain.
 
 ### 4. [G-STAR: Group-Scaled Token Capacity for Deeply Compressed Autoregressive Generation](https://huggingface.co/papers/2611.13004)
-**Research** (Hugging Face Daily Papers) · 40 pts · *2026-11-07*
+**Research** (Hugging Face Daily Papers) · 41 pts · *2026-11-07*
 - Discrete autoregressive models offer a scalable framework for image generation. However, they face a fundamental trade-off: long token sequences preserve representation quality but slow generation, while aggressive spatial compression reduces representation capacity.
 
 ### 5. [Gemini 4 Hydrogen and Orchestrator](https://antigravity.google/blog/gemini-4-hydrogen-in-google-antigravity/)
@@ -25,7 +25,7 @@
 **Engineering** (Hacker News) · `status.claude.com` · [484 pts on HN](https://news.ycombinator.com/item?id=50481187) · *2026-11-13*
 
 ### 7. [I'm making LLMs work on small and old devices](https://github.com/hyperionaidev/smolmaxxing/)
-**Engineering** (Hacker News) · `github.com` · [465 pts on HN](https://news.ycombinator.com/item?id=50468888) · *2026-11-12*
+**Engineering** (Hacker News) · `github.com` · [466 pts on HN](https://news.ycombinator.com/item?id=50468888) · *2026-11-12*
 
 ### 8. [GPT-6 Astra covertly underperforms on safety research](https://alignment.openai.com/misalignment-reports/covert-underperformance-on-safety-research-tasks/)
 **Engineering** (Hacker News) · `alignment.openai.com` · [342 pts on HN](https://news.ycombinator.com/item?id=50376313) · *2026-11-05*
@@ -48,8 +48,8 @@
   - Technical thread from @brodieseo examining Claude Code, but for SEO, generating active engineering debate across 2 comments (14 pts).
 - **[AI Twitter/X Daily Recap: OpenAI GPT-6 Astra](https://news.smol.ai/issues/26-09-03-gpt-6-astra/)** — *AINews (AI X/Twitter Recap)* · *Thu, 03 Sep 2026*
   - **OpenAI** launched **GPT-6 Astra** as its new flagship model, described as "our most intelligent and aligned model yet," focusing on computer use, software engineering, math/science, office work, and cybersecurity.
-- **[Nvidia prepares to fire CEO Jensen Huang, WSJ reports](https://twitter.com/watcherguru/status/2120645607866188008)** — *X.com (@watcherguru)* (225 pts) · *2026-11-11*
-  - Technical thread from @watcherguru examining Nvidia prepares to fire CEO Jensen Huang, WSJ reports, generating active engineering debate across 4 comments (225 pts).
+- **[NVIDIA Denies Fake Letter Demanding Board Resignation, Huang Return](https://news.google.com/rss/articles/CBMiiAFBVV95cUxOTVZsVUVJVXl0NVFrbXAzNE13WGZ6eEFoT3B3RmtJU1JjMldxMFBwOS1CcHJLNnV1dzhINkRPY0Z3emFQbGotMXZzSVNXS292a1J4TnlYN1Y4VERBWmlqMGNmVUNHWUhQakhWREVoM0JmdG5ZVzdwRW5tY1NJRXNHa2oydTF2eUxI?oc=5)** — *X Pulse (조선일보)* · *Sat, 14 Nov 2026*
+  - Industry analysis and researcher commentary on X examining NVIDIA Denies Fake Letter Demanding Board Resignation, Huang Return, reported by 조선일보.
 
 ---
 
@@ -57,10 +57,10 @@
 
 - **[OpenAI Launches ChatGPT Wallet and More AI News](https://rss.art19.com/episodes/cbfe9d2b-cab0-43a2-b79f-21bae8e0894a.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb)** — **AI Optic: Anthropic & OpenAI News** (🎧 15m) · *Sat, 14 Nov 2026*
   - Show Links • Get the top 80+ AI Models for $8.99 at AI Box: https://aibox.ai • How I Grow and Scale My Business with AI: https://www.skool.com/aihustle • Get the AI Chat Daily Newsletter: https://www.aichatdaily.com/newsletter In this episode, we explore the.
+- **[Designing for Agents — Zeno Rocha, Resend](https://lspace.beehiiv.com/podcast/s/latent_space_the_ai_engineer_podcast/designing_for_agents_zeno_rocha_resend)** — **Latent Space (AI Engineer Podcast)** (🎧 1h 25m) · *Tue, 10 Nov 2026*
+  - swyx had already connected Cloudflare email. Then a coding agent opened a pull request that quietly chose Resend for him. Zeno Rocha, Resend’s founder and CEO, explains what answer engine optimization (AEO) looks like from the receiving end of that rec...
 - **[Implementing Federated Learning to enhance Agentic AI](https://share.transistor.fm/s/58a69653)** — **Practical AI Podcast** (🎧 43m) · *Fri, 13 Nov 2026*
   - How can AI models learn from private data without compromising privacy? Chris is joined by Lorenzo Sani, Research Scientist at Flower Labs and PhD researcher at Cambridge, to explore federated learning and privacy-preserving AI.
-- **[When AI Tells You What You Want to Hear](https://generativeai101.podbean.com/e/when-ai-tells-you-what-you-want-to-hear/)** — **Generative AI 101** (🎧 12m) · *Wed, 11 Nov 2026*
-  - Your AI chatbot thinks your ideas are brilliant. That might be the problem.
 
 ---
 
