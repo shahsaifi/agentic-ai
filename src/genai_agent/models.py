@@ -13,6 +13,7 @@ class SourceCategory(str, Enum):
     WEB_SEARCH = "web_search"
     PODCAST = "podcast"
     SOCIAL_X = "social_x"
+    TECH_TALK = "tech_talk"
 
 
 @dataclass

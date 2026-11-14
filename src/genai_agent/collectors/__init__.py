@@ -11,6 +11,7 @@ from genai_agent.collectors.papers import (
 )
 from genai_agent.collectors.podcasts import fetch_ai_podcasts
 from genai_agent.collectors.social_x import fetch_x_social_pulse
+from genai_agent.collectors.tech_talks import fetch_ai_tech_talks
 from genai_agent.collectors.web_search import fetch_google_news_rss
 from genai_agent.models import NewsItem
 
@@ -49,6 +50,7 @@ def collect_all_sources(
         "AI Lab & Engineering Blogs": lambda: fetch_ai_company_blogs(max_per_feed=2),
         "X.com / AI Twitter Pulse": lambda: fetch_x_social_pulse(days=days, limit=6),
         "AI Podcasts": lambda: fetch_ai_podcasts(max_per_feed=1),
+        "YouTube Tech Talks": lambda: fetch_ai_tech_talks(focus_topics=focus_topics, limit=6),
         "Web News Search": lambda: fetch_google_news_rss(
             topics=focus_topics, days=days, limit=max_per_source
         ),
@@ -57,7 +59,7 @@ def collect_all_sources(
     all_items: List[NewsItem] = []
     breakdown: Dict[str, int] = {}
 
-    with ThreadPoolExecutor(max_workers=8) as executor:
+    with ThreadPoolExecutor(max_workers=9) as executor:
         future_to_name = {executor.submit(fn): name for name, fn in tasks.items()}
         for future in as_completed(future_to_name):
             name = future_to_name[future]
@@ -78,6 +80,9 @@ __all__ = [
     "fetch_hacker_news_ai",
     "fetch_reddit_ai",
     "fetch_ai_company_blogs",
+    "fetch_ai_podcasts",
+    "fetch_x_social_pulse",
+    "fetch_ai_tech_talks",
     "fetch_google_news_rss",
     "deduplicate_items",
     "collect_all_sources",

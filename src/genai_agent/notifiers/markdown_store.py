@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import html
 import re
 from datetime import datetime
 from pathlib import Path
@@ -9,6 +10,7 @@ from urllib.parse import urlparse
 import markdown
 
 from genai_agent.collectors.podcasts import fetch_detailed_podcast_hub
+from genai_agent.collectors.tech_talks import CURATED_FALLBACK_TECH_TALKS
 
 EDITORIAL_CSS_AND_JS = """
   <meta name="theme-color" id="meta-theme-color" content="#F6F4EF">
@@ -482,6 +484,7 @@ EDITORIAL_CSS_AND_JS = """
       color: var(--ink-secondary);
       margin: 0 0 8px;
       line-height: 1.55;
+      max-width: 66ch;
     }
     .note-links {
       font-family: var(--font-mono);
@@ -780,7 +783,7 @@ EDITORIAL_CSS_AND_JS = """
 def _strip_emojis(text: str) -> str:
     """Remove decorative emoji prefixes from legacy markdown headings and badges."""
     return re.sub(
-        r"[🚀⚡🧠📄🏢🛠️🔥🏆🎧🎯✨📅⬆️🎙️🍏📌🌐]+\s*",
+        r"[🚀⚡🧠📄🏢🛠️🔥🏆🎧🎯✨📅⬆️🎙️🍏📌🌐🎥📺▶️🎬]+\s*",
         "",
         text or "",
     ).strip()
@@ -908,6 +911,8 @@ def _parse_top10_items(markdown_text: str) -> List[Dict[str, str]]:
                 category = "Research"
             elif "Blog" in cat_raw or "Lab" in cat_raw:
                 category = "Lab Release"
+            elif "Tech Talk" in cat_raw or "Keynote" in cat_raw or "YouTube" in meta_line:
+                category = "Tech Talk"
             else:
                 category = cat_raw
 
@@ -957,9 +962,9 @@ def _extract_section_markdown(markdown_text: str, section_keyword: str) -> str:
 
 
 def _parse_bullet_notes(section_md: str, kind: str = "x") -> List[Dict[str, str]]:
-    """Parse 2-line markdown bullets from X or Podcast sections into structured notes."""
+    """Parse 2-line markdown bullets from X, Podcast, or Tech Talk sections into structured notes."""
     notes: List[Dict[str, str]] = []
-    lines = [ln for ln in section_md.splitlines() if ln.strip()]
+    lines = [ln for ln in (section_md or "").splitlines() if ln.strip()]
     idx = 0
     while idx < len(lines):
         line = lines[idx].strip()
@@ -977,33 +982,63 @@ def _parse_bullet_notes(section_md: str, kind: str = "x") -> List[Dict[str, str]
             hn_m = re.search(r"https://news\.ycombinator\.com/item\?id=\d+", tail + " " + desc)
             hn_url = hn_m.group(0) if hn_m else ""
 
-            pts_m = re.search(r"(\d[\d,]*)\s*pts", tail + " " + desc)
-            pts = f"{pts_m.group(1)} pts" if pts_m else ""
+            pts_m = re.search(r"(\d[\d,]*)\s*(?:pts|views)", tail + " " + desc)
+            pts = pts_m.group(0).strip() if pts_m else ""
 
             dur_m = re.search(r"🎧\s*([0-9hm:\s]+)", tail + " " + desc)
             dur = dur_m.group(1).strip() if dur_m else ""
 
+            date_m = re.search(
+                r"\*([0-9]{4}-[0-9]{2}-[0-9]{2}|[A-Za-z]{3},\s+[0-9]{2}\s+[A-Za-z]{3}\s+[0-9]{4})\*",
+                tail,
+            )
+            pub_date = date_m.group(1).strip() if date_m else ""
+
             handle_m = re.search(r"(?:twitter\.com|x\.com)/([A-Za-z0-9_]+)", url)
-            if handle_m:
+            if handle_m and kind == "x":
                 kicker = f"@{handle_m.group(1)}"
-            elif "smol.ai" in url:
+            elif "smol.ai" in url and kind == "x":
                 kicker = "AINews · X Recap"
             else:
-                show_m = re.search(r"—\s*(?:\*|\*\*)([^*]+)(?:\*|\*\*)", tail)
+                show_m = re.search(r"—\s*(?:\*\*|\*)([^*]+)(?:\*\*|\*)", tail)
                 kicker = _strip_emojis(show_m.group(1)) if show_m else _domain_of(url)
 
-            clean_desc = _clean_excerpt(desc, max_chars=260)
+            if kind == "podcast":
+                meta = dur or pub_date
+            elif kind == "tech_talk":
+                meta = pub_date or pts or "YouTube"
+            else:
+                meta = pts or pub_date
+
+            clean_desc = _clean_excerpt(desc, max_chars=280)
             notes.append(
                 {
                     "title": title,
                     "url": url,
                     "kicker": kicker,
-                    "meta": dur if kind == "podcast" else pts,
+                    "meta": meta,
                     "hn_url": hn_url,
                     "summary": clean_desc,
                 }
             )
         idx += 1
+    return notes
+
+
+def _default_tech_talk_notes(limit: int = 4) -> List[Dict[str, str]]:
+    """Build curated fallback tech talk notes when rendering legacy digests that predate Section IV."""
+    notes: List[Dict[str, str]] = []
+    for talk in CURATED_FALLBACK_TECH_TALKS[:limit]:
+        notes.append(
+            {
+                "title": _strip_emojis(talk["title"]),
+                "url": talk["url"],
+                "kicker": talk["source"],
+                "meta": talk.get("published_at", "YouTube"),
+                "hn_url": "",
+                "summary": _clean_excerpt(talk.get("summary", ""), max_chars=280),
+            }
+        )
     return notes
 
 
@@ -1025,12 +1060,13 @@ def _render_masthead(active_page: str, latest_date: str, edition_date: str = "")
       </div>
       <div class="masthead-title-row">
         <h1 class="masthead-title"><a href="index.html">The GenAI Briefing</a></h1>
-        <p class="masthead-sub">Curated research papers, frontier lab engineering, researcher threads &amp; audio briefings.</p>
+        <p class="masthead-sub">Curated research papers, frontier lab engineering, tech talks, researcher threads &amp; audio briefings.</p>
       </div>
       <nav class="masthead-nav">
         <div class="nav-links">
           <a href="index.html" class="{'active' if active_page == 'index' else ''}">Front Page</a>
           <a href="{latest_date}.html" class="{'active' if active_page == 'daily' else ''}">Latest Issue ({latest_date})</a>
+          <a href="#tech-talks">Tech Talks</a>
           <a href="podcasts.html" class="{'active' if active_page == 'podcasts' else ''}">Podcasts Index</a>
           <a href="index.html#archive">Archive</a>
         </div>
@@ -1213,14 +1249,56 @@ def _find_reddit_discussion(title: str) -> Tuple[Dict[str, str] | None, str]:
     return None, search_url
 
 
-_CACHED_URL_SUMMARIES: Dict[str, str] = {}
+_CACHED_URL_SUMMARIES: Dict[str, str] = {
+    "https://github.com/anthropics/claude-code/issues/107757": (
+        "Bug Description I receive dozens of scam emails per day because claude code divulged my email "
+        "to arbitrary 3rd parties in the User-Agent request header while conducting web searches without my."
+    ),
+    "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/": (
+        "Gemini 4 Carbon is our strongest model with state-of-the-art cybersecurity and long horizon capabilities."
+    ),
+    "https://8rank.ai/game/apple-intelligence-personal-knowledge-graph": (
+        "Every Mac since macOS 13 (allegedly) ships a pair of daemons whose only purpose in life is to build a graph "
+        "about who you are, whom you know, how those people are related to you and to each other, how you communicate "
+        "with them, where you go, what you do and when."
+    ),
+    "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/": (
+        "Announcing Gemini 4 Argon, our frontier model for real-world coding, enterprise knowledge work, "
+        "and cyber defense, rolling out soon."
+    ),
+    "https://caleb.software/posts/claude-to-pi.html": (
+        "I’ve been a longtime Claude Code user, ever since it became available in the Claude Pro subscription plan over a year ago."
+    ),
+    "https://www.thestateofai.com/news/goldman-sachs-claude-code-traders-bankers": (
+        "Community note: Original source appears to be Bloomberg, with State of AI being some kind of AI-written site run by a spam company."
+    ),
+    "https://apiiro.com/blog/coding-agents-leaking-secrets-github-dont-ask-again": (
+        "Secure everything coding agents build, use, and ship - prevent risk before code exists, AutoFix the backlog, "
+        "and protect the coding agents and supply chain."
+    ),
+}
+
+
+def _safe_http_url(url: str) -> str:
+    """Ensure a URL uses http/https scheme and escape it for safe HTML attribute rendering."""
+    raw = (url or "").strip()
+    if not raw:
+        return "#"
+    try:
+        parsed = urlparse(raw)
+        if parsed.scheme not in ("http", "https"):
+            return "#"
+        return html.escape(raw, quote=True)
+    except Exception:
+        return "#"
 
 
 def _format_inline_math(text: str) -> str:
-    """Convert raw inline LaTeX variables like `$L$` into clean typographic `<var>L</var>` tags."""
+    """Escape HTML entities and convert raw inline LaTeX variables like `$L$` into clean typographic `<var>L</var>` tags."""
     if not text:
         return ""
-    return re.sub(r"\$([A-Za-z0-9_^{}\-]+)\$", r"<var>\1</var>", text)
+    escaped = html.escape(text)
+    return re.sub(r"\$([A-Za-z0-9_^{}\-]+)\$", r"<var>\1</var>", escaped)
 
 
 def _enrich_missing_summary(title: str, url: str, hn_url: str) -> str:
@@ -1298,7 +1376,7 @@ def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
     filter_pills = [
         f'<button class="filter-pill active" data-filter-pill="all" onclick="filterBriefing(\'all\')">All ({len(items)})</button>'
     ]
-    for cat_name in ("Research", "Engineering", "Lab Release"):
+    for cat_name in ("Research", "Engineering", "Lab Release", "Tech Talk"):
         if cat_counts.get(cat_name):
             filter_pills.append(
                 f'<button class="filter-pill" data-filter-pill="{cat_name}" onclick="filterBriefing(\'{cat_name}\')">{cat_name} ({cat_counts[cat_name]})</button>'
@@ -1307,11 +1385,19 @@ def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
 
     for it in items:
         matched_reddit, reddit_search_url = _find_reddit_discussion(it["title"])
+        safe_url = _safe_http_url(it["url"])
+        safe_hn_url = _safe_http_url(it["hn_url"]) if it["hn_url"] else ""
+        safe_reddit_search_url = _safe_http_url(reddit_search_url)
+        safe_title = html.escape(it["title"])
+        safe_cat = html.escape(it["category"])
+        safe_src = html.escape(it["source"])
+        safe_date = html.escape(it["date"])
+        safe_domain = html.escape(it["domain"])
 
         # Tier 1: Clean, uncluttered kicker above the headline
-        kicker_bits = [f'<span class="briefing-tag">{it["category"]}</span>', f'<span>{it["source"]}</span>']
-        if it["date"]:
-            kicker_bits.append(f'<span>{it["date"]}</span>')
+        kicker_bits = [f'<span class="briefing-tag">{safe_cat}</span>', f'<span>{safe_src}</span>']
+        if safe_date:
+            kicker_bits.append(f'<span>{safe_date}</span>')
 
         # Tier 2: Substantive summary (auto-enriched if empty) + formatted inline math
         raw_summary = it["summary"] or _enrich_missing_summary(it["title"], it["url"], it["hn_url"])
@@ -1328,20 +1414,20 @@ def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
 
             body_parts: List[str] = []
             if op_excerpt and op_excerpt.lower() != matched_reddit["title"].lower():
-                body_parts.append(f'<p style="margin:0 0 6px;">{op_excerpt}</p>')
+                body_parts.append(f'<p style="margin:0 0 6px;">{html.escape(op_excerpt)}</p>')
             for cm in top_comments:
                 body_parts.append(
-                    f'<div class="reddit-comment"><strong>{cm["author"]}:</strong> {cm["text"]}</div>'
+                    f'<div class="reddit-comment"><strong>{html.escape(cm["author"])}:</strong> {html.escape(cm["text"])}</div>'
                 )
             body_parts.append(
                 f'<div class="reddit-footer">'
-                f'<a href="{reddit_search_url}" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a>'
-                f'<a href="{matched_reddit["url"]}" target="_blank" rel="noopener noreferrer">Direct link ({matched_reddit["sub"]}) ↗</a>'
+                f'<a href="{safe_reddit_search_url}" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a>'
+                f'<a href="{_safe_http_url(matched_reddit["url"])}" target="_blank" rel="noopener noreferrer">Direct link ({html.escape(matched_reddit["sub"])}) ↗</a>'
                 f'</div>'
             )
             reddit_callout_html = (
                 f'<details class="briefing-reddit">'
-                f'<summary><span><strong>Reddit ({matched_reddit["sub"]}):</strong> {r_title}</span>'
+                f'<summary><span><strong>Reddit ({html.escape(matched_reddit["sub"])}):</strong> {html.escape(r_title)}</span>'
                 f'<span class="reddit-toggle">Read inline ▾</span></summary>'
                 f'<div class="reddit-body">{"".join(body_parts)}</div>'
                 f'</details>'
@@ -1349,35 +1435,35 @@ def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
 
         # Tier 3: Dedicated Action & Discussion Bar below the summary
         action_links: List[str] = []
-        source_label = f'Read Source ({it["domain"]}) ↗' if it["domain"] else "Read Source ↗"
-        action_links.append(f'<a href="{it["url"]}" target="_blank" rel="noopener noreferrer">{source_label}</a>')
+        source_label = f'Read Source ({safe_domain}) ↗' if safe_domain else "Read Source ↗"
+        action_links.append(f'<a href="{safe_url}" target="_blank" rel="noopener noreferrer">{source_label}</a>')
 
         if it["points"]:
-            if it["hn_url"] and it["hn_url"] != it["url"]:
+            if safe_hn_url and it["hn_url"] != it["url"]:
                 action_links.append(
-                    f'<a href="{it["hn_url"]}" target="_blank" rel="noopener noreferrer">HN Discussion ({it["points"]} pts) ↗</a>'
+                    f'<a href="{safe_hn_url}" target="_blank" rel="noopener noreferrer">HN Discussion ({html.escape(it["points"])} pts) ↗</a>'
                 )
             else:
-                action_links.append(f'<span>{it["points"]} pts</span>')
-        elif it["hn_url"] and it["hn_url"] != it["url"]:
-            action_links.append(f'<a href="{it["hn_url"]}" target="_blank" rel="noopener noreferrer">HN Discussion ↗</a>')
+                action_links.append(f'<span>{html.escape(it["points"])} pts</span>')
+        elif safe_hn_url and it["hn_url"] != it["url"]:
+            action_links.append(f'<a href="{safe_hn_url}" target="_blank" rel="noopener noreferrer">HN Discussion ↗</a>')
 
         if matched_reddit:
             action_links.append(
-                f'<a href="{reddit_search_url}" target="_blank" rel="noopener noreferrer">{matched_reddit["sub"]} via Google ↗</a>'
+                f'<a href="{safe_reddit_search_url}" target="_blank" rel="noopener noreferrer">{html.escape(matched_reddit["sub"])} via Google ↗</a>'
             )
         else:
             action_links.append(
-                f'<a href="{reddit_search_url}" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a>'
+                f'<a href="{safe_reddit_search_url}" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a>'
             )
 
         rows.append(
             f"""
-            <article class="briefing-item" data-category="{it["category"]}">
-              <div class="briefing-num">{it["rank"]}</div>
+            <article class="briefing-item" data-category="{safe_cat}">
+              <div class="briefing-num">{html.escape(it["rank"])}</div>
               <div class="briefing-content">
                 <div class="briefing-meta">{'<span>·</span>'.join(kicker_bits)}</div>
-                <h3><a href="{it["url"]}" target="_blank" rel="noopener noreferrer">{it["title"]}</a></h3>
+                <h3><a href="{safe_url}" target="_blank" rel="noopener noreferrer">{safe_title}</a></h3>
                 {summary_html}
                 {reddit_callout_html}
                 <div class="briefing-actions">{"".join(action_links)}</div>
@@ -1388,29 +1474,53 @@ def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
     return f'{filter_bar_html}<div class="briefing-list">{"".join(rows)}</div>'
 
 
-def _render_notes_column_html(notes: List[Dict[str, str]], action_label: str) -> str:
+def _render_notes_column_html(
+    notes: List[Dict[str, str]],
+    action_label: str,
+    empty_msg: str = "No entries recorded for this issue.",
+) -> str:
     if not notes:
-        return '<p style="color:var(--ink-muted);font-size:0.9rem;">No entries recorded for this issue.</p>'
+        return f'<p style="color:var(--ink-muted);font-size:0.9rem;">{html.escape(empty_msg)}</p>'
     blocks: List[str] = []
     for n in notes:
-        links = [f'<a href="{n["url"]}" target="_blank" rel="noopener noreferrer">{action_label} ↗</a>']
-        if n["hn_url"] and n["hn_url"] != n["url"]:
-            links.append(f'<a href="{n["hn_url"]}" target="_blank" rel="noopener noreferrer">HN Thread ↗</a>')
-        body_html = f'<p class="note-body">{n["summary"]}</p>' if n["summary"] else ""
+        safe_url = _safe_http_url(n["url"])
+        safe_hn_url = _safe_http_url(n["hn_url"]) if n["hn_url"] else ""
+        links = [f'<a href="{safe_url}" target="_blank" rel="noopener noreferrer">{html.escape(action_label)} ↗</a>']
+        if safe_hn_url and n["hn_url"] != n["url"]:
+            links.append(f'<a href="{safe_hn_url}" target="_blank" rel="noopener noreferrer">HN Thread ↗</a>')
+        body_html = f'<p class="note-body">{html.escape(n["summary"])}</p>' if n["summary"] else ""
         blocks.append(
             f"""
             <article class="note-item">
               <div class="note-kicker">
-                <strong>{n["kicker"]}</strong>
-                <span>{n["meta"]}</span>
+                <strong>{html.escape(n["kicker"])}</strong>
+                <span>{html.escape(n["meta"])}</span>
               </div>
-              <h4 class="note-title"><a href="{n["url"]}" target="_blank" rel="noopener noreferrer">{n["title"]}</a></h4>
+              <h4 class="note-title"><a href="{safe_url}" target="_blank" rel="noopener noreferrer">{html.escape(n["title"])}</a></h4>
               {body_html}
               <div class="note-links">{"".join(links)}</div>
             </article>
             """
         )
     return f'<div class="note-list">{"".join(blocks)}</div>'
+
+
+def _render_bullet_notes_html(
+    section_md: str,
+    kind: str = "tech_talk",
+    empty_msg: str = "No entries recorded for this issue.",
+) -> str:
+    """Parse a bullet section markdown block and render it as editorial note cards."""
+    notes = _parse_bullet_notes(section_md, kind=kind)
+    if not notes and kind == "tech_talk":
+        notes = _default_tech_talk_notes(limit=4)
+    action_map = {
+        "x": "Read Thread on X",
+        "podcast": "Listen Episode",
+        "tech_talk": "Watch on YouTube",
+    }
+    action_label = action_map.get(kind, "Open Link")
+    return _render_notes_column_html(notes, action_label=action_label, empty_msg=empty_msg)
 
 
 def _render_daily_digest_html(
@@ -1424,6 +1534,11 @@ def _render_daily_digest_html(
     top10_items = _parse_top10_items(markdown_content)
     x_md = _extract_section_markdown(markdown_content, "X") or _extract_section_markdown(markdown_content, "Twitter")
     pod_md = _extract_section_markdown(markdown_content, "Podcast") or _extract_section_markdown(markdown_content, "Audio")
+    talks_md = (
+        _extract_section_markdown(markdown_content, "Tech Talk")
+        or _extract_section_markdown(markdown_content, "Keynote")
+        or _extract_section_markdown(markdown_content, "YouTube")
+    )
     tldr_md = _extract_section_markdown(markdown_content, "TL;DR") or _extract_section_markdown(markdown_content, "Executive Summary")
     concept_md = _extract_section_markdown(markdown_content, "Concept") or _extract_section_markdown(markdown_content, "Deep-Dive")
 
@@ -1440,6 +1555,7 @@ def _render_daily_digest_html(
     top10_html = _render_top10_ledger_html(top10_items)
     x_html = _render_notes_column_html(_parse_bullet_notes(x_md, kind="x"), "Read Thread on X")
     pod_html = _render_notes_column_html(_parse_bullet_notes(pod_md, kind="podcast"), "Listen Episode")
+    talks_html = _render_bullet_notes_html(talks_md, kind="tech_talk")
 
     date_links = " · ".join(
         f'<a href="{d}.html" style="font-weight:{"700" if d == current_date else "400"};color:var(--ink);">{d}</a>'
@@ -1488,9 +1604,17 @@ def _render_daily_digest_html(
       </section>
     </div>
 
+    <section id="tech-talks">
+      <div class="section-head">
+        <h2>IV. Tech Talks &amp; Keynotes</h2>
+        <span>AI ENGINEERING, FRONTIER LABS &amp; SEMINARS</span>
+      </div>
+      {talks_html}
+    </section>
+
     <footer class="footer">
       <div>THE GENAI BRIEFING · ISSUE {current_date}</div>
-      <div><a href="index.html">Front Page</a> · <a href="podcasts.html">Podcasts Index</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="#tech-talks">Tech Talks</a> · <a href="podcasts.html">Podcasts Index</a></div>
     </footer>
   </div>
 </body>
@@ -1506,6 +1630,11 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
     top10_items = _parse_top10_items(latest_md)
     x_md = _extract_section_markdown(latest_md, "X") or _extract_section_markdown(latest_md, "Twitter")
     pod_md = _extract_section_markdown(latest_md, "Podcast") or _extract_section_markdown(latest_md, "Audio")
+    talks_md = (
+        _extract_section_markdown(latest_md, "Tech Talk")
+        or _extract_section_markdown(latest_md, "Keynote")
+        or _extract_section_markdown(latest_md, "YouTube")
+    )
     tldr_md = _extract_section_markdown(latest_md, "TL;DR") or _extract_section_markdown(latest_md, "Executive Summary")
 
     tldr_html = ""
@@ -1516,12 +1645,13 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
     top10_html = _render_top10_ledger_html(top10_items)
     x_html = _render_notes_column_html(_parse_bullet_notes(x_md, kind="x"), "Read Thread on X")
     pod_html = _render_notes_column_html(_parse_bullet_notes(pod_md, kind="podcast"), "Listen Episode")
+    talks_html = _render_bullet_notes_html(talks_md, kind="tech_talk")
 
     archive_rows: List[str] = []
     for d in sorted_dates:
         items_d = _parse_top10_items(archive_map[d])
         leads = " · ".join(
-            f'<a href="{it["url"]}" target="_blank" rel="noopener">{it["title"]}</a>'
+            f'<a href="{_safe_http_url(it["url"])}" target="_blank" rel="noopener noreferrer">{html.escape(it["title"])}</a>'
             for it in items_d[:3]
         )
         archive_rows.append(
@@ -1570,9 +1700,17 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
       </section>
     </div>
 
+    <section id="tech-talks">
+      <div class="section-head">
+        <h2>IV. Tech Talks &amp; Keynotes</h2>
+        <span>AI ENGINEERING, FRONTIER LABS &amp; SEMINARS</span>
+      </div>
+      {talks_html}
+    </section>
+
     <section id="archive">
       <div class="section-head">
-        <h2>IV. Past Issues Archive</h2>
+        <h2>V. Past Issues Archive</h2>
         <span>{len(sorted_dates)} EDITIONS PUBLISHED</span>
       </div>
       <table class="archive-table">
@@ -1590,7 +1728,7 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · PUBLISHED DAILY</div>
-      <div><a href="index.html">Front Page</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="#tech-talks">Tech Talks</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a></div>
     </footer>
   </div>
 </body>
@@ -1621,10 +1759,10 @@ def _render_podcasts_page_html(
             f"""
             <section id="show-{idx}">
               <div class="section-head">
-                <h2>0{idx}. {show["name"]} — Host: {show["host"]}</h2>
-                <span><a href="{show["apple_url"]}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">APPLE PODCASTS ↗</a></span>
+                <h2>0{idx}. {html.escape(show["name"])} — Host: {html.escape(show["host"])}</h2>
+                <span><a href="{_safe_http_url(show["apple_url"])}" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;">APPLE PODCASTS ↗</a></span>
               </div>
-              <p style="font-family:var(--font-sans);font-size:0.84rem;color:var(--ink-muted);margin:0 0 8px;">Focus: {show["focus"]}</p>
+              <p style="font-family:var(--font-sans);font-size:0.84rem;color:var(--ink-muted);margin:0 0 8px;">Focus: {html.escape(show["focus"])}</p>
               {notes_html}
             </section>
             """

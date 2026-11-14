@@ -151,3 +151,115 @@ def test_reddit_waf_safe_links_and_rss_sanitization():
     assert "<table" not in excerpt
 
 
+def test_tech_talks_collector_and_boilerplate_sanitization(monkeypatch):
+    from genai_agent.collectors import tech_talks
+    from genai_agent.collectors.tech_talks import (
+        _is_valid_youtube_url,
+        _strip_youtube_boilerplate,
+        fetch_ai_tech_talks,
+    )
+
+    assert _is_valid_youtube_url("https://www.youtube.com/watch?v=7xTGNNLPyMI")
+    assert _is_valid_youtube_url("https://youtu.be/7xTGNNLPyMI")
+    assert not _is_valid_youtube_url("https://example.com/watch?v=123")
+    assert not _is_valid_youtube_url("javascript:alert(1)")
+
+    raw_desc = (
+        "00:00 Intro\n"
+        "04:15 Transformer KV Cache Architecture\n"
+        "<p>We present a deep dive into speculative decoding and multi-head latent attention for low-latency LLM inference.</p>\n"
+        "Subscribe to our channel and join our Discord: https://discord.gg/test\n"
+        "Sponsored by ExampleCorp — use code AI2026!\n"
+        "#AI #LLMs #DeepLearning"
+    )
+    cleaned = _strip_youtube_boilerplate(raw_desc)
+    assert "speculative decoding" in cleaned
+    assert "00:00" not in cleaned
+    assert "Subscribe to" not in cleaned
+    assert "Sponsored by" not in cleaned
+    assert "https://discord.gg" not in cleaned
+    assert "#AI" not in cleaned
+    assert "<p>" not in cleaned
+
+    monkeypatch.setattr(tech_talks, "fetch_youtube_channel_feeds", lambda **kwargs: [])
+    monkeypatch.setattr(tech_talks, "fetch_hn_youtube_tech_talks", lambda **kwargs: [])
+    talks = fetch_ai_tech_talks(focus_topics=["LLMs", "AI Agents"], limit=4)
+    assert len(talks) == 4
+    for item in talks:
+        assert isinstance(item, NewsItem)
+        assert item.category == SourceCategory.TECH_TALK
+        assert "youtube.com/watch" in item.url or "youtu.be/" in item.url
+        assert len(item.summary) > 30
+
+
+def test_tech_talks_prompt_fallback_and_html_rendering(tmp_path: Path):
+    talk_item = NewsItem(
+        title="Building Effective AI Agents: Architecture Patterns & Production Evals",
+        url="https://www.youtube.com/watch?v=d5EltXhbcfA",
+        source="Anthropic",
+        category=SourceCategory.TECH_TALK,
+        summary="Engineering breakdown of composable agent workflows versus autonomous multi-step loops.",
+        published_at="2026-11-04",
+        score=620,
+    )
+    paper_item = NewsItem(
+        title="DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via RL",
+        url="https://arxiv.org/abs/2501.12948",
+        source="arXiv",
+        category=SourceCategory.RESEARCH_PAPER,
+        summary="Demonstrates pure reinforcement learning for reasoning models.",
+        published_at="2026-11-06",
+        score=420,
+    )
+
+    prompt = build_synthesis_prompt([paper_item, talk_item], ["AI Agents"], "2026-11-09")
+    assert "## Tech Talks & Keynotes" in prompt
+    assert "Building Effective AI Agents" in prompt
+
+    fallback_md = build_fallback_markdown(
+        items=[paper_item, talk_item],
+        focus_topics=["AI Agents"],
+        date_str="2026-11-09",
+        breakdown={"arXiv": 1, "YouTube Tech Talks": 1},
+    )
+    assert "## Tech Talks & Keynotes" in fallback_md
+    assert "- **[Building Effective AI Agents: Architecture Patterns & Production Evals](https://www.youtube.com/watch?v=d5EltXhbcfA)** — **Anthropic** · *2026-11-04*" in fallback_md
+    assert "  - Engineering breakdown of composable agent workflows versus autonomous multi-step loops." in fallback_md
+    for emoji in ("🚀", "🔥", "🎥", "📺", "▶️", "🎬"):
+        assert emoji not in fallback_md
+
+    digests_dir = tmp_path / "digests"
+    docs_dir = tmp_path / "docs"
+    ts = datetime(2026, 11, 9, 12, 0)
+    save_markdown_digest(fallback_md, digests_dir, timestamp=ts, docs_dir=docs_dir)
+
+    for html_file in (docs_dir / "index.html", docs_dir / "2026-11-09.html"):
+        assert html_file.exists()
+        content = html_file.read_text(encoding="utf-8")
+        assert 'id="tech-talks"' in content
+        assert "IV. Tech Talks &amp; Keynotes" in content
+        assert '<a href="#tech-talks">Tech Talks</a>' in content
+        assert "Watch on YouTube ↗" in content
+        assert 'target="_blank" rel="noopener noreferrer"' in content
+        assert "viewport-fit=cover" in content
+        assert "max-width: 66ch;" in content
+
+
+def test_published_docs_html_integrity():
+    repo_docs = Path(__file__).resolve().parent.parent / "docs"
+    if not repo_docs.exists():
+        return
+    for page in ("index.html", "2026-11-09.html"):
+        html_path = repo_docs / page
+        assert html_path.exists()
+        text = html_path.read_text(encoding="utf-8")
+        assert 'id="tech-talks"' in text
+        assert "IV. Tech Talks &amp; Keynotes" in text
+        assert '<a href="#tech-talks">Tech Talks</a>' in text
+        assert "Watch on YouTube ↗" in text
+        assert "viewport-fit=cover" in text
+        assert "max-width: 66ch;" in text
+
+
+
+

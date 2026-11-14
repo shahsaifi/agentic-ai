@@ -50,3 +50,16 @@
   - Active engineering discussion thread on [Hacker News](https://news.ycombinator.com/item?id=50381914).
 - **[Introducing Gemini 4 Hydrogen for Agentic Workflows - Google DeepMind](https://news.google.com/rss/articles/CBMia0FVX3lxTE5tcFA0eUdfTldGdV9NTDA4bkVfbVljVVZfaHg4OExYbXptenFGT3otNU40YXZQWE9ka3V3cGw1Z01EaDR6bFpUMHlGV0IyTG5tVDdrZU9jQnZJcm1nTm5UY0dQamlVRG1BYldB?oc=5)** — *X Pulse (Google DeepMind)* · *Thu, 12 Nov 2026*
   - Trending AI discussion on X covered by Google DeepMind.
+
+---
+
+## Tech Talks & Keynotes
+
+- **[Deep Dive into LLMs like ChatGPT: Pretraining, Supervised Finetuning & RLHF](https://www.youtube.com/watch?v=7xTGNNLPyMI)** — **Andrej Karpathy** · *2026-10-28*
+  - Comprehensive technical walkthrough of the full Large Language Model training pipeline, covering internet-scale tokenization, distributed pretraining, supervised instruction tuning, and reinforcement learning from human and verifiable rewards.
+- **[Building Effective AI Agents: Architecture Patterns & Production Evals](https://www.youtube.com/watch?v=d5EltXhbcfA)** — **Anthropic** · *2026-11-04*
+  - Engineering breakdown of composable agent workflows versus autonomous multi-step loops, detailing tool-use sandboxing, context window management, and deterministic evaluation harnesses.
+- **[Stanford CS25: Reasoning Models, Test-Time Compute & Search-Guided Decoding](https://www.youtube.com/watch?v=zjkBMFhNj_g)** — **Stanford Online (CS25)** · *2026-11-02*
+  - Examines how scaling test-time inference compute and verifier-guided tree search allow frontier transformers to solve multi-step mathematics, synthesis, and repository-level coding tasks.
+- **[Hybrid Retrieval-Augmented Generation (RAG) at Scale: Vector, Lexical & Graph Reranking](https://www.youtube.com/watch?v=TRjq7t2Ms5I)** — **AI Engineer** · *2026-11-06*
+  - Architecture deep-dive into production RAG systems combining dense embeddings, BM25 lexical indexes, late-interaction cross-encoders, and citation-grounded context assembly.

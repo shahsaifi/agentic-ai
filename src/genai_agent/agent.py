@@ -14,6 +14,7 @@ from genai_agent.collectors import (
     collect_all_sources,
     fetch_ai_company_blogs,
     fetch_ai_podcasts,
+    fetch_ai_tech_talks,
     fetch_arxiv_papers,
     fetch_google_news_rss,
     fetch_hacker_news_ai,
@@ -97,7 +98,7 @@ def build_synthesis_prompt(
     return f"""Date: {date_str}
 Focus Topics: {topics_str}
 
-Below are {len(items)} collected items from Hugging Face Daily Papers, arXiv (cs.CL/cs.AI), AI Lab Blogs (OpenAI, Google AI, DeepMind, Hugging Face, Simon Willison, Lilian Weng), Hacker News, Reddit (r/LocalLLaMA, r/MachineLearning), X.com, and AI Podcasts.
+Below are {len(items)} collected items from Hugging Face Daily Papers, arXiv (cs.CL/cs.AI), AI Lab Blogs (OpenAI, Google AI, DeepMind, Hugging Face, Simon Willison, Lilian Weng), Hacker News, Reddit (r/LocalLLaMA, r/MachineLearning), X.com, AI Podcasts, and YouTube Tech Talks (AI Engineer, Karpathy, Anthropic, OpenAI, DeepMind, Stanford CS25).
 
 Write a crisp, high-signal technical briefing using the exact Markdown sections below. Do NOT use emojis in headings or bullets.
 
@@ -132,6 +133,13 @@ Highlight 3–4 notable X.com / AI researcher discussions. Format each item usin
 Include 3–4 relevant AI podcast episodes from the feed. Format each item using this exact 2-line bullet structure:
 - **[Episode Title](URL)** — *Show Name* (🎧 Duration)
   - 1–2 complete sentences on the core technical or strategic topic discussed.
+
+---
+
+## Tech Talks & Keynotes
+Include 3–4 notable YouTube AI technical talks, keynotes, or lectures from the feed. Format each item using this exact 2-line bullet structure:
+- **[Talk Title](URL)** — **Channel Name** · *Date*
+  - 1–2 complete sentences explaining the technical architecture, benchmark, or engineering pattern presented.
 
 ---
 ### Collected Source Material:
@@ -191,6 +199,7 @@ def rank_top_items(items: List[NewsItem], top_k: int = 10) -> List[NewsItem]:
         SourceCategory.WEB_SEARCH: [],
         SourceCategory.PODCAST: [],
         SourceCategory.SOCIAL_X: [],
+        SourceCategory.TECH_TALK: [],
     }
     for item in items:
         by_cat.setdefault(item.category, []).append(item)
@@ -219,7 +228,7 @@ def rank_top_items(items: List[NewsItem], top_k: int = 10) -> List[NewsItem]:
             i
             for i in items
             if i.url not in used_urls
-            and i.category not in (SourceCategory.PODCAST, SourceCategory.SOCIAL_X)
+            and i.category not in (SourceCategory.PODCAST, SourceCategory.SOCIAL_X, SourceCategory.TECH_TALK)
         ]
         remaining.sort(key=lambda x: ((x.score or 0), len(x.summary or "")), reverse=True)
         selected.extend(remaining[: top_k - len(selected)])
@@ -237,6 +246,7 @@ def build_fallback_markdown(
     top_items = rank_top_items(items, top_k=10)
     x_posts = [i for i in items if i.category == SourceCategory.SOCIAL_X]
     podcasts = [i for i in items if i.category == SourceCategory.PODCAST]
+    tech_talks = [i for i in items if i.category == SourceCategory.TECH_TALK]
 
     lines = [
         f"# Generative AI Technical Briefing — {date_str}",
@@ -250,6 +260,7 @@ def build_fallback_markdown(
         SourceCategory.COMPANY_BLOG: "Lab Post",
         SourceCategory.COMMUNITY_NEWS: "Engineering",
         SourceCategory.WEB_SEARCH: "Report",
+        SourceCategory.TECH_TALK: "Tech Talk",
     }
 
     for idx, item in enumerate(top_items, start=1):
@@ -303,6 +314,19 @@ def build_fallback_markdown(
             pub_str = f" · *{pod.published_at}*" if pod.published_at else ""
             lines.append(f"- **[{pod.title}]({pod.url})** — **{pod.source}**{dur_str}{pub_str}")
             excerpt = _clean_sentence_excerpt(pod.summary, max_chars=260)
+            if excerpt:
+                lines.append(f"  - {excerpt}")
+        lines.append("")
+
+    if tech_talks:
+        lines.append("---")
+        lines.append("")
+        lines.append("## Tech Talks & Keynotes")
+        lines.append("")
+        for talk in tech_talks[:4]:
+            pub_str = f" · *{talk.published_at}*" if talk.published_at else ""
+            lines.append(f"- **[{talk.title}]({talk.url})** — **{talk.source}**{pub_str}")
+            excerpt = _clean_sentence_excerpt(talk.summary, max_chars=260)
             if excerpt:
                 lines.append(f"  - {excerpt}")
         lines.append("")
@@ -403,9 +427,13 @@ class GenAILearningAgent:
             """Fetch recent Generative AI news articles from Google News RSS."""
             return [i.to_dict() for i in fetch_google_news_rss(topics=topics, days=days, limit=max_items)]
 
+        def tool_get_ai_tech_talks() -> List[dict]:
+            """Fetch YouTube AI technical talks and keynotes from AI Engineer, Karpathy, Anthropic, OpenAI, DeepMind, and Stanford CS25."""
+            return [i.to_dict() for i in fetch_ai_tech_talks(focus_topics=topics, limit=6)]
+
         prompt = (
             f"Today is {date_str}. Focus topics: {', '.join(topics)}.\n"
-            "Call the collector tools to gather the latest papers, lab blog posts, and community threads, "
+            "Call the collector tools to gather the latest papers, lab blog posts, community threads, and YouTube tech talks, "
             "then synthesize a clean, emoji-free Generative AI Technical Briefing."
         )
 
@@ -422,6 +450,7 @@ class GenAILearningAgent:
                     tool_get_reddit_discussions,
                     tool_get_ai_company_blogs,
                     tool_get_web_news,
+                    tool_get_ai_tech_talks,
                 ],
             ),
         )

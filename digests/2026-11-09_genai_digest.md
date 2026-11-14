@@ -54,3 +54,16 @@
 
 - **[Abundant Intelligence at the Midwest AI Summit Part 2](https://share.transistor.fm/s/1b301bdc)** — **Practical AI Podcast** (🎧 47m) · *Thu, 05 Nov 2026*
   - How do organizations decide what AI should do, where to set boundaries, and when to keep humans in control? In this special episode, we bring you three more talks from the Midwest AI Summit, exploring how organizations are putting AI into practice.
+
+---
+
+## Tech Talks & Keynotes
+
+- **[Deep Dive into LLMs like ChatGPT: Pretraining, Supervised Finetuning & RLHF](https://www.youtube.com/watch?v=7xTGNNLPyMI)** — **Andrej Karpathy** · *2026-10-28*
+  - Comprehensive technical walkthrough of the full Large Language Model training pipeline, covering internet-scale tokenization, distributed pretraining, supervised instruction tuning, and reinforcement learning from human and verifiable rewards.
+- **[Building Effective AI Agents: Architecture Patterns & Production Evals](https://www.youtube.com/watch?v=d5EltXhbcfA)** — **Anthropic** · *2026-11-04*
+  - Engineering breakdown of composable agent workflows versus autonomous multi-step loops, detailing tool-use sandboxing, context window management, and deterministic evaluation harnesses.
+- **[Stanford CS25: Reasoning Models, Test-Time Compute & Search-Guided Decoding](https://www.youtube.com/watch?v=zjkBMFhNj_g)** — **Stanford Online (CS25)** · *2026-11-02*
+  - Examines how scaling test-time inference compute and verifier-guided tree search allow frontier transformers to solve multi-step mathematics, synthesis, and repository-level coding tasks.
+- **[Hybrid Retrieval-Augmented Generation (RAG) at Scale: Vector, Lexical & Graph Reranking](https://www.youtube.com/watch?v=TRjq7t2Ms5I)** — **AI Engineer** · *2026-11-06*
+  - Architecture deep-dive into production RAG systems combining dense embeddings, BM25 lexical indexes, late-interaction cross-encoders, and citation-grounded context assembly.
