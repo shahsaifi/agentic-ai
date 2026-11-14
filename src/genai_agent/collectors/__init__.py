@@ -50,7 +50,7 @@ def collect_all_sources(
         "AI Lab & Engineering Blogs": lambda: fetch_ai_company_blogs(max_per_feed=2),
         "X.com / AI Twitter Pulse": lambda: fetch_x_social_pulse(days=days, limit=6),
         "AI Podcasts": lambda: fetch_ai_podcasts(max_per_feed=1),
-        "YouTube Tech Talks": lambda: fetch_ai_tech_talks(focus_topics=focus_topics, limit=6),
+        "YouTube Tech Talks": lambda: fetch_ai_tech_talks(focus_topics=focus_topics, limit=8),
         "Web News Search": lambda: fetch_google_news_rss(
             topics=focus_topics, days=days, limit=max_per_source
         ),

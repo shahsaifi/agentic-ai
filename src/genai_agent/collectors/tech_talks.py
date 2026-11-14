@@ -15,34 +15,38 @@ logger = logging.getLogger(__name__)
 
 USER_AGENT = "GenAILearningAgent/0.1 (+https://github.com/genai-learning-agent)"
 
-FEATURED_TECH_TALK_CHANNELS: List[Dict[str, str]] = [
+FEATURED_TECH_TALK_CHANNELS: List[Dict[str, Any]] = [
     {
-        "name": "Andrej Karpathy",
-        "channel_id": "UCXUPKJO5MZQN11PqgIvyuvQ",
-        "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCXUPKJO5MZQN11PqgIvyuvQ",
-        "channel_url": "https://www.youtube.com/@AndrejKarpathy",
-        "focus": "Deep-dive neural network engineering, LLM pretraining, tokenization, and post-training",
+        "name": "Google Cloud Tech",
+        "channel_id": "UCJS9pqu9BzkAMNTmzNMNhvg",
+        "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCJS9pqu9BzkAMNTmzNMNhvg",
+        "channel_url": "https://www.youtube.com/@GoogleCloudTech",
+        "focus": "Agent Development Kit (ADK), Vertex AI, Gemini grounding, MCP servers, and production GenAI infrastructure",
+        "strict_topic_match": True,
     },
     {
-        "name": "Anthropic",
-        "channel_id": "UCrDwWp7EBBv4NwvScIpBDOA",
-        "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCrDwWp7EBBv4NwvScIpBDOA",
-        "channel_url": "https://www.youtube.com/@anthropic-ai",
-        "focus": "Claude architecture, agentic coding, Model Context Protocol (MCP), and mechanistic interpretability",
+        "name": "IBM Technology",
+        "channel_id": "UCKWaEZ-_VweaEx1j62do_vQ",
+        "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCKWaEZ-_VweaEx1j62do_vQ",
+        "channel_url": "https://www.youtube.com/@IBMTechnology",
+        "focus": "Lightboard architecture breakdowns on LangChain, LangGraph, RAG, AI agents, MCP, and LLM security",
+        "strict_topic_match": True,
     },
     {
-        "name": "OpenAI",
-        "channel_id": "UCXZCJLdBC09xxGZ6gcdrc6A",
-        "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCXZCJLdBC09xxGZ6gcdrc6A",
-        "channel_url": "https://www.youtube.com/@OpenAI",
-        "focus": "Reasoning models, reinforcement learning, multimodal systems, and developer keynotes",
+        "name": "The Pragmatic Engineer",
+        "channel_id": "UCPbwhExawYrn9xxI21TFfyw",
+        "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCPbwhExawYrn9xxI21TFfyw",
+        "channel_url": "https://www.youtube.com/@ThePragmaticEngineer",
+        "focus": "Gergely Orosz deep-dives on AI engineering workflows, coding agents, and frontier systems architecture",
+        "strict_topic_match": True,
     },
     {
-        "name": "Google DeepMind",
-        "channel_id": "UCP7jMXSY2xbc3KCAE0MHQ-A",
-        "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCP7jMXSY2xbc3KCAE0MHQ-A",
-        "channel_url": "https://www.youtube.com/@GoogleDeepMind",
-        "focus": "Gemini architecture, AlphaFold, scaling laws, and frontier reinforcement learning",
+        "name": "IBM Developer",
+        "channel_id": "UCUm6InQvGI9-6vo1teGWINA",
+        "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCUm6InQvGI9-6vo1teGWINA",
+        "channel_url": "https://www.youtube.com/@IBMDeveloper",
+        "focus": "Hands-on engineering tutorials on IBM Granite models, watsonx.ai Flows Engine, and open-source AI agents",
+        "strict_topic_match": True,
     },
     {
         "name": "Stanford Online (CS25)",
@@ -50,6 +54,47 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, str]] = [
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCBa5G_ESCn8Yd4vw5U-gIcg",
         "channel_url": "https://www.youtube.com/@stanfordonline",
         "focus": "Stanford CS25 Transformers United seminars, academic ML research, and systems optimization",
+        "strict_topic_match": True,
+    },
+    {
+        "name": "LangChain",
+        "channel_id": "UCC-lyoTfSrcJzA1ab3APAgw",
+        "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCC-lyoTfSrcJzA1ab3APAgw",
+        "channel_url": "https://www.youtube.com/@LangChain",
+        "focus": "LangGraph stateful agent orchestration, RAG From Scratch, context engineering, and LangSmith evaluations",
+        "strict_topic_match": False,
+    },
+    {
+        "name": "Andrej Karpathy",
+        "channel_id": "UCXUPKJO5MZQN11PqgIvyuvQ",
+        "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCXUPKJO5MZQN11PqgIvyuvQ",
+        "channel_url": "https://www.youtube.com/@AndrejKarpathy",
+        "focus": "Deep-dive neural network engineering, LLM pretraining, tokenization, and post-training",
+        "strict_topic_match": False,
+    },
+    {
+        "name": "Anthropic",
+        "channel_id": "UCrDwWp7EBBv4NwvScIpBDOA",
+        "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCrDwWp7EBBv4NwvScIpBDOA",
+        "channel_url": "https://www.youtube.com/@anthropic-ai",
+        "focus": "Claude architecture, agentic coding, Model Context Protocol (MCP), and mechanistic interpretability",
+        "strict_topic_match": False,
+    },
+    {
+        "name": "OpenAI",
+        "channel_id": "UCXZCJLdBC09xxGZ6gcdrc6A",
+        "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCXZCJLdBC09xxGZ6gcdrc6A",
+        "channel_url": "https://www.youtube.com/@OpenAI",
+        "focus": "Reasoning models, reinforcement learning, multimodal systems, and developer keynotes",
+        "strict_topic_match": False,
+    },
+    {
+        "name": "Google DeepMind",
+        "channel_id": "UCP7jMXSY2xbc3KCAE0MHQ-A",
+        "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCP7jMXSY2xbc3KCAE0MHQ-A",
+        "channel_url": "https://www.youtube.com/@GoogleDeepMind",
+        "focus": "Gemini architecture, AlphaFold, scaling laws, and frontier reinforcement learning",
+        "strict_topic_match": False,
     },
     {
         "name": "AI Engineer",
@@ -57,6 +102,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, str]] = [
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UC6q07N_E-G6rB8H-t0N6yHA",
         "channel_url": "https://www.youtube.com/@aiDotEngineer",
         "focus": "AI Engineer World's Fair & Summit keynotes on production agents, RAG, evals, and inference",
+        "strict_topic_match": False,
     },
     {
         "name": "Latent Space",
@@ -64,6 +110,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, str]] = [
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCaG9f4O2N2vF2l_X9E7Y8_A",
         "channel_url": "https://www.youtube.com/@LatentSpaceTV",
         "focus": "Technical interviews with frontier model researchers, infra engineers, and agent builders",
+        "strict_topic_match": False,
     },
     {
         "name": "Weights & Biases",
@@ -71,6 +118,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, str]] = [
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCBp3w4D7m5hH3v7nB3E2B5Q",
         "channel_url": "https://www.youtube.com/@WeightsBiases",
         "focus": "Fine-tuning, LLM evaluation pipelines, CUDA optimization, and production MLOps",
+        "strict_topic_match": True,
     },
 ]
 
@@ -78,7 +126,87 @@ DEFAULT_TECH_TALK_FEEDS: Dict[str, str] = {
     ch["name"]: ch["feed_url"] for ch in FEATURED_TECH_TALK_CHANNELS
 }
 
+_CHANNEL_STRICT_MAP: Dict[str, bool] = {
+    ch["name"]: bool(ch.get("strict_topic_match", True)) for ch in FEATURED_TECH_TALK_CHANNELS
+}
+
 CURATED_FALLBACK_TECH_TALKS: List[Dict[str, Any]] = [
+    {
+        "title": "Building and Deploying Python AI Agents with ADK, Gemini, and MCP",
+        "url": "https://www.youtube.com/watch?v=h_r3NsfrrRI",
+        "source": "Google Cloud Tech",
+        "published_at": "2026-11-11",
+        "score": 680,
+        "summary": (
+            "Walkthrough of Google Cloud's Agent Development Kit (ADK) for Python, demonstrating how to "
+            "connect Gemini reasoning models to external enterprise tools via Model Context Protocol (MCP) "
+            "servers and deploy multi-agent workflows on Vertex AI."
+        ),
+        "tags": ["Google Cloud Tech", "ADK", "Gemini", "MCP", "AI Agents"],
+    },
+    {
+        "title": "LangChain vs LangGraph: Architecting Stateful Multi-Agent Workflows & RAG",
+        "url": "https://www.youtube.com/watch?v=qAF1NjEVHhY",
+        "source": "IBM Technology",
+        "published_at": "2026-11-10",
+        "score": 640,
+        "summary": (
+            "Architectural comparison of directed acyclic chains in LangChain versus cyclic, stateful "
+            "graph execution in LangGraph for building fault-tolerant multi-agent orchestration and "
+            "corrective retrieval-augmented generation."
+        ),
+        "tags": ["IBM Technology", "LangChain", "LangGraph", "AI Agents", "RAG"],
+    },
+    {
+        "title": "AI and Software Engineering: Production LLM Workflows & Agentic Tooling",
+        "url": "https://www.youtube.com/watch?v=5wks1W-auKY",
+        "source": "The Pragmatic Engineer",
+        "published_at": "2026-11-09",
+        "score": 595,
+        "summary": (
+            "Gergely Orosz examines how engineering organizations integrate coding agents, automated "
+            "PR verification, context indexing, and deterministic evaluation harnesses into high-velocity "
+            "production software pipelines."
+        ),
+        "tags": ["The Pragmatic Engineer", "AI Engineering", "Coding Agents", "LLMs"],
+    },
+    {
+        "title": "Building Enterprise AI Workflows with IBM Granite & watsonx.ai Flows Engine",
+        "url": "https://www.youtube.com/watch?v=-WXzgIFcNK0",
+        "source": "IBM Developer",
+        "published_at": "2026-11-08",
+        "score": 540,
+        "summary": (
+            "Technical deep-dive into building low-latency enterprise RAG and tool-calling pipelines using "
+            "open-weight IBM Granite foundation models and declarative flow orchestration in watsonx.ai."
+        ),
+        "tags": ["IBM Developer", "Granite", "watsonx", "RAG", "Enterprise AI"],
+    },
+    {
+        "title": "Stanford CS25: Transformers United — Frontier Reasoning & Post-Training Architectures",
+        "url": "https://www.youtube.com/watch?v=XfpMkf4rD6E",
+        "source": "Stanford Online (CS25)",
+        "published_at": "2026-11-07",
+        "score": 710,
+        "summary": (
+            "Stanford CS25 seminar examining how scaling test-time compute, reinforcement fine-tuning, "
+            "and verifier-guided search enable transformer architectures to solve complex mathematical "
+            "and multi-step reasoning problems."
+        ),
+        "tags": ["Stanford CS25", "Transformers", "Reasoning", "Post-Training"],
+    },
+    {
+        "title": "RAG From Scratch: Query Translation, Routing, RAPTOR & Corrective RAG",
+        "url": "https://www.youtube.com/watch?v=sVcwVQRHIc8",
+        "source": "LangChain",
+        "published_at": "2026-11-06",
+        "score": 760,
+        "summary": (
+            "End-to-end engineering tutorial covering multi-query decomposition, semantic routing, "
+            "hierarchical RAPTOR indexing, and self-reflective Corrective RAG (CRAG) grading loops."
+        ),
+        "tags": ["LangChain", "RAG", "Context Engineering", "Vector Search"],
+    },
     {
         "title": "Deep Dive into LLMs like ChatGPT: Pretraining, Supervised Finetuning & RLHF",
         "url": "https://www.youtube.com/watch?v=7xTGNNLPyMI",
@@ -105,28 +233,16 @@ CURATED_FALLBACK_TECH_TALKS: List[Dict[str, Any]] = [
         "tags": ["AI Agents", "Tool Use", "MCP", "Evals"],
     },
     {
-        "title": "Stanford CS25: Reasoning Models, Test-Time Compute & Search-Guided Decoding",
-        "url": "https://www.youtube.com/watch?v=zjkBMFhNj_g",
-        "source": "Stanford Online (CS25)",
-        "published_at": "2026-11-02",
-        "score": 510,
+        "title": "Reinforcement Fine-Tuning & Verifiable Rewards for Frontier Coding Models",
+        "url": "https://www.youtube.com/watch?v=eaAonE58sLU",
+        "source": "OpenAI",
+        "published_at": "2026-11-05",
+        "score": 475,
         "summary": (
-            "Examines how scaling test-time inference compute and verifier-guided tree search allow "
-            "frontier transformers to solve multi-step mathematics, synthesis, and repository-level coding tasks."
+            "Details how reinforcement fine-tuning with automated unit-test graders and execution sandboxes "
+            "shapes chain-of-thought reasoning for complex software engineering and debugging."
         ),
-        "tags": ["Reasoning", "Test-Time Compute", "LLMs"],
-    },
-    {
-        "title": "Hybrid Retrieval-Augmented Generation (RAG) at Scale: Vector, Lexical & Graph Reranking",
-        "url": "https://www.youtube.com/watch?v=TRjq7t2Ms5I",
-        "source": "AI Engineer",
-        "published_at": "2026-11-06",
-        "score": 445,
-        "summary": (
-            "Architecture deep-dive into production RAG systems combining dense embeddings, BM25 lexical "
-            "indexes, late-interaction cross-encoders, and citation-grounded context assembly."
-        ),
-        "tags": ["RAG", "Retrieval", "Vector Search", "Context Engineering"],
+        "tags": ["Reinforcement Learning", "AI Agents", "Coding Models"],
     },
     {
         "title": "Multimodal Foundation Models: Native Audio, Vision & Action Tokenization",
@@ -141,23 +257,24 @@ CURATED_FALLBACK_TECH_TALKS: List[Dict[str, Any]] = [
         "tags": ["Multimodal AI", "Vision-Language", "Transformers"],
     },
     {
-        "title": "Reinforcement Fine-Tuning & Verifiable Rewards for Frontier Coding Models",
-        "url": "https://www.youtube.com/watch?v=eaAonE58sLU",
-        "source": "OpenAI",
-        "published_at": "2026-11-05",
-        "score": 475,
+        "title": "Grounding for Gemini with Vertex AI Search and Production RAG",
+        "url": "https://www.youtube.com/watch?v=5aOF-RIZS5c",
+        "source": "Google Cloud Tech",
+        "published_at": "2026-11-03",
+        "score": 430,
         "summary": (
-            "Details how reinforcement fine-tuning with automated unit-test graders and execution sandboxes "
-            "shapes chain-of-thought reasoning for complex software engineering and debugging."
+            "Demonstrates how enterprise teams reduce hallucinations in Gemini responses by combining "
+            "Vertex AI Search hybrid retrieval, dynamic chunking, and verifiable inline citations."
         ),
-        "tags": ["Reinforcement Learning", "AI Agents", "Coding Models"],
+        "tags": ["Google Cloud Tech", "Vertex AI", "Gemini", "Grounding", "RAG"],
     },
 ]
 
 AI_TALK_KEYWORDS = re.compile(
     r"\b(ai|llm|llms|gpt|claude|gemini|openai|anthropic|deepmind|karpathy|qwen|llama|deepseek|"
     r"agent|agents|agentic|rag|retrieval|embedding|multimodal|transformer|reasoning|rlhf|post-training|"
-    r"fine-tuning|finetuning|inference|cuda|vllm|tensorrt|eval|evals|benchmark|diffusion|token)\b",
+    r"fine-tuning|finetuning|inference|cuda|vllm|tensorrt|eval|evals|benchmark|diffusion|token|"
+    r"langchain|langgraph|vertex|adk|mcp|granite|watsonx|grounding|context\s+engineering|pragmatic)\b",
     re.IGNORECASE,
 )
 
@@ -265,6 +382,7 @@ def fetch_youtube_channel_feeds(
 
     with httpx.Client(timeout=10.0, headers={"User-Agent": USER_AGENT}, follow_redirects=True) as client:
         for channel_name, feed_url in target_feeds.items():
+            strict_match = _CHANNEL_STRICT_MAP.get(channel_name, True)
             try:
                 resp = client.get(feed_url)
                 resp.raise_for_status()
@@ -293,7 +411,7 @@ def fetch_youtube_channel_feeds(
                             "model architecture, and production deployment patterns."
                         )
 
-                    if not _matches_focus_topics(f"{title} {summary}", focus_topics):
+                    if strict_match and not _matches_focus_topics(f"{title} {summary}", focus_topics):
                         continue
 
                     published_raw = (entry.get("published") or entry.get("updated") or "").strip()
@@ -395,44 +513,60 @@ def fetch_hn_youtube_tech_talks(
 def fetch_ai_tech_talks(
     focus_topics: List[str] | None = None,
     max_per_channel: int = 2,
-    limit: int = 6,
+    limit: int = 8,
 ) -> List[NewsItem]:
-    """Collect AI technical talks and keynotes from YouTube channels, Hacker News, and curated fallbacks."""
-    collected: List[NewsItem] = []
+    """Collect AI technical talks and keynotes with channel diversity across featured YouTube feeds, HN, and curated fallbacks."""
+    candidates: List[NewsItem] = []
     seen_urls = set()
 
     for item in fetch_youtube_channel_feeds(focus_topics=focus_topics, max_per_channel=max_per_channel):
         norm = item.url.strip().rstrip("/").lower()
         if norm not in seen_urls:
             seen_urls.add(norm)
-            collected.append(item)
+            candidates.append(item)
 
-    if len(collected) < limit:
-        for item in fetch_hn_youtube_tech_talks(focus_topics=focus_topics, max_items=max(4, limit)):
-            norm = item.url.strip().rstrip("/").lower()
-            if norm not in seen_urls:
-                seen_urls.add(norm)
-                collected.append(item)
-
-    if len(collected) < limit:
-        for fb in CURATED_FALLBACK_TECH_TALKS:
-            norm = fb["url"].strip().rstrip("/").lower()
-            if norm in seen_urls:
-                continue
+    for item in fetch_hn_youtube_tech_talks(focus_topics=focus_topics, max_items=max(4, limit)):
+        norm = item.url.strip().rstrip("/").lower()
+        if norm not in seen_urls:
             seen_urls.add(norm)
-            collected.append(
-                NewsItem(
-                    title=fb["title"],
-                    url=fb["url"],
-                    source=fb["source"],
-                    category=SourceCategory.TECH_TALK,
-                    summary=_strip_youtube_boilerplate(fb["summary"], max_chars=300),
-                    published_at=fb.get("published_at", ""),
-                    score=fb.get("score"),
-                    tags=list(fb.get("tags", ["youtube", "tech-talk"])),
-                )
-            )
-            if len(collected) >= limit:
-                break
+            candidates.append(item)
 
-    return collected[:limit]
+    for fb in CURATED_FALLBACK_TECH_TALKS:
+        norm = fb["url"].strip().rstrip("/").lower()
+        if norm in seen_urls:
+            continue
+        seen_urls.add(norm)
+        candidates.append(
+            NewsItem(
+                title=fb["title"],
+                url=fb["url"],
+                source=fb["source"],
+                category=SourceCategory.TECH_TALK,
+                summary=_strip_youtube_boilerplate(fb["summary"], max_chars=300),
+                published_at=fb.get("published_at", ""),
+                score=fb.get("score"),
+                tags=list(fb.get("tags", ["youtube", "tech-talk"])),
+            )
+        )
+
+    # Pass 1: Enforce channel diversity (at most 1 talk per distinct source channel)
+    selected: List[NewsItem] = []
+    used_sources = set()
+    overflow: List[NewsItem] = []
+
+    for item in candidates:
+        if len(selected) >= limit:
+            break
+        if item.source not in used_sources:
+            used_sources.add(item.source)
+            selected.append(item)
+        else:
+            overflow.append(item)
+
+    # Pass 2: Fill remaining slots if needed
+    for item in overflow:
+        if len(selected) >= limit:
+            break
+        selected.append(item)
+
+    return selected[:limit]

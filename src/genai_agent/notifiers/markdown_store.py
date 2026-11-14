@@ -1025,7 +1025,7 @@ def _parse_bullet_notes(section_md: str, kind: str = "x") -> List[Dict[str, str]
     return notes
 
 
-def _default_tech_talk_notes(limit: int = 4) -> List[Dict[str, str]]:
+def _default_tech_talk_notes(limit: int = 8) -> List[Dict[str, str]]:
     """Build curated fallback tech talk notes when rendering legacy digests that predate Section IV."""
     notes: List[Dict[str, str]] = []
     for talk in CURATED_FALLBACK_TECH_TALKS[:limit]:
@@ -1509,11 +1509,14 @@ def _render_bullet_notes_html(
     section_md: str,
     kind: str = "tech_talk",
     empty_msg: str = "No entries recorded for this issue.",
+    limit: int = 8,
 ) -> str:
     """Parse a bullet section markdown block and render it as editorial note cards."""
     notes = _parse_bullet_notes(section_md, kind=kind)
     if not notes and kind == "tech_talk":
-        notes = _default_tech_talk_notes(limit=4)
+        notes = _default_tech_talk_notes(limit=limit)
+    elif kind == "tech_talk":
+        notes = notes[:limit]
     action_map = {
         "x": "Read Thread on X",
         "podcast": "Listen Episode",

@@ -59,11 +59,19 @@
 
 ## Tech Talks & Keynotes
 
+- **[Building and Deploying Python AI Agents with ADK, Gemini, and MCP](https://www.youtube.com/watch?v=h_r3NsfrrRI)** — **Google Cloud Tech** · *2026-11-11*
+  - Walkthrough of Google Cloud's Agent Development Kit (ADK) for Python, demonstrating how to connect Gemini reasoning models to external enterprise tools via Model Context Protocol (MCP) servers and deploy multi-agent workflows on Vertex AI.
+- **[LangChain vs LangGraph: Architecting Stateful Multi-Agent Workflows & RAG](https://www.youtube.com/watch?v=qAF1NjEVHhY)** — **IBM Technology** · *2026-11-10*
+  - Architectural comparison of directed acyclic chains in LangChain versus cyclic, stateful graph execution in LangGraph for building fault-tolerant multi-agent orchestration and corrective retrieval-augmented generation.
+- **[AI and Software Engineering: Production LLM Workflows & Agentic Tooling](https://www.youtube.com/watch?v=5wks1W-auKY)** — **The Pragmatic Engineer** · *2026-11-09*
+  - Gergely Orosz examines how engineering organizations integrate coding agents, automated PR verification, context indexing, and deterministic evaluation harnesses into high-velocity production software pipelines.
+- **[Building Enterprise AI Workflows with IBM Granite & watsonx.ai Flows Engine](https://www.youtube.com/watch?v=-WXzgIFcNK0)** — **IBM Developer** · *2026-11-08*
+  - Technical deep-dive into building low-latency enterprise RAG and tool-calling pipelines using open-weight IBM Granite foundation models and declarative flow orchestration in watsonx.ai.
+- **[Stanford CS25: Transformers United — Frontier Reasoning & Post-Training Architectures](https://www.youtube.com/watch?v=XfpMkf4rD6E)** — **Stanford Online (CS25)** · *2026-11-07*
+  - Stanford CS25 seminar examining how scaling test-time compute, reinforcement fine-tuning, and verifier-guided search enable transformer architectures to solve complex mathematical and multi-step reasoning problems.
+- **[RAG From Scratch: Query Translation, Routing, RAPTOR & Corrective RAG](https://www.youtube.com/watch?v=sVcwVQRHIc8)** — **LangChain** · *2026-11-06*
+  - End-to-end engineering tutorial covering multi-query decomposition, semantic routing, hierarchical RAPTOR indexing, and self-reflective Corrective RAG (CRAG) grading loops.
 - **[Deep Dive into LLMs like ChatGPT: Pretraining, Supervised Finetuning & RLHF](https://www.youtube.com/watch?v=7xTGNNLPyMI)** — **Andrej Karpathy** · *2026-10-28*
   - Comprehensive technical walkthrough of the full Large Language Model training pipeline, covering internet-scale tokenization, distributed pretraining, supervised instruction tuning, and reinforcement learning from human and verifiable rewards.
 - **[Building Effective AI Agents: Architecture Patterns & Production Evals](https://www.youtube.com/watch?v=d5EltXhbcfA)** — **Anthropic** · *2026-11-04*
   - Engineering breakdown of composable agent workflows versus autonomous multi-step loops, detailing tool-use sandboxing, context window management, and deterministic evaluation harnesses.
-- **[Stanford CS25: Reasoning Models, Test-Time Compute & Search-Guided Decoding](https://www.youtube.com/watch?v=zjkBMFhNj_g)** — **Stanford Online (CS25)** · *2026-11-02*
-  - Examines how scaling test-time inference compute and verifier-guided tree search allow frontier transformers to solve multi-step mathematics, synthesis, and repository-level coding tasks.
-- **[Hybrid Retrieval-Augmented Generation (RAG) at Scale: Vector, Lexical & Graph Reranking](https://www.youtube.com/watch?v=TRjq7t2Ms5I)** — **AI Engineer** · *2026-11-06*
-  - Architecture deep-dive into production RAG systems combining dense embeddings, BM25 lexical indexes, late-interaction cross-encoders, and citation-grounded context assembly.

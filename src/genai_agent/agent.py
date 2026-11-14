@@ -98,7 +98,7 @@ def build_synthesis_prompt(
     return f"""Date: {date_str}
 Focus Topics: {topics_str}
 
-Below are {len(items)} collected items from Hugging Face Daily Papers, arXiv (cs.CL/cs.AI), AI Lab Blogs (OpenAI, Google AI, DeepMind, Hugging Face, Simon Willison, Lilian Weng), Hacker News, Reddit (r/LocalLLaMA, r/MachineLearning), X.com, AI Podcasts, and YouTube Tech Talks (AI Engineer, Karpathy, Anthropic, OpenAI, DeepMind, Stanford CS25).
+Below are {len(items)} collected items from Hugging Face Daily Papers, arXiv (cs.CL/cs.AI), AI Lab Blogs (OpenAI, Google AI, DeepMind, Hugging Face, Simon Willison, Lilian Weng), Hacker News, Reddit (r/LocalLLaMA, r/MachineLearning), X.com, AI Podcasts, and YouTube Tech Talks (Google Cloud Tech, IBM Technology, IBM Developer, The Pragmatic Engineer, Stanford Online (CS25), LangChain, Anthropic, OpenAI, DeepMind, Karpathy).
 
 Write a crisp, high-signal technical briefing using the exact Markdown sections below. Do NOT use emojis in headings or bullets.
 
@@ -137,7 +137,7 @@ Include 3–4 relevant AI podcast episodes from the feed. Format each item using
 ---
 
 ## Tech Talks & Keynotes
-Include 3–4 notable YouTube AI technical talks, keynotes, or lectures from the feed. Format each item using this exact 2-line bullet structure:
+Include 6–8 notable YouTube AI technical talks, keynotes, or lectures from the feed. Format each item using this exact 2-line bullet structure:
 - **[Talk Title](URL)** — **Channel Name** · *Date*
   - 1–2 complete sentences explaining the technical architecture, benchmark, or engineering pattern presented.
 
@@ -323,7 +323,7 @@ def build_fallback_markdown(
         lines.append("")
         lines.append("## Tech Talks & Keynotes")
         lines.append("")
-        for talk in tech_talks[:4]:
+        for talk in tech_talks[:8]:
             pub_str = f" · *{talk.published_at}*" if talk.published_at else ""
             lines.append(f"- **[{talk.title}]({talk.url})** — **{talk.source}**{pub_str}")
             excerpt = _clean_sentence_excerpt(talk.summary, max_chars=260)
@@ -428,8 +428,8 @@ class GenAILearningAgent:
             return [i.to_dict() for i in fetch_google_news_rss(topics=topics, days=days, limit=max_items)]
 
         def tool_get_ai_tech_talks() -> List[dict]:
-            """Fetch YouTube AI technical talks and keynotes from AI Engineer, Karpathy, Anthropic, OpenAI, DeepMind, and Stanford CS25."""
-            return [i.to_dict() for i in fetch_ai_tech_talks(focus_topics=topics, limit=6)]
+            """Fetch YouTube AI technical talks and keynotes from Google Cloud Tech, IBM Technology, IBM Developer, The Pragmatic Engineer, Stanford CS25, LangChain, Karpathy, Anthropic, OpenAI, and DeepMind."""
+            return [i.to_dict() for i in fetch_ai_tech_talks(focus_topics=topics, limit=8)]
 
         prompt = (
             f"Today is {date_str}. Focus topics: {', '.join(topics)}.\n"

@@ -154,10 +154,23 @@ def test_reddit_waf_safe_links_and_rss_sanitization():
 def test_tech_talks_collector_and_boilerplate_sanitization(monkeypatch):
     from genai_agent.collectors import tech_talks
     from genai_agent.collectors.tech_talks import (
+        FEATURED_TECH_TALK_CHANNELS,
         _is_valid_youtube_url,
         _strip_youtube_boilerplate,
         fetch_ai_tech_talks,
     )
+
+    expected_channels = {
+        "Google Cloud Tech": "UCJS9pqu9BzkAMNTmzNMNhvg",
+        "IBM Technology": "UCKWaEZ-_VweaEx1j62do_vQ",
+        "The Pragmatic Engineer": "UCPbwhExawYrn9xxI21TFfyw",
+        "IBM Developer": "UCUm6InQvGI9-6vo1teGWINA",
+        "Stanford Online (CS25)": "UCBa5G_ESCn8Yd4vw5U-gIcg",
+        "LangChain": "UCC-lyoTfSrcJzA1ab3APAgw",
+    }
+    channel_map = {ch["name"]: ch["channel_id"] for ch in FEATURED_TECH_TALK_CHANNELS}
+    for ch_name, ch_id in expected_channels.items():
+        assert channel_map.get(ch_name) == ch_id
 
     assert _is_valid_youtube_url("https://www.youtube.com/watch?v=7xTGNNLPyMI")
     assert _is_valid_youtube_url("https://youtu.be/7xTGNNLPyMI")
@@ -183,13 +196,17 @@ def test_tech_talks_collector_and_boilerplate_sanitization(monkeypatch):
 
     monkeypatch.setattr(tech_talks, "fetch_youtube_channel_feeds", lambda **kwargs: [])
     monkeypatch.setattr(tech_talks, "fetch_hn_youtube_tech_talks", lambda **kwargs: [])
-    talks = fetch_ai_tech_talks(focus_topics=["LLMs", "AI Agents"], limit=4)
-    assert len(talks) == 4
+    talks = fetch_ai_tech_talks(focus_topics=["LLMs", "AI Agents"], limit=8)
+    assert len(talks) == 8
+    sources = {item.source for item in talks}
+    for ch_name in expected_channels:
+        assert ch_name in sources
     for item in talks:
         assert isinstance(item, NewsItem)
         assert item.category == SourceCategory.TECH_TALK
         assert "youtube.com/watch" in item.url or "youtu.be/" in item.url
         assert len(item.summary) > 30
+
 
 
 def test_tech_talks_prompt_fallback_and_html_rendering(tmp_path: Path):
@@ -249,7 +266,15 @@ def test_published_docs_html_integrity():
     repo_docs = Path(__file__).resolve().parent.parent / "docs"
     if not repo_docs.exists():
         return
-    for page in ("index.html", "2026-11-09.html"):
+    required_channels = (
+        "Google Cloud Tech",
+        "IBM Technology",
+        "The Pragmatic Engineer",
+        "IBM Developer",
+        "Stanford Online (CS25)",
+        "LangChain",
+    )
+    for page in ("index.html", "2026-11-13.html"):
         html_path = repo_docs / page
         assert html_path.exists()
         text = html_path.read_text(encoding="utf-8")
@@ -259,6 +284,10 @@ def test_published_docs_html_integrity():
         assert "Watch on YouTube ↗" in text
         assert "viewport-fit=cover" in text
         assert "max-width: 66ch;" in text
+        tech_talks_section = text.split('id="tech-talks"', 1)[1].split("</section>", 1)[0]
+        for channel in required_channels:
+            assert channel in tech_talks_section
+
 
 
 
