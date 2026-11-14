@@ -10,7 +10,10 @@ from urllib.parse import urlparse
 import markdown
 
 from genai_agent.collectors.podcasts import fetch_detailed_podcast_hub
-from genai_agent.collectors.tech_talks import CURATED_FALLBACK_TECH_TALKS
+from genai_agent.collectors.tech_talks import (
+    CURATED_FALLBACK_TECH_TALKS,
+    fetch_detailed_tech_talks_hub,
+)
 
 EDITORIAL_CSS_AND_JS = """
   <meta name="theme-color" id="meta-theme-color" content="#F6F4EF">
@@ -1066,7 +1069,7 @@ def _render_masthead(active_page: str, latest_date: str, edition_date: str = "")
         <div class="nav-links">
           <a href="index.html" class="{'active' if active_page == 'index' else ''}">Front Page</a>
           <a href="{latest_date}.html" class="{'active' if active_page == 'daily' else ''}">Latest Issue ({latest_date})</a>
-          <a href="#tech-talks">Tech Talks</a>
+          <a href="tech-talks.html" class="{'active' if active_page == 'tech_talks' else ''}">Tech Talks Index</a>
           <a href="podcasts.html" class="{'active' if active_page == 'podcasts' else ''}">Podcasts Index</a>
           <a href="index.html#archive">Archive</a>
         </div>
@@ -1513,9 +1516,18 @@ def _render_bullet_notes_html(
 ) -> str:
     """Parse a bullet section markdown block and render it as editorial note cards."""
     notes = _parse_bullet_notes(section_md, kind=kind)
-    if not notes and kind == "tech_talk":
-        notes = _default_tech_talk_notes(limit=limit)
-    elif kind == "tech_talk":
+    if kind == "tech_talk":
+        if not notes:
+            notes = _default_tech_talk_notes(limit=limit)
+        elif len(notes) < limit:
+            seen_urls = {n["url"].strip().rstrip("/").lower() for n in notes}
+            for fb_note in _default_tech_talk_notes(limit=limit):
+                norm = fb_note["url"].strip().rstrip("/").lower()
+                if norm not in seen_urls:
+                    seen_urls.add(norm)
+                    notes.append(fb_note)
+                if len(notes) >= limit:
+                    break
         notes = notes[:limit]
     action_map = {
         "x": "Read Thread on X",
@@ -1610,14 +1622,14 @@ def _render_daily_digest_html(
     <section id="tech-talks">
       <div class="section-head">
         <h2>IV. Tech Talks &amp; Keynotes</h2>
-        <span>AI ENGINEERING, FRONTIER LABS &amp; SEMINARS</span>
+        <span><a href="tech-talks.html" style="color:var(--accent);text-decoration:none;">ALL CHANNELS →</a></span>
       </div>
       {talks_html}
     </section>
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · ISSUE {current_date}</div>
-      <div><a href="index.html">Front Page</a> · <a href="#tech-talks">Tech Talks</a> · <a href="podcasts.html">Podcasts Index</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a></div>
     </footer>
   </div>
 </body>
@@ -1706,7 +1718,7 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
     <section id="tech-talks">
       <div class="section-head">
         <h2>IV. Tech Talks &amp; Keynotes</h2>
-        <span>AI ENGINEERING, FRONTIER LABS &amp; SEMINARS</span>
+        <span><a href="tech-talks.html" style="color:var(--accent);text-decoration:none;">FULL TECH TALKS DIRECTORY →</a></span>
       </div>
       {talks_html}
     </section>
@@ -1731,7 +1743,7 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · PUBLISHED DAILY</div>
-      <div><a href="index.html">Front Page</a> · <a href="#tech-talks">Tech Talks</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a></div>
     </footer>
   </div>
 </body>
@@ -1762,7 +1774,7 @@ def _render_podcasts_page_html(
             f"""
             <section id="show-{idx}">
               <div class="section-head">
-                <h2>0{idx}. {html.escape(show["name"])} — Host: {html.escape(show["host"])}</h2>
+                <h2>{idx:02d}. {html.escape(show["name"])} — Host: {html.escape(show["host"])}</h2>
                 <span><a href="{_safe_http_url(show["apple_url"])}" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;">APPLE PODCASTS ↗</a></span>
               </div>
               <p style="font-family:var(--font-sans);font-size:0.84rem;color:var(--ink-muted);margin:0 0 8px;">Focus: {html.escape(show["focus"])}</p>
@@ -1785,7 +1797,77 @@ def _render_podcasts_page_html(
     {"".join(show_blocks)}
     <footer class="footer">
       <div>THE GENAI BRIEFING · AUDIO &amp; PODCASTS DIRECTORY</div>
-      <div><a href="index.html">Front Page</a> · <a href="{latest_date}.html">Latest Issue</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="{latest_date}.html">Latest Issue</a></div>
+    </footer>
+  </div>
+</body>
+</html>"""
+
+
+def _render_tech_talks_page_html(
+    channels_data: List[Dict[str, Any]],
+    latest_date: str,
+) -> str:
+    """Render `docs/tech-talks.html` as a dedicated YouTube Tech Talks & Keynotes directory grouped by channel."""
+    jump_pills: List[str] = []
+    channel_blocks: List[str] = []
+
+    for idx, ch in enumerate(channels_data, start=1):
+        jump_pills.append(
+            f'<a class="filter-pill" href="#channel-{idx}" style="text-decoration:none;">{idx:02d}. {html.escape(ch["name"])}</a>'
+        )
+        video_notes: List[Dict[str, str]] = []
+        for vid in ch.get("videos", []):
+            video_notes.append(
+                {
+                    "title": _strip_emojis(vid["title"]),
+                    "url": vid["url"],
+                    "kicker": ch["name"],
+                    "meta": vid.get("published") or vid.get("meta") or "YouTube",
+                    "hn_url": "",
+                    "summary": _clean_excerpt(vid.get("summary", ""), max_chars=340),
+                }
+            )
+        notes_html = _render_notes_column_html(video_notes, "Watch on YouTube")
+        channel_blocks.append(
+            f"""
+            <section id="channel-{idx}">
+              <div class="section-head">
+                <h2>{idx:02d}. {html.escape(ch["name"])} — Host: {html.escape(ch.get("host", ch["name"]))}</h2>
+                <span><a href="{_safe_http_url(ch["channel_url"])}" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;">YOUTUBE CHANNEL ↗</a></span>
+              </div>
+              <p style="font-family:var(--font-sans);font-size:0.84rem;color:var(--ink-muted);margin:0 0 8px;">Focus: {html.escape(ch["focus"])}</p>
+              {notes_html}
+            </section>
+            """
+        )
+
+    jump_bar_html = (
+        f'<div class="filter-bar" aria-label="Channel Directory">{"".join(jump_pills)}</div>'
+        if jump_pills
+        else ""
+    )
+
+    return f"""<!DOCTYPE html>
+<html lang="en" data-theme="sage">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>The GenAI Briefing — Tech Talks &amp; Keynotes Directory</title>
+  {EDITORIAL_CSS_AND_JS}
+</head>
+<body>
+  <div class="page-wrap">
+    {_render_masthead(active_page="tech_talks", latest_date=latest_date)}
+    <div class="editorial-callout">
+      <h3>YouTube Tech Talks &amp; Keynotes Directory ({len(channels_data)} Channels)</h3>
+      <p>Curated technical keynotes, engineering lightboards, and academic seminars from Google Cloud Tech, IBM Technology, The Pragmatic Engineer, IBM Developer, Stanford CS25, LangChain, Andrej Karpathy, Anthropic, OpenAI, and Google DeepMind.</p>
+    </div>
+    {jump_bar_html}
+    {"".join(channel_blocks)}
+    <footer class="footer">
+      <div>THE GENAI BRIEFING · TECH TALKS &amp; KEYNOTES DIRECTORY</div>
+      <div><a href="index.html">Front Page</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a></div>
     </footer>
   </div>
 </body>
@@ -1798,7 +1880,7 @@ def save_markdown_digest(
     timestamp: datetime | None = None,
     docs_dir: Path | None = None,
 ) -> Path:
-    """Save the digest to a dated Markdown file, update `latest.md`, and build GitHub Pages HTML (`index.html`, `<date>.html`, `podcasts.html`)."""
+    """Save the digest to a dated Markdown file, update `latest.md`, and build GitHub Pages HTML (`index.html`, `<date>.html`, `tech-talks.html`, `podcasts.html`)."""
     ts = timestamp or datetime.now()
     date_str = ts.strftime("%Y-%m-%d")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -1836,15 +1918,30 @@ def save_markdown_digest(
     index_html = _render_index_portal_html(archive_map=archive_map)
     (target_docs / "index.html").write_text(index_html, encoding="utf-8")
 
-    if docs_dir is None and output_dir.name == "digests":
+    latest_d = archive_dates[-1] if archive_dates else date_str
+    is_live_docs_build = docs_dir is None and output_dir.name == "digests"
+    try:
+        channels_data = fetch_detailed_tech_talks_hub(
+            videos_per_channel=3,
+            fetch_live=is_live_docs_build,
+        )
+        tech_talks_page_html = _render_tech_talks_page_html(
+            channels_data=channels_data,
+            latest_date=latest_d,
+        )
+        (target_docs / "tech-talks.html").write_text(tech_talks_page_html, encoding="utf-8")
+    except Exception:
+        pass
+
+    if is_live_docs_build:
         try:
             shows_data = fetch_detailed_podcast_hub(episodes_per_show=3)
-            latest_d = archive_dates[-1] if archive_dates else date_str
-            podcasts_page_html = _render_podcasts_page_html(
-                shows_data=shows_data,
-                latest_date=latest_d,
-            )
-            (target_docs / "podcasts.html").write_text(podcasts_page_html, encoding="utf-8")
+            if shows_data:
+                podcasts_page_html = _render_podcasts_page_html(
+                    shows_data=shows_data,
+                    latest_date=latest_d,
+                )
+                (target_docs / "podcasts.html").write_text(podcasts_page_html, encoding="utf-8")
         except Exception:
             pass
 

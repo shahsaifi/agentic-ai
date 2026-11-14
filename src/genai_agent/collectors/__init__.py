@@ -11,7 +11,10 @@ from genai_agent.collectors.papers import (
 )
 from genai_agent.collectors.podcasts import fetch_ai_podcasts
 from genai_agent.collectors.social_x import fetch_x_social_pulse
-from genai_agent.collectors.tech_talks import fetch_ai_tech_talks
+from genai_agent.collectors.tech_talks import (
+    fetch_ai_tech_talks,
+    fetch_detailed_tech_talks_hub,
+)
 from genai_agent.collectors.web_search import fetch_google_news_rss
 from genai_agent.models import NewsItem
 
@@ -83,6 +86,7 @@ __all__ = [
     "fetch_ai_podcasts",
     "fetch_x_social_pulse",
     "fetch_ai_tech_talks",
+    "fetch_detailed_tech_talks_hub",
     "fetch_google_news_rss",
     "deduplicate_items",
     "collect_all_sources",

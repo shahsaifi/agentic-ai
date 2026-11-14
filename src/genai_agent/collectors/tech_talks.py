@@ -18,6 +18,7 @@ USER_AGENT = "GenAILearningAgent/0.1 (+https://github.com/genai-learning-agent)"
 FEATURED_TECH_TALK_CHANNELS: List[Dict[str, Any]] = [
     {
         "name": "Google Cloud Tech",
+        "host": "Google Cloud AI & Vertex Engineering",
         "channel_id": "UCJS9pqu9BzkAMNTmzNMNhvg",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCJS9pqu9BzkAMNTmzNMNhvg",
         "channel_url": "https://www.youtube.com/@GoogleCloudTech",
@@ -26,6 +27,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, Any]] = [
     },
     {
         "name": "IBM Technology",
+        "host": "IBM Research & Cloud Architecture",
         "channel_id": "UCKWaEZ-_VweaEx1j62do_vQ",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCKWaEZ-_VweaEx1j62do_vQ",
         "channel_url": "https://www.youtube.com/@IBMTechnology",
@@ -34,6 +36,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, Any]] = [
     },
     {
         "name": "The Pragmatic Engineer",
+        "host": "Gergely Orosz",
         "channel_id": "UCPbwhExawYrn9xxI21TFfyw",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCPbwhExawYrn9xxI21TFfyw",
         "channel_url": "https://www.youtube.com/@ThePragmaticEngineer",
@@ -42,6 +45,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, Any]] = [
     },
     {
         "name": "IBM Developer",
+        "host": "IBM Developer Advocacy",
         "channel_id": "UCUm6InQvGI9-6vo1teGWINA",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCUm6InQvGI9-6vo1teGWINA",
         "channel_url": "https://www.youtube.com/@IBMDeveloper",
@@ -50,6 +54,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, Any]] = [
     },
     {
         "name": "Stanford Online (CS25)",
+        "host": "Stanford University CS25",
         "channel_id": "UCBa5G_ESCn8Yd4vw5U-gIcg",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCBa5G_ESCn8Yd4vw5U-gIcg",
         "channel_url": "https://www.youtube.com/@stanfordonline",
@@ -58,6 +63,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, Any]] = [
     },
     {
         "name": "LangChain",
+        "host": "Harrison Chase & LangChain Engineering",
         "channel_id": "UCC-lyoTfSrcJzA1ab3APAgw",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCC-lyoTfSrcJzA1ab3APAgw",
         "channel_url": "https://www.youtube.com/@LangChain",
@@ -66,6 +72,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, Any]] = [
     },
     {
         "name": "Andrej Karpathy",
+        "host": "Andrej Karpathy",
         "channel_id": "UCXUPKJO5MZQN11PqgIvyuvQ",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCXUPKJO5MZQN11PqgIvyuvQ",
         "channel_url": "https://www.youtube.com/@AndrejKarpathy",
@@ -74,6 +81,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, Any]] = [
     },
     {
         "name": "Anthropic",
+        "host": "Anthropic Research & Engineering",
         "channel_id": "UCrDwWp7EBBv4NwvScIpBDOA",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCrDwWp7EBBv4NwvScIpBDOA",
         "channel_url": "https://www.youtube.com/@anthropic-ai",
@@ -82,6 +90,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, Any]] = [
     },
     {
         "name": "OpenAI",
+        "host": "OpenAI Engineering & Research",
         "channel_id": "UCXZCJLdBC09xxGZ6gcdrc6A",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCXZCJLdBC09xxGZ6gcdrc6A",
         "channel_url": "https://www.youtube.com/@OpenAI",
@@ -90,6 +99,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, Any]] = [
     },
     {
         "name": "Google DeepMind",
+        "host": "Google DeepMind Research",
         "channel_id": "UCP7jMXSY2xbc3KCAE0MHQ-A",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCP7jMXSY2xbc3KCAE0MHQ-A",
         "channel_url": "https://www.youtube.com/@GoogleDeepMind",
@@ -98,6 +108,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, Any]] = [
     },
     {
         "name": "AI Engineer",
+        "host": "swyx & AI Engineer Summit",
         "channel_id": "UC6q07N_E-G6rB8H-t0N6yHA",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UC6q07N_E-G6rB8H-t0N6yHA",
         "channel_url": "https://www.youtube.com/@aiDotEngineer",
@@ -106,6 +117,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, Any]] = [
     },
     {
         "name": "Latent Space",
+        "host": "swyx & Alessio",
         "channel_id": "UCaG9f4O2N2vF2l_X9E7Y8_A",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCaG9f4O2N2vF2l_X9E7Y8_A",
         "channel_url": "https://www.youtube.com/@LatentSpaceTV",
@@ -114,6 +126,7 @@ FEATURED_TECH_TALK_CHANNELS: List[Dict[str, Any]] = [
     },
     {
         "name": "Weights & Biases",
+        "host": "Weights & Biases ML Engineering",
         "channel_id": "UCBp3w4D7m5hH3v7nB3E2B5Q",
         "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCBp3w4D7m5hH3v7nB3E2B5Q",
         "channel_url": "https://www.youtube.com/@WeightsBiases",
@@ -257,6 +270,18 @@ CURATED_FALLBACK_TECH_TALKS: List[Dict[str, Any]] = [
         "tags": ["Multimodal AI", "Vision-Language", "Transformers"],
     },
     {
+        "title": "Hybrid Retrieval-Augmented Generation (RAG) at Scale: Vector, Lexical & Graph Reranking",
+        "url": "https://www.youtube.com/watch?v=TRjq7t2Ms5I",
+        "source": "AI Engineer",
+        "published_at": "2026-11-06",
+        "score": 445,
+        "summary": (
+            "Architecture deep-dive into production RAG systems combining dense embeddings, BM25 lexical "
+            "indexes, late-interaction cross-encoders, and citation-grounded context assembly."
+        ),
+        "tags": ["RAG", "Retrieval", "Vector Search", "Context Engineering"],
+    },
+    {
         "title": "Grounding for Gemini with Vertex AI Search and Production RAG",
         "url": "https://www.youtube.com/watch?v=5aOF-RIZS5c",
         "source": "Google Cloud Tech",
@@ -267,6 +292,90 @@ CURATED_FALLBACK_TECH_TALKS: List[Dict[str, Any]] = [
             "Vertex AI Search hybrid retrieval, dynamic chunking, and verifiable inline citations."
         ),
         "tags": ["Google Cloud Tech", "Vertex AI", "Gemini", "Grounding", "RAG"],
+    },
+    {
+        "title": "Model Context Protocol (MCP) & Enterprise Agent Security Explained",
+        "url": "https://www.youtube.com/watch?v=7j_NE6Pjv-E",
+        "source": "IBM Technology",
+        "published_at": "2026-11-02",
+        "score": 410,
+        "summary": (
+            "Lightboard breakdown of standardized tool-use interfaces using the Model Context Protocol (MCP), "
+            "least-privilege agent sandboxing, and prompt-injection defenses for enterprise LLMs."
+        ),
+        "tags": ["IBM Technology", "MCP", "AI Security", "AI Agents"],
+    },
+    {
+        "title": "How Frontier Engineering Teams Ship with AI Coding Agents & Evals",
+        "url": "https://www.youtube.com/watch?v=a8Q2U2R8G1E",
+        "source": "The Pragmatic Engineer",
+        "published_at": "2026-10-30",
+        "score": 405,
+        "summary": (
+            "Examines real-world architecture trade-offs when adopting autonomous repository agents, "
+            "benchmarking latency versus reasoning depth, and maintaining code review rigor."
+        ),
+        "tags": ["The Pragmatic Engineer", "Coding Agents", "Software Architecture"],
+    },
+    {
+        "title": "Multi-Agent Orchestration with Open-Source Granite 3.0 & LangGraph",
+        "url": "https://www.youtube.com/watch?v=K2vA6N9m8P0",
+        "source": "IBM Developer",
+        "published_at": "2026-10-29",
+        "score": 385,
+        "summary": (
+            "Hands-on implementation of structured tool calling, schema validation, and multi-agent "
+            "supervision loops using compact IBM Granite models."
+        ),
+        "tags": ["IBM Developer", "Granite", "LangGraph", "Multi-Agent"],
+    },
+    {
+        "title": "Stanford CS25: Reasoning Models, Test-Time Compute & Search-Guided Decoding",
+        "url": "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+        "source": "Stanford Online (CS25)",
+        "published_at": "2026-11-02",
+        "score": 510,
+        "summary": (
+            "Examines how scaling test-time inference compute and verifier-guided tree search allow "
+            "frontier transformers to solve multi-step mathematics, synthesis, and repository-level coding tasks."
+        ),
+        "tags": ["Reasoning", "Test-Time Compute", "LLMs"],
+    },
+    {
+        "title": "Context Engineering for LangGraph Agents: Memory, State & Long-Horizon Planning",
+        "url": "https://www.youtube.com/watch?v=dcgRMOG605w",
+        "source": "LangChain",
+        "published_at": "2026-11-01",
+        "score": 490,
+        "summary": (
+            "Deep-dive into episodic and semantic memory persistence, state compaction, and human-in-the-loop "
+            "breakpoints for long-running LangGraph agents."
+        ),
+        "tags": ["LangChain", "LangGraph", "Context Engineering", "AI Agents"],
+    },
+    {
+        "title": "Inside Frontier Model Infrastructure, Speculative Decoding & Inference Scaling",
+        "url": "https://www.youtube.com/watch?v=L_Guz73e6fw",
+        "source": "Latent Space",
+        "published_at": "2026-11-03",
+        "score": 370,
+        "summary": (
+            "Technical conversation on KV-cache compression, disaggregated prefill/decode clusters, "
+            "and latency-optimal serving for reasoning models."
+        ),
+        "tags": ["Latent Space", "Inference", "KV Cache", "Systems"],
+    },
+    {
+        "title": "Production LLM Evaluation Harnesses, LLM-as-a-Judge & Fine-Tuning Recipes",
+        "url": "https://www.youtube.com/watch?v=y9k-U9AuDeM",
+        "source": "Weights & Biases",
+        "published_at": "2026-10-31",
+        "score": 360,
+        "summary": (
+            "Practical methodology for calibrating LLM-as-a-Judge rubrics, tracing multi-turn agent "
+            "trajectories in Weave, and distilling domain-specific models."
+        ),
+        "tags": ["Weights & Biases", "Evals", "Fine-Tuning", "MLOps"],
     },
 ]
 
@@ -570,3 +679,111 @@ def fetch_ai_tech_talks(
         selected.append(item)
 
     return selected[:limit]
+
+
+def fetch_detailed_tech_talks_hub(
+    videos_per_channel: int = 3,
+    fetch_live: bool = True,
+) -> List[Dict[str, Any]]:
+    """Fetch latest technical talks and curated keynotes per channel for the dedicated Tech Talks Index page (`docs/tech-talks.html`)."""
+    channels_data: List[Dict[str, Any]] = []
+
+    client = (
+        httpx.Client(timeout=10.0, headers={"User-Agent": USER_AGENT}, follow_redirects=True)
+        if fetch_live
+        else None
+    )
+    try:
+        for ch in FEATURED_TECH_TALK_CHANNELS:
+            ch_name = ch["name"]
+            strict_match = bool(ch.get("strict_topic_match", True))
+            videos: List[Dict[str, str]] = []
+            seen_urls = set()
+
+            if client is not None:
+                try:
+                    resp = client.get(ch["feed_url"])
+                    resp.raise_for_status()
+                    parsed = feedparser.parse(resp.text)
+
+                    for entry in parsed.entries:
+                        if len(videos) >= videos_per_channel:
+                            break
+                        raw_title = (entry.get("title") or "").strip()
+                        title = html.unescape(re.sub(r"<[^>]+>", "", raw_title)).strip()
+                        link = (entry.get("link") or "").strip()
+                        if not title or not _is_valid_youtube_url(link):
+                            continue
+
+                        raw_summary = (
+                            entry.get("summary")
+                            or entry.get("media_description")
+                            or entry.get("description")
+                            or ""
+                        )
+                        summary = _strip_youtube_boilerplate(raw_summary, max_chars=340)
+                        if not summary:
+                            summary = (
+                                f"Technical session from {ch_name} covering {ch['focus'].lower()}."
+                            )
+
+                        if strict_match and not _matches_focus_topics(f"{title} {summary}", None):
+                            continue
+
+                        published_raw = (entry.get("published") or entry.get("updated") or "").strip()
+                        published = published_raw[:10] if len(published_raw) >= 10 else published_raw
+
+                        norm_url = link.strip().rstrip("/").lower()
+                        if norm_url in seen_urls:
+                            continue
+                        seen_urls.add(norm_url)
+
+                        videos.append(
+                            {
+                                "title": title,
+                                "url": link,
+                                "summary": summary,
+                                "published": published or "YouTube",
+                                "meta": published or "YouTube",
+                            }
+                        )
+                except Exception as exc:
+                    logger.warning("Failed to fetch live YouTube hub feed for %s: %s", ch_name, exc)
+
+            # Top up with curated fallback talks for this channel
+            if len(videos) < videos_per_channel:
+                for fb in CURATED_FALLBACK_TECH_TALKS:
+                    if fb.get("source") != ch_name:
+                        continue
+                    norm_url = fb["url"].strip().rstrip("/").lower()
+                    if norm_url in seen_urls:
+                        continue
+                    seen_urls.add(norm_url)
+                    pub = fb.get("published_at", "YouTube")
+                    videos.append(
+                        {
+                            "title": fb["title"],
+                            "url": fb["url"],
+                            "summary": _strip_youtube_boilerplate(fb.get("summary", ""), max_chars=340),
+                            "published": pub,
+                            "meta": pub,
+                        }
+                    )
+                    if len(videos) >= videos_per_channel:
+                        break
+
+            if videos:
+                channels_data.append(
+                    {
+                        "name": ch_name,
+                        "host": ch.get("host", ch_name),
+                        "focus": ch["focus"],
+                        "channel_url": ch["channel_url"],
+                        "videos": videos,
+                    }
+                )
+    finally:
+        if client is not None:
+            client.close()
+
+    return channels_data

@@ -255,11 +255,54 @@ def test_tech_talks_prompt_fallback_and_html_rendering(tmp_path: Path):
         content = html_file.read_text(encoding="utf-8")
         assert 'id="tech-talks"' in content
         assert "IV. Tech Talks &amp; Keynotes" in content
-        assert '<a href="#tech-talks">Tech Talks</a>' in content
+        assert '<a href="tech-talks.html"' in content
+        assert "Tech Talks Index" in content
+        assert '<a href="#tech-talks">Tech Talks</a>' not in content
         assert "Watch on YouTube ↗" in content
         assert 'target="_blank" rel="noopener noreferrer"' in content
         assert "viewport-fit=cover" in content
         assert "max-width: 66ch;" in content
+
+    tech_talks_html = docs_dir / "tech-talks.html"
+    assert tech_talks_html.exists()
+    tt_content = tech_talks_html.read_text(encoding="utf-8")
+    assert '<a href="tech-talks.html" class="active">Tech Talks Index</a>' in tt_content
+    assert "YOUTUBE CHANNEL ↗" in tt_content
+    assert "Watch on YouTube ↗" in tt_content
+
+
+def test_tech_talks_hub_all_13_channels():
+    from genai_agent.collectors.tech_talks import (
+        _is_valid_youtube_url,
+        fetch_detailed_tech_talks_hub,
+    )
+
+    expected_all_13 = [
+        "Google Cloud Tech",
+        "IBM Technology",
+        "The Pragmatic Engineer",
+        "IBM Developer",
+        "Stanford Online (CS25)",
+        "LangChain",
+        "Andrej Karpathy",
+        "Anthropic",
+        "OpenAI",
+        "Google DeepMind",
+        "AI Engineer",
+        "Latent Space",
+        "Weights & Biases",
+    ]
+    hub_data = fetch_detailed_tech_talks_hub(videos_per_channel=3, fetch_live=False)
+    assert len(hub_data) == 13
+    assert [ch["name"] for ch in hub_data] == expected_all_13
+    for ch in hub_data:
+        assert ch.get("host")
+        assert ch.get("channel_url", "").startswith("https://www.youtube.com/")
+        videos = ch.get("videos", [])
+        assert len(videos) >= 1
+        for vid in videos:
+            assert _is_valid_youtube_url(vid["url"])
+            assert len(vid.get("summary", "")) > 25
 
 
 def test_published_docs_html_integrity():
@@ -274,19 +317,38 @@ def test_published_docs_html_integrity():
         "Stanford Online (CS25)",
         "LangChain",
     )
-    for page in ("index.html", "2026-11-13.html"):
+    for page in ("index.html", "2026-11-14.html", "2026-11-13.html"):
         html_path = repo_docs / page
         assert html_path.exists()
         text = html_path.read_text(encoding="utf-8")
         assert 'id="tech-talks"' in text
         assert "IV. Tech Talks &amp; Keynotes" in text
-        assert '<a href="#tech-talks">Tech Talks</a>' in text
+        assert '<a href="tech-talks.html"' in text
+        assert "Tech Talks Index" in text
+        assert '<a href="#tech-talks">Tech Talks</a>' not in text
         assert "Watch on YouTube ↗" in text
         assert "viewport-fit=cover" in text
         assert "max-width: 66ch;" in text
         tech_talks_section = text.split('id="tech-talks"', 1)[1].split("</section>", 1)[0]
         for channel in required_channels:
             assert channel in tech_talks_section
+
+    for nav_page in ("tech-talks.html", "index.html", "podcasts.html", "2026-11-14.html"):
+        nav_path = repo_docs / nav_page
+        assert nav_path.exists()
+        nav_text = nav_path.read_text(encoding="utf-8")
+        assert '<a href="tech-talks.html"' in nav_text
+        assert "Tech Talks Index" in nav_text
+        assert '<a href="#tech-talks">Tech Talks</a>' not in nav_text
+
+    tt_text = (repo_docs / "tech-talks.html").read_text(encoding="utf-8")
+    for idx in range(1, 14):
+        assert f'id="channel-{idx}"' in tt_text
+        assert f">{idx:02d}. " in tt_text
+    assert "YOUTUBE CHANNEL ↗" in tt_text
+    assert "Watch on YouTube ↗" in tt_text
+    assert 'target="_blank" rel="noopener noreferrer"' in tt_text
+
 
 
 
