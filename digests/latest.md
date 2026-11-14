@@ -42,14 +42,14 @@
 
 ## Researcher Threads on X
 
-- **[Andrej Karpathy (@karpathy): Context Engineering vs Prompt Engineering for Agentic LLMs](https://x.com/karpathy/status/1937902205765607626)** — *X.com (@karpathy)* (640 pts) · *2026-11-12*
-  - Argues that industrial LLM applications depend on systematic context engineering—packing the right task descriptions, retrieved evidence, tool schemas, and state history into the working context window—rather than ad-hoc single-turn prompt phrasing.
-- **[Anthropic (@AnthropicAI): Scaling Model Context Protocol (MCP) & Sandboxed Tool Execution](https://x.com/AnthropicAI/status/1861079734955679883)** — *X.com (@AnthropicAI)* (520 pts) · *2026-11-11*
-  - Details how standardized Model Context Protocol (MCP) servers decouple frontier coding agents from custom data-source integrations while enforcing explicit permission boundaries on tool execution.
-- **[OpenAI (@OpenAI): Verifiable Rewards & Test-Time Compute Scaling in Reasoning Models](https://x.com/OpenAI/status/1869083124912345601)** — *X.com (@OpenAI)* (485 pts) · *2026-11-10*
-  - Breaks down how reinforcement fine-tuning over programmatic graders and extended chain-of-thought allocation improves reliability on repository-scale debugging and formal synthesis benchmarks.
-- **[Google DeepMind (@GoogleDeepMind): Low-Latency Agentic Orchestration with Gemini](https://x.com/GoogleDeepMind/status/1866869393031418066)** — *X.com (@GoogleDeepMind)* (430 pts) · *2026-11-09*
-  - Highlights architectural optimizations in Gemini for parallel tool invocation, long-context KV-cache reuse, and grounded multi-step planning across code, browser, and terminal environments.
+- **[Gemini 4 Carbon is rolling out today](https://twitter.com/sundarpichai/status/2120185896469496180)** — *X.com (@sundarpichai)* (14 pts) · *2026-11-10*
+  - Technical thread from @sundarpichai examining Gemini 4 Carbon is rolling out today, generating active engineering debate across 0 comments (14 pts).
+- **[Claude Code, but for SEO](https://twitter.com/brodieseo/status/2118299596292305356)** — *X.com (@brodieseo)* (14 pts) · *2026-11-06*
+  - Technical thread from @brodieseo examining Claude Code, but for SEO, generating active engineering debate across 2 comments (14 pts).
+- **[AI Twitter/X Daily Recap: OpenAI GPT-6 Astra](https://news.smol.ai/issues/26-09-03-gpt-6-astra/)** — *AINews (AI X/Twitter Recap)* · *Thu, 03 Sep 2026*
+  - **OpenAI** launched **GPT-6 Astra** as its new flagship model, described as "our most intelligent and aligned model yet," focusing on computer use, software engineering, math/science, office work, and cybersecurity.
+- **[Nvidia prepares to fire CEO Jensen Huang, WSJ reports](https://twitter.com/watcherguru/status/2120645607866188008)** — *X.com (@watcherguru)* (225 pts) · *2026-11-11*
+  - Technical thread from @watcherguru examining Nvidia prepares to fire CEO Jensen Huang, WSJ reports, generating active engineering debate across 4 comments (225 pts).
 
 ---
 
@@ -59,10 +59,26 @@
   - Show Links • Get the top 80+ AI Models for $8.99 at AI Box: https://aibox.ai • How I Grow and Scale My Business with AI: https://www.skool.com/aihustle • Get the AI Chat Daily Newsletter: https://www.aichatdaily.com/newsletter In this episode, we explore the.
 - **[Implementing Federated Learning to enhance Agentic AI](https://share.transistor.fm/s/58a69653)** — **Practical AI Podcast** (🎧 43m) · *Fri, 13 Nov 2026*
   - How can AI models learn from private data without compromising privacy? Chris is joined by Lorenzo Sani, Research Scientist at Flower Labs and PhD researcher at Cambridge, to explore federated learning and privacy-preserving AI.
+- **[When AI Tells You What You Want to Hear](https://generativeai101.podbean.com/e/when-ai-tells-you-what-you-want-to-hear/)** — **Generative AI 101** (🎧 12m) · *Wed, 11 Nov 2026*
+  - Your AI chatbot thinks your ideas are brilliant. That might be the problem.
 
 ---
 
 ## Tech Talks & Keynotes
 
-- **[No AI, 52 min. Build all Linux Files utils in C by Hand](https://www.youtube.com/watch?v=gQRmSlcTq9c)** — **YouTube (via Hacker News)** · *2026-10-29*
-  - High-signal technical lecture on No AI, 52 min. Build all Linux Files utils in C by Hand, highlighted by the AI engineering community on Hacker News (159 pts).
+- **[Jonathan Blow – If AI Solved Coding, Why Is My Software Still the Same?](https://www.youtube.com/watch?v=IRK8h67ol7Q)** — **YouTube (via Hacker News)** · *2026-11-13*
+  - High-signal technical lecture on Jonathan Blow – If AI Solved Coding, Why Is My Software Still the Same?, highlighted by the AI engineering community on Hacker News (147 pts).
+- **[Building and Deploying Python AI Agents with ADK, Gemini, and MCP](https://www.youtube.com/watch?v=h_r3NsfrrRI)** — **Google Cloud Tech** · *2026-11-11*
+  - Walkthrough of Google Cloud's Agent Development Kit (ADK) for Python, demonstrating how to connect Gemini reasoning models to external enterprise tools via Model Context Protocol (MCP) servers and deploy multi-agent workflows on Vertex AI.
+- **[LangChain vs LangGraph: Architecting Stateful Multi-Agent Workflows & RAG](https://www.youtube.com/watch?v=qAF1NjEVHhY)** — **IBM Technology** · *2026-11-10*
+  - Architectural comparison of directed acyclic chains in LangChain versus cyclic, stateful graph execution in LangGraph for building fault-tolerant multi-agent orchestration and corrective retrieval-augmented generation.
+- **[AI and Software Engineering: Production LLM Workflows & Agentic Tooling](https://www.youtube.com/watch?v=5wks1W-auKY)** — **The Pragmatic Engineer** · *2026-11-09*
+  - Gergely Orosz examines how engineering organizations integrate coding agents, automated PR verification, context indexing, and deterministic evaluation harnesses into high-velocity production software pipelines.
+- **[Building Enterprise AI Workflows with IBM Granite & watsonx.ai Flows Engine](https://www.youtube.com/watch?v=-WXzgIFcNK0)** — **IBM Developer** · *2026-11-08*
+  - Technical deep-dive into building low-latency enterprise RAG and tool-calling pipelines using open-weight IBM Granite foundation models and declarative flow orchestration in watsonx.ai.
+- **[Stanford CS25: Transformers United — Frontier Reasoning & Post-Training Architectures](https://www.youtube.com/watch?v=XfpMkf4rD6E)** — **Stanford Online (CS25)** · *2026-11-07*
+  - Stanford CS25 seminar examining how scaling test-time compute, reinforcement fine-tuning, and verifier-guided search enable transformer architectures to solve complex mathematical and multi-step reasoning problems.
+- **[RAG From Scratch: Query Translation, Routing, RAPTOR & Corrective RAG](https://www.youtube.com/watch?v=sVcwVQRHIc8)** — **LangChain** · *2026-11-06*
+  - End-to-end engineering tutorial covering multi-query decomposition, semantic routing, hierarchical RAPTOR indexing, and self-reflective Corrective RAG (CRAG) grading loops.
+- **[Deep Dive into LLMs like ChatGPT: Pretraining, Supervised Finetuning & RLHF](https://www.youtube.com/watch?v=7xTGNNLPyMI)** — **Andrej Karpathy** · *2026-10-28*
+  - Comprehensive technical walkthrough of the full Large Language Model training pipeline, covering internet-scale tokenization, distributed pretraining, supervised instruction tuning, and reinforcement learning from human and verifiable rewards.
