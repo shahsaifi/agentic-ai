@@ -1562,7 +1562,7 @@ def _render_contact_page_html(latest_date: str) -> str:
                 "github.com/shahsaifi/agentic-ai/issues ↗</a>"
             ),
             _p(
-                "Publisher: Mohd Sahnawaz, The GenAI Briefing (jabi.io). We aim to review corrections within a few days."
+                "Publisher: The GenAI Briefing (jabi.io). We aim to review corrections within a few days."
             ),
         ]
     )
