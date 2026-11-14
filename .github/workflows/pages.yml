@@ -48,7 +48,7 @@ jobs:
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           SITE_DOMAIN: ${{ vars.SITE_DOMAIN || 'jabi.io' }}
-          GOOGLE_ADSENSE_CLIENT_ID: ${{ secrets.GOOGLE_ADSENSE_CLIENT_ID || vars.GOOGLE_ADSENSE_CLIENT_ID }}
+          GOOGLE_ADSENSE_CLIENT_ID: ${{ secrets.GOOGLE_ADSENSE_CLIENT_ID || vars.GOOGLE_ADSENSE_CLIENT_ID || 'ca-pub-4585099070726775' }}
           GOOGLE_ADSENSE_SLOT_ID: ${{ secrets.GOOGLE_ADSENSE_SLOT_ID || vars.GOOGLE_ADSENSE_SLOT_ID }}
           NEWSLETTER_FORM_ACTION: ${{ secrets.NEWSLETTER_FORM_ACTION || vars.NEWSLETTER_FORM_ACTION }}
         run: |

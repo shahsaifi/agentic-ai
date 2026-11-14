@@ -1256,12 +1256,19 @@ def _render_masthead(active_page: str, latest_date: str, edition_date: str = "")
     """
 
 
+DEFAULT_ADSENSE_CLIENT_ID = "ca-pub-4585099070726775"
 _ADSENSE_CLIENT_RE = re.compile(r"^(?:ca-)?pub-(\d{10,20})$")
 
 
 def _normalize_adsense_client_id(raw: str = "") -> str:
     """Validate and normalize a Google AdSense publisher ID to `ca-pub-XXXXXXXXXXXXXXXX`."""
-    candidate = (raw or os.getenv("GOOGLE_ADSENSE_CLIENT_ID", "")).strip()
+    env_val = os.getenv("GOOGLE_ADSENSE_CLIENT_ID")
+    if raw:
+        candidate = raw.strip()
+    elif env_val is not None:
+        candidate = env_val.strip() or DEFAULT_ADSENSE_CLIENT_ID
+    else:
+        candidate = DEFAULT_ADSENSE_CLIENT_ID
     m = _ADSENSE_CLIENT_RE.match(candidate)
     if not m:
         return ""

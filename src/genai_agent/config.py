@@ -55,7 +55,7 @@ class AgentConfig:
 
     # Publishing, Newsletter & Google AdSense settings (jabi.io)
     site_domain: str = "jabi.io"
-    google_adsense_client_id: str = ""
+    google_adsense_client_id: str = "ca-pub-4585099070726775"
     google_adsense_slot_id: str = ""
     newsletter_form_action: str = ""
 
@@ -99,7 +99,10 @@ class AgentConfig:
             email_to=os.getenv("EMAIL_TO", "").strip(),
             resend_api_key=os.getenv("RESEND_API_KEY", "").strip(),
             site_domain=os.getenv("SITE_DOMAIN", "jabi.io").strip() or "jabi.io",
-            google_adsense_client_id=os.getenv("GOOGLE_ADSENSE_CLIENT_ID", "").strip(),
+            google_adsense_client_id=(
+                os.getenv("GOOGLE_ADSENSE_CLIENT_ID", "ca-pub-4585099070726775").strip()
+                or "ca-pub-4585099070726775"
+            ),
             google_adsense_slot_id=os.getenv("GOOGLE_ADSENSE_SLOT_ID", "").strip(),
             newsletter_form_action=os.getenv("NEWSLETTER_FORM_ACTION", "").strip(),
         )
