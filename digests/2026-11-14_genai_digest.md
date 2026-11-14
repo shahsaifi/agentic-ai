@@ -67,7 +67,7 @@
 ## Tech Talks & Keynotes
 
 - **[Jonathan Blow – If AI Solved Coding, Why Is My Software Still the Same?](https://www.youtube.com/watch?v=IRK8h67ol7Q)** — **YouTube (via Hacker News)** · *2026-11-13*
-  - High-signal technical lecture on Jonathan Blow – If AI Solved Coding, Why Is My Software Still the Same?, highlighted by the AI engineering community on Hacker News (147 pts).
+  - High-signal technical lecture on Jonathan Blow – If AI Solved Coding, Why Is My Software Still the Same?, highlighted by the AI engineering community on Hacker News (148 pts).
 - **[Building and Deploying Python AI Agents with ADK, Gemini, and MCP](https://www.youtube.com/watch?v=h_r3NsfrrRI)** — **Google Cloud Tech** · *2026-11-11*
   - Walkthrough of Google Cloud's Agent Development Kit (ADK) for Python, demonstrating how to connect Gemini reasoning models to external enterprise tools via Model Context Protocol (MCP) servers and deploy multi-agent workflows on Vertex AI.
 - **[LangChain vs LangGraph: Architecting Stateful Multi-Agent Workflows & RAG](https://www.youtube.com/watch?v=qAF1NjEVHhY)** — **IBM Technology** · *2026-11-10*
