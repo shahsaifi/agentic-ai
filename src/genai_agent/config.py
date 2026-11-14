@@ -53,6 +53,12 @@ class AgentConfig:
     email_to: str = ""
     resend_api_key: str = ""
 
+    # Publishing, Newsletter & Google AdSense settings (jabi.io)
+    site_domain: str = "jabi.io"
+    google_adsense_client_id: str = ""
+    google_adsense_slot_id: str = ""
+    newsletter_form_action: str = ""
+
     @classmethod
     def from_env(cls, env_file: Optional[str] = None) -> AgentConfig:
         """Load configuration from .env file and environment variables."""
@@ -92,4 +98,8 @@ class AgentConfig:
             email_from=os.getenv("EMAIL_FROM", "").strip(),
             email_to=os.getenv("EMAIL_TO", "").strip(),
             resend_api_key=os.getenv("RESEND_API_KEY", "").strip(),
+            site_domain=os.getenv("SITE_DOMAIN", "jabi.io").strip() or "jabi.io",
+            google_adsense_client_id=os.getenv("GOOGLE_ADSENSE_CLIENT_ID", "").strip(),
+            google_adsense_slot_id=os.getenv("GOOGLE_ADSENSE_SLOT_ID", "").strip(),
+            newsletter_form_action=os.getenv("NEWSLETTER_FORM_ACTION", "").strip(),
         )

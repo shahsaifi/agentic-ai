@@ -9,6 +9,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="format-detection" content="telephone=no">
+  <link rel="alternate" type="application/rss+xml" title="The GenAI Briefing (jabi.io)" href="https://jabi.io/feed.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
@@ -569,6 +570,117 @@
       margin-bottom: 8px;
     }
 
+    /* Free Daily Email Digest Subscribe Box */
+    .subscribe-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--border-strong);
+      border-left: 3px solid var(--accent);
+      padding: 22px 24px;
+      margin: 36px 0 28px;
+    }
+    .subscribe-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .subscribe-box h3 {
+      font-family: var(--font-serif);
+      font-size: 1.24rem;
+      font-weight: 600;
+      margin: 0 0 6px;
+      color: var(--ink);
+    }
+    .subscribe-copy {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--ink-secondary);
+      margin: 0 0 14px;
+      line-height: 1.6;
+      max-width: 66ch;
+    }
+    .subscribe-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .subscribe-input {
+      flex: 1 1 260px;
+      max-width: 380px;
+      padding: 9px 12px;
+      font-family: var(--font-sans);
+      font-size: 16px;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      outline: none;
+    }
+    .subscribe-input:focus {
+      border-color: var(--accent);
+    }
+    .subscribe-btn {
+      padding: 10px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--bg);
+      background: var(--ink);
+      border: 1px solid var(--ink);
+      border-radius: 3px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .subscribe-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .subscribe-meta {
+      font-family: var(--font-mono);
+      font-size: 0.71rem;
+      color: var(--ink-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+    }
+    .subscribe-meta a {
+      color: var(--ink-secondary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .subscribe-status {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-top: 8px;
+      display: none;
+    }
+
+    /* Non-intrusive Google AdSense Editorial Sponsorship Slot */
+    .editorial-ad-slot {
+      margin: 28px 0;
+      padding: 14px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .editorial-ad-label {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+    }
+
     .footer {
       margin-top: 56px;
       padding-top: 18px;
@@ -683,6 +795,17 @@
         padding: 14px 16px;
         margin: 14px 0 20px;
       }
+      .subscribe-box {
+        padding: 16px;
+        margin: 24px 0 20px;
+      }
+      .subscribe-input {
+        max-width: 100%;
+        width: 100%;
+      }
+      .subscribe-btn {
+        width: 100%;
+      }
       /* Stack Archive Table cleanly on iPhone screens */
       .archive-table thead {
         display: none;
@@ -767,9 +890,36 @@
       });
     }
 
+    function handleSubscribe(event) {
+      const form = event.target;
+      const action = (form.getAttribute('action') || '').trim();
+      if (action && action !== '#') {
+        return true;
+      }
+      event.preventDefault();
+      const input = form.querySelector('input[type="email"]');
+      const status = form.parentElement.querySelector('.subscribe-status');
+      const email = input ? input.value.trim() : '';
+      if (!email || !email.includes('@')) {
+        return false;
+      }
+      try {
+        localStorage.setItem('jabi_subscribed_email', email);
+      } catch (e) {}
+      const subject = encodeURIComponent('Subscribe: The GenAI Briefing (jabi.io)');
+      const body = encodeURIComponent('Please subscribe ' + email + ' to the free daily GenAI Briefing on jabi.io.');
+      window.location.href = 'mailto:digest@jabi.io?subject=' + subject + '&body=' + body;
+      if (status) {
+        status.style.display = 'block';
+        status.textContent = 'Subscription request prepared for ' + email + '. You can also subscribe directly via RSS (feed.xml).';
+      }
+      return false;
+    }
+
     window.addEventListener('DOMContentLoaded', updateControls);
   </script>
 
+  
 </head>
 <body>
   <div class="page-wrap">
@@ -798,9 +948,10 @@
           <a href="tech-talks.html" class="">Tech Talks Index</a>
           <a href="podcasts.html" class="">Podcasts Index</a>
           <a href="index.html#archive">Archive</a>
+          <a href="#subscribe">Subscribe</a>
         </div>
         <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">
-          DAILY EDITION
+          JABI.IO · DAILY EDITION
         </div>
       </nav>
     </header>
@@ -1104,9 +1255,30 @@
             </div>
     </section>
 
+    
+    
+    <section id="subscribe" class="subscribe-box" aria-label="Subscribe to Free Daily Email Digest">
+      <div class="subscribe-kicker">FREE DAILY EMAIL DIGEST · JABI.IO</div>
+      <h3>Receive The GenAI Briefing in Your Inbox Every Morning</h3>
+      <p class="subscribe-copy">Get the daily Top 10 research papers, frontier lab engineering posts, researcher X threads, and YouTube tech talk summaries delivered free at 07:00 SGT. Zero noise, zero spam, one-click unsubscribe.</p>
+      <form class="subscribe-form" action="#" method="post" onsubmit="return handleSubscribe(event)">
+        <input type="email" name="email" class="subscribe-input" placeholder="you@company.com" required aria-label="Email address">
+        <button type="submit" class="subscribe-btn">Subscribe Free →</button>
+      </form>
+      <div class="subscribe-status" role="status" aria-live="polite"></div>
+      <div class="subscribe-meta">
+        <span>100% Free for AI Engineers &amp; Researchers</span>
+        <span>·</span>
+        <a href="feed.xml">RSS / Atom Feed (feed.xml) ↗</a>
+        <span>·</span>
+        <a href="privacy.html">Privacy &amp; Editorial Policy</a>
+      </div>
+    </section>
+    
+
     <footer class="footer">
-      <div>THE GENAI BRIEFING · ISSUE 2026-11-14</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a></div>
+      <div>THE GENAI BRIEFING · JABI.IO · ISSUE 2026-11-14</div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
     </footer>
   </div>
 </body>

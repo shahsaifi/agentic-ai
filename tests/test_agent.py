@@ -416,6 +416,10 @@ def test_published_docs_html_integrity():
         assert '<a href="tech-talks.html"' in nav_text
         assert "Tech Talks Index" in nav_text
         assert '<a href="#tech-talks">Tech Talks</a>' not in nav_text
+        assert '<a href="#subscribe">Subscribe</a>' in nav_text
+        assert 'id="subscribe"' in nav_text
+        assert 'class="subscribe-box"' in nav_text
+        assert "font-size: 16px;" in nav_text
 
     tt_text = (repo_docs / "tech-talks.html").read_text(encoding="utf-8")
     for idx in range(1, 14):
@@ -424,6 +428,68 @@ def test_published_docs_html_integrity():
     assert "YOUTUBE CHANNEL ↗" in tt_text
     assert "Watch on YouTube ↗" in tt_text
     assert 'target="_blank" rel="noopener noreferrer"' in tt_text
+
+    cname_path = repo_docs / "CNAME"
+    assert cname_path.exists()
+    assert cname_path.read_text(encoding="utf-8").strip() == "jabi.io"
+
+    feed_path = repo_docs / "feed.xml"
+    assert feed_path.exists()
+    feed_xml = feed_path.read_text(encoding="utf-8")
+    assert '<rss version="2.0"' in feed_xml
+    assert "<link>https://jabi.io/</link>" in feed_xml
+    assert "<item>" in feed_xml
+
+    ads_path = repo_docs / "ads.txt"
+    assert ads_path.exists()
+
+    privacy_path = repo_docs / "privacy.html"
+    assert privacy_path.exists()
+    privacy_text = privacy_path.read_text(encoding="utf-8")
+    assert "Google AdSense" in privacy_text
+    assert "adssettings.google.com" in privacy_text
+
+
+def test_subscribe_rss_and_adsense_readiness(tmp_path: Path, monkeypatch):
+    import xml.etree.ElementTree as ET
+
+    monkeypatch.setenv("GOOGLE_ADSENSE_CLIENT_ID", "ca-pub-1234567890123456")
+
+    md = (
+        "# Generative AI Technical Briefing — 2026-11-14\n\n"
+        "## Top 10 Ranked Briefing\n\n"
+        "### 1. [Test Frontier Paper](https://arxiv.org/abs/2611.00001)\n"
+        "**Research** (arXiv) · 120 pts · *2026-11-14*\n"
+        "- Rigorous architectural evaluation of test-time compute scaling.\n"
+    )
+    digests_dir = tmp_path / "digests"
+    docs_dir = tmp_path / "docs"
+    save_markdown_digest(md, digests_dir, timestamp=datetime(2026, 11, 14, 9, 0), docs_dir=docs_dir)
+
+    assert (docs_dir / "CNAME").read_text(encoding="utf-8").strip() == "jabi.io"
+
+    ads_txt = (docs_dir / "ads.txt").read_text(encoding="utf-8").strip()
+    assert ads_txt == "google.com, pub-1234567890123456, DIRECT, f08c47fec0942fa0"
+
+    feed_xml = (docs_dir / "feed.xml").read_text(encoding="utf-8")
+    root = ET.fromstring(feed_xml)
+    assert root.tag == "rss"
+    assert "https://jabi.io" in feed_xml
+
+    privacy_html = (docs_dir / "privacy.html").read_text(encoding="utf-8")
+    assert "Google AdSense" in privacy_html
+    assert "adssettings.google.com" in privacy_html
+
+    for page_name in ("index.html", "2026-11-14.html", "tech-talks.html", "privacy.html"):
+        page_html = (docs_dir / page_name).read_text(encoding="utf-8")
+        assert '<meta name="google-adsense-account" content="ca-pub-1234567890123456">' in page_html
+        assert "adsbygoogle.js?client=ca-pub-1234567890123456" in page_html
+        assert 'id="subscribe"' in page_html
+        assert '<a href="#subscribe">Subscribe</a>' in page_html
+
+    index_html = (docs_dir / "index.html").read_text(encoding="utf-8")
+    assert '<ins class="adsbygoogle"' in index_html
+
 
 
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import html
+import os
 import re
 from datetime import datetime
 from pathlib import Path
@@ -21,6 +22,7 @@ EDITORIAL_CSS_AND_JS = """
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="format-detection" content="telephone=no">
+  <link rel="alternate" type="application/rss+xml" title="The GenAI Briefing (jabi.io)" href="https://jabi.io/feed.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
@@ -581,6 +583,117 @@ EDITORIAL_CSS_AND_JS = """
       margin-bottom: 8px;
     }
 
+    /* Free Daily Email Digest Subscribe Box */
+    .subscribe-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--border-strong);
+      border-left: 3px solid var(--accent);
+      padding: 22px 24px;
+      margin: 36px 0 28px;
+    }
+    .subscribe-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .subscribe-box h3 {
+      font-family: var(--font-serif);
+      font-size: 1.24rem;
+      font-weight: 600;
+      margin: 0 0 6px;
+      color: var(--ink);
+    }
+    .subscribe-copy {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--ink-secondary);
+      margin: 0 0 14px;
+      line-height: 1.6;
+      max-width: 66ch;
+    }
+    .subscribe-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .subscribe-input {
+      flex: 1 1 260px;
+      max-width: 380px;
+      padding: 9px 12px;
+      font-family: var(--font-sans);
+      font-size: 16px;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      outline: none;
+    }
+    .subscribe-input:focus {
+      border-color: var(--accent);
+    }
+    .subscribe-btn {
+      padding: 10px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--bg);
+      background: var(--ink);
+      border: 1px solid var(--ink);
+      border-radius: 3px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .subscribe-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .subscribe-meta {
+      font-family: var(--font-mono);
+      font-size: 0.71rem;
+      color: var(--ink-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+    }
+    .subscribe-meta a {
+      color: var(--ink-secondary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .subscribe-status {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-top: 8px;
+      display: none;
+    }
+
+    /* Non-intrusive Google AdSense Editorial Sponsorship Slot */
+    .editorial-ad-slot {
+      margin: 28px 0;
+      padding: 14px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .editorial-ad-label {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+    }
+
     .footer {
       margin-top: 56px;
       padding-top: 18px;
@@ -695,6 +808,17 @@ EDITORIAL_CSS_AND_JS = """
         padding: 14px 16px;
         margin: 14px 0 20px;
       }
+      .subscribe-box {
+        padding: 16px;
+        margin: 24px 0 20px;
+      }
+      .subscribe-input {
+        max-width: 100%;
+        width: 100%;
+      }
+      .subscribe-btn {
+        width: 100%;
+      }
       /* Stack Archive Table cleanly on iPhone screens */
       .archive-table thead {
         display: none;
@@ -777,6 +901,32 @@ EDITORIAL_CSS_AND_JS = """
         const itemCat = item.getAttribute('data-category') || '';
         item.style.display = (cat === 'all' || itemCat === cat) ? '' : 'none';
       });
+    }
+
+    function handleSubscribe(event) {
+      const form = event.target;
+      const action = (form.getAttribute('action') || '').trim();
+      if (action && action !== '#') {
+        return true;
+      }
+      event.preventDefault();
+      const input = form.querySelector('input[type="email"]');
+      const status = form.parentElement.querySelector('.subscribe-status');
+      const email = input ? input.value.trim() : '';
+      if (!email || !email.includes('@')) {
+        return false;
+      }
+      try {
+        localStorage.setItem('jabi_subscribed_email', email);
+      } catch (e) {}
+      const subject = encodeURIComponent('Subscribe: The GenAI Briefing (jabi.io)');
+      const body = encodeURIComponent('Please subscribe ' + email + ' to the free daily GenAI Briefing on jabi.io.');
+      window.location.href = 'mailto:digest@jabi.io?subject=' + subject + '&body=' + body;
+      if (status) {
+        status.style.display = 'block';
+        status.textContent = 'Subscription request prepared for ' + email + '. You can also subscribe directly via RSS (feed.xml).';
+      }
+      return false;
     }
 
     window.addEventListener('DOMContentLoaded', updateControls);
@@ -1096,13 +1246,183 @@ def _render_masthead(active_page: str, latest_date: str, edition_date: str = "")
           <a href="tech-talks.html" class="{'active' if active_page == 'tech_talks' else ''}">Tech Talks Index</a>
           <a href="podcasts.html" class="{'active' if active_page == 'podcasts' else ''}">Podcasts Index</a>
           <a href="index.html#archive">Archive</a>
+          <a href="#subscribe">Subscribe</a>
         </div>
         <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">
-          DAILY EDITION
+          JABI.IO · DAILY EDITION
         </div>
       </nav>
     </header>
     """
+
+
+_ADSENSE_CLIENT_RE = re.compile(r"^(?:ca-)?pub-(\d{10,20})$")
+
+
+def _normalize_adsense_client_id(raw: str = "") -> str:
+    """Validate and normalize a Google AdSense publisher ID to `ca-pub-XXXXXXXXXXXXXXXX`."""
+    candidate = (raw or os.getenv("GOOGLE_ADSENSE_CLIENT_ID", "")).strip()
+    m = _ADSENSE_CLIENT_RE.match(candidate)
+    if not m:
+        return ""
+    return f"ca-pub-{m.group(1)}"
+
+
+def _render_adsense_head_snippet() -> str:
+    """Return Google AdSense account meta tag and async script when `GOOGLE_ADSENSE_CLIENT_ID` is configured."""
+    client_id = _normalize_adsense_client_id()
+    if not client_id:
+        return ""
+    safe_client = html.escape(client_id, quote=True)
+    return (
+        f'\n  <meta name="google-adsense-account" content="{safe_client}">\n'
+        f'  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={safe_client}" crossorigin="anonymous"></script>'
+    )
+
+
+def _render_editorial_ad_slot() -> str:
+    """Render a single, clearly labeled responsive AdSense unit when `GOOGLE_ADSENSE_CLIENT_ID` is configured."""
+    client_id = _normalize_adsense_client_id()
+    if not client_id:
+        return ""
+    raw_slot = os.getenv("GOOGLE_ADSENSE_SLOT_ID", "").strip()
+    slot_attr = f' data-ad-slot="{html.escape(raw_slot, quote=True)}"' if re.match(r"^\d{6,20}$", raw_slot) else ""
+    safe_client = html.escape(client_id, quote=True)
+    return f"""
+    <aside class="editorial-ad-slot" aria-label="Advertisement">
+      <div class="editorial-ad-label">Sponsored · Advertisement</div>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="{safe_client}"{slot_attr}
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({{}});</script>
+    </aside>
+    """
+
+
+def _render_subscribe_box_html() -> str:
+    """Render the free daily email digest subscription box and RSS feed links for `jabi.io`."""
+    raw_action = os.getenv("NEWSLETTER_FORM_ACTION", "").strip()
+    safe_action = _safe_http_url(raw_action) if raw_action else "#"
+    target_attr = ' target="_blank" rel="noopener noreferrer"' if safe_action != "#" else ""
+    return f"""
+    <section id="subscribe" class="subscribe-box" aria-label="Subscribe to Free Daily Email Digest">
+      <div class="subscribe-kicker">FREE DAILY EMAIL DIGEST · JABI.IO</div>
+      <h3>Receive The GenAI Briefing in Your Inbox Every Morning</h3>
+      <p class="subscribe-copy">Get the daily Top 10 research papers, frontier lab engineering posts, researcher X threads, and YouTube tech talk summaries delivered free at 07:00 SGT. Zero noise, zero spam, one-click unsubscribe.</p>
+      <form class="subscribe-form" action="{safe_action}" method="post" onsubmit="return handleSubscribe(event)"{target_attr}>
+        <input type="email" name="email" class="subscribe-input" placeholder="you@company.com" required aria-label="Email address">
+        <button type="submit" class="subscribe-btn">Subscribe Free →</button>
+      </form>
+      <div class="subscribe-status" role="status" aria-live="polite"></div>
+      <div class="subscribe-meta">
+        <span>100% Free for AI Engineers &amp; Researchers</span>
+        <span>·</span>
+        <a href="feed.xml">RSS / Atom Feed (feed.xml) ↗</a>
+        <span>·</span>
+        <a href="privacy.html">Privacy &amp; Editorial Policy</a>
+      </div>
+    </section>
+    """
+
+
+def _render_rss_feed_xml(archive_map: Dict[str, str], site_url: str = "https://jabi.io") -> str:
+    """Render an RSS 2.0 feed (`docs/feed.xml`) of recent daily issues for email-to-RSS and feed readers."""
+    base = site_url.rstrip("/")
+    sorted_dates = sorted(archive_map.keys(), reverse=True)
+    items_xml: List[str] = []
+
+    for d in sorted_dates[:15]:
+        top_items = _parse_top10_items(archive_map[d])
+        bullet_lines = [
+            f"<li><a href=\"{_safe_http_url(it['url'])}\">{html.escape(it['title'])}</a> — {html.escape(it['summary'])}</li>"
+            for it in top_items[:10]
+        ]
+        desc_html = f"<ul>{''.join(bullet_lines)}</ul>" if bullet_lines else "Daily Generative AI Technical Briefing."
+        issue_url = f"{base}/{d}.html"
+        items_xml.append(
+            f"""    <item>
+      <title>The GenAI Briefing — {html.escape(d)}</title>
+      <link>{issue_url}</link>
+      <guid isPermaLink="true">{issue_url}</guid>
+      <pubDate>{html.escape(d)}T07:00:00+08:00</pubDate>
+      <description>{html.escape(desc_html)}</description>
+    </item>"""
+        )
+
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>The GenAI Briefing (jabi.io)</title>
+    <link>{base}/</link>
+    <atom:link href="{base}/feed.xml" rel="self" type="application/rss+xml" />
+    <description>Curated daily Generative AI research papers, frontier lab engineering, researcher threads on X, audio podcasts, and YouTube tech talks.</description>
+    <language>en-us</language>
+{chr(10).join(items_xml)}
+  </channel>
+</rss>
+"""
+
+
+def _render_privacy_page_html(latest_date: str) -> str:
+    """Render `docs/privacy.html` with About, Editorial Standards, Email Privacy, and Google AdSense disclosures."""
+    return f"""<!DOCTYPE html>
+<html lang="en" data-theme="sage">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>The GenAI Briefing (jabi.io) — About, Editorial Policy &amp; Privacy</title>
+  {EDITORIAL_CSS_AND_JS}{_render_adsense_head_snippet()}
+</head>
+<body>
+  <div class="page-wrap">
+    {_render_masthead(active_page="privacy", latest_date=latest_date)}
+
+    <div class="section-head">
+      <h2>I. About The GenAI Briefing (jabi.io)</h2>
+      <span>EDITORIAL MISSION</span>
+    </div>
+    <p class="briefing-summary">
+      <strong>The GenAI Briefing</strong> (<a href="https://jabi.io">jabi.io</a>) is an independent daily technical publication curating high-signal Generative AI research papers (arXiv, Hugging Face Daily Papers), frontier AI lab engineering posts (Anthropic, OpenAI, Google DeepMind, Meta AI), community engineering discussions (Hacker News, Reddit), researcher threads on X, AI engineering podcasts, and YouTube technical keynotes.
+    </p>
+
+    <div class="section-head">
+      <h2>II. Free Daily Email Digest &amp; Reader Privacy</h2>
+      <span>ZERO-SPAM GUARANTEE</span>
+    </div>
+    <p class="briefing-summary">
+      Readers may subscribe to receive the daily briefing via email or via our public RSS feed (<a href="feed.xml"><code>https://jabi.io/feed.xml</code></a>). Email addresses submitted through the subscription form are used solely to deliver The GenAI Briefing and are never sold, rented, or shared with third-party data brokers. Every email includes a one-click unsubscribe link. Reading preferences (such as Paper/Sepia/Ink theme palette and font size) are stored locally in your browser via <code>localStorage</code>.
+    </p>
+
+    <div class="section-head">
+      <h2>III. Advertising &amp; Google AdSense Disclosure</h2>
+      <span>COOKIE &amp; DART POLICY</span>
+    </div>
+    <p class="briefing-summary">
+      To keep The GenAI Briefing free for engineers and researchers worldwide, <strong>jabi.io</strong> may display clearly labeled advertisements served by Google AdSense and third-party advertising partners.
+    </p>
+    <p class="briefing-summary">
+      Third-party vendors, including Google, use cookies (such as the Google DART cookie) to serve ads based on a user&#x27;s prior visits to <strong>jabi.io</strong> or other websites on the internet. Google&#x27;s use of advertising cookies enables it and its partners to serve ads to users based on their visit to this site and/or other sites on the internet. Users may opt out of personalized advertising at any time by visiting <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Google Ads Settings</a> or <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">aboutads.info</a>.
+    </p>
+
+    <div class="section-head">
+      <h2>IV. Contact &amp; Editorial Corrections</h2>
+      <span>PUBLISHER DESK</span>
+    </div>
+    <p class="briefing-summary">
+      For editorial inquiries, paper submissions, or privacy requests, contact the editorial desk at <a href="mailto:digest@jabi.io">digest@jabi.io</a>.
+    </p>
+
+    {_render_subscribe_box_html()}
+
+    <footer class="footer">
+      <div>THE GENAI BRIEFING · JABI.IO · ABOUT &amp; PRIVACY</div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
+    </footer>
+  </div>
+</body>
+</html>"""
 
 
 _REDDIT_TOPIC_STOPWORDS = {
@@ -1926,6 +2246,7 @@ def _render_daily_digest_html(
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — {current_date}</title>
   {EDITORIAL_CSS_AND_JS}
+  {_render_adsense_head_snippet()}
 </head>
 <body>
   <div class="page-wrap">
@@ -1969,9 +2290,12 @@ def _render_daily_digest_html(
       {talks_html}
     </section>
 
+    {_render_editorial_ad_slot()}
+    {_render_subscribe_box_html()}
+
     <footer class="footer">
-      <div>THE GENAI BRIEFING · ISSUE {current_date}</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a></div>
+      <div>THE GENAI BRIEFING · JABI.IO · ISSUE {current_date}</div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
     </footer>
   </div>
 </body>
@@ -2027,6 +2351,7 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — Daily Research, Engineering &amp; Audio Index</title>
   {EDITORIAL_CSS_AND_JS}
+  {_render_adsense_head_snippet()}
 </head>
 <body>
   <div class="page-wrap">
@@ -2083,9 +2408,12 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
       </table>
     </section>
 
+    {_render_editorial_ad_slot()}
+    {_render_subscribe_box_html()}
+
     <footer class="footer">
-      <div>THE GENAI BRIEFING · PUBLISHED DAILY</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a></div>
+      <div>THE GENAI BRIEFING · JABI.IO · PUBLISHED DAILY</div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
     </footer>
   </div>
 </body>
@@ -2132,14 +2460,17 @@ def _render_podcasts_page_html(
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — Podcasts &amp; Episode Summaries</title>
   {EDITORIAL_CSS_AND_JS}
+  {_render_adsense_head_snippet()}
 </head>
 <body>
   <div class="page-wrap">
     {_render_masthead(active_page="podcasts", latest_date=latest_date)}
     {"".join(show_blocks)}
+    {_render_editorial_ad_slot()}
+    {_render_subscribe_box_html()}
     <footer class="footer">
-      <div>THE GENAI BRIEFING · AUDIO &amp; PODCASTS DIRECTORY</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="{latest_date}.html">Latest Issue</a></div>
+      <div>THE GENAI BRIEFING · JABI.IO · AUDIO &amp; PODCASTS DIRECTORY</div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
     </footer>
   </div>
 </body>
@@ -2197,6 +2528,7 @@ def _render_tech_talks_page_html(
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — Tech Talks &amp; Keynotes Directory</title>
   {EDITORIAL_CSS_AND_JS}
+  {_render_adsense_head_snippet()}
 </head>
 <body>
   <div class="page-wrap">
@@ -2207,9 +2539,11 @@ def _render_tech_talks_page_html(
     </div>
     {jump_bar_html}
     {"".join(channel_blocks)}
+    {_render_editorial_ad_slot()}
+    {_render_subscribe_box_html()}
     <footer class="footer">
-      <div>THE GENAI BRIEFING · TECH TALKS &amp; KEYNOTES DIRECTORY</div>
-      <div><a href="index.html">Front Page</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a></div>
+      <div>THE GENAI BRIEFING · JABI.IO · TECH TALKS &amp; KEYNOTES DIRECTORY</div>
+      <div><a href="index.html">Front Page</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
     </footer>
   </div>
 </body>
@@ -2222,7 +2556,7 @@ def save_markdown_digest(
     timestamp: datetime | None = None,
     docs_dir: Path | None = None,
 ) -> Path:
-    """Save the digest to a dated Markdown file, update `latest.md`, and build GitHub Pages HTML (`index.html`, `<date>.html`, `tech-talks.html`, `podcasts.html`)."""
+    """Save the digest to a dated Markdown file, update `latest.md`, and build GitHub Pages HTML (`index.html`, `<date>.html`, `tech-talks.html`, `podcasts.html`, `privacy.html`, `feed.xml`, `CNAME`, `ads.txt`)."""
     ts = timestamp or datetime.now()
     date_str = ts.strftime("%Y-%m-%d")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -2237,6 +2571,17 @@ def save_markdown_digest(
     target_docs = docs_dir if docs_dir is not None else output_dir.parent / "docs"
     target_docs.mkdir(parents=True, exist_ok=True)
     (target_docs / ".nojekyll").write_text("", encoding="utf-8")
+    (target_docs / "CNAME").write_text("jabi.io\n", encoding="utf-8")
+
+    ads_client = _normalize_adsense_client_id()
+    if ads_client:
+        pub_id = ads_client.replace("ca-", "", 1)
+        ads_txt_content = f"google.com, {pub_id}, DIRECT, f08c47fec0942fa0\n"
+    else:
+        ads_txt_content = (
+            "# Google AdSense ads.txt for jabi.io — set GOOGLE_ADSENSE_CLIENT_ID (ca-pub-XXXXXXXXXXXXXXXX) to populate\n"
+        )
+    (target_docs / "ads.txt").write_text(ads_txt_content, encoding="utf-8")
 
     archive_files = {
         p.name.split("_genai_digest.md")[0]: p
@@ -2261,6 +2606,15 @@ def save_markdown_digest(
     (target_docs / "index.html").write_text(index_html, encoding="utf-8")
 
     latest_d = archive_dates[-1] if archive_dates else date_str
+    (target_docs / "feed.xml").write_text(
+        _render_rss_feed_xml(archive_map=archive_map, site_url="https://jabi.io"),
+        encoding="utf-8",
+    )
+    (target_docs / "privacy.html").write_text(
+        _render_privacy_page_html(latest_date=latest_d),
+        encoding="utf-8",
+    )
+
     is_live_docs_build = docs_dir is None and output_dir.name == "digests"
     try:
         channels_data = fetch_detailed_tech_talks_hub(
