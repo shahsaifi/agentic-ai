@@ -3,7 +3,7 @@
 ## Top 10 Ranked Briefing
 
 ### 1. [SO-Arena: Benchmarking the Capability Spectrum and Reliability of System One Models](https://huggingface.co/papers/2611.15777)
-**Research** (Hugging Face Daily Papers) · 76 pts · *2026-11-10*
+**Research** (Hugging Face Daily Papers) · 78 pts · *2026-11-10*
 - System One models promise fast, general-purpose decision-making without lengthy token generation. However, understanding their capability spectrum and decision reliability requires more than aggregate performance on current benchmarks.
 
 ### 2. [BirdDreams: Joint Perspective and BEV Video Generation for a Plausible, Reactive Driving World Model](https://huggingface.co/papers/2611.14815)
@@ -57,10 +57,10 @@
 
 - **[OpenAI Launches ChatGPT Wallet and More AI News](https://rss.art19.com/episodes/cbfe9d2b-cab0-43a2-b79f-21bae8e0894a.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb)** — **AI Optic: Anthropic & OpenAI News** (🎧 15m) · *Sat, 14 Nov 2026*
   - Show Links • Get the top 80+ AI Models for $8.99 at AI Box: https://aibox.ai • How I Grow and Scale My Business with AI: https://www.skool.com/aihustle • Get the AI Chat Daily Newsletter: https://www.aichatdaily.com/newsletter In this episode, we explore the.
-- **[Designing for Agents — Zeno Rocha, Resend](https://lspace.beehiiv.com/podcast/s/latent_space_the_ai_engineer_podcast/designing_for_agents_zeno_rocha_resend)** — **Latent Space (AI Engineer Podcast)** (🎧 1h 25m) · *Tue, 10 Nov 2026*
-  - swyx had already connected Cloudflare email. Then a coding agent opened a pull request that quietly chose Resend for him. Zeno Rocha, Resend’s founder and CEO, explains what answer engine optimization (AEO) looks like from the receiving end of that rec...
 - **[Implementing Federated Learning to enhance Agentic AI](https://share.transistor.fm/s/58a69653)** — **Practical AI Podcast** (🎧 43m) · *Fri, 13 Nov 2026*
   - How can AI models learn from private data without compromising privacy? Chris is joined by Lorenzo Sani, Research Scientist at Flower Labs and PhD researcher at Cambridge, to explore federated learning and privacy-preserving AI.
+- **[When AI Tells You What You Want to Hear](https://generativeai101.podbean.com/e/when-ai-tells-you-what-you-want-to-hear/)** — **Generative AI 101** (🎧 12m) · *Wed, 11 Nov 2026*
+  - Your AI chatbot thinks your ideas are brilliant. That might be the problem.
 
 ---
 
