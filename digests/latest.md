@@ -21,11 +21,11 @@
 ### 5. [Gemini 4 Hydrogen and Orchestrator](https://antigravity.google/blog/gemini-4-hydrogen-in-google-antigravity/)
 **Engineering** (Hacker News) · `antigravity.google` · [499 pts on HN](https://news.ycombinator.com/item?id=50472260) · *2026-11-12*
 
-### 6. [Elevated errors on claude.ai, Claude Code, and platform.claude.com](https://status.claude.com/incidents/nn11wk485zfn)
-**Engineering** (Hacker News) · `status.claude.com` · [488 pts on HN](https://news.ycombinator.com/item?id=50481187) · *2026-11-13*
+### 6. [Nvidia allegedly engineered scarcity by funding AI startups to buy its GPUs](https://www.techpowerup.com/354814/nvidia-allegedly-engineered-scarcity-by-funding-ai-startups-to-buy-its-gpus)
+**Engineering** (Hacker News) · `techpowerup.com` · [492 pts on HN](https://news.ycombinator.com/item?id=50493251) · *2026-11-14*
 
-### 7. [Nvidia allegedly engineered scarcity by funding AI startups to buy its GPUs](https://www.techpowerup.com/354814/nvidia-allegedly-engineered-scarcity-by-funding-ai-startups-to-buy-its-gpus)
-**Engineering** (Hacker News) · `techpowerup.com` · [483 pts on HN](https://news.ycombinator.com/item?id=50493251) · *2026-11-14*
+### 7. [Elevated errors on claude.ai, Claude Code, and platform.claude.com](https://status.claude.com/incidents/nn11wk485zfn)
+**Engineering** (Hacker News) · `status.claude.com` · [488 pts on HN](https://news.ycombinator.com/item?id=50481187) · *2026-11-13*
 
 ### 8. [I'm making LLMs work on small and old devices](https://github.com/hyperionaidev/smolmaxxing/)
 **Engineering** (Hacker News) · `github.com` · [472 pts on HN](https://news.ycombinator.com/item?id=50468888) · *2026-11-12*
