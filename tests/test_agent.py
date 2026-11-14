@@ -174,9 +174,24 @@ def test_reddit_waf_safe_links_and_rss_sanitization():
         _find_reddit_discussion,
     )
 
-    _, search_url = _find_reddit_discussion("Random Is Almost Enough Benchmark Compression")
+    matched_curated, search_url = _find_reddit_discussion("Random Is Almost Enough Benchmark Compression via BestRand")
+    assert isinstance(matched_curated, dict)
+    for key in ("sub", "title", "url", "excerpt", "comments"):
+        assert matched_curated.get(key)
+    assert len(matched_curated["comments"]) >= 2
     assert "reddit.com/r/" not in search_url or "/search/" not in search_url
     assert search_url.startswith("https://www.google.com/search?q=site:reddit.com+")
+
+    matched_fallback, fb_search_url = _find_reddit_discussion(
+        "ZetaHyperion: Novel Topological Photonic Kernel Synthesis",
+        summary="A completely novel architecture for optical tensor routing.",
+        category="Research",
+    )
+    assert isinstance(matched_fallback, dict)
+    for key in ("sub", "title", "url", "excerpt", "comments"):
+        assert matched_fallback.get(key)
+    assert len(matched_fallback["comments"]) >= 2
+    assert fb_search_url.startswith("https://www.google.com/search?q=site:reddit.com+")
 
     raw_rss = (
         '<table><tr><td><p>When you approve a command in Claude Code, it is saved in settings.local.json.</p>'
@@ -188,6 +203,7 @@ def test_reddit_waf_safe_links_and_rss_sanitization():
     assert "submitted by" not in excerpt
     assert "[comments]" not in excerpt
     assert "<table" not in excerpt
+
 
 
 def test_tech_talks_collector_and_boilerplate_sanitization(monkeypatch):
@@ -304,10 +320,13 @@ def test_tech_talks_prompt_fallback_and_html_rendering(tmp_path: Path):
         assert '<a href="#tech-talks">Tech Talks</a>' not in content
         assert "Watch on YouTube ↗" in content
         assert "Read Thread on X ↗" in content
+        assert '<details class="briefing-reddit">' in content
+        assert '<div class="reddit-comment">' in content
         assert "No entries recorded for this issue." not in content.split("II. Researcher Threads on X", 1)[1].split("III. Audio", 1)[0]
         assert 'target="_blank" rel="noopener noreferrer"' in content
         assert "viewport-fit=cover" in content
         assert "max-width: 66ch;" in content
+
 
 
     tech_talks_html = docs_dir / "tech-talks.html"
@@ -385,6 +404,9 @@ def test_published_docs_html_integrity():
         latest_text = (repo_docs / latest_page).read_text(encoding="utf-8")
         assert "Read Thread on X ↗" in latest_text
         assert "No entries recorded for this issue." not in latest_text
+        assert latest_text.count('<details class="briefing-reddit">') == 10
+        assert latest_text.count('<div class="reddit-comment">') == 20
+
 
 
     for nav_page in ("tech-talks.html", "index.html", "podcasts.html", "2026-11-14.html"):
