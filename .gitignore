@@ -17,3 +17,6 @@ build/
 
 # OS files
 .DS_Store
+
+# Local agent config, skills & checkpoints (local only, never commit)
+.agents/
