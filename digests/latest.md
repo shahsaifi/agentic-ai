@@ -3,7 +3,7 @@
 ## Top 10 Ranked Briefing
 
 ### 1. [SO-Arena: Benchmarking the Capability Spectrum and Reliability of System One Models](https://huggingface.co/papers/2611.15777)
-**Research** (Hugging Face Daily Papers) · 78 pts · *2026-11-10*
+**Research** (Hugging Face Daily Papers) · 79 pts · *2026-11-10*
 - System One models promise fast, general-purpose decision-making without lengthy token generation. However, understanding their capability spectrum and decision reliability requires more than aggregate performance on current benchmarks.
 
 ### 2. [BirdDreams: Joint Perspective and BEV Video Generation for a Plausible, Reactive Driving World Model](https://huggingface.co/papers/2611.14815)
