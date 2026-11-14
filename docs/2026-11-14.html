@@ -666,7 +666,8 @@
 
     /* Non-intrusive Google AdSense Editorial Sponsorship Slot */
     .editorial-ad-slot {
-      margin: 28px 0;
+      margin: 56px 0;
+      clear: both;
       padding: 14px 18px;
       background: var(--surface);
       border: 1px solid var(--border);
@@ -893,27 +894,13 @@
     function handleSubscribe(event) {
       const form = event.target;
       const action = (form.getAttribute('action') || '').trim();
-      if (action && action !== '#') {
-        return true;
-      }
-      event.preventDefault();
       const input = form.querySelector('input[type="email"]');
-      const status = form.parentElement.querySelector('.subscribe-status');
       const email = input ? input.value.trim() : '';
-      if (!email || !email.includes('@')) {
+      if (!action || action === '#' || !email.includes('@')) {
+        event.preventDefault();
         return false;
       }
-      try {
-        localStorage.setItem('jabi_subscribed_email', email);
-      } catch (e) {}
-      const subject = encodeURIComponent('Subscribe: The GenAI Briefing (jabi.io)');
-      const body = encodeURIComponent('Please subscribe ' + email + ' to the free daily GenAI Briefing on jabi.io.');
-      window.location.href = 'mailto:digest@jabi.io?subject=' + subject + '&body=' + body;
-      if (status) {
-        status.style.display = 'block';
-        status.textContent = 'Subscription request prepared for ' + email + '. You can also subscribe directly via RSS (feed.xml).';
-      }
-      return false;
+      return true;
     }
 
     window.addEventListener('DOMContentLoaded', updateControls);
@@ -922,6 +909,12 @@
   
   <meta name="google-adsense-account" content="ca-pub-4585099070726775">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4585099070726775" crossorigin="anonymous"></script>
+  <meta name="description" content="The GenAI Briefing for 2026-11-14: Top 10 Generative AI research, engineering and community stories with practitioner discussion.">
+  <link rel="canonical" href="https://jabi.io/2026-11-14.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The GenAI Briefing">
+  <meta property="og:url" content="https://jabi.io/2026-11-14.html">
+  <meta property="og:description" content="The GenAI Briefing for 2026-11-14: Top 10 Generative AI research, engineering and community stories with practitioner discussion.">
 </head>
 <body>
   <div class="page-wrap">
@@ -1076,11 +1069,23 @@
                 <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>OpenAI News</span><span>·</span><span>Fri, 13 Nov 2026</span></div>
                 <h3><a href="https://openai.com/index/introducing-chatgpt-wallet" target="_blank" rel="noopener noreferrer">Introducing ChatGPT Wallet</a></h3>
                 <p class="briefing-summary">Introducing ChatGPT Wallet, a secure way for agents in ChatGPT Work, Codex, and dots to complete purchases with user approval and existing card protections.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/OpenAI):</strong> Enterprise Agentic AI in production: ChatGPT Wallet, Shield legacy portal automation &amp; Amplitude Wave</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Practitioners debate human-in-the-loop approval rails for transactional agents (`ChatGPT Wallet`), computer-use automation over legacy IT portals (`Shield`), and guardrails against unauthorized booking bots.</p><div class="reddit-comment"><strong>u/fintech_arch:</strong> Cryptographically scoped single-use virtual cards with strict merchant and dollar caps are the only sane way to let an agent execute checkout flows.</div><div class="reddit-comment"><strong>u/enterprise_rpa:</strong> DOM + vision hybrid agents finally make legacy ERP/portal migrations tractable without waiting two years for vendor APIs.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Introducing+ChatGPT+Wallet" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/OpenAI/comments/1gnwalletshield/enterprise_agents_chatgpt_wallet_shield_amplitude/" target="_blank" rel="noopener noreferrer">Direct link (r/OpenAI) ↗</a></div></div></details>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/OpenAI):</strong> OpenAI introduces ChatGPT Wallet so agents can complete purchases with user approval</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Introducing+ChatGPT+Wallet" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/OpenAI/comments/1xvd1ci/openai_introduces_chatgpt_wallet_so_agents_can/" target="_blank" rel="noopener noreferrer">Direct link (r/OpenAI) ↗</a></div></div></details>
                 <div class="briefing-actions"><a href="https://openai.com/index/introducing-chatgpt-wallet" target="_blank" rel="noopener noreferrer">Read Source (openai.com) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Introducing+ChatGPT+Wallet" target="_blank" rel="noopener noreferrer">r/OpenAI via Google ↗</a></div>
               </div>
             </article>
             </div>
+
+    
+    <aside class="editorial-ad-slot" aria-label="Advertisement">
+      <div class="editorial-ad-label">Sponsored · Advertisement</div>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4585099070726775"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </aside>
+    
 
     <div class="two-col">
       <section>
@@ -1258,39 +1263,21 @@
     </section>
 
     
-    <aside class="editorial-ad-slot" aria-label="Advertisement">
-      <div class="editorial-ad-label">Sponsored · Advertisement</div>
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-4585099070726775"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </aside>
-    
-    
-    <section id="subscribe" class="subscribe-box" aria-label="Subscribe to Free Daily Email Digest">
-      <div class="subscribe-kicker">FREE DAILY EMAIL DIGEST · JABI.IO</div>
-      <h3>Receive The GenAI Briefing in Your Inbox Every Morning</h3>
-      <p class="subscribe-copy">Get the daily Top 10 research papers, frontier lab engineering posts, researcher X threads, and YouTube tech talk summaries delivered free at 07:00 SGT. Zero noise, zero spam, one-click unsubscribe.</p>
-      <form class="subscribe-form" action="#" method="post" onsubmit="return handleSubscribe(event)">
-        <input type="email" name="email" class="subscribe-input" placeholder="you@company.com" required aria-label="Email address">
-        <button type="submit" class="subscribe-btn">Subscribe Free →</button>
-      </form>
-      <div class="subscribe-status" role="status" aria-live="polite"></div>
+    <section id="subscribe" class="subscribe-box" aria-label="Follow The GenAI Briefing">
+      <div class="subscribe-kicker">FOLLOW · JABI.IO</div>
+      <h3>Follow The GenAI Briefing</h3>
+      <p class="subscribe-copy">A new issue is published every morning. Add the RSS feed to any feed reader to get each issue as it appears. Email delivery is not open yet.</p>
       <div class="subscribe-meta">
-        <span>100% Free for AI Engineers &amp; Researchers</span>
+        <a href="feed.xml">RSS Feed (feed.xml) ↗</a>
         <span>·</span>
-        <a href="feed.xml">RSS / Atom Feed (feed.xml) ↗</a>
-        <span>·</span>
-        <a href="privacy.html">Privacy &amp; Editorial Policy</a>
+        <a href="privacy.html">Privacy</a>
       </div>
     </section>
     
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · ISSUE 2026-11-14</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
     </footer>
   </div>
 </body>

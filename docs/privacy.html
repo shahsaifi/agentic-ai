@@ -666,7 +666,8 @@
 
     /* Non-intrusive Google AdSense Editorial Sponsorship Slot */
     .editorial-ad-slot {
-      margin: 28px 0;
+      margin: 56px 0;
+      clear: both;
       padding: 14px 18px;
       background: var(--surface);
       border: 1px solid var(--border);
@@ -893,27 +894,13 @@
     function handleSubscribe(event) {
       const form = event.target;
       const action = (form.getAttribute('action') || '').trim();
-      if (action && action !== '#') {
-        return true;
-      }
-      event.preventDefault();
       const input = form.querySelector('input[type="email"]');
-      const status = form.parentElement.querySelector('.subscribe-status');
       const email = input ? input.value.trim() : '';
-      if (!email || !email.includes('@')) {
+      if (!action || action === '#' || !email.includes('@')) {
+        event.preventDefault();
         return false;
       }
-      try {
-        localStorage.setItem('jabi_subscribed_email', email);
-      } catch (e) {}
-      const subject = encodeURIComponent('Subscribe: The GenAI Briefing (jabi.io)');
-      const body = encodeURIComponent('Please subscribe ' + email + ' to the free daily GenAI Briefing on jabi.io.');
-      window.location.href = 'mailto:digest@jabi.io?subject=' + subject + '&body=' + body;
-      if (status) {
-        status.style.display = 'block';
-        status.textContent = 'Subscription request prepared for ' + email + '. You can also subscribe directly via RSS (feed.xml).';
-      }
-      return false;
+      return true;
     }
 
     window.addEventListener('DOMContentLoaded', updateControls);
@@ -921,6 +908,12 @@
 
   <meta name="google-adsense-account" content="ca-pub-4585099070726775">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4585099070726775" crossorigin="anonymous"></script>
+  <meta name="description" content="Privacy policy for jabi.io: email, cookies, Google AdSense and reader data.">
+  <link rel="canonical" href="https://jabi.io/privacy.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The GenAI Briefing">
+  <meta property="og:url" content="https://jabi.io/privacy.html">
+  <meta property="og:description" content="Privacy policy for jabi.io: email, cookies, Google AdSense and reader data.">
 </head>
 <body>
   <div class="page-wrap">
@@ -971,7 +964,7 @@
       <span>ZERO-SPAM GUARANTEE</span>
     </div>
     <p class="briefing-summary">
-      Readers may subscribe to receive the daily briefing via email or via our public RSS feed (<a href="feed.xml"><code>https://jabi.io/feed.xml</code></a>). Email addresses submitted through the subscription form are used solely to deliver The GenAI Briefing and are never sold, rented, or shared with third-party data brokers. Every email includes a one-click unsubscribe link. Reading preferences (such as Paper/Sepia/Ink theme palette and font size) are stored locally in your browser via <code>localStorage</code>.
+      Readers can follow the daily briefing through our public RSS feed (<a href="feed.xml"><code>https://jabi.io/feed.xml</code></a>). If an email signup is offered, the address you submit is handled by the newsletter provider named on the form and is used only to send The GenAI Briefing; it is never sold. Reading preferences (such as Paper/Sepia/Ink theme palette and font size) are stored locally in your browser via <code>localStorage</code>.
     </p>
 
     <div class="section-head">
@@ -990,32 +983,25 @@
       <span>PUBLISHER DESK</span>
     </div>
     <p class="briefing-summary">
-      For editorial inquiries, paper submissions, or privacy requests, contact the editorial desk at <a href="mailto:digest@jabi.io">digest@jabi.io</a>.
+      For editorial inquiries, paper submissions, or privacy requests, use the <a href="contact.html">Contact page</a>. See also our <a href="terms.html">Terms of Service</a>.
     </p>
 
     
-    <section id="subscribe" class="subscribe-box" aria-label="Subscribe to Free Daily Email Digest">
-      <div class="subscribe-kicker">FREE DAILY EMAIL DIGEST · JABI.IO</div>
-      <h3>Receive The GenAI Briefing in Your Inbox Every Morning</h3>
-      <p class="subscribe-copy">Get the daily Top 10 research papers, frontier lab engineering posts, researcher X threads, and YouTube tech talk summaries delivered free at 07:00 SGT. Zero noise, zero spam, one-click unsubscribe.</p>
-      <form class="subscribe-form" action="#" method="post" onsubmit="return handleSubscribe(event)">
-        <input type="email" name="email" class="subscribe-input" placeholder="you@company.com" required aria-label="Email address">
-        <button type="submit" class="subscribe-btn">Subscribe Free →</button>
-      </form>
-      <div class="subscribe-status" role="status" aria-live="polite"></div>
+    <section id="subscribe" class="subscribe-box" aria-label="Follow The GenAI Briefing">
+      <div class="subscribe-kicker">FOLLOW · JABI.IO</div>
+      <h3>Follow The GenAI Briefing</h3>
+      <p class="subscribe-copy">A new issue is published every morning. Add the RSS feed to any feed reader to get each issue as it appears. Email delivery is not open yet.</p>
       <div class="subscribe-meta">
-        <span>100% Free for AI Engineers &amp; Researchers</span>
+        <a href="feed.xml">RSS Feed (feed.xml) ↗</a>
         <span>·</span>
-        <a href="feed.xml">RSS / Atom Feed (feed.xml) ↗</a>
-        <span>·</span>
-        <a href="privacy.html">Privacy &amp; Editorial Policy</a>
+        <a href="privacy.html">Privacy</a>
       </div>
     </section>
     
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · ABOUT &amp; PRIVACY</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
     </footer>
   </div>
 </body>

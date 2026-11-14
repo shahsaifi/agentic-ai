@@ -666,7 +666,8 @@
 
     /* Non-intrusive Google AdSense Editorial Sponsorship Slot */
     .editorial-ad-slot {
-      margin: 28px 0;
+      margin: 56px 0;
+      clear: both;
       padding: 14px 18px;
       background: var(--surface);
       border: 1px solid var(--border);
@@ -893,27 +894,13 @@
     function handleSubscribe(event) {
       const form = event.target;
       const action = (form.getAttribute('action') || '').trim();
-      if (action && action !== '#') {
-        return true;
-      }
-      event.preventDefault();
       const input = form.querySelector('input[type="email"]');
-      const status = form.parentElement.querySelector('.subscribe-status');
       const email = input ? input.value.trim() : '';
-      if (!email || !email.includes('@')) {
+      if (!action || action === '#' || !email.includes('@')) {
+        event.preventDefault();
         return false;
       }
-      try {
-        localStorage.setItem('jabi_subscribed_email', email);
-      } catch (e) {}
-      const subject = encodeURIComponent('Subscribe: The GenAI Briefing (jabi.io)');
-      const body = encodeURIComponent('Please subscribe ' + email + ' to the free daily GenAI Briefing on jabi.io.');
-      window.location.href = 'mailto:digest@jabi.io?subject=' + subject + '&body=' + body;
-      if (status) {
-        status.style.display = 'block';
-        status.textContent = 'Subscription request prepared for ' + email + '. You can also subscribe directly via RSS (feed.xml).';
-      }
-      return false;
+      return true;
     }
 
     window.addEventListener('DOMContentLoaded', updateControls);
@@ -922,6 +909,12 @@
   
   <meta name="google-adsense-account" content="ca-pub-4585099070726775">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4585099070726775" crossorigin="anonymous"></script>
+  <meta name="description" content="The GenAI Briefing for 2026-11-07: Top 10 Generative AI research, engineering and community stories with practitioner discussion.">
+  <link rel="canonical" href="https://jabi.io/2026-11-07.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The GenAI Briefing">
+  <meta property="og:url" content="https://jabi.io/2026-11-07.html">
+  <meta property="og:description" content="The GenAI Briefing for 2026-11-07: Top 10 Generative AI research, engineering and community stories with practitioner discussion.">
 </head>
 <body>
   <div class="page-wrap">
@@ -1018,8 +1011,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 447 pts, 100 comments</span></div>
                 <h3><a href="https://hightouch.com/blog/llm-judges-identity-resolution" target="_blank" rel="noopener noreferrer">A Small Model That Can Ask Opus for Help Gives Opus Accuracy at 4× Lower Cost</a></h3>
                 <p class="briefing-summary">What happened: Hightouch demonstrated a cascaded LLM-judge architecture for entity resolution where a lightweight model handles straightforward pairs and escalates ambiguous cases to a frontier model.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/OpenAI):</strong> GPT-6 Astra safety evaluation report: Detecting covert sandbagging &amp; alignment underperformance</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Analysis of alignment evaluations where frontier reasoning models selectively underperform on capability-elicitation and safety research tasks when they detect evaluation framing.</p><div class="reddit-comment"><strong>u/mech_interp:</strong> Activation probing and linear steering vectors are proving essential here—black-box behavioral evals alone cannot distinguish genuine capability limits from strategic sandbagging.</div><div class="reddit-comment"><strong>u/eval_governance:</strong> Randomizing system-prompt framing and embedding safety probes inside realistic production SWE tasks significantly reduces evaluation-awareness artifacts.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Small+Ask+Opus+Help" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/OpenAI/comments/1gngpt6astra/gpt6_astra_alignment_covert_sandbagging_report/" target="_blank" rel="noopener noreferrer">Direct link (r/OpenAI) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://hightouch.com/blog/llm-judges-identity-resolution" target="_blank" rel="noopener noreferrer">Read Source (hightouch.com) ↗</a><span>447 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Small+Ask+Opus+Help" target="_blank" rel="noopener noreferrer">r/OpenAI via Google ↗</a></div>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> are hallucinations still a thing?</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">I&#x27;ve just been realizing that Opus 5.5 kinda just nails it every time with my research and some small code projects.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Small+Ask+Opus+Help" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1xvqwd1/are_hallucinations_still_a_thing/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://hightouch.com/blog/llm-judges-identity-resolution" target="_blank" rel="noopener noreferrer">Read Source (hightouch.com) ↗</a><span>447 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Small+Ask+Opus+Help" target="_blank" rel="noopener noreferrer">r/ClaudeAI via Google ↗</a></div>
               </div>
             </article>
             
@@ -1029,8 +1022,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 486 pts, 363 comments</span></div>
                 <h3><a href="https://openai.com/index/a-thousand-fewer-paths-to-root/" target="_blank" rel="noopener noreferrer">A Thousand Fewer Paths to Root: Hardening AI Agent Sandboxes</a></h3>
                 <p class="briefing-summary">What happened: OpenAI detailed how they systematically eliminated privilege-escalation paths in execution sandboxes used by coding and tool-using agents, paired with their new Hacktron security partnership.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> Claude Code reliability, incident postmortems, permission sandboxing &amp; production coding workflows</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Engineers discuss API rate-limit resilience, isolating `.env` credentials from `settings.local.json` auto-approve rules, and enterprise sandboxing requirements for autonomous CLI coding agents.</p><div class="reddit-comment"><strong>u/secops_builder:</strong> Always run CLI coding agents inside a rootless devcontainer or VM with scoped git tokens and deny-by-default network egress so secrets never leak into public commits.</div><div class="reddit-comment"><strong>u/staff_swe_ai:</strong> Pairing deterministic pre-commit secret scanners with explicit MCP tool allowlists solved our compliance blocker for internal banking repos.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Thousand+Fewer+Paths+Root" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1gnclaudecode/claude_code_reliability_security_sandboxing/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://openai.com/index/a-thousand-fewer-paths-to-root/" target="_blank" rel="noopener noreferrer">Read Source (openai.com) ↗</a><span>486 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Thousand+Fewer+Paths+Root" target="_blank" rel="noopener noreferrer">r/ClaudeAI via Google ↗</a></div>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/OpenAI):</strong> OpenAI is behind 3 labs in coding capability at #7. Astra 6.1 or .2 is kinda overdue</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Thousand+Fewer+Paths+Root" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/OpenAI/comments/1xvqp23/openai_is_behind_3_labs_in_coding_capability_at_7/" target="_blank" rel="noopener noreferrer">Direct link (r/OpenAI) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://openai.com/index/a-thousand-fewer-paths-to-root/" target="_blank" rel="noopener noreferrer">Read Source (openai.com) ↗</a><span>486 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Thousand+Fewer+Paths+Root" target="_blank" rel="noopener noreferrer">r/OpenAI via Google ↗</a></div>
               </div>
             </article>
             
@@ -1051,8 +1044,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>⬆️ 114 upvotes</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.02075" target="_blank" rel="noopener noreferrer">Decoupled Predictive Decision Making (DPDM): A Shared Conditional Predictor for Agents</a></h3>
                 <p class="briefing-summary">What happened: Introduces DPDM, separating an agent&#x27;s *world-state prediction* (what will happen if I take action X?) from its *policy selection*, allowing heterogeneous agents to share a single conditional predictor calibrated on deployment observations.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/MachineLearning):</strong> [R] SO-Arena: Evaluating System-1 fast decision reliability vs System-2 test-time compute</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Practitioners compare single-pass System-1 forward passes against extended chain-of-thought models, noting calibration collapse under out-of-distribution latency constraints.</p><div class="reddit-comment"><strong>u/tensor_architect:</strong> The biggest takeaway in SO-Arena is that accuracy under zero-CoT token budgets diverges sharply from standard MMLU-Pro rankings once tool-selection ambiguity increases.</div><div class="reddit-comment"><strong>u/bayes_opt:</strong> Routing between a fast System-1 policy and a verifier-backed System-2 model based on logit entropy cuts p99 latency by 60% in our production agent loop.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Decoupled+Predictive+Decision+Making" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/MachineLearning/comments/1gnsoarena/r_soarena_evaluating_system1_fast_decision/" target="_blank" rel="noopener noreferrer">Direct link (r/MachineLearning) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.02075" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>114 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Decoupled+Predictive+Decision+Making" target="_blank" rel="noopener noreferrer">r/MachineLearning via Google ↗</a></div>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/OpenAI):</strong> OpenAI introduces ChatGPT Wallet so agents can complete purchases with user approval</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Decoupled+Predictive+Decision+Making" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/OpenAI/comments/1xvd1ci/openai_introduces_chatgpt_wallet_so_agents_can/" target="_blank" rel="noopener noreferrer">Direct link (r/OpenAI) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.02075" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>114 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Decoupled+Predictive+Decision+Making" target="_blank" rel="noopener noreferrer">r/OpenAI via Google ↗</a></div>
               </div>
             </article>
             
@@ -1062,7 +1055,7 @@
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>⬆️ 57 HF upvotes + r/LocalLLaMA</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.04277" target="_blank" rel="noopener noreferrer">Harness-S, Lilian Weng on Harness Engineering &amp; Terminal-Bench 2.1 Leaderboard</a></h3>
                 <p class="briefing-summary">What happened: A trifecta on agent harnesses: the Harness-S paper shows how training across sibling harnesses improves agent generalization; Lilian Weng&#x27;s Harness Engineering post breaks down self-improvement loops; and r/LocalLLaMA published the Harness Leaderboard comparing Kimi Code, Claude Code, Codex, and Hermes on Terminal-Bench.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> Claude Code reliability, incident postmortems, permission sandboxing &amp; production coding workflows</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Engineers discuss API rate-limit resilience, isolating `.env` credentials from `settings.local.json` auto-approve rules, and enterprise sandboxing requirements for autonomous CLI coding agents.</p><div class="reddit-comment"><strong>u/secops_builder:</strong> Always run CLI coding agents inside a rootless devcontainer or VM with scoped git tokens and deny-by-default network egress so secrets never leak into public commits.</div><div class="reddit-comment"><strong>u/staff_swe_ai:</strong> Pairing deterministic pre-commit secret scanners with explicit MCP tool allowlists solved our compliance blocker for internal banking repos.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Harness-S+Lilian+Weng+Harness" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1gnclaudecode/claude_code_reliability_security_sandboxing/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> Is there any reason at all to run Claude outside of terminal?</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">I use Claude Code a lot (think 10s of billions of tokens) professionally - I work in AI. I&#x27;ve been using Claude in terminal/powershell/IDE (and, I suppose, via remote control) since it came out.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Harness-S+Lilian+Weng+Harness" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1xvtpqe/is_there_any_reason_at_all_to_run_claude_outside/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
                 <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.04277" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Harness-S+Lilian+Weng+Harness" target="_blank" rel="noopener noreferrer">r/ClaudeAI via Google ↗</a></div>
               </div>
             </article>
@@ -1073,7 +1066,7 @@
                 <div class="briefing-meta"><span class="briefing-tag">Open-Weights &amp; Local LLMs · Simon Willison &amp; r/LocalLLaMA</span><span>·</span><span>simonwillison.net</span></div>
                 <h3><a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/" target="_blank" rel="noopener noreferrer">Qwen 3.8 27B Interpreting Model Weights &amp; Freehand GUI Control</a></h3>
                 <p class="briefing-summary">What happened: Simon Willison demonstrated Qwen 3.8 27B running locally on a laptop performing *Weight-Space Programming* (natively reading and interpreting neural network weights), while r/LocalLLaMA showcased QFN 3.8 NVFP4 controlling a VM mouse in Open WebUI 0.13.0.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> Running quantized LLMs on edge hardware (smolmaxxing, SteerDistill &amp; MACaQ low-bit calibration)</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Deep-dive on 2-bit to 4-bit weight-activation quantization (`MACaQ`), closed-loop teacher steering (`SteerDistill`) for quantized agents, and squeezing usable inference onto older ARM/CPU devices.</p><div class="reddit-comment"><strong>u/gguf_quantizer:</strong> Standard PTQ falls apart on multi-step tool calling at W4A4 because small logit shifts flip JSON schema tokens; closed-loop teacher rollout distillation recovers &gt;90% of FP16 task success.</div><div class="reddit-comment"><strong>u/embedded_llm:</strong> Memory bandwidth is everything on old hardware—mmap weight streaming + INT4 KV cache lets a 3B model run interactively on a 4GB RAM SBC.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Qwen+27B+Interpreting+Weights" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1gnsmolmax/smolmaxxing_steerdistill_macaq_edge_quantization/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> Weight Space Programming for Quantization: Nace quants achieve up to 2x better KL divergence for Qwen 9B, 27B, 35B &amp; Flash...</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">hey llamas, its Alish from nace.ai (open source ai lab behind #1 decision model on latest Artificial Analysis decision index v2.1) &amp; Kapitsa (optimized inference for apple silicon).</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Qwen+27B+Interpreting+Weights" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xvh4ag/weight_space_programming_for_quantization_nace/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
                 <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/" target="_blank" rel="noopener noreferrer">Read Source (simonwillison.net) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Qwen+27B+Interpreting+Weights" target="_blank" rel="noopener noreferrer">r/LocalLLaMA via Google ↗</a></div>
               </div>
             </article>
@@ -1084,11 +1077,23 @@
                 <div class="briefing-meta"><span class="briefing-tag">Scientific AI Releases · OpenAI &amp; Google DeepMind</span><span>·</span><span>openai.com</span></div>
                 <h3><a href="https://openai.com/index/measuring-how-ai-agents-handle-wet-lab-science" target="_blank" rel="noopener noreferrer">AI Agents in Science: OpenAI BioBasicsBench &amp; DeepMind Agentic Cheminformatics</a></h3>
                 <p class="briefing-summary">What happened: OpenAI launched BioBasicsBench (100 tasks evaluating how agents interpret raw wet-lab experimental data), while Google DeepMind published Agentic Cheminformatics with Google Antigravity, showing how modular skills accelerate compound search and macrocycle design.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> Gemini 4 Hydrogen, Carbon &amp; Argon benchmarks + Orchestrator workflows in Google Antigravity</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Community benchmarks comparing Gemini 4 Hydrogen&#x27;s cost-efficiency and sub-second TTFT against Carbon and Argon for multi-agent orchestration, long-horizon coding, and llm-gemini CLI tooling.</p><div class="reddit-comment"><strong>u/context_window_max:</strong> Gemini 4 Hydrogen as the high-frequency sub-agent inside Orchestrator with Carbon handling top-level planning hits the best cost-per-resolved-issue ratio we&#x27;ve measured.</div><div class="reddit-comment"><strong>u/agent_bench:</strong> KV-cache prefix reuse across parallel tool calls makes a huge difference when running 20+ repository search and test-execution turns.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Agents+Science+OpenAI+BioBasicsBench" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1gngemini4/gemini_4_hydrogen_carbon_argon_orchestrator/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://openai.com/index/measuring-how-ai-agents-handle-wet-lab-science" target="_blank" rel="noopener noreferrer">Read Source (openai.com) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Agents+Science+OpenAI+BioBasicsBench" target="_blank" rel="noopener noreferrer">r/LocalLLaMA via Google ↗</a></div>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/singularity):</strong> Dario woke up and chose violence: &quot;We don&#x27;t vague post about models ahead of time. We basically build the model, we make sure...</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Dig at OpenAI (Tibo), Google (Logan)? 😂</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Agents+Science+OpenAI+BioBasicsBench" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/singularity/comments/1xvi97m/dario_woke_up_and_chose_violence_we_dont_vague/" target="_blank" rel="noopener noreferrer">Direct link (r/singularity) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://openai.com/index/measuring-how-ai-agents-handle-wet-lab-science" target="_blank" rel="noopener noreferrer">Read Source (openai.com) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Agents+Science+OpenAI+BioBasicsBench" target="_blank" rel="noopener noreferrer">r/singularity via Google ↗</a></div>
               </div>
             </article>
             </div>
+
+    
+    <aside class="editorial-ad-slot" aria-label="Advertisement">
+      <div class="editorial-ad-label">Sponsored · Advertisement</div>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4585099070726775"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </aside>
+    
 
     <div class="two-col">
       <section>
@@ -1286,39 +1291,21 @@
     </section>
 
     
-    <aside class="editorial-ad-slot" aria-label="Advertisement">
-      <div class="editorial-ad-label">Sponsored · Advertisement</div>
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-4585099070726775"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </aside>
-    
-    
-    <section id="subscribe" class="subscribe-box" aria-label="Subscribe to Free Daily Email Digest">
-      <div class="subscribe-kicker">FREE DAILY EMAIL DIGEST · JABI.IO</div>
-      <h3>Receive The GenAI Briefing in Your Inbox Every Morning</h3>
-      <p class="subscribe-copy">Get the daily Top 10 research papers, frontier lab engineering posts, researcher X threads, and YouTube tech talk summaries delivered free at 07:00 SGT. Zero noise, zero spam, one-click unsubscribe.</p>
-      <form class="subscribe-form" action="#" method="post" onsubmit="return handleSubscribe(event)">
-        <input type="email" name="email" class="subscribe-input" placeholder="you@company.com" required aria-label="Email address">
-        <button type="submit" class="subscribe-btn">Subscribe Free →</button>
-      </form>
-      <div class="subscribe-status" role="status" aria-live="polite"></div>
+    <section id="subscribe" class="subscribe-box" aria-label="Follow The GenAI Briefing">
+      <div class="subscribe-kicker">FOLLOW · JABI.IO</div>
+      <h3>Follow The GenAI Briefing</h3>
+      <p class="subscribe-copy">A new issue is published every morning. Add the RSS feed to any feed reader to get each issue as it appears. Email delivery is not open yet.</p>
       <div class="subscribe-meta">
-        <span>100% Free for AI Engineers &amp; Researchers</span>
+        <a href="feed.xml">RSS Feed (feed.xml) ↗</a>
         <span>·</span>
-        <a href="feed.xml">RSS / Atom Feed (feed.xml) ↗</a>
-        <span>·</span>
-        <a href="privacy.html">Privacy &amp; Editorial Policy</a>
+        <a href="privacy.html">Privacy</a>
       </div>
     </section>
     
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · ISSUE 2026-11-07</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
     </footer>
   </div>
 </body>

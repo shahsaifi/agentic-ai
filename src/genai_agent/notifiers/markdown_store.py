@@ -679,7 +679,8 @@ EDITORIAL_CSS_AND_JS = """
 
     /* Non-intrusive Google AdSense Editorial Sponsorship Slot */
     .editorial-ad-slot {
-      margin: 28px 0;
+      margin: 56px 0;
+      clear: both;
       padding: 14px 18px;
       background: var(--surface);
       border: 1px solid var(--border);
@@ -906,27 +907,13 @@ EDITORIAL_CSS_AND_JS = """
     function handleSubscribe(event) {
       const form = event.target;
       const action = (form.getAttribute('action') || '').trim();
-      if (action && action !== '#') {
-        return true;
-      }
-      event.preventDefault();
       const input = form.querySelector('input[type="email"]');
-      const status = form.parentElement.querySelector('.subscribe-status');
       const email = input ? input.value.trim() : '';
-      if (!email || !email.includes('@')) {
+      if (!action || action === '#' || !email.includes('@')) {
+        event.preventDefault();
         return false;
       }
-      try {
-        localStorage.setItem('jabi_subscribed_email', email);
-      } catch (e) {}
-      const subject = encodeURIComponent('Subscribe: The GenAI Briefing (jabi.io)');
-      const body = encodeURIComponent('Please subscribe ' + email + ' to the free daily GenAI Briefing on jabi.io.');
-      window.location.href = 'mailto:digest@jabi.io?subject=' + subject + '&body=' + body;
-      if (status) {
-        status.style.display = 'block';
-        status.textContent = 'Subscription request prepared for ' + email + '. You can also subscribe directly via RSS (feed.xml).';
-      }
-      return false;
+      return true;
     }
 
     window.addEventListener('DOMContentLoaded', updateControls);
@@ -1309,26 +1296,35 @@ def _render_editorial_ad_slot() -> str:
 
 
 def _render_subscribe_box_html() -> str:
-    """Render the free daily email digest subscription box and RSS feed links for `jabi.io`."""
+    """Render the follow box. The email form appears only when `NEWSLETTER_FORM_ACTION` points to a real provider."""
     raw_action = os.getenv("NEWSLETTER_FORM_ACTION", "").strip()
     safe_action = _safe_http_url(raw_action) if raw_action else "#"
-    target_attr = ' target="_blank" rel="noopener noreferrer"' if safe_action != "#" else ""
-    return f"""
-    <section id="subscribe" class="subscribe-box" aria-label="Subscribe to Free Daily Email Digest">
-      <div class="subscribe-kicker">FREE DAILY EMAIL DIGEST · JABI.IO</div>
-      <h3>Receive The GenAI Briefing in Your Inbox Every Morning</h3>
-      <p class="subscribe-copy">Get the daily Top 10 research papers, frontier lab engineering posts, researcher X threads, and YouTube tech talk summaries delivered free at 07:00 SGT. Zero noise, zero spam, one-click unsubscribe.</p>
-      <form class="subscribe-form" action="{safe_action}" method="post" onsubmit="return handleSubscribe(event)"{target_attr}>
+    if safe_action != "#":
+        return f"""
+    <section id="subscribe" class="subscribe-box" aria-label="Subscribe to the daily email digest">
+      <div class="subscribe-kicker">DAILY EMAIL DIGEST · JABI.IO</div>
+      <h3>Receive The GenAI Briefing by Email</h3>
+      <p class="subscribe-copy">The daily Top 10 research papers, engineering posts, researcher threads and tech talks, one email per issue.</p>
+      <form class="subscribe-form" action="{safe_action}" method="post" target="_blank" rel="noopener noreferrer" onsubmit="return handleSubscribe(event)">
         <input type="email" name="email" class="subscribe-input" placeholder="you@company.com" required aria-label="Email address">
-        <button type="submit" class="subscribe-btn">Subscribe Free →</button>
+        <button type="submit" class="subscribe-btn">Subscribe →</button>
       </form>
-      <div class="subscribe-status" role="status" aria-live="polite"></div>
       <div class="subscribe-meta">
-        <span>100% Free for AI Engineers &amp; Researchers</span>
+        <a href="feed.xml">RSS Feed ↗</a>
         <span>·</span>
-        <a href="feed.xml">RSS / Atom Feed (feed.xml) ↗</a>
+        <a href="privacy.html">Privacy</a>
+      </div>
+    </section>
+    """
+    return """
+    <section id="subscribe" class="subscribe-box" aria-label="Follow The GenAI Briefing">
+      <div class="subscribe-kicker">FOLLOW · JABI.IO</div>
+      <h3>Follow The GenAI Briefing</h3>
+      <p class="subscribe-copy">A new issue is published every morning. Add the RSS feed to any feed reader to get each issue as it appears. Email delivery is not open yet.</p>
+      <div class="subscribe-meta">
+        <a href="feed.xml">RSS Feed (feed.xml) ↗</a>
         <span>·</span>
-        <a href="privacy.html">Privacy &amp; Editorial Policy</a>
+        <a href="privacy.html">Privacy</a>
       </div>
     </section>
     """
@@ -1372,6 +1368,239 @@ def _render_rss_feed_xml(archive_map: Dict[str, str], site_url: str = "https://j
 """
 
 
+SITE_URL = "https://jabi.io"
+GITHUB_ISSUES_URL = "https://github.com/shahsaifi/agentic-ai/issues"
+_EMAIL_RE = re.compile(r"^[^@\s<>\"']+@[^@\s<>\"']+\.[^@\s<>\"']+$")
+
+
+def _footer_trust_links() -> str:
+    """Shared trust-page links (About, FAQ, Contact, Terms, Privacy) rendered in every page footer."""
+    return (
+        '<a href="faq.html">FAQ</a> · '
+        '<a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · '
+        '<a href="privacy.html">Privacy</a>'
+    )
+
+
+def _seo_head(page: str, description: str) -> str:
+    """Canonical URL, meta description and Open Graph tags so Google can index each page."""
+    path = "" if page == "index.html" else page
+    canonical = html.escape(f"{SITE_URL}/{path}", quote=True)
+    desc = html.escape(description, quote=True)
+    return (
+        f'<meta name="description" content="{desc}">\n'
+        f'  <link rel="canonical" href="{canonical}">\n'
+        f'  <meta property="og:type" content="website">\n'
+        f'  <meta property="og:site_name" content="The GenAI Briefing">\n'
+        f'  <meta property="og:url" content="{canonical}">\n'
+        f'  <meta property="og:description" content="{desc}">'
+    )
+
+
+def _render_robots_txt() -> str:
+    """Allow all crawlers (including Googlebot and Mediapartners-Google) and point to the sitemap."""
+    return f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n"
+
+
+def _render_sitemap_xml(archive_dates: List[str], latest_date: str) -> str:
+    """Render `docs/sitemap.xml` listing the front page, every edition, directories and trust pages."""
+    entries: List[Tuple[str, str]] = [(f"{SITE_URL}/", latest_date)]
+    for d in sorted(archive_dates, reverse=True):
+        entries.append((f"{SITE_URL}/{d}.html", d))
+    for page in ("tech-talks", "podcasts", "faq", "contact", "terms", "privacy"):
+        entries.append((f"{SITE_URL}/{page}.html", latest_date))
+    body = "\n".join(
+        f"  <url><loc>{html.escape(loc)}</loc><lastmod>{html.escape(mod)}</lastmod></url>"
+        for loc, mod in entries
+    )
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"{body}\n"
+        "</urlset>\n"
+    )
+
+
+def _render_static_page_html(
+    page_key: str,
+    filename: str,
+    title: str,
+    description: str,
+    kicker: str,
+    body_html: str,
+    latest_date: str,
+) -> str:
+    """Shared layout for About / FAQ / Contact / Terms. No ad slot is ever rendered on these pages."""
+    return f"""<!DOCTYPE html>
+<html lang="en" data-theme="sage">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{html.escape(title)}</title>
+  {EDITORIAL_CSS_AND_JS}{_render_adsense_head_snippet()}
+  {_seo_head(filename, description)}
+</head>
+<body>
+  <div class="page-wrap">
+    {_render_masthead(active_page=page_key, latest_date=latest_date)}
+    <div class="section-head">
+      <h2>{html.escape(kicker)}</h2>
+      <span>JABI.IO</span>
+    </div>
+    {body_html}
+    {_render_subscribe_box_html()}
+    <footer class="footer">
+      <div>THE GENAI BRIEFING · JABI.IO · {html.escape(kicker.upper())}</div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{html.escape(latest_date)}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
+    </footer>
+  </div>
+</body>
+</html>"""
+
+
+def _p(text: str) -> str:
+    return f'<p class="briefing-summary">{text}</p>'
+
+
+def _render_faq_page_html(latest_date: str) -> str:
+    qa = [
+        (
+            "What is The GenAI Briefing?",
+            "A free daily briefing that collects and ranks generative AI research papers, engineering posts, community "
+            "discussions, podcasts and recorded talks, with short summaries and links to the original sources.",
+        ),
+        (
+            "Who is it for?",
+            "Software engineers, ML practitioners, researchers and technical leaders who want to follow generative AI "
+            "without reading dozens of feeds. It assumes technical familiarity and skips introductory explainers.",
+        ),
+        (
+            "When is a new issue published?",
+            "Every day at about 06:45 Singapore time (22:45 UTC). Each issue has its own permanent page, and older issues "
+            "are listed in the archive on the front page.",
+        ),
+        (
+            "How do I read a Top 10 entry?",
+            "Each entry shows a category tag (Research, Engineering or Lab Post), the source, the date and a short summary. "
+            "Below the summary are links to the original article and to the Hacker News discussion when one exists. "
+            "Use the filter buttons above the list to show only one category.",
+        ),
+        (
+            "What is the Reddit brief under each story?",
+            "A collapsible note summarizing how practitioners on communities such as r/LocalLLaMA, r/MachineLearning, "
+            "r/ClaudeAI and r/OpenAI are discussing the topic, with links to search Reddit for the live threads. It is "
+            "a reading aid, not a statement of fact.",
+        ),
+        (
+            "How are stories chosen?",
+            "An automated agent gathers candidates from public sources, drops anything already featured in a previous "
+            "issue, and ranks the rest by community reach and the substance of the summary, keeping a balance between "
+            "research papers, engineering discussion and lab releases.",
+        ),
+        (
+            "Are the summaries written by AI?",
+            "They are generated automatically from the source text and may be AI-assisted. They are short and always link "
+            "to the original, so you can verify any claim. Corrections are welcome through the contact page.",
+        ),
+        (
+            "Where can I find talks and podcasts?",
+            "The Tech Talks Index lists recent YouTube talks grouped by channel, and the Podcasts Index lists recent "
+            "episodes of AI engineering shows. Both are linked in the navigation bar at the top of every page.",
+        ),
+        (
+            "How do I follow the briefing?",
+            "Add the RSS feed at jabi.io/feed.xml to any feed reader. Email delivery is not open yet. You can also "
+            "bookmark the front page, which always shows the latest issue.",
+        ),
+        (
+            "Does the site show ads or track me?",
+            "The site may show clearly labeled ads served by Google AdSense, which uses cookies. Details and opt-out "
+            "links are in the Privacy Policy. Your theme and font size choices are stored only in your browser.",
+        ),
+        (
+            "Is the content free to reuse?",
+            "Headlines and short summaries are provided for reading and discussion. Original articles, papers and videos "
+            "belong to their authors and are linked, not copied. See the Terms of Service for details.",
+        ),
+        (
+            "How do I report an error or suggest a source?",
+            "Use the Contact page. Include the issue date and the link to the entry, and we will review it.",
+        ),
+    ]
+    blocks: List[str] = []
+    for q, a in qa:
+        blocks.append(f"<h3 class=\"note-title\">{html.escape(q)}</h3>\n{_p(html.escape(a))}")
+    body = "\n".join(blocks)
+    return _render_static_page_html(
+        "faq",
+        "faq.html",
+        "FAQ and Reading Guide — The GenAI Briefing (jabi.io)",
+        "Frequently asked questions and a reading guide for The GenAI Briefing daily generative AI newsletter.",
+        "FAQ and Reading Guide",
+        body,
+        latest_date,
+    )
+
+
+def _render_contact_page_html(latest_date: str) -> str:
+    raw_email = os.getenv("CONTACT_EMAIL", "").strip()
+    email_block = ""
+    if raw_email and _EMAIL_RE.match(raw_email):
+        safe_email = html.escape(raw_email, quote=True)
+        email_block = _p(f'Email: <a href="mailto:{safe_email}">{safe_email}</a>')
+    issues = html.escape(GITHUB_ISSUES_URL, quote=True)
+    body = "\n".join(
+        [
+            _p(
+                "To report an error, suggest a source, ask a question about the briefing or make a privacy request, "
+                "get in touch using the options below. Please include the issue date and the link to the entry you are "
+                "writing about."
+            ),
+            email_block,
+            _p(
+                f'Public issue tracker: <a href="{issues}" target="_blank" rel="noopener noreferrer">'
+                "github.com/shahsaifi/agentic-ai/issues ↗</a>"
+            ),
+            _p(
+                "Publisher: Mohd Sahnawaz, The GenAI Briefing (jabi.io). We aim to review corrections within a few days."
+            ),
+        ]
+    )
+    return _render_static_page_html(
+        "contact",
+        "contact.html",
+        "Contact — The GenAI Briefing (jabi.io)",
+        "How to contact The GenAI Briefing for corrections, source suggestions and privacy requests.",
+        "Contact",
+        body,
+        latest_date,
+    )
+
+
+def _render_terms_page_html(latest_date: str) -> str:
+    sections = [
+        ("Use of the Site", "The GenAI Briefing (jabi.io) is provided for personal, informational reading. You may link to and quote short excerpts of the pages with attribution. You may not scrape the site in a way that degrades it for others."),
+        ("No Warranty", "Content is provided as is. Summaries are generated automatically and may contain mistakes or omit context. Nothing here is professional, financial or legal advice. Verify important claims against the linked sources."),
+        ("Third-Party Content and Links", "Headlines, excerpts and links point to material owned by others, including papers, articles, discussions, podcasts and videos. That material remains the property of its authors and is subject to their terms. We are not responsible for the content or availability of external sites."),
+        ("Intellectual Property", "The layout, selection and original text of this site are the work of the publisher. Third-party names and trademarks belong to their owners and are used only to identify them."),
+        ("Advertising", "The site may display advertisements served by Google AdSense and similar partners. Ads are labeled and do not influence which stories are selected. See the Privacy Policy for cookie and opt-out details."),
+        ("Changes to These Terms", "These terms may be updated from time to time. The version on this page is the current one."),
+        ("Contact", "Questions about these terms can be sent through the Contact page."),
+    ]
+    body = "\n".join(
+        f'<h3 class="note-title">{html.escape(h)}</h3>\n{_p(html.escape(t))}' for h, t in sections
+    )
+    return _render_static_page_html(
+        "terms",
+        "terms.html",
+        "Terms of Service — The GenAI Briefing (jabi.io)",
+        "Terms of Service for The GenAI Briefing (jabi.io).",
+        "Terms of Service",
+        body,
+        latest_date,
+    )
+
+
 def _render_privacy_page_html(latest_date: str) -> str:
     """Render `docs/privacy.html` with About, Editorial Standards, Email Privacy, and Google AdSense disclosures."""
     return f"""<!DOCTYPE html>
@@ -1381,6 +1610,7 @@ def _render_privacy_page_html(latest_date: str) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing (jabi.io) — About, Editorial Policy &amp; Privacy</title>
   {EDITORIAL_CSS_AND_JS}{_render_adsense_head_snippet()}
+  {_seo_head('privacy.html', 'Privacy policy for jabi.io: email, cookies, Google AdSense and reader data.')}
 </head>
 <body>
   <div class="page-wrap">
@@ -1399,7 +1629,7 @@ def _render_privacy_page_html(latest_date: str) -> str:
       <span>ZERO-SPAM GUARANTEE</span>
     </div>
     <p class="briefing-summary">
-      Readers may subscribe to receive the daily briefing via email or via our public RSS feed (<a href="feed.xml"><code>https://jabi.io/feed.xml</code></a>). Email addresses submitted through the subscription form are used solely to deliver The GenAI Briefing and are never sold, rented, or shared with third-party data brokers. Every email includes a one-click unsubscribe link. Reading preferences (such as Paper/Sepia/Ink theme palette and font size) are stored locally in your browser via <code>localStorage</code>.
+      Readers can follow the daily briefing through our public RSS feed (<a href="feed.xml"><code>https://jabi.io/feed.xml</code></a>). If an email signup is offered, the address you submit is handled by the newsletter provider named on the form and is used only to send The GenAI Briefing; it is never sold. Reading preferences (such as Paper/Sepia/Ink theme palette and font size) are stored locally in your browser via <code>localStorage</code>.
     </p>
 
     <div class="section-head">
@@ -1418,14 +1648,14 @@ def _render_privacy_page_html(latest_date: str) -> str:
       <span>PUBLISHER DESK</span>
     </div>
     <p class="briefing-summary">
-      For editorial inquiries, paper submissions, or privacy requests, contact the editorial desk at <a href="mailto:digest@jabi.io">digest@jabi.io</a>.
+      For editorial inquiries, paper submissions, or privacy requests, use the <a href="contact.html">Contact page</a>. See also our <a href="terms.html">Terms of Service</a>.
     </p>
 
     {_render_subscribe_box_html()}
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · ABOUT &amp; PRIVACY</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
     </footer>
   </div>
 </body>
@@ -2254,6 +2484,7 @@ def _render_daily_digest_html(
   <title>The GenAI Briefing — {current_date}</title>
   {EDITORIAL_CSS_AND_JS}
   {_render_adsense_head_snippet()}
+  {_seo_head(f'{current_date}.html', f'The GenAI Briefing for {current_date}: Top 10 Generative AI research, engineering and community stories with practitioner discussion.')}
 </head>
 <body>
   <div class="page-wrap">
@@ -2271,6 +2502,8 @@ def _render_daily_digest_html(
       <span>RANKED BY SUBSTANCE &amp; COMMUNITY REACH</span>
     </div>
     {top10_html}
+
+    {_render_editorial_ad_slot()}
 
     <div class="two-col">
       <section>
@@ -2297,12 +2530,11 @@ def _render_daily_digest_html(
       {talks_html}
     </section>
 
-    {_render_editorial_ad_slot()}
     {_render_subscribe_box_html()}
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · ISSUE {current_date}</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
     </footer>
   </div>
 </body>
@@ -2359,6 +2591,7 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
   <title>The GenAI Briefing — Daily Research, Engineering &amp; Audio Index</title>
   {EDITORIAL_CSS_AND_JS}
   {_render_adsense_head_snippet()}
+  {_seo_head('index.html', 'Daily Generative AI technical briefing: ranked research papers, frontier lab engineering, researcher threads, podcasts and YouTube tech talks.')}
 </head>
 <body>
   <div class="page-wrap">
@@ -2371,6 +2604,8 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
       <span><a href="{latest_date}.html" style="color:var(--accent);text-decoration:none;">PERMALINK ({latest_date}) →</a></span>
     </div>
     {top10_html}
+
+    {_render_editorial_ad_slot()}
 
     <div class="two-col">
       <section id="x-highlights">
@@ -2415,12 +2650,11 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
       </table>
     </section>
 
-    {_render_editorial_ad_slot()}
     {_render_subscribe_box_html()}
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · PUBLISHED DAILY</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
     </footer>
   </div>
 </body>
@@ -2468,16 +2702,16 @@ def _render_podcasts_page_html(
   <title>The GenAI Briefing — Podcasts &amp; Episode Summaries</title>
   {EDITORIAL_CSS_AND_JS}
   {_render_adsense_head_snippet()}
+  {_seo_head('podcasts.html', 'Generative AI podcast index with recent episode summaries from leading AI engineering and research shows.')}
 </head>
 <body>
   <div class="page-wrap">
     {_render_masthead(active_page="podcasts", latest_date=latest_date)}
     {"".join(show_blocks)}
-    {_render_editorial_ad_slot()}
     {_render_subscribe_box_html()}
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · AUDIO &amp; PODCASTS DIRECTORY</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
     </footer>
   </div>
 </body>
@@ -2536,6 +2770,7 @@ def _render_tech_talks_page_html(
   <title>The GenAI Briefing — Tech Talks &amp; Keynotes Directory</title>
   {EDITORIAL_CSS_AND_JS}
   {_render_adsense_head_snippet()}
+  {_seo_head('tech-talks.html', 'Directory of YouTube tech talks and keynotes on LLMs, AI agents, RAG and inference, grouped by channel.')}
 </head>
 <body>
   <div class="page-wrap">
@@ -2546,11 +2781,10 @@ def _render_tech_talks_page_html(
     </div>
     {jump_bar_html}
     {"".join(channel_blocks)}
-    {_render_editorial_ad_slot()}
     {_render_subscribe_box_html()}
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · TECH TALKS &amp; KEYNOTES DIRECTORY</div>
-      <div><a href="index.html">Front Page</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
     </footer>
   </div>
 </body>
@@ -2619,6 +2853,14 @@ def save_markdown_digest(
     )
     (target_docs / "privacy.html").write_text(
         _render_privacy_page_html(latest_date=latest_d),
+        encoding="utf-8",
+    )
+    (target_docs / "faq.html").write_text(_render_faq_page_html(latest_d), encoding="utf-8")
+    (target_docs / "contact.html").write_text(_render_contact_page_html(latest_d), encoding="utf-8")
+    (target_docs / "terms.html").write_text(_render_terms_page_html(latest_d), encoding="utf-8")
+    (target_docs / "robots.txt").write_text(_render_robots_txt(), encoding="utf-8")
+    (target_docs / "sitemap.xml").write_text(
+        _render_sitemap_xml(archive_dates=archive_dates, latest_date=latest_d),
         encoding="utf-8",
     )
 

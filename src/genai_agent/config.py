@@ -58,6 +58,7 @@ class AgentConfig:
     google_adsense_client_id: str = "ca-pub-4585099070726775"
     google_adsense_slot_id: str = ""
     newsletter_form_action: str = ""
+    contact_email: str = ""
 
     @classmethod
     def from_env(cls, env_file: Optional[str] = None) -> AgentConfig:
@@ -105,4 +106,5 @@ class AgentConfig:
             ),
             google_adsense_slot_id=os.getenv("GOOGLE_ADSENSE_SLOT_ID", "").strip(),
             newsletter_form_action=os.getenv("NEWSLETTER_FORM_ACTION", "").strip(),
+            contact_email=os.getenv("CONTACT_EMAIL", "").strip(),
         )

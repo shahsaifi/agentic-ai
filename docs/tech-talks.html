@@ -666,7 +666,8 @@
 
     /* Non-intrusive Google AdSense Editorial Sponsorship Slot */
     .editorial-ad-slot {
-      margin: 28px 0;
+      margin: 56px 0;
+      clear: both;
       padding: 14px 18px;
       background: var(--surface);
       border: 1px solid var(--border);
@@ -893,27 +894,13 @@
     function handleSubscribe(event) {
       const form = event.target;
       const action = (form.getAttribute('action') || '').trim();
-      if (action && action !== '#') {
-        return true;
-      }
-      event.preventDefault();
       const input = form.querySelector('input[type="email"]');
-      const status = form.parentElement.querySelector('.subscribe-status');
       const email = input ? input.value.trim() : '';
-      if (!email || !email.includes('@')) {
+      if (!action || action === '#' || !email.includes('@')) {
+        event.preventDefault();
         return false;
       }
-      try {
-        localStorage.setItem('jabi_subscribed_email', email);
-      } catch (e) {}
-      const subject = encodeURIComponent('Subscribe: The GenAI Briefing (jabi.io)');
-      const body = encodeURIComponent('Please subscribe ' + email + ' to the free daily GenAI Briefing on jabi.io.');
-      window.location.href = 'mailto:digest@jabi.io?subject=' + subject + '&body=' + body;
-      if (status) {
-        status.style.display = 'block';
-        status.textContent = 'Subscription request prepared for ' + email + '. You can also subscribe directly via RSS (feed.xml).';
-      }
-      return false;
+      return true;
     }
 
     window.addEventListener('DOMContentLoaded', updateControls);
@@ -922,6 +909,12 @@
   
   <meta name="google-adsense-account" content="ca-pub-4585099070726775">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4585099070726775" crossorigin="anonymous"></script>
+  <meta name="description" content="Directory of YouTube tech talks and keynotes on LLMs, AI agents, RAG and inference, grouped by channel.">
+  <link rel="canonical" href="https://jabi.io/tech-talks.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The GenAI Briefing">
+  <meta property="og:url" content="https://jabi.io/tech-talks.html">
+  <meta property="og:description" content="Directory of YouTube tech talks and keynotes on LLMs, AI agents, RAG and inference, grouped by channel.">
 </head>
 <body>
   <div class="page-wrap">
@@ -974,21 +967,31 @@
             <article class="note-item">
               <div class="note-kicker">
                 <strong>Google Cloud Tech</strong>
-                <span>2026-11-11</span>
+                <span>2026-11-14</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=h_r3NsfrrRI" target="_blank" rel="noopener noreferrer">Building and Deploying Python AI Agents with ADK, Gemini, and MCP</a></h4>
-              <p class="note-body">Walkthrough of Google Cloud&#x27;s Agent Development Kit (ADK) for Python, demonstrating how to connect Gemini reasoning models to external enterprise tools via Model Context Protocol (MCP) servers and deploy multi-agent workflows on Vertex AI.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=h_r3NsfrrRI" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/shorts/fgsodriej9M" target="_blank" rel="noopener noreferrer">What Is Jev? Fast discriminative models vs. LLMs</a></h4>
+              <p class="note-body">📖 Codelab next: Getting started with Discriminative (Jev/DiffusionGemma) models.</p>
+              <div class="note-links"><a href="https://www.youtube.com/shorts/fgsodriej9M" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             
             <article class="note-item">
               <div class="note-kicker">
                 <strong>Google Cloud Tech</strong>
-                <span>2026-11-03</span>
+                <span>2026-11-13</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=5aOF-RIZS5c" target="_blank" rel="noopener noreferrer">Grounding for Gemini with Vertex AI Search and Production RAG</a></h4>
-              <p class="note-body">Demonstrates how enterprise teams reduce hallucinations in Gemini responses by combining Vertex AI Search hybrid retrieval, dynamic chunking, and verifiable inline citations.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=5aOF-RIZS5c" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=24WH740Xn9M" target="_blank" rel="noopener noreferrer">Decide which Looker MCP integration is right for you?</a></h4>
+              <p class="note-body">Choosing the right integration path for your Looker AI agents can be tricky. In this video, we break down the key differences between the native Looker-Managed MCP Server and the open-source MCP Toolbox for databases to help you pick the best approach for your workload.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=24WH740Xn9M" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Google Cloud Tech</strong>
+                <span>2026-11-13</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/shorts/8p2EmLiQL9c" target="_blank" rel="noopener noreferrer">Computer use vs. WebMCP: How AI agents use the web</a></h4>
+              <p class="note-body">▶ Watch next: Make your website agent ready with WebMCP.</p>
+              <div class="note-links"><a href="https://www.youtube.com/shorts/8p2EmLiQL9c" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             </div>
             </section>
@@ -1003,21 +1006,31 @@
             <article class="note-item">
               <div class="note-kicker">
                 <strong>IBM Technology</strong>
-                <span>2026-11-10</span>
+                <span>2026-11-13</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=qAF1NjEVHhY" target="_blank" rel="noopener noreferrer">LangChain vs LangGraph: Architecting Stateful Multi-Agent Workflows &amp; RAG</a></h4>
-              <p class="note-body">Architectural comparison of directed acyclic chains in LangChain versus cyclic, stateful graph execution in LangGraph for building fault-tolerant multi-agent orchestration and corrective retrieval-augmented generation.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=qAF1NjEVHhY" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/shorts/4pjeaeK4S9o" target="_blank" rel="noopener noreferrer">Huang&#x27;s Nvidia Legacy</a></h4>
+              <p class="note-body">Jensen Huang built Nvidia over 30 years with relentless passion. Can anyone replace him? Explore the challenge facing AI&#x27;s most iconic leader. --------------------------------------------------------------------------------------------------------- Find us on YouTube: 🔵 IBM Technology: 🔵 IBM: 🔵 IBM Developer.</p>
+              <div class="note-links"><a href="https://www.youtube.com/shorts/4pjeaeK4S9o" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             
             <article class="note-item">
               <div class="note-kicker">
                 <strong>IBM Technology</strong>
-                <span>2026-11-02</span>
+                <span>2026-11-13</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=7j_NE6Pjv-E" target="_blank" rel="noopener noreferrer">Model Context Protocol (MCP) &amp; Enterprise Agent Security Explained</a></h4>
-              <p class="note-body">Lightboard breakdown of standardized tool-use interfaces using the Model Context Protocol (MCP), least-privilege agent sandboxing, and prompt-injection defenses for enterprise LLMs.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=7j_NE6Pjv-E" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=Az2aRR51fDU" target="_blank" rel="noopener noreferrer">Jensen Huang exits NVIDIA &amp; does Claude Fable 5.2 count as AGI?</a></h4>
+              <p class="note-body">Visit Mixture of Experts podcast page to get more AI content → Who can replace a founder like Jensen Huang? This week on Mixture of Experts, host David Zax is joined by Derek Robertson, Bri Kopecki and Kiyu Gabriel.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=Az2aRR51fDU" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>IBM Technology</strong>
+                <span>2026-11-12</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=hvnPWgfmvyI" target="_blank" rel="noopener noreferrer">Why AI Agents Need RAG + Observability</a></h4>
+              <p class="note-body">Learn more about Why Observability Is Essential for AI Agents here → Your AI agent knows the system, but what about now? Matt Aiken explains how RAG and observability give AI agents documented knowledge plus live metrics, logs, and traces. Learn how better operational context helps teams investigate issues with evidence.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=hvnPWgfmvyI" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             </div>
             </section>
@@ -1032,21 +1045,31 @@
             <article class="note-item">
               <div class="note-kicker">
                 <strong>The Pragmatic Engineer</strong>
-                <span>2026-11-09</span>
+                <span>2026-11-10</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=5wks1W-auKY" target="_blank" rel="noopener noreferrer">AI and Software Engineering: Production LLM Workflows &amp; Agentic Tooling</a></h4>
-              <p class="note-body">Gergely Orosz examines how engineering organizations integrate coding agents, automated PR verification, context indexing, and deterministic evaluation harnesses into high-velocity production software pipelines.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=5wks1W-auKY" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/shorts/LDcRdpVvmgQ" target="_blank" rel="noopener noreferrer">The value of AI is not doing the same thing faster</a></h4>
+              <p class="note-body">with Titus Winters, co-author of Software Engineering at Google See the full episode on The Pragmatic Engineer Podcast.</p>
+              <div class="note-links"><a href="https://www.youtube.com/shorts/LDcRdpVvmgQ" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             
             <article class="note-item">
               <div class="note-kicker">
                 <strong>The Pragmatic Engineer</strong>
-                <span>2026-10-30</span>
+                <span>2026-11-10</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=a8Q2U2R8G1E" target="_blank" rel="noopener noreferrer">How Frontier Engineering Teams Ship with AI Coding Agents &amp; Evals</a></h4>
-              <p class="note-body">Examines real-world architecture trade-offs when adopting autonomous repository agents, benchmarking latency versus reasoning depth, and maintaining code review rigor.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=a8Q2U2R8G1E" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=OrXKvOjR-vI" target="_blank" rel="noopener noreferrer">Software correctness and programming languages with Sean Allen</a></h4>
+              <p class="note-body">We do not mention &quot;AI&quot; a single time - even though this happens to be a deep conversation on the biggest challenges of developing with AI. With Sean Allen (seantallen.com), Distinguished Engineer at Antithesis, we dig up the fundamentals that are as important as ever.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=OrXKvOjR-vI" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>The Pragmatic Engineer</strong>
+                <span>2026-11-07</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/shorts/BBdkmPFYnC0" target="_blank" rel="noopener noreferrer">“Prototyping is a whole different game now”</a></h4>
+              <p class="note-body">with Maggie Appleton, Design Engineer at GitHub Next See the full episode on The Pragmatic Engineer Podcast.</p>
+              <div class="note-links"><a href="https://www.youtube.com/shorts/BBdkmPFYnC0" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             </div>
             </section>
@@ -1061,11 +1084,21 @@
             <article class="note-item">
               <div class="note-kicker">
                 <strong>IBM Developer</strong>
-                <span>2026-11-08</span>
+                <span>2026-11-09</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=-WXzgIFcNK0" target="_blank" rel="noopener noreferrer">Building Enterprise AI Workflows with IBM Granite &amp; watsonx.ai Flows Engine</a></h4>
-              <p class="note-body">Technical deep-dive into building low-latency enterprise RAG and tool-calling pipelines using open-weight IBM Granite foundation models and declarative flow orchestration in watsonx.ai.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=-WXzgIFcNK0" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/shorts/o0Kad7f7WRo" target="_blank" rel="noopener noreferrer">What Is AI Slop? Wrong Answers Only</a></h4>
+              <p class="note-body">What is AI slop? Wrong answers only. At IBM TechXchange, Bri Kopecki (@Tech-Cowgirl ) asked people for their best wrong answers. They came up with everything from soulless sourdough starters to raccoons learning to code. AI was used in the creation of the transcript and metadata for this video.</p>
+              <div class="note-links"><a href="https://www.youtube.com/shorts/o0Kad7f7WRo" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>IBM Developer</strong>
+                <span>2026-11-04</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/shorts/PxivYkYx0YM" target="_blank" rel="noopener noreferrer">Which Monitor Setup is Best?</a></h4>
+              <p class="note-body">We had people crowding around to defend their dream desk setup, and let&#x27;s just say… some of these picks need explaining. Which setup are you fighting for? 1, 2, 3, or 4? Explore more technical tutorials, articles, and learning resources here → AI was used in the creation of the transcript and metadata for this video.</p>
+              <div class="note-links"><a href="https://www.youtube.com/shorts/PxivYkYx0YM" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             
             <article class="note-item">
@@ -1073,9 +1106,9 @@
                 <strong>IBM Developer</strong>
                 <span>2026-10-29</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=K2vA6N9m8P0" target="_blank" rel="noopener noreferrer">Multi-Agent Orchestration with Open-Source Granite 3.0 &amp; LangGraph</a></h4>
-              <p class="note-body">Hands-on implementation of structured tool calling, schema validation, and multi-agent supervision loops using compact IBM Granite models.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=K2vA6N9m8P0" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/shorts/Hv2vN9GNh-4" target="_blank" rel="noopener noreferrer">The Most Underrated AI Models Right Now</a></h4>
+              <p class="note-body">Small AI models are getting surprisingly powerful. Cedric Clyburn explains what makes SLMs worth trying. See how local AI can offer privacy, flexibility, and lower costs. AI was used in the creation of the transcript and metadata for this video.</p>
+              <div class="note-links"><a href="https://www.youtube.com/shorts/Hv2vN9GNh-4" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             </div>
             </section>
@@ -1090,21 +1123,31 @@
             <article class="note-item">
               <div class="note-kicker">
                 <strong>Stanford Online (CS25)</strong>
-                <span>2026-11-07</span>
+                <span>2026-11-13</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=XfpMkf4rD6E" target="_blank" rel="noopener noreferrer">Stanford CS25: Transformers United — Frontier Reasoning &amp; Post-Training Architectures</a></h4>
-              <p class="note-body">Stanford CS25 seminar examining how scaling test-time compute, reinforcement fine-tuning, and verifier-guided search enable transformer architectures to solve complex mathematical and multi-step reasoning problems.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=XfpMkf4rD6E" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=nU2a2lm6vDE" target="_blank" rel="noopener noreferrer">Stanford CME295 Transformers &amp; LLMs | Autumn 2026 | Lecture 6 - AI Agents</a></h4>
+              <p class="note-body">For more information about Stanford’s graduate programs, visit: To follow along with the course schedule and syllabus, visit: Afshine Amidi is an Adjunct Professor at Stanford University. Shervine Amidi is an Adjunct Professor at Stanford University. Follow the playlist.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=nU2a2lm6vDE" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             
             <article class="note-item">
               <div class="note-kicker">
                 <strong>Stanford Online (CS25)</strong>
-                <span>2026-11-02</span>
+                <span>2026-11-13</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank" rel="noopener noreferrer">Stanford CS25: Reasoning Models, Test-Time Compute &amp; Search-Guided Decoding</a></h4>
-              <p class="note-body">Examines how scaling test-time inference compute and verifier-guided tree search allow frontier transformers to solve multi-step mathematics, synthesis, and repository-level coding tasks.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=q0Q-Hy8TTps" target="_blank" rel="noopener noreferrer">DSPy vs. LangGraph: AI Agent Frameworks Explained | Stanford CS329Z Lecture 5 with Michael Ryan</a></h4>
+              <p class="note-body">Browse Stanford&#x27;s online courses in Agentic AI: Self-paced online Agentic AI course: Lecture Overview: Which framework should you use to build AI agents?</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=q0Q-Hy8TTps" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Stanford Online (CS25)</strong>
+                <span>2026-11-13</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=3vpnwkePGVQ" target="_blank" rel="noopener noreferrer">Why AI Decisions Are Geopolitical Decisions | Francis Fukuyama &amp; Andy Grotto, Stanford</a></h4>
+              <p class="note-body">Learn more and enroll: In this overview of AI, Power, and the New Rules of Global Strategy, academic co-directors Francis Fukuyama and Andy Grotto of Stanford’s Freeman Spogli Institute for International Studies explain why AI decisions are never only about technology.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=3vpnwkePGVQ" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             </div>
             </section>
@@ -1119,21 +1162,31 @@
             <article class="note-item">
               <div class="note-kicker">
                 <strong>LangChain</strong>
-                <span>2026-11-06</span>
+                <span>2026-11-13</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=sVcwVQRHIc8" target="_blank" rel="noopener noreferrer">RAG From Scratch: Query Translation, Routing, RAPTOR &amp; Corrective RAG</a></h4>
-              <p class="note-body">End-to-end engineering tutorial covering multi-query decomposition, semantic routing, hierarchical RAPTOR indexing, and self-reflective Corrective RAG (CRAG) grading loops.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=sVcwVQRHIc8" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=NeV6MSN6zEE" target="_blank" rel="noopener noreferrer">LangSmith: The platform to run, improve, and govern agents</a></h4>
+              <p class="note-body">LangChain has raised $300 million in a Series C at a $3 billion valuation, and we&#x27;re launching the new LangSmith, which puts what we&#x27;ve learned from millions of developers building agents into one platform. LangSmith processes billions of traces a month for more than 7,000 customers.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=NeV6MSN6zEE" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             
             <article class="note-item">
               <div class="note-kicker">
                 <strong>LangChain</strong>
-                <span>2026-11-01</span>
+                <span>2026-11-12</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=dcgRMOG605w" target="_blank" rel="noopener noreferrer">Context Engineering for LangGraph Agents: Memory, State &amp; Long-Horizon Planning</a></h4>
-              <p class="note-body">Deep-dive into episodic and semantic memory persistence, state compaction, and human-in-the-loop breakpoints for long-running LangGraph agents.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=dcgRMOG605w" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=tqgthjS7Ym4" target="_blank" rel="noopener noreferrer">LangChain Academy New Course: Building and Deploying Managed Agents</a></h4>
+              <p class="note-body">Getting an agent working on your laptop takes hours, but putting it in front of real users can take weeks of infrastructure work around the agent itself. This new LangChain Academy course shows you how to close that gap with LangSmith Managed Agents, where you define the agent and the context it needs and deploy it with one command.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=tqgthjS7Ym4" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>LangChain</strong>
+                <span>2026-11-12</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=1M8vagUOdJM" target="_blank" rel="noopener noreferrer">Fireside Chat with Erik Bernhardsson, Modal</a></h4>
+              <p class="note-body">Erik Bernhardsson, CEO and Co-Founder of Modal, explains what drove demand for Modal&#x27;s sandboxes (vibe coding apps, background agents, and reinforcement learning rollouts) and why he thinks agent harnesses should run outside the sandbox, with sandboxes that are short-lived, maybe one per tool call.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=1M8vagUOdJM" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             </div>
             </section>
@@ -1148,11 +1201,31 @@
             <article class="note-item">
               <div class="note-kicker">
                 <strong>Andrej Karpathy</strong>
-                <span>2026-10-28</span>
+                <span>2025-02-27</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=7xTGNNLPyMI" target="_blank" rel="noopener noreferrer">Deep Dive into LLMs like ChatGPT: Pretraining, Supervised Finetuning &amp; RLHF</a></h4>
-              <p class="note-body">Comprehensive technical walkthrough of the full Large Language Model training pipeline, covering internet-scale tokenization, distributed pretraining, supervised instruction tuning, and reinforcement learning from human and verifiable rewards.</p>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=EWvNQjAaOHw" target="_blank" rel="noopener noreferrer">How I use LLMs</a></h4>
+              <p class="note-body">The example-driven, practical walkthrough of Large Language Models and their growing list of related features, as a new entry to my general audience series on LLMs. In this more practical followup, I take you through the many ways I use LLMs in my own life.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=EWvNQjAaOHw" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Andrej Karpathy</strong>
+                <span>2025-02-05</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=7xTGNNLPyMI" target="_blank" rel="noopener noreferrer">Deep Dive into LLMs like ChatGPT</a></h4>
+              <p class="note-body">This is a general audience deep dive into the Large Language Model (LLM) AI technology that powers ChatGPT and related products. It is covers the full training stack of how the models are developed, along with mental models of how to think about their &quot;psychology&quot;, and how to get the best use them in practical applications.</p>
               <div class="note-links"><a href="https://www.youtube.com/watch?v=7xTGNNLPyMI" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Andrej Karpathy</strong>
+                <span>2024-06-09</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=l8pRSuU81PU" target="_blank" rel="noopener noreferrer">Let&#x27;s reproduce GPT-2 (124M)</a></h4>
+              <p class="note-body">We reproduce the GPT-2 (124M) from scratch. This video covers the whole process: First we build the GPT-2 network, then we optimize its training to be really fast, then we set up the training run following the GPT-2 and GPT-3 paper and their hyperparameters, then we hit run, and come back the next morning to see our results, and enjoy.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=l8pRSuU81PU" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             </div>
             </section>
@@ -1167,11 +1240,31 @@
             <article class="note-item">
               <div class="note-kicker">
                 <strong>Anthropic</strong>
-                <span>2026-11-04</span>
+                <span>2026-09-23</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=d5EltXhbcfA" target="_blank" rel="noopener noreferrer">Building Effective AI Agents: Architecture Patterns &amp; Production Evals</a></h4>
-              <p class="note-body">Engineering breakdown of composable agent workflows versus autonomous multi-step loops, detailing tool-use sandboxing, context window management, and deterministic evaluation harnesses.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=d5EltXhbcfA" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=DdCEmlAydcw" target="_blank" rel="noopener noreferrer">Inside Anthropic&#x27;s molecular biology lab</a></h4>
+              <p class="note-body">Some of the biggest discoveries in biology started with someone noticing something strange in one of the many molecular machines found in nature. We’re introducing a new molecular biology research group and lab at Anthropic to see if Claude can help scientists notice more of them.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=DdCEmlAydcw" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Anthropic</strong>
+                <span>2026-09-01</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/shorts/uVS88gnaxcg" target="_blank" rel="noopener noreferrer">Meet Claude Fable 5.1</a></h4>
+              <p class="note-body">Claude Fable 5.1 is the latest upgrade to our most capable class of models. It excels at complex, long-running tasks, and its research capabilities offer an early glimpse of how AI will contribute to scientific progress. It excels at complex, multi-step work, like a long mathematical proof or a contract with hundreds of cross-references.</p>
+              <div class="note-links"><a href="https://www.youtube.com/shorts/uVS88gnaxcg" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Anthropic</strong>
+                <span>2026-09-01</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=ROF2Nv_KjOM" target="_blank" rel="noopener noreferrer">Introducing Claude Fable 5.1</a></h4>
+              <p class="note-body">Claude Fable 5.1 is the latest upgrade to our most capable class of models. It excels at complex, long-running tasks, and its research capabilities offer an early glimpse of how AI will contribute to scientific progress. It excels at complex, multi-step work, like a long mathematical proof or a contract with hundreds of cross-references.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=ROF2Nv_KjOM" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             </div>
             </section>
@@ -1186,11 +1279,31 @@
             <article class="note-item">
               <div class="note-kicker">
                 <strong>OpenAI</strong>
-                <span>2026-11-05</span>
+                <span>2026-11-13</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=eaAonE58sLU" target="_blank" rel="noopener noreferrer">Reinforcement Fine-Tuning &amp; Verifiable Rewards for Frontier Coding Models</a></h4>
-              <p class="note-body">Details how reinforcement fine-tuning with automated unit-test graders and execution sandboxes shapes chain-of-thought reasoning for complex software engineering and debugging.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=eaAonE58sLU" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/shorts/ErOVIC-MGVA" target="_blank" rel="noopener noreferrer">6 Underrated Ways to Use ChatGPT</a></h4>
+              <p class="note-body">We asked 6 people for their most underrated way to use ChatGPT. Their answers covered personal style, everyday logistics, and stopping random subscription charges. What’s yours?</p>
+              <div class="note-links"><a href="https://www.youtube.com/shorts/ErOVIC-MGVA" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>OpenAI</strong>
+                <span>2026-11-13</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=PkAmyub12K8" target="_blank" rel="noopener noreferrer">How Mozilla uses GPT-6 Cyber to find and fix Firefox vulnerabilities</a></h4>
+              <p class="note-body">Mozilla is combining decades of security engineering with AI agents to strengthen Firefox’s defenses. Brian Grinstead joins OpenAI’s Clint Gibler to discuss how the team prioritizes investigations, tests and verifies vulnerabilities, finds related bug patterns, and helps engineers develop fixes.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=PkAmyub12K8" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>OpenAI</strong>
+                <span>2026-11-13</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/shorts/pfbfZKxUEDQ" target="_blank" rel="noopener noreferrer">How Mozilla strengthens Firefox security with GPT-6 Cyber</a></h4>
+              <p class="note-body">Mozilla’s Brian Grinstead shares how early testing with GPT-6 Cyber identified new vulnerabilities and opportunities to strengthen Firefox’s defenses, helping the team work toward an ambitious goal: zero bugs. Watch the full conversation with OpenAI’s Clint Gibler to learn more.</p>
+              <div class="note-links"><a href="https://www.youtube.com/shorts/pfbfZKxUEDQ" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             </div>
             </section>
@@ -1205,11 +1318,31 @@
             <article class="note-item">
               <div class="note-kicker">
                 <strong>Google DeepMind</strong>
-                <span>2026-11-01</span>
+                <span>2026-11-11</span>
               </div>
-              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=sal78ACtGTc" target="_blank" rel="noopener noreferrer">Multimodal Foundation Models: Native Audio, Vision &amp; Action Tokenization</a></h4>
-              <p class="note-body">Explores unified multimodal transformer architectures that jointly process interleaved video, audio, and code tokens without separate adapter bottlenecks, enabling real-time spatial reasoning.</p>
-              <div class="note-links"><a href="https://www.youtube.com/watch?v=sal78ACtGTc" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=uND6iY2qp_c" target="_blank" rel="noopener noreferrer">AlphaGenome 2: Teaching AI to read the entire human genome</a></h4>
+              <p class="note-body">98% of human DNA doesn&#x27;t build proteins—it controls how our cells work, and holds vital clues to why diseases happen and why 90% of new drugs fail in clinical trials. Understanding the genome at the molecular level is the key to deciphering the blueprint of human life.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=uND6iY2qp_c" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Google DeepMind</strong>
+                <span>2026-10-27</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=sFfPkUJd_Jk" target="_blank" rel="noopener noreferrer">Genie 4: A new generation of world simulation</a></h4>
+              <p class="note-body">Meet Genie 4, Google DeepMind’s most realistic and interactive world model yet. Built on our Gemini models, Genie 4 lets you step inside dynamic worlds in real time, steer scenes on the fly with natural language, and watch what happens next: how the world responds, how it sounds, and how the people in it move, react, and speak.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=sFfPkUJd_Jk" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Google DeepMind</strong>
+                <span>2026-10-13</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=LVEfFyijQ2c" target="_blank" rel="noopener noreferrer">Applying Gemini 4 for large-scale codebase maintenance in Chromium</a></h4>
+              <p class="note-body">The Chromium codebase is millions of lines long and decades old. In the past, working with it has meant navigating decades of tangled features, where touching one component can unexpectedly affect another. Erik Chen, an engineer at Google, is using Gemini 4 Argon to ‘untangle’ the architecture.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=LVEfFyijQ2c" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
             </article>
             </div>
             </section>
@@ -1272,38 +1405,20 @@
             </section>
             
     
-    <aside class="editorial-ad-slot" aria-label="Advertisement">
-      <div class="editorial-ad-label">Sponsored · Advertisement</div>
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-4585099070726775"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </aside>
-    
-    
-    <section id="subscribe" class="subscribe-box" aria-label="Subscribe to Free Daily Email Digest">
-      <div class="subscribe-kicker">FREE DAILY EMAIL DIGEST · JABI.IO</div>
-      <h3>Receive The GenAI Briefing in Your Inbox Every Morning</h3>
-      <p class="subscribe-copy">Get the daily Top 10 research papers, frontier lab engineering posts, researcher X threads, and YouTube tech talk summaries delivered free at 07:00 SGT. Zero noise, zero spam, one-click unsubscribe.</p>
-      <form class="subscribe-form" action="#" method="post" onsubmit="return handleSubscribe(event)">
-        <input type="email" name="email" class="subscribe-input" placeholder="you@company.com" required aria-label="Email address">
-        <button type="submit" class="subscribe-btn">Subscribe Free →</button>
-      </form>
-      <div class="subscribe-status" role="status" aria-live="polite"></div>
+    <section id="subscribe" class="subscribe-box" aria-label="Follow The GenAI Briefing">
+      <div class="subscribe-kicker">FOLLOW · JABI.IO</div>
+      <h3>Follow The GenAI Briefing</h3>
+      <p class="subscribe-copy">A new issue is published every morning. Add the RSS feed to any feed reader to get each issue as it appears. Email delivery is not open yet.</p>
       <div class="subscribe-meta">
-        <span>100% Free for AI Engineers &amp; Researchers</span>
+        <a href="feed.xml">RSS Feed (feed.xml) ↗</a>
         <span>·</span>
-        <a href="feed.xml">RSS / Atom Feed (feed.xml) ↗</a>
-        <span>·</span>
-        <a href="privacy.html">Privacy &amp; Editorial Policy</a>
+        <a href="privacy.html">Privacy</a>
       </div>
     </section>
     
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · TECH TALKS &amp; KEYNOTES DIRECTORY</div>
-      <div><a href="index.html">Front Page</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="2026-11-14.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="2026-11-14.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
     </footer>
   </div>
 </body>

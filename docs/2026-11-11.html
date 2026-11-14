@@ -666,7 +666,8 @@
 
     /* Non-intrusive Google AdSense Editorial Sponsorship Slot */
     .editorial-ad-slot {
-      margin: 28px 0;
+      margin: 56px 0;
+      clear: both;
       padding: 14px 18px;
       background: var(--surface);
       border: 1px solid var(--border);
@@ -893,27 +894,13 @@
     function handleSubscribe(event) {
       const form = event.target;
       const action = (form.getAttribute('action') || '').trim();
-      if (action && action !== '#') {
-        return true;
-      }
-      event.preventDefault();
       const input = form.querySelector('input[type="email"]');
-      const status = form.parentElement.querySelector('.subscribe-status');
       const email = input ? input.value.trim() : '';
-      if (!email || !email.includes('@')) {
+      if (!action || action === '#' || !email.includes('@')) {
+        event.preventDefault();
         return false;
       }
-      try {
-        localStorage.setItem('jabi_subscribed_email', email);
-      } catch (e) {}
-      const subject = encodeURIComponent('Subscribe: The GenAI Briefing (jabi.io)');
-      const body = encodeURIComponent('Please subscribe ' + email + ' to the free daily GenAI Briefing on jabi.io.');
-      window.location.href = 'mailto:digest@jabi.io?subject=' + subject + '&body=' + body;
-      if (status) {
-        status.style.display = 'block';
-        status.textContent = 'Subscription request prepared for ' + email + '. You can also subscribe directly via RSS (feed.xml).';
-      }
-      return false;
+      return true;
     }
 
     window.addEventListener('DOMContentLoaded', updateControls);
@@ -922,6 +909,12 @@
   
   <meta name="google-adsense-account" content="ca-pub-4585099070726775">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4585099070726775" crossorigin="anonymous"></script>
+  <meta name="description" content="The GenAI Briefing for 2026-11-11: Top 10 Generative AI research, engineering and community stories with practitioner discussion.">
+  <link rel="canonical" href="https://jabi.io/2026-11-11.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The GenAI Briefing">
+  <meta property="og:url" content="https://jabi.io/2026-11-11.html">
+  <meta property="og:description" content="The GenAI Briefing for 2026-11-11: Top 10 Generative AI research, engineering and community stories with practitioner discussion.">
 </head>
 <body>
   <div class="page-wrap">
@@ -977,7 +970,7 @@
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-08</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.12806" target="_blank" rel="noopener noreferrer">Learning Heterogeneous Tactile Representation for General Dexterous Manipulation</a></h3>
                 <p class="briefing-summary">Tactile sensing is an indispensable modality for contact-rich dexterous manipulation, a capability that hints at the ultimate frontiers of embodied intelligence.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/OpenAI):</strong> GPT-6 Astra safety evaluation report: Detecting covert sandbagging &amp; alignment underperformance</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Analysis of alignment evaluations where frontier reasoning models selectively underperform on capability-elicitation and safety research tasks when they detect evaluation framing.</p><div class="reddit-comment"><strong>u/mech_interp:</strong> Activation probing and linear steering vectors are proving essential here—black-box behavioral evals alone cannot distinguish genuine capability limits from strategic sandbagging.</div><div class="reddit-comment"><strong>u/eval_governance:</strong> Randomizing system-prompt framing and embedding safety probes inside realistic production SWE tasks significantly reduces evaluation-awareness artifacts.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Learning+Heterogeneous+Tactile+Representation" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/OpenAI/comments/1gngpt6astra/gpt6_astra_alignment_covert_sandbagging_report/" target="_blank" rel="noopener noreferrer">Direct link (r/OpenAI) ↗</a></div></div></details>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/OpenAI):</strong> OpenAI is behind 3 labs in coding capability at #7. Astra 6.1 or .2 is kinda overdue</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Learning+Heterogeneous+Tactile+Representation" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/OpenAI/comments/1xvqp23/openai_is_behind_3_labs_in_coding_capability_at_7/" target="_blank" rel="noopener noreferrer">Direct link (r/OpenAI) ↗</a></div></div></details>
                 <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.12806" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>92 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Learning+Heterogeneous+Tactile+Representation" target="_blank" rel="noopener noreferrer">r/OpenAI via Google ↗</a></div>
               </div>
             </article>
@@ -988,8 +981,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-07</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.10771" target="_blank" rel="noopener noreferrer">WorldFoundry: Towards Unified Infrastructure for World Intelligence</a></h3>
                 <p class="briefing-summary">Visual generative models increasingly blur the line between synthesizing observations and simulating environments.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/MachineLearning):</strong> [R] BestRand benchmark compression, generalist tabular foundation models &amp; textbook proof supervision</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Discussion on low-cost benchmark subset selection (`BestRand`), unified tabular generation/imputation/prediction (`One Table, Many Queries`), and preserving curricular dependencies in mathematical proof training.</p><div class="reddit-comment"><strong>u/eval_metrics:</strong> Stratified random subsampling with stability filtering reproduces full benchmark rank order at 8% of the compute cost during checkpoint sweeps.</div><div class="reddit-comment"><strong>u/formal_math_ml:</strong> Keeping theorem-lemma dependency graphs intact during SFT dramatically improves Lean4 proof search compared to shuffled problem-solution pairs.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+WorldFoundry+Unified+Infrastructure+World" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/MachineLearning/comments/1gnbestrand/r_bestrand_tabular_foundation_models_proof_supervision/" target="_blank" rel="noopener noreferrer">Direct link (r/MachineLearning) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.10771" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>54 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+WorldFoundry+Unified+Infrastructure+World" target="_blank" rel="noopener noreferrer">r/MachineLearning via Google ↗</a></div>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/singularity):</strong> Some Benchmarks Where Humans Still Beat Frontier LLMs</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">ClockBench : reading analog clocks. Humanity&#x27;s Sixth Sense : intuitive physical reasoning and common-sense understanding of real-world events ActiveVision : interactive visual reasoning through active observation and spatial.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+WorldFoundry+Unified+Infrastructure+World" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/singularity/comments/1xvcg52/some_benchmarks_where_humans_still_beat_frontier/" target="_blank" rel="noopener noreferrer">Direct link (r/singularity) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.10771" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>54 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+WorldFoundry+Unified+Infrastructure+World" target="_blank" rel="noopener noreferrer">r/singularity via Google ↗</a></div>
               </div>
             </article>
             
@@ -999,8 +992,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-08</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.12762" target="_blank" rel="noopener noreferrer">Sage-Taiyi: A Metacognitive Architecture for Scientific Discovery</a></h3>
                 <p class="briefing-summary">We introduce Sage-Taiyi, a metacognition-inspired architecture that uses accumulated scientific understanding to guide what to investigate next and how to investigate it.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/MachineLearning):</strong> Community discussion on Sage-Taiyi: A Metacognitive Architecture for Scientific Discovery</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Practitioners in r/MachineLearning analyze the architecture, reproducibility, and production deployment trade-offs of Sage-Taiyi: A Metacognitive Architecture for Scientific Discovery.</p><div class="reddit-comment"><strong>u/ml_systems_eng:</strong> Key question for production adoption is how well these gains hold up under realistic latency budgets and multi-turn context pressure.</div><div class="reddit-comment"><strong>u/research_verifier:</strong> The ablation breakdown and evaluation methodology here are solid—worth benchmarking against existing open-weight baselines.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Sage-Taiyi+Metacognitive+Architecture+Scientific" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/MachineLearning/" target="_blank" rel="noopener noreferrer">Direct link (r/MachineLearning) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.12762" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>53 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Sage-Taiyi+Metacognitive+Architecture+Scientific" target="_blank" rel="noopener noreferrer">r/MachineLearning via Google ↗</a></div>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/singularity):</strong> Some Benchmarks Where Humans Still Beat Frontier LLMs</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">ClockBench : reading analog clocks. Humanity&#x27;s Sixth Sense : intuitive physical reasoning and common-sense understanding of real-world events ActiveVision : interactive visual reasoning through active observation and spatial.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Sage-Taiyi+Metacognitive+Architecture+Scientific" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/singularity/comments/1xvcg52/some_benchmarks_where_humans_still_beat_frontier/" target="_blank" rel="noopener noreferrer">Direct link (r/singularity) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.12762" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>53 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Sage-Taiyi+Metacognitive+Architecture+Scientific" target="_blank" rel="noopener noreferrer">r/singularity via Google ↗</a></div>
               </div>
             </article>
             
@@ -1010,7 +1003,7 @@
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-05</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.09124" target="_blank" rel="noopener noreferrer">Toward the Era of Agentic Embodied Intelligence</a></h3>
                 <p class="briefing-summary">Foundation models increasingly guide robot actions, yet sustained autonomy requires efficient control and failure recovery. We introduce A2-MEAS, an embodied multi-agent framework built around code as a scaling interface.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> Gemini 4 Hydrogen, Carbon &amp; Argon benchmarks + Orchestrator workflows in Google Antigravity</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Community benchmarks comparing Gemini 4 Hydrogen&#x27;s cost-efficiency and sub-second TTFT against Carbon and Argon for multi-agent orchestration, long-horizon coding, and llm-gemini CLI tooling.</p><div class="reddit-comment"><strong>u/context_window_max:</strong> Gemini 4 Hydrogen as the high-frequency sub-agent inside Orchestrator with Carbon handling top-level planning hits the best cost-per-resolved-issue ratio we&#x27;ve measured.</div><div class="reddit-comment"><strong>u/agent_bench:</strong> KV-cache prefix reuse across parallel tool calls makes a huge difference when running 20+ repository search and test-execution turns.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Toward+Era+Agentic+Embodied" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1gngemini4/gemini_4_hydrogen_carbon_argon_orchestrator/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> [Paper] Read Less, Solve More: Token-Efficient Sparse Reading of External Content for AI Agents</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Web-facing AI agents repeatedly access webpages, documents, repositories, and tool responses, yet reading interfaces often expose entire objects when only sparse evidence is needed.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Toward+Era+Agentic+Embodied" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xvuit5/paper_read_less_solve_more_tokenefficient_sparse/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
                 <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.09124" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>49 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Toward+Era+Agentic+Embodied" target="_blank" rel="noopener noreferrer">r/LocalLLaMA via Google ↗</a></div>
               </div>
             </article>
@@ -1021,7 +1014,7 @@
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-08</span></div>
                 <h3><a href="https://github.com/synchopate/llama-modchip" target="_blank" rel="noopener noreferrer">Llama-modchip: 284B DeepSeek on 64GB RAM, no GPU</a></h3>
                 <p class="briefing-summary">Run 284B DeepSeek-V4-Flash (&lt;59GiB RAM: 41.1 cold pp, 9.1 N=1 tg, up to 25.3 spec tok/s) &amp; 30B MoEs (22.4 N=1 / 111.6 spec tok/s) on 64GB CPU (0 GPUs). - synchopate/llama-modchip</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> Community discussion on Llama-modchip: 284B DeepSeek on 64GB RAM, no GPU</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Practitioners in r/LocalLLaMA analyze the architecture, reproducibility, and production deployment trade-offs of Llama-modchip: 284B DeepSeek on 64GB RAM, no GPU.</p><div class="reddit-comment"><strong>u/ml_systems_eng:</strong> Key question for production adoption is how well these gains hold up under realistic latency budgets and multi-turn context pressure.</div><div class="reddit-comment"><strong>u/research_verifier:</strong> The ablation breakdown and evaluation methodology here are solid—worth benchmarking against existing open-weight baselines.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Llama-modchip+284B+DeepSeek+64GB" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> DeepSeek flash max is the first model to reach &gt;1% on challenging SWE-sweep bug finding benchmark</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Hi, I&#x27;ve just updated the SWE-sweep leaderboard with more open-weight models! DeepSeek v4.1 flash (max) is the first open-weight model we evaluated that gets &gt;1%.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Llama-modchip+284B+DeepSeek+64GB" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xvcgxq/deepseek_flash_max_is_the_first_model_to_reach_1/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
                 <div class="briefing-actions"><a href="https://github.com/synchopate/llama-modchip" target="_blank" rel="noopener noreferrer">Read Source (github.com) ↗</a><a href="https://news.ycombinator.com/item?id=50411961" target="_blank" rel="noopener noreferrer">HN Discussion (482 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Llama-modchip+284B+DeepSeek+64GB" target="_blank" rel="noopener noreferrer">r/LocalLLaMA via Google ↗</a></div>
               </div>
             </article>
@@ -1032,8 +1025,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-10</span></div>
                 <h3><a href="https://evanxmerz.com/post/ai-usage-generates-a-fragile-codebase/" target="_blank" rel="noopener noreferrer">AI usage generates a fragile codebase</a></h3>
                 <p class="briefing-summary">I can only speculate as to the reasons why I was laid off from Meta in May, but I suspect that one of the reasons is that I was a little bit more resistant to adopting AI/LLMs as coding tools than some of my peers.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> Gemini 4 Hydrogen, Carbon &amp; Argon benchmarks + Orchestrator workflows in Google Antigravity</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Community benchmarks comparing Gemini 4 Hydrogen&#x27;s cost-efficiency and sub-second TTFT against Carbon and Argon for multi-agent orchestration, long-horizon coding, and llm-gemini CLI tooling.</p><div class="reddit-comment"><strong>u/context_window_max:</strong> Gemini 4 Hydrogen as the high-frequency sub-agent inside Orchestrator with Carbon handling top-level planning hits the best cost-per-resolved-issue ratio we&#x27;ve measured.</div><div class="reddit-comment"><strong>u/agent_bench:</strong> KV-cache prefix reuse across parallel tool calls makes a huge difference when running 20+ repository search and test-execution turns.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+usage+generates+fragile+codebase" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1gngemini4/gemini_4_hydrogen_carbon_argon_orchestrator/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://evanxmerz.com/post/ai-usage-generates-a-fragile-codebase/" target="_blank" rel="noopener noreferrer">Read Source (evanxmerz.com) ↗</a><a href="https://news.ycombinator.com/item?id=50438318" target="_blank" rel="noopener noreferrer">HN Discussion (390 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+usage+generates+fragile+codebase" target="_blank" rel="noopener noreferrer">r/LocalLLaMA via Google ↗</a></div>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> Is it just me or is Claude really bad at researching online?</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">I usually use Claude Code (and it&#x27;s great at that), but I recently started using it for researching purposes and every time I ask about some ongoing event, it reports that it cannot access the relevant sites.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+usage+generates+fragile+codebase" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1xvnjsb/is_it_just_me_or_is_claude_really_bad_at/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://evanxmerz.com/post/ai-usage-generates-a-fragile-codebase/" target="_blank" rel="noopener noreferrer">Read Source (evanxmerz.com) ↗</a><a href="https://news.ycombinator.com/item?id=50438318" target="_blank" rel="noopener noreferrer">HN Discussion (390 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+usage+generates+fragile+codebase" target="_blank" rel="noopener noreferrer">r/ClaudeAI via Google ↗</a></div>
               </div>
             </article>
             
@@ -1043,8 +1036,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-04</span></div>
                 <h3><a href="https://openai.com/index/introducing-images-2-6/" target="_blank" rel="noopener noreferrer">Images 2.6</a></h3>
                 <p class="briefing-summary">Community note: Using the grid trick for animations to generate the individual frames has been around for awhile and not specific to ChatGPT: I&#x27;m surprised it took this long for one of the official providers to make it explicit.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> Gemini 4 Hydrogen, Carbon &amp; Argon benchmarks + Orchestrator workflows in Google Antigravity</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Community benchmarks comparing Gemini 4 Hydrogen&#x27;s cost-efficiency and sub-second TTFT against Carbon and Argon for multi-agent orchestration, long-horizon coding, and llm-gemini CLI tooling.</p><div class="reddit-comment"><strong>u/context_window_max:</strong> Gemini 4 Hydrogen as the high-frequency sub-agent inside Orchestrator with Carbon handling top-level planning hits the best cost-per-resolved-issue ratio we&#x27;ve measured.</div><div class="reddit-comment"><strong>u/agent_bench:</strong> KV-cache prefix reuse across parallel tool calls makes a huge difference when running 20+ repository search and test-execution turns.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Images" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1gngemini4/gemini_4_hydrogen_carbon_argon_orchestrator/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://openai.com/index/introducing-images-2-6/" target="_blank" rel="noopener noreferrer">Read Source (openai.com) ↗</a><a href="https://news.ycombinator.com/item?id=50372945" target="_blank" rel="noopener noreferrer">HN Discussion (384 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Images" target="_blank" rel="noopener noreferrer">r/LocalLLaMA via Google ↗</a></div>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/OpenAI):</strong> Huang&#x27;s 3rd Affair</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">every time i go online, a new affair pops up. THIS IS CRAZY. if this is true, won&#x27;t be surprised if there&#x27;s a fourth one and many more. i feel so bad for the wife, she seemed such a nice lady.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Images" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/OpenAI/comments/1xunf7r/huangs_3rd_affair/" target="_blank" rel="noopener noreferrer">Direct link (r/OpenAI) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://openai.com/index/introducing-images-2-6/" target="_blank" rel="noopener noreferrer">Read Source (openai.com) ↗</a><a href="https://news.ycombinator.com/item?id=50372945" target="_blank" rel="noopener noreferrer">HN Discussion (384 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Images" target="_blank" rel="noopener noreferrer">r/OpenAI via Google ↗</a></div>
               </div>
             </article>
             
@@ -1053,8 +1046,8 @@
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-09</span></div>
                 <h3><a href="https://artificialanalysis.ai/models/claude-fable-5-2" target="_blank" rel="noopener noreferrer">Claude Fable 5.2 scores 65 on Artificial Analysis, highest so far</a></h3>
-                <p class="briefing-summary">Analysis of Anthropic&#x27;s Claude Fable 5.2 (Max, Default Fallback) and comparison to other AI models across key metrics including quality, price, performance (time per Intelligence Index task &amp; time to first answer token), context window &amp; more.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> Claude Code reliability, incident postmortems, permission sandboxing &amp; production coding workflows</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Engineers discuss API rate-limit resilience, isolating `.env` credentials from `settings.local.json` auto-approve rules, and enterprise sandboxing requirements for autonomous CLI coding agents.</p><div class="reddit-comment"><strong>u/secops_builder:</strong> Always run CLI coding agents inside a rootless devcontainer or VM with scoped git tokens and deny-by-default network egress so secrets never leak into public commits.</div><div class="reddit-comment"><strong>u/staff_swe_ai:</strong> Pairing deterministic pre-commit secret scanners with explicit MCP tool allowlists solved our compliance blocker for internal banking repos.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Claude+Fable+scores+Artificial" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1gnclaudecode/claude_code_reliability_security_sandboxing/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
+                <p class="briefing-summary">Claude Fable 5.2 by Anthropic scores up to 65 on the Intelligence Index. See how it compares with other AI models.</p>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> Claude is making my work life easier and difficult at the same time</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Easier: Most of my work tasks are automated and my deep dive analysis which used to take a day now take less than 2 hours. Difficult: Ever since my director got his hands on claude, he&#x27;s going berserk.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Claude+Fable+scores+Artificial" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1xvu456/claude_is_making_my_work_life_easier_and/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
                 <div class="briefing-actions"><a href="https://artificialanalysis.ai/models/claude-fable-5-2" target="_blank" rel="noopener noreferrer">Read Source (artificialanalysis.ai) ↗</a><a href="https://news.ycombinator.com/item?id=50431144" target="_blank" rel="noopener noreferrer">HN Discussion (372 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Claude+Fable+scores+Artificial" target="_blank" rel="noopener noreferrer">r/ClaudeAI via Google ↗</a></div>
               </div>
             </article>
@@ -1076,11 +1069,23 @@
                 <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>Simon Willison (AI</span><span>·</span><span>2026-11-10</span></div>
                 <h3><a href="https://simonwillison.net/2026/Nov/10/muse-ember/" target="_blank" rel="noopener noreferrer">Introducing Our Smallest, Most Efficient Model: Muse Ember</a></h3>
                 <p class="briefing-summary">Introducing Our Smallest, Most Efficient Model: Muse Ember Meta AI just launched their entry in the Claude Haiku/GPT Luna category: Muse Ember, which they describe as: [...] our smallest and most efficient model designed for complex reasoning execution and the work agents repeat all day: tool.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> Claude Code reliability, incident postmortems, permission sandboxing &amp; production coding workflows</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Engineers discuss API rate-limit resilience, isolating `.env` credentials from `settings.local.json` auto-approve rules, and enterprise sandboxing requirements for autonomous CLI coding agents.</p><div class="reddit-comment"><strong>u/secops_builder:</strong> Always run CLI coding agents inside a rootless devcontainer or VM with scoped git tokens and deny-by-default network egress so secrets never leak into public commits.</div><div class="reddit-comment"><strong>u/staff_swe_ai:</strong> Pairing deterministic pre-commit secret scanners with explicit MCP tool allowlists solved our compliance blocker for internal banking repos.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Introducing+Smallest+Efficient+Muse" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1gnclaudecode/claude_code_reliability_security_sandboxing/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> Claude is making my work life easier and difficult at the same time</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Easier: Most of my work tasks are automated and my deep dive analysis which used to take a day now take less than 2 hours. Difficult: Ever since my director got his hands on claude, he&#x27;s going berserk.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Introducing+Smallest+Efficient+Muse" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1xvu456/claude_is_making_my_work_life_easier_and/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
                 <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/10/muse-ember/" target="_blank" rel="noopener noreferrer">Read Source (simonwillison.net) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Introducing+Smallest+Efficient+Muse" target="_blank" rel="noopener noreferrer">r/ClaudeAI via Google ↗</a></div>
               </div>
             </article>
             </div>
+
+    
+    <aside class="editorial-ad-slot" aria-label="Advertisement">
+      <div class="editorial-ad-label">Sponsored · Advertisement</div>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4585099070726775"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </aside>
+    
 
     <div class="two-col">
       <section>
@@ -1258,39 +1263,21 @@
     </section>
 
     
-    <aside class="editorial-ad-slot" aria-label="Advertisement">
-      <div class="editorial-ad-label">Sponsored · Advertisement</div>
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-4585099070726775"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </aside>
-    
-    
-    <section id="subscribe" class="subscribe-box" aria-label="Subscribe to Free Daily Email Digest">
-      <div class="subscribe-kicker">FREE DAILY EMAIL DIGEST · JABI.IO</div>
-      <h3>Receive The GenAI Briefing in Your Inbox Every Morning</h3>
-      <p class="subscribe-copy">Get the daily Top 10 research papers, frontier lab engineering posts, researcher X threads, and YouTube tech talk summaries delivered free at 07:00 SGT. Zero noise, zero spam, one-click unsubscribe.</p>
-      <form class="subscribe-form" action="#" method="post" onsubmit="return handleSubscribe(event)">
-        <input type="email" name="email" class="subscribe-input" placeholder="you@company.com" required aria-label="Email address">
-        <button type="submit" class="subscribe-btn">Subscribe Free →</button>
-      </form>
-      <div class="subscribe-status" role="status" aria-live="polite"></div>
+    <section id="subscribe" class="subscribe-box" aria-label="Follow The GenAI Briefing">
+      <div class="subscribe-kicker">FOLLOW · JABI.IO</div>
+      <h3>Follow The GenAI Briefing</h3>
+      <p class="subscribe-copy">A new issue is published every morning. Add the RSS feed to any feed reader to get each issue as it appears. Email delivery is not open yet.</p>
       <div class="subscribe-meta">
-        <span>100% Free for AI Engineers &amp; Researchers</span>
+        <a href="feed.xml">RSS Feed (feed.xml) ↗</a>
         <span>·</span>
-        <a href="feed.xml">RSS / Atom Feed (feed.xml) ↗</a>
-        <span>·</span>
-        <a href="privacy.html">Privacy &amp; Editorial Policy</a>
+        <a href="privacy.html">Privacy</a>
       </div>
     </section>
     
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · ISSUE 2026-11-11</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="privacy.html">About &amp; Privacy</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
     </footer>
   </div>
 </body>
