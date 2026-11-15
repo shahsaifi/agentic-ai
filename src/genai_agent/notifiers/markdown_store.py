@@ -1369,7 +1369,6 @@ def _render_rss_feed_xml(archive_map: Dict[str, str], site_url: str = "https://j
 
 
 SITE_URL = "https://jabi.io"
-GITHUB_ISSUES_URL = "https://github.com/shahsaifi/agentic-ai/issues"
 _EMAIL_RE = re.compile(r"^[^@\s<>\"']+@[^@\s<>\"']+\.[^@\s<>\"']+$")
 
 
@@ -1544,11 +1543,14 @@ def _render_faq_page_html(latest_date: str) -> str:
 
 def _render_contact_page_html(latest_date: str) -> str:
     raw_email = os.getenv("CONTACT_EMAIL", "").strip()
-    email_block = ""
     if raw_email and _EMAIL_RE.match(raw_email):
         safe_email = html.escape(raw_email, quote=True)
-        email_block = _p(f'Email: <a href="mailto:{safe_email}">{safe_email}</a>')
-    issues = html.escape(GITHUB_ISSUES_URL, quote=True)
+        contact_method = _p(f'Email: <a href="mailto:{safe_email}">{safe_email}</a>')
+    else:
+        contact_method = _p(
+            'Inquiries and corrections can be submitted directly to the editorial team via our '
+            '<a href="faq.html">FAQ guide</a> or feedback channels.'
+        )
     body = "\n".join(
         [
             _p(
@@ -1556,11 +1558,7 @@ def _render_contact_page_html(latest_date: str) -> str:
                 "get in touch using the options below. Please include the issue date and the link to the entry you are "
                 "writing about."
             ),
-            email_block,
-            _p(
-                f'Public issue tracker: <a href="{issues}" target="_blank" rel="noopener noreferrer">'
-                "github.com/shahsaifi/agentic-ai/issues ↗</a>"
-            ),
+            contact_method,
             _p(
                 "Publisher: The GenAI Briefing (jabi.io). We aim to review corrections within a few days."
             ),

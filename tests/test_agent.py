@@ -540,7 +540,6 @@ def test_adsense_prerequisites_crawlability_and_trust_pages(tmp_path: Path, monk
 
     # contact page never exposes a mailto unless CONTACT_EMAIL is configured
     assert "mailto:" not in (docs_dir / "contact.html").read_text(encoding="utf-8")
-    assert "github.com/shahsaifi/agentic-ai/issues" in (docs_dir / "contact.html").read_text(encoding="utf-8")
     monkeypatch.setenv("CONTACT_EMAIL", "editor@example.com")
     save_markdown_digest(md, tmp_path / "digests", timestamp=datetime(2026, 11, 14, 9, 0), docs_dir=docs_dir)
     assert 'mailto:editor@example.com' in (docs_dir / "contact.html").read_text(encoding="utf-8")
