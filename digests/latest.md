@@ -1,84 +1,86 @@
-# Generative AI Technical Briefing — 2026-11-14
+# Generative AI Technical Briefing — 2026-11-15
 
 ## Top 10 Ranked Briefing
 
-### 1. [SO-Arena: Benchmarking the Capability Spectrum and Reliability of System One Models](https://huggingface.co/papers/2611.15777)
-**Research** (Hugging Face Daily Papers) · 83 pts · *2026-11-10*
-- System One models promise fast, general-purpose decision-making without lengthy token generation. However, understanding their capability spectrum and decision reliability requires more than aggregate performance on current benchmarks.
+### 1. [Duo: A Reciprocal World Model for Full-Duplex Interaction](https://huggingface.co/papers/2611.15131)
+**Research** (Hugging Face Daily Papers) · 40 pts · *2026-11-10*
+- In this report, we introduce the Reciprocal World Model (RWM) and present Duo v1, a full-duplex world model that continuously perceives audiovisual inputs while responding to users in real time. The RWM treats intelligence and physical reality as equally fundamental to what constitutes a world.
 
-### 2. [BirdDreams: Joint Perspective and BEV Video Generation for a Plausible, Reactive Driving World Model](https://huggingface.co/papers/2611.14815)
-**Research** (Hugging Face Daily Papers) · 49 pts · *2026-11-09*
-- Driving world models aim to simulate how a scene unfolds under different ego actions. This requires plausible motion of surrounding vehicles as well as precise ego-trajectory control.
+### 2. [Open Vision Banana: A Fully Open Recipe for Generative Visual Perception](https://huggingface.co/papers/2611.15844)
+**Research** (Hugging Face Daily Papers) · 35 pts · *2026-11-10*
+- Recent work suggests that pretrained image generators encode real-world understanding beyond image synthesis. Vision Banana exploits this by framing vision tasks as conditional image editing. However, its data, weights, code, and implementation details are not public.
 
-### 3. [PhysLoop: Harnessing LLMs' Physics Awareness for Self-Improving Video Generation Models](https://huggingface.co/papers/2611.16748)
-**Research** (Hugging Face Daily Papers) · 44 pts · *2026-11-11*
-- Video generation models produce visually realistic videos but still struggle with physical dynamics and causal consistency. Learning from generated videos requires fine-grained physical supervision, yet reliable quality judgments, correction pairs, and controlled variations are difficult to obtain.
+### 3. [Actor, Judge, or Teacher? Understanding Decision Models in Long-Horizon Agents](https://huggingface.co/papers/2611.17167)
+**Research** (Hugging Face Daily Papers) · 33 pts · *2026-11-11*
+- Decision models answer a question with a typed output, such as a choice among options with a probability for each, so one model can choose an agent's actions, evaluate actions already taken, or score every action to teach a policy with reinforcement learning.
 
-### 4. [G-STAR: Group-Scaled Token Capacity for Deeply Compressed Autoregressive Generation](https://huggingface.co/papers/2611.13004)
-**Research** (Hugging Face Daily Papers) · 42 pts · *2026-11-07*
-- Discrete autoregressive models offer a scalable framework for image generation. However, they face a fundamental trade-off: long token sequences preserve representation quality but slow generation, while aggressive spatial compression reduces representation capacity.
+### 4. [On the Design of Hyper-Connections: Simplification, Stability, and Scalability](https://huggingface.co/papers/2611.05984)
+**Research** (Hugging Face Daily Papers) · 29 pts · *2026-11-03*
+- Hyper-Connections (HC) architectures are increasingly adopted in frontier language models, yet their components remain insufficiently understood and introduce non-negligible training overhead.
 
-### 5. [Gemini 4 Hydrogen and Orchestrator](https://antigravity.google/blog/gemini-4-hydrogen-in-google-antigravity/)
-**Engineering** (Hacker News) · `antigravity.google` · [499 pts on HN](https://news.ycombinator.com/item?id=50472260) · *2026-11-12*
+### 5. [GPT-6 Astra covertly underperforms on safety research](https://alignment.openai.com/misalignment-reports/covert-underperformance-on-safety-research-tasks/)
+**Engineering** (Hacker News) · `alignment.openai.com` · [342 pts on HN](https://news.ycombinator.com/item?id=50376313) · *2026-11-05*
 
-### 6. [Nvidia allegedly engineered scarcity by funding AI startups to buy its GPUs](https://www.techpowerup.com/354814/nvidia-allegedly-engineered-scarcity-by-funding-ai-startups-to-buy-its-gpus)
-**Engineering** (Hacker News) · `techpowerup.com` · [492 pts on HN](https://news.ycombinator.com/item?id=50493251) · *2026-11-14*
+### 6. [Show HN: Yogurt – Free, private, open-source alternative to Granola](https://github.com/FrigadeHQ/yogurt)
+**Engineering** (Hacker News) · `github.com` · [303 pts on HN](https://news.ycombinator.com/item?id=50454625) · *2026-11-11*
+- Hey HN, I’m Eric and I want to share an OSS project that I’ve been building in my free time. Yogurt is a free, MIT licensed desktop app that uses on-device AI models to transcribe, summarize, and chat with your meetings.
 
-### 7. [Elevated errors on claude.ai, Claude Code, and platform.claude.com](https://status.claude.com/incidents/nn11wk485zfn)
-**Engineering** (Hacker News) · `status.claude.com` · [488 pts on HN](https://news.ycombinator.com/item?id=50481187) · *2026-11-13*
+### 7. [Gemini 4 Carbon is now available](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/)
+**Engineering** (Hacker News) · `blog.google` · [295 pts on HN](https://news.ycombinator.com/item?id=50442303) · *2026-11-10*
 
-### 8. [I'm making LLMs work on small and old devices](https://github.com/hyperionaidev/smolmaxxing/)
-**Engineering** (Hacker News) · `github.com` · [472 pts on HN](https://news.ycombinator.com/item?id=50468888) · *2026-11-12*
+### 8. [[Bi-Weekly Megathread] Project Showcase](https://www.reddit.com/r/LocalLLaMA/comments/1xtjze2/biweekly_megathread_project_showcase/)
+**Engineering** (Reddit r/LocalLLaMA) · `reddit.com` · *2026-11-11*
+- Do you have something you'd like to share with the r/LocalLLaMA community. This is the place for it!
 
-### 9. [Shield helps technicians hand off legacy portal work with OpenAI](https://openai.com/business/customer-stories/shield)
-**Lab Post** (OpenAI News) · `openai.com` · *Fri, 13 Nov 2026*
-- Shield uses OpenAI to help IT technicians hand off work in legacy portals. Its Forge agents navigate systems so technicians can focus on issues needing their judgment.
+### 9. [datasette-llm 0.1a11](https://simonwillison.net/2026/Nov/14/datasette-llm/)
+**Lab Post** (Simon Willison (AI)) · `simonwillison.net` · *2026-11-14T23:59*
+- Release: datasette-llm 0.1a11 datasette-llm is the intermediate plugin for Datasette that supports configuring LLMs for use with other Datasette plugins.
 
-### 10. [Introducing ChatGPT Wallet](https://openai.com/index/introducing-chatgpt-wallet)
-**Lab Post** (OpenAI News) · `openai.com` · *Fri, 13 Nov 2026*
-- Introducing ChatGPT Wallet, a secure way for agents in ChatGPT Work, Codex, and dots to complete purchases with user approval and existing card protections.
+### 10. [Google Search gets a major upgrade with Gemini 4 Hydrogen](https://blog.google/products-and-platforms/products/search/gemini-4-hydrogen-search-upgrade/)
+**Lab Post** (Google AI Blog) · `blog.google` · *Thu, 12 Nov 2026*
+- Rotating carousel of cards with text "Gemini 4 Hydrogen" "Now in Google Search" and examples from the Google Search UI
 
 ---
 
 ## Researcher Threads on X
 
-- **[Gemini 4 Carbon is rolling out today](https://twitter.com/sundarpichai/status/2120185896469496180)** — *X.com (@sundarpichai)* (14 pts) · *2026-11-10*
-  - Technical thread from @sundarpichai examining Gemini 4 Carbon is rolling out today, generating active engineering debate across 0 comments (14 pts).
-- **[Claude Code, but for SEO](https://twitter.com/brodieseo/status/2118299596292305356)** — *X.com (@brodieseo)* (14 pts) · *2026-11-06*
-  - Technical thread from @brodieseo examining Claude Code, but for SEO, generating active engineering debate across 2 comments (14 pts).
-- **[AI Twitter/X Daily Recap: OpenAI GPT-6 Astra](https://news.smol.ai/issues/26-09-03-gpt-6-astra/)** — *AINews (AI X/Twitter Recap)* · *Thu, 03 Sep 2026*
-  - **OpenAI** launched **GPT-6 Astra** as its new flagship model, described as "our most intelligent and aligned model yet," focusing on computer use, software engineering, math/science, office work, and cybersecurity.
-- **[NVIDIA Denies Fake Letter Demanding Board Resignation, Huang Return](https://news.google.com/rss/articles/CBMiiAFBVV95cUxOTVZsVUVJVXl0NVFrbXAzNE13WGZ6eEFoT3B3RmtJU1JjMldxMFBwOS1CcHJLNnV1dzhINkRPY0Z3emFQbGotMXZzSVNXS292a1J4TnlYN1Y4VERBWmlqMGNmVUNHWUhQakhWREVoM0JmdG5ZVzdwRW5tY1NJRXNHa2oydTF2eUxI?oc=5)** — *X Pulse (조선일보)* · *Sat, 14 Nov 2026*
-  - Industry analysis and researcher commentary on X examining NVIDIA Denies Fake Letter Demanding Board Resignation, Huang Return, reported by 조선일보.
+- **[Ex-OpenAI researcher finds Blackwell signatures in open-weight models](https://twitter.com/willdepue/status/2120992457630326841)** — *X.com (@willdepue)* (18 pts) · *2026-11-14*
+  - Technical thread from @willdepue examining Ex-OpenAI researcher finds Blackwell signatures in open-weight models, generating active engineering debate across 1 comments (18 pts).
+- **[Nasdaq 100 Forecast: NDX falls after hotter inflation, Anthropic IPO details announced](https://news.google.com/rss/articles/CBMizAFBVV95cUxON1Q2X2paSDVqZVU3OS0tRFRkZF9JZTZ2d0ZkOHJROHkyYnoyUldxbkpMLUgwRm5CeVlnUWZtMi1OUlF5ZTNVSklUelo0U0Qtb3JCcGMwbkNHSzdIZUo4dWMyWXpHdXdJaWZOZzQ2c3dabFJjUEdOYXJBZ2VpTHV1ODZ4V1l3WW0xNnBwcEdhX3pPZlJuLS1fdFhyT25VLTEzZUszeEZadWdsVHd5eGVvS2N4STlxWFdHdEFkbVN6V0F1ZGhtSDIza2xBRE4?oc=5)** — *X Pulse (StoneX)* · *Sat, 14 Nov 2026*
+  - Industry analysis and researcher commentary on X examining Nasdaq 100 Forecast: NDX falls after hotter inflation, Anthropic IPO details announced, reported by StoneX.
+- **[Nvidia prepares to fire CEO Jensen Huang, WSJ reports](https://twitter.com/watcherguru/status/2120645607866188008)** — *X.com (@watcherguru)* (225 pts) · *2026-11-11*
+  - Technical thread from @watcherguru examining Nvidia prepares to fire CEO Jensen Huang, WSJ reports, generating active engineering debate across 4 comments (225 pts).
+- **[Claude Fable 5.2](https://twitter.com/claudeai/status/2119867114450268322)** — *X.com (@claudeai)* (33 pts) · *2026-11-09*
+  - Technical thread from @claudeai examining Claude Fable 5.2, generating active engineering debate across 6 comments (33 pts).
 
 ---
 
 ## Audio & Podcasts
 
-- **[OpenAI Launches ChatGPT Wallet and More AI News](https://rss.art19.com/episodes/cbfe9d2b-cab0-43a2-b79f-21bae8e0894a.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb)** — **AI Optic: Anthropic & OpenAI News** (🎧 15m) · *Sat, 14 Nov 2026*
-  - Show Links • Get the top 80+ AI Models for $8.99 at AI Box: https://aibox.ai • How I Grow and Scale My Business with AI: https://www.skool.com/aihustle • Get the AI Chat Daily Newsletter: https://www.aichatdaily.com/newsletter In this episode, we explore the.
-- **[Implementing Federated Learning to enhance Agentic AI](https://share.transistor.fm/s/58a69653)** — **Practical AI Podcast** (🎧 43m) · *Fri, 13 Nov 2026*
-  - How can AI models learn from private data without compromising privacy? Chris is joined by Lorenzo Sani, Research Scientist at Flower Labs and PhD researcher at Cambridge, to explore federated learning and privacy-preserving AI.
 - **[When AI Tells You What You Want to Hear](https://generativeai101.podbean.com/e/when-ai-tells-you-what-you-want-to-hear/)** — **Generative AI 101** (🎧 12m) · *Wed, 11 Nov 2026*
   - Your AI chatbot thinks your ideas are brilliant. That might be the problem.
+- **[OpenAI Launches ChatGPT Wallet and More AI News](https://rss.art19.com/episodes/cbfe9d2b-cab0-43a2-b79f-21bae8e0894a.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb)** — **AI Optic: Anthropic & OpenAI News** (🎧 15m) · *Sat, 14 Nov 2026*
+  - Show Links • Get the top 80+ AI Models for $8.99 at AI Box: https://aibox.ai • How I Grow and Scale My Business with AI: https://www.skool.com/aihustle • Get the AI Chat Daily Newsletter: https://www.aichatdaily.com/newsletter In this episode, we explore the.
+- **[The Rise of AI Agents: Insights from Mark Howard](https://www.buzzsprout.com/2502664/episodes/20059572-the-rise-of-ai-agents-insights-from-mark-howard.mp3)** — **AI Today Podcast** (🎧 39m) · *Wed, 11 Nov 2026*
+  - In this episode of AI Today, host Kathleen Walch welcomes Mark Howard, COO of TIME, to discuss how AI agents are reshaping the internet and what organizations must do to remain visible in an increasingly agent-driven world.
 
 ---
 
 ## Tech Talks & Keynotes
 
-- **[What Is Jev? Fast discriminative models vs. LLMs](https://www.youtube.com/shorts/fgsodriej9M)** — **Google Cloud Tech** · *2026-11-14*
-  - 📖 Codelab next: Getting started with Discriminative (Jev/DiffusionGemma) models.
-- **[Huang's Nvidia Legacy](https://www.youtube.com/shorts/4pjeaeK4S9o)** — **IBM Technology** · *2026-11-13*
-  - Jensen Huang built Nvidia over 30 years with relentless passion. Can anyone replace him? Explore the challenge facing AI's most iconic leader.
-- **[The value of AI is not doing the same thing faster](https://www.youtube.com/shorts/LDcRdpVvmgQ)** — **The Pragmatic Engineer** · *2026-11-10*
-  - with Titus Winters, co-author of Software Engineering at Google See the full episode on The Pragmatic Engineer Podcast.
-- **[What Is AI Slop? Wrong Answers Only](https://www.youtube.com/shorts/o0Kad7f7WRo)** — **IBM Developer** · *2026-11-09*
-  - What is AI slop? Wrong answers only. At IBM TechXchange, Bri Kopecki (@Tech-Cowgirl ) asked people for their best wrong answers. They came up with everything from soulless sourdough starters to raccoons learning to code.
-- **[Stanford CME295 Transformers & LLMs | Autumn 2026 | Lecture 6 - AI Agents](https://www.youtube.com/watch?v=nU2a2lm6vDE)** — **Stanford Online (CS25)** · *2026-11-13*
-  - For more information about Stanford’s graduate programs, visit: To follow along with the course schedule and syllabus, visit: Afshine Amidi is an Adjunct Professor at Stanford University. Shervine Amidi is an Adjunct Professor at Stanford University.
-- **[LangSmith: The platform to run, improve, and govern agents](https://www.youtube.com/watch?v=NeV6MSN6zEE)** — **LangChain** · *2026-11-13*
-  - LangChain has raised $300 million in a Series C at a $3 billion valuation, and we're launching the new LangSmith, which puts what we've learned from millions of developers building agents into one platform.
-- **[How I use LLMs](https://www.youtube.com/watch?v=EWvNQjAaOHw)** — **Andrej Karpathy** · *2025-02-27*
-  - The example-driven, practical walkthrough of Large Language Models and their growing list of related features, as a new entry to my general audience series on LLMs. In this more practical followup, I take you through the many ways I use LLMs in my own life.
-- **[Inside Anthropic's molecular biology lab](https://www.youtube.com/watch?v=DdCEmlAydcw)** — **Anthropic** · *2026-09-23*
-  - Some of the biggest discoveries in biology started with someone noticing something strange in one of the many molecular machines found in nature.
+- **[Jonathan Blow – If AI solved coding, why is my software still the same?](https://www.youtube.com/watch?v=IRK8h67ol7Q)** — **YouTube (via Hacker News)** · *2026-11-13*
+  - High-signal technical lecture on Jonathan Blow – If AI solved coding, why is my software still the same?, highlighted by the AI engineering community on Hacker News (460 pts).
+- **[Building and Deploying Python AI Agents with ADK, Gemini, and MCP](https://www.youtube.com/watch?v=h_r3NsfrrRI)** — **Google Cloud Tech** · *2026-11-11*
+  - Walkthrough of Google Cloud's Agent Development Kit (ADK) for Python, demonstrating how to connect Gemini reasoning models to external enterprise tools via Model Context Protocol (MCP) servers and deploy multi-agent workflows on Vertex AI.
+- **[LangChain vs LangGraph: Architecting Stateful Multi-Agent Workflows & RAG](https://www.youtube.com/watch?v=qAF1NjEVHhY)** — **IBM Technology** · *2026-11-10*
+  - Architectural comparison of directed acyclic chains in LangChain versus cyclic, stateful graph execution in LangGraph for building fault-tolerant multi-agent orchestration and corrective retrieval-augmented generation.
+- **[AI and Software Engineering: Production LLM Workflows & Agentic Tooling](https://www.youtube.com/watch?v=5wks1W-auKY)** — **The Pragmatic Engineer** · *2026-11-09*
+  - Gergely Orosz examines how engineering organizations integrate coding agents, automated PR verification, context indexing, and deterministic evaluation harnesses into high-velocity production software pipelines.
+- **[Building Enterprise AI Workflows with IBM Granite & watsonx.ai Flows Engine](https://www.youtube.com/watch?v=-WXzgIFcNK0)** — **IBM Developer** · *2026-11-08*
+  - Technical deep-dive into building low-latency enterprise RAG and tool-calling pipelines using open-weight IBM Granite foundation models and declarative flow orchestration in watsonx.ai.
+- **[Stanford CS25: Transformers United — Frontier Reasoning & Post-Training Architectures](https://www.youtube.com/watch?v=XfpMkf4rD6E)** — **Stanford Online (CS25)** · *2026-11-07*
+  - Stanford CS25 seminar examining how scaling test-time compute, reinforcement fine-tuning, and verifier-guided search enable transformer architectures to solve complex mathematical and multi-step reasoning problems.
+- **[RAG From Scratch: Query Translation, Routing, RAPTOR & Corrective RAG](https://www.youtube.com/watch?v=sVcwVQRHIc8)** — **LangChain** · *2026-11-06*
+  - End-to-end engineering tutorial covering multi-query decomposition, semantic routing, hierarchical RAPTOR indexing, and self-reflective Corrective RAG (CRAG) grading loops.
+- **[Deep Dive into LLMs like ChatGPT: Pretraining, Supervised Finetuning & RLHF](https://www.youtube.com/watch?v=7xTGNNLPyMI)** — **Andrej Karpathy** · *2026-10-28*
+  - Comprehensive technical walkthrough of the full Large Language Model training pipeline, covering internet-scale tokenization, distributed pretraining, supervised instruction tuning, and reinforcement learning from human and verifiable rewards.
