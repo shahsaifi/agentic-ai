@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="sage">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>The GenAI Briefing — 2026-11-16</title>
+  
+  <meta name="theme-color" id="meta-theme-color" content="#F6F4EF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="alternate" type="application/rss+xml" title="The GenAI Briefing (jabi.io)" href="https://jabi.io/feed.xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+  <style>
+    /* Default: Warm Archival Paper (FT / Anthropic / Stripe Press inspired) */
+    :root, [data-theme="sage"] {
+      --bg: #F6F4EF;
+      --surface: #FDFCF9;
+      --surface-alt: #EFECE5;
+      --ink: #121211;
+      --ink-secondary: #2B2926;
+      --ink-muted: #6B6860;
+      --border: #DCD7CC;
+      --border-strong: #121211;
+      --accent: #9E2A2B;
+      --accent-hover: #7A1C1D;
+      --link: #1D4ED8;
+      --font-serif: 'Newsreader', Georgia, serif;
+      --font-display: 'Instrument Serif', 'Newsreader', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --base-size: 17px;
+    }
+
+    [data-theme="sepia"] {
+      --bg: #F2E9D8;
+      --surface: #F9F3E6;
+      --surface-alt: #E8DEC8;
+      --ink: #221B15;
+      --ink-secondary: #382E26;
+      --ink-muted: #6E5F52;
+      --border: #D5C7B0;
+      --border-strong: #221B15;
+      --accent: #8C2D19;
+      --accent-hover: #692010;
+      --link: #0F5257;
+    }
+
+    [data-theme="dark"] {
+      --bg: #111214;
+      --surface: #18191C;
+      --surface-alt: #202226;
+      --ink: #F2F0EA;
+      --ink-secondary: #D0CDC4;
+      --ink-muted: #8A877F;
+      --border: #2B2D31;
+      --border-strong: #F2F0EA;
+      --accent: #E07A5F;
+      --accent-hover: #F29C85;
+      --link: #7AA2F7;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html {
+      font-size: var(--base-size);
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      overflow-x: hidden;
+    }
+    body {
+      font-family: var(--font-serif);
+      background-color: var(--bg);
+      color: var(--ink);
+      line-height: 1.72;
+      margin: 0;
+      padding:
+        env(safe-area-inset-top, 0px)
+        max(20px, env(safe-area-inset-right, 20px))
+        calc(72px + env(safe-area-inset-bottom, 0px))
+        max(20px, env(safe-area-inset-left, 20px));
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .page-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Editorial Masthead */
+    .masthead {
+      padding-top: 20px;
+      margin-bottom: 32px;
+    }
+    .masthead-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .ctrl-btn {
+      background: none;
+      border: none;
+      padding: 2px 4px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      cursor: pointer;
+    }
+    .ctrl-btn:hover, .ctrl-btn.active {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      font-weight: 600;
+    }
+
+    .masthead-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 22px 0 18px;
+      border-bottom: 2px solid var(--border-strong);
+    }
+    .masthead-title {
+      font-family: var(--font-display);
+      font-size: 3.1rem;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .masthead-title a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .masthead-sub {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--ink-secondary);
+      margin: 0;
+    }
+
+    .masthead-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .nav-links a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 5px;
+      text-decoration-thickness: 1.5px;
+    }
+
+    /* Section Headers */
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-top: 1px solid var(--border-strong);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 0;
+      margin: 36px 0 20px;
+    }
+    .section-head h2 {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0;
+      color: var(--ink);
+    }
+    .section-head span {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+
+    /* Category Filter Bar */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 8px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-pill {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 5px 11px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink-secondary);
+      cursor: pointer;
+      border-radius: 3px;
+      touch-action: manipulation;
+    }
+    .filter-pill:hover, .filter-pill.active {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* Editorial Briefing Ledger (Top 10 List) */
+    .briefing-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .briefing-item {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 16px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .briefing-item:last-child {
+      border-bottom: none;
+    }
+    .briefing-num {
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--accent);
+      padding-top: 2px;
+    }
+    .briefing-content {
+      min-width: 0;
+    }
+    .briefing-content h3 {
+      font-family: var(--font-serif);
+      font-size: 1.28rem;
+      font-weight: 600;
+      line-height: 1.34;
+      letter-spacing: -0.01em;
+      margin: 0 0 8px;
+      max-width: 62ch;
+    }
+    .briefing-content h3 a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .briefing-content h3 a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .briefing-meta {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+      margin-bottom: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 8px;
+      align-items: center;
+      line-height: 1.4;
+    }
+    .briefing-tag {
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .briefing-summary {
+      font-family: var(--font-serif);
+      font-size: 1.02rem;
+      color: var(--ink-secondary);
+      margin: 0 0 10px;
+      line-height: 1.68;
+      max-width: 66ch;
+    }
+    .briefing-summary var {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .briefing-reddit {
+      margin: 8px 0 10px;
+      padding: 8px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      font-family: var(--font-sans);
+      font-size: 0.83rem;
+      line-height: 1.5;
+      color: var(--ink-secondary);
+      max-width: 66ch;
+    }
+    .briefing-reddit summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .briefing-reddit summary::-webkit-details-marker {
+      display: none;
+    }
+    .briefing-reddit strong {
+      font-family: var(--font-mono);
+      font-size: 0.71rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      margin-right: 4px;
+    }
+    .reddit-toggle {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .reddit-body {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--ink-secondary);
+    }
+    .reddit-comment {
+      margin-top: 6px;
+      padding-left: 10px;
+      border-left: 2px solid var(--border);
+      font-size: 0.86rem;
+    }
+    .reddit-footer {
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .briefing-reddit a {
+      color: var(--ink-secondary);
+      text-decoration: underline;
+      text-decoration-color: var(--border);
+      text-underline-offset: 2px;
+    }
+    .briefing-reddit a:hover {
+      color: var(--accent);
+      text-decoration-color: var(--accent);
+    }
+    .briefing-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+    }
+    .briefing-actions a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1px;
+    }
+    .briefing-actions a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* Two-Column Editorial Split for X Threads & Podcasts */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      margin-top: 12px;
+    }
+    .two-col > section {
+      min-width: 0;
+    }
+    .note-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .note-item {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .note-item:last-child {
+      border-bottom: none;
+    }
+    .note-kicker {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+      margin-bottom: 4px;
+    }
+    .note-kicker strong {
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .note-title {
+      font-family: var(--font-sans);
+      font-size: 0.96rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 0 0 6px;
+    }
+    .note-title a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .note-title a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .note-body {
+      font-family: var(--font-serif);
+      font-size: 0.92rem;
+      color: var(--ink-secondary);
+      margin: 0 0 8px;
+      line-height: 1.55;
+      max-width: 66ch;
+    }
+    .note-links {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      display: flex;
+      gap: 14px;
+    }
+    .note-links a {
+      color: var(--ink-secondary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .note-links a:hover {
+      color: var(--ink);
+    }
+
+    /* Archive Table */
+    .archive-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+    }
+    .archive-table th {
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+      padding: 8px 12px 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .archive-table td {
+      padding: 14px 12px 14px 0;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .archive-date {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 600;
+      white-space: nowrap;
+      width: 130px;
+    }
+    .archive-date a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .archive-date a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .archive-leads {
+      color: var(--ink-secondary);
+      line-height: 1.5;
+    }
+    .archive-leads a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-decoration-color: var(--border);
+      text-underline-offset: 3px;
+    }
+    .archive-leads a:hover {
+      text-decoration-color: var(--ink);
+    }
+
+    /* Callout Box for Executive Summary / Concept Deep-Dive */
+    .editorial-callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 20px 24px;
+      margin: 20px 0 28px;
+    }
+    .editorial-callout h3 {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin: 0 0 10px;
+    }
+    .editorial-callout ul, .editorial-callout p {
+      margin: 0;
+      font-size: 0.96rem;
+      color: var(--ink-secondary);
+    }
+    .editorial-callout li {
+      margin-bottom: 8px;
+    }
+
+    /* Free Daily Email Digest Subscribe Box */
+    .subscribe-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--border-strong);
+      border-left: 3px solid var(--accent);
+      padding: 22px 24px;
+      margin: 36px 0 28px;
+    }
+    .subscribe-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .subscribe-box h3 {
+      font-family: var(--font-serif);
+      font-size: 1.24rem;
+      font-weight: 600;
+      margin: 0 0 6px;
+      color: var(--ink);
+    }
+    .subscribe-copy {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--ink-secondary);
+      margin: 0 0 14px;
+      line-height: 1.6;
+      max-width: 66ch;
+    }
+    .subscribe-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .subscribe-input {
+      flex: 1 1 260px;
+      max-width: 380px;
+      padding: 9px 12px;
+      font-family: var(--font-sans);
+      font-size: 16px;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      outline: none;
+    }
+    .subscribe-input:focus {
+      border-color: var(--accent);
+    }
+    .subscribe-btn {
+      padding: 10px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--bg);
+      background: var(--ink);
+      border: 1px solid var(--ink);
+      border-radius: 3px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .subscribe-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .subscribe-meta {
+      font-family: var(--font-mono);
+      font-size: 0.71rem;
+      color: var(--ink-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+    }
+    .subscribe-meta a {
+      color: var(--ink-secondary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .subscribe-status {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-top: 8px;
+      display: none;
+    }
+
+    /* Non-intrusive Google AdSense Editorial Sponsorship Slot */
+    .editorial-ad-slot {
+      margin: 56px 0;
+      clear: both;
+      padding: 14px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .editorial-ad-label {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+    }
+
+    .footer {
+      margin-top: 56px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+    .footer a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* iPhone & Mobile Safari Optimizations */
+    @media (max-width: 760px) {
+      body {
+        padding:
+          env(safe-area-inset-top, 0px)
+          max(16px, env(safe-area-inset-right, 16px))
+          calc(56px + env(safe-area-inset-bottom, 0px))
+          max(16px, env(safe-area-inset-left, 16px));
+        line-height: 1.6;
+      }
+      .masthead {
+        padding-top: 14px;
+        margin-bottom: 22px;
+      }
+      .masthead-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding-bottom: 10px;
+      }
+      .controls {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .ctrl-btn {
+        min-height: 32px;
+        padding: 4px 8px;
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        touch-action: manipulation;
+      }
+      .ctrl-btn.active {
+        border-color: var(--ink);
+        background: var(--surface-alt);
+        text-decoration: none;
+      }
+      .masthead-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 16px 0 14px;
+      }
+      .masthead-title {
+        font-size: 2.2rem;
+        line-height: 1.05;
+      }
+      .masthead-sub {
+        font-size: 0.84rem;
+        line-height: 1.45;
+      }
+      .masthead-nav {
+        padding: 8px 0;
+      }
+      .nav-links {
+        width: 100%;
+        gap: 14px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+        padding-bottom: 2px;
+      }
+      .nav-links a {
+        display: inline-block;
+        padding: 4px 0;
+      }
+      .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        margin: 26px 0 14px;
+      }
+      .briefing-item {
+        grid-template-columns: 28px 1fr;
+        gap: 10px;
+        padding: 15px 0;
+      }
+      .briefing-content h3 {
+        font-size: 1.12rem;
+        line-height: 1.35;
+      }
+      .briefing-summary {
+        font-size: 0.94rem;
+        line-height: 1.56;
+      }
+      .two-col {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .editorial-callout {
+        padding: 14px 16px;
+        margin: 14px 0 20px;
+      }
+      .subscribe-box {
+        padding: 16px;
+        margin: 24px 0 20px;
+      }
+      .subscribe-input {
+        max-width: 100%;
+        width: 100%;
+      }
+      .subscribe-btn {
+        width: 100%;
+      }
+      /* Stack Archive Table cleanly on iPhone screens */
+      .archive-table thead {
+        display: none;
+      }
+      .archive-table, .archive-table tbody, .archive-table tr, .archive-table td {
+        display: block;
+        width: 100%;
+      }
+      .archive-table tr {
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .archive-table td {
+        padding: 2px 0;
+        border-bottom: none;
+      }
+      .archive-date {
+        width: auto;
+        margin-bottom: 4px;
+        color: var(--accent);
+      }
+      .footer {
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 40px;
+      }
+    }
+  </style>
+  <script>
+    const THEME_COLORS = {
+      sage: '#F6F4EF',
+      sepia: '#F2E9D8',
+      dark: '#111214'
+    };
+
+    function applyThemeColorMeta(theme) {
+      const meta = document.getElementById('meta-theme-color');
+      if (meta && THEME_COLORS[theme]) {
+        meta.setAttribute('content', THEME_COLORS[theme]);
+      }
+    }
+
+    (function() {
+      const savedTheme = localStorage.getItem('genai_theme') || 'sage';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      applyThemeColorMeta(savedTheme);
+      const savedSize = localStorage.getItem('genai_fontsize');
+      if (savedSize) {
+        document.documentElement.style.setProperty('--base-size', savedSize + 'px');
+      }
+    })();
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('genai_theme', theme);
+      applyThemeColorMeta(theme);
+      updateControls();
+    }
+
+    function adjustFontSize(delta) {
+      const current = parseFloat(localStorage.getItem('genai_fontsize') || '16.5');
+      const next = Math.min(20, Math.max(14.5, current + delta));
+      localStorage.setItem('genai_fontsize', next);
+      document.documentElement.style.setProperty('--base-size', next + 'px');
+    }
+
+    function updateControls() {
+      const theme = document.documentElement.getAttribute('data-theme') || 'sage';
+      applyThemeColorMeta(theme);
+      document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-theme-btn') === theme);
+      });
+    }
+
+    function filterBriefing(cat) {
+      document.querySelectorAll('[data-filter-pill]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-filter-pill') === cat);
+      });
+      document.querySelectorAll('.briefing-item').forEach(item => {
+        const itemCat = item.getAttribute('data-category') || '';
+        item.style.display = (cat === 'all' || itemCat === cat) ? '' : 'none';
+      });
+    }
+
+    function handleSubscribe(event) {
+      const form = event.target;
+      const action = (form.getAttribute('action') || '').trim();
+      const input = form.querySelector('input[type="email"]');
+      const email = input ? input.value.trim() : '';
+      if (!action || action === '#' || !email.includes('@')) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    }
+
+    window.addEventListener('DOMContentLoaded', updateControls);
+  </script>
+
+  
+  <meta name="google-adsense-account" content="ca-pub-4585099070726775">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4585099070726775" crossorigin="anonymous"></script>
+  <meta name="description" content="The GenAI Briefing for 2026-11-16: Top 10 Generative AI research, engineering and community stories with practitioner discussion.">
+  <link rel="canonical" href="https://jabi.io/2026-11-16.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The GenAI Briefing">
+  <meta property="og:url" content="https://jabi.io/2026-11-16.html">
+  <meta property="og:description" content="The GenAI Briefing for 2026-11-16: Top 10 Generative AI research, engineering and community stories with practitioner discussion.">
+</head>
+<body>
+  <div class="page-wrap">
+    
+    <header class="masthead">
+      <div class="masthead-top">
+        <div>THE GENERATIVE AI TECHNICAL BRIEFING · ISSUE 2026-11-16</div>
+        <div class="controls">
+          <span>PALETTE:</span>
+          <button class="ctrl-btn" data-theme-btn="sage" onclick="setTheme('sage')">Paper</button>
+          <button class="ctrl-btn" data-theme-btn="sepia" onclick="setTheme('sepia')">Sepia</button>
+          <button class="ctrl-btn" data-theme-btn="dark" onclick="setTheme('dark')">Ink</button>
+          <span>·</span>
+          <button class="ctrl-btn" onclick="adjustFontSize(-0.5)">A-</button>
+          <button class="ctrl-btn" onclick="adjustFontSize(0.5)">A+</button>
+        </div>
+      </div>
+      <div class="masthead-title-row">
+        <h1 class="masthead-title"><a href="index.html">The GenAI Briefing</a></h1>
+        <p class="masthead-sub">Curated research papers, frontier lab engineering, tech talks, researcher threads &amp; audio briefings.</p>
+      </div>
+      <nav class="masthead-nav">
+        <div class="nav-links">
+          <a href="index.html" class="">Front Page</a>
+          <a href="2026-11-16.html" class="active">Latest Issue (2026-11-16)</a>
+          <a href="tech-talks.html" class="">Tech Talks Index</a>
+          <a href="podcasts.html" class="">Podcasts Index</a>
+          <a href="index.html#archive">Archive</a>
+          <a href="#subscribe">Subscribe</a>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">
+          JABI.IO · DAILY EDITION
+        </div>
+      </nav>
+    </header>
+    
+
+    <div style="font-family:var(--font-mono);font-size:0.74rem;color:var(--ink-muted);margin-bottom:20px;">
+      ISSUES: <a href="2026-11-16.html" style="font-weight:700;color:var(--ink);">2026-11-16</a> · <a href="2026-11-15.html" style="font-weight:400;color:var(--ink);">2026-11-15</a> · <a href="2026-11-14.html" style="font-weight:400;color:var(--ink);">2026-11-14</a> · <a href="2026-11-13.html" style="font-weight:400;color:var(--ink);">2026-11-13</a> · <a href="2026-11-12.html" style="font-weight:400;color:var(--ink);">2026-11-12</a> · <a href="2026-11-11.html" style="font-weight:400;color:var(--ink);">2026-11-11</a> · <a href="2026-11-10.html" style="font-weight:400;color:var(--ink);">2026-11-10</a> · <a href="2026-11-09.html" style="font-weight:400;color:var(--ink);">2026-11-09</a> · <a href="2026-11-08.html" style="font-weight:400;color:var(--ink);">2026-11-08</a> · <a href="2026-11-07.html" style="font-weight:400;color:var(--ink);">2026-11-07</a> · <a href="2026-11-06.html" style="font-weight:400;color:var(--ink);">2026-11-06</a>
+    </div>
+
+    
+    
+
+    <div class="section-head">
+      <h2>I. Top 10 Technical Briefing — 2026-11-16</h2>
+      <span>RANKED BY SUBSTANCE &amp; COMMUNITY REACH</span>
+    </div>
+    <div class="filter-bar"><button class="filter-pill active" data-filter-pill="all" onclick="filterBriefing('all')">All (10)</button><button class="filter-pill" data-filter-pill="Research" onclick="filterBriefing('Research')">Research (4)</button><button class="filter-pill" data-filter-pill="Engineering" onclick="filterBriefing('Engineering')">Engineering (4)</button><button class="filter-pill" data-filter-pill="Lab Release" onclick="filterBriefing('Lab Release')">Lab Release (2)</button></div><div class="briefing-list">
+            <article class="briefing-item" data-category="Research">
+              <div class="briefing-num">01</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-11</span></div>
+                <h3><a href="https://huggingface.co/papers/2611.17060" target="_blank" rel="noopener noreferrer">Ropedia Xperience 2: A Gold Standard for Scaling Physical AI Environments and Behaviors</a></h3>
+                <p class="briefing-summary">Large foundation models such as GPT-6 Astra and Claude Fable 5.1 have recently been shown to control robots directly from visual observations. They nevertheless remain brittle on long-horizon, contact-rich tasks in real-world environments.</p>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> I made a real time fish identification app for scuba diving and snorkelling</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">I recently made a real time fish identification app for scuba diving and snorkelling with the help of Claude and Codex!</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Ropedia+Xperience+Gold+Standard" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1xx98ed/i_made_a_real_time_fish_identification_app_for/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.17060" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>30 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Ropedia+Xperience+Gold+Standard" target="_blank" rel="noopener noreferrer">r/ClaudeAI via Google ↗</a></div>
+              </div>
+            </article>
+            
+            <article class="briefing-item" data-category="Research">
+              <div class="briefing-num">02</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-11</span></div>
+                <h3><a href="https://huggingface.co/papers/2611.17331" target="_blank" rel="noopener noreferrer">TTB: Test-time Baking for Efficient Rendering of Decoder-only View Synthesis Models</a></h3>
+                <p class="briefing-summary">Decoder-only Large View Synthesis Models (LVSMs) with KV-cache have recently achieved state-of-the-art quality by regressing novel views from neural networks without reconstructing 3D geometry, while Test-Time Training (TTT) layers save computation but sacrifice quality.</p>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/singularity):</strong> Six months ago someone posted about how frontier AI&#x27;s were failing at AI research, and a bunch of people said to check back in...</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">The original post: Now, six months later, we have: Claude writes a neural network&#x27;s weights by hand, without training, to detect fake legal citations: Opus 5.5 can directly edit weights to fix bugs and lower hallucinations in.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+TTB+Test-time+Baking+Efficient" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/singularity/comments/1xxb8fi/six_months_ago_someone_posted_about_how_frontier/" target="_blank" rel="noopener noreferrer">Direct link (r/singularity) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.17331" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>25 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+TTB+Test-time+Baking+Efficient" target="_blank" rel="noopener noreferrer">r/singularity via Google ↗</a></div>
+              </div>
+            </article>
+            
+            <article class="briefing-item" data-category="Research">
+              <div class="briefing-num">03</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-06</span></div>
+                <h3><a href="https://huggingface.co/papers/2608.22237" target="_blank" rel="noopener noreferrer">Read Less, Solve More: Token-Efficient Sparse Reading of External Content for AI Agents</a></h3>
+                <p class="briefing-summary">Web-facing AI agents repeatedly access webpages, documents, repositories, and tool responses, yet reading interfaces often expose entire objects when only sparse evidence is needed. This over-reading increases token and latency costs and can dilute relevant evidence.</p>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> I have created a tool to observe what happens inside an LLM. Also allows for the comparison of two quantizations of the same...</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">What changes between different quantizations of the same model? And what if you could SEE what actually sets them apart?</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Read+Less+Solve+Token-Efficient" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xx7qbf/i_have_created_a_tool_to_observe_what_happens/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2608.22237" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>22 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Read+Less+Solve+Token-Efficient" target="_blank" rel="noopener noreferrer">r/LocalLLaMA via Google ↗</a></div>
+              </div>
+            </article>
+            
+            <article class="briefing-item" data-category="Research">
+              <div class="briefing-num">04</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-04</span></div>
+                <h3><a href="https://huggingface.co/papers/2611.08318" target="_blank" rel="noopener noreferrer">Learning the Task or Learning the Verifier? Rethinking Criteria Exposure in Embodied Self-Improvement</a></h3>
+                <p class="briefing-summary">Self-improving embodied agents are increasingly being developed and compared on robot simulation benchmarks. Several recent works expose the benchmark&#x27;s success criteria to the learning agent, a practice we call Criteria Exposure (CE).</p>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/MachineLearning):</strong> Social Simulation with LLMs - From Proxies to Population (CFP @ AAAI&#x27;27) Due Nov. 20 [R]</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Say you simulate a population of LLM agents and get polarization, norm formation or an information cascade. How do you know the population produced it, and not the prompt, the base model or something memorized from pretraining?</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Learning+Task+Learning+Verifier" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/MachineLearning/comments/1xxc63w/social_simulation_with_llms_from_proxies_to/" target="_blank" rel="noopener noreferrer">Direct link (r/MachineLearning) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.08318" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>21 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Learning+Task+Learning+Verifier" target="_blank" rel="noopener noreferrer">r/MachineLearning via Google ↗</a></div>
+              </div>
+            </article>
+            
+            <article class="briefing-item" data-category="Engineering">
+              <div class="briefing-num">05</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-15</span></div>
+                <h3><a href="https://jakub.jankiewicz.org/blog/ai-code-open-source/" target="_blank" rel="noopener noreferrer">All AI-generated code should be Open Source</a></h3>
+                <p class="briefing-summary">All code generated with help from AI should be Open Source or on Creative Commons Zero (CC0) license.</p>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> I built a swimmable underwater world in one 97 KB HTML file with Fable 5.2</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Try it in your browser · Source on GitHub Best experienced in Chrome. Free to try, open source under the MIT license.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+AI-generated+code+should+Open" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1xw376f/i_built_a_swimmable_underwater_world_in_one_97_kb/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://jakub.jankiewicz.org/blog/ai-code-open-source/" target="_blank" rel="noopener noreferrer">Read Source (jakub.jankiewicz.org) ↗</a><a href="https://news.ycombinator.com/item?id=50507303" target="_blank" rel="noopener noreferrer">HN Discussion (1096 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+AI-generated+code+should+Open" target="_blank" rel="noopener noreferrer">r/ClaudeAI via Google ↗</a></div>
+              </div>
+            </article>
+            
+            <article class="briefing-item" data-category="Engineering">
+              <div class="briefing-num">06</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-15</span></div>
+                <h3><a href="https://litnews.ai/articles/garciaguirre-samsung-sk-hynix-micron-dram-conspiracy-suit-survives-dismissal" target="_blank" rel="noopener noreferrer">Court denies motion to dismiss DRAM price fixing case</a></h3>
+                <p class="briefing-summary">Judge Noël Wise found buyers plausibly alleged the chipmakers conspired to cut conventional DRAM supply and shift capacity to HBM, distinguishing the Ninth Circuit&#x27;s DRAM II.</p>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/MachineLearning):</strong> Community discussion on Court denies motion to dismiss DRAM price fixing case</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Practitioners in r/MachineLearning analyze the architecture, reproducibility, and production deployment trade-offs of Court denies motion to dismiss DRAM price fixing case.</p><div class="reddit-comment"><strong>u/ml_systems_eng:</strong> Key question for production adoption is how well these gains hold up under realistic latency budgets and multi-turn context pressure.</div><div class="reddit-comment"><strong>u/research_verifier:</strong> The ablation breakdown and evaluation methodology here are solid—worth benchmarking against existing open-weight baselines.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Court+denies+motion+dismiss" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/MachineLearning/" target="_blank" rel="noopener noreferrer">Direct link (r/MachineLearning) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://litnews.ai/articles/garciaguirre-samsung-sk-hynix-micron-dram-conspiracy-suit-survives-dismissal" target="_blank" rel="noopener noreferrer">Read Source (litnews.ai) ↗</a><a href="https://news.ycombinator.com/item?id=50502988" target="_blank" rel="noopener noreferrer">HN Discussion (492 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Court+denies+motion+dismiss" target="_blank" rel="noopener noreferrer">r/MachineLearning via Google ↗</a></div>
+              </div>
+            </article>
+            
+            <article class="briefing-item" data-category="Engineering">
+              <div class="briefing-num">07</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-12</span></div>
+                <h3><a href="https://www.youtube.com/watch?v=WPj3aQ-xxpI" target="_blank" rel="noopener noreferrer">Claude Code and Codex reverse engineered my 1994 Jeep&#x27;s ECU over a $3 Arduino [video]</a></h3>
+                <p class="briefing-summary">Community note: Would love to see this being used to add keys to cars. A lot of cars now have tablets and screens that could be used to do this, but for some reason (money) I have to take my VW to the dealer...</p>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> One game without AI ($50k, a studio) and one with Claude Code ($700). It’s been… fun :)</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Hey everyone. Thought I&#x27;d share my experience with &#x27;made with AI&#x27; :) I’m not a developer and never will be though it hasn&#x27;t been for a lack of trying. I would LOVE to learn to code.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Claude+Code+Codex+reverse" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1xwzqi2/one_game_without_ai_50k_a_studio_and_one_with/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://www.youtube.com/watch?v=WPj3aQ-xxpI" target="_blank" rel="noopener noreferrer">Read Source (youtube.com) ↗</a><a href="https://news.ycombinator.com/item?id=50463399" target="_blank" rel="noopener noreferrer">HN Discussion (344 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Claude+Code+Codex+reverse" target="_blank" rel="noopener noreferrer">r/ClaudeAI via Google ↗</a></div>
+              </div>
+            </article>
+            
+            <article class="briefing-item" data-category="Engineering">
+              <div class="briefing-num">08</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Reddit r/LocalLLaMA</span><span>·</span><span>2026-11-11</span></div>
+                <h3><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xtjze2/biweekly_megathread_project_showcase/" target="_blank" rel="noopener noreferrer">[Bi-Weekly Megathread] Project Showcase</a></h3>
+                <p class="briefing-summary">Do you have something you&#x27;d like to share with the r/LocalLLaMA community. This is the place for it!</p>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> Llama.cpp performance improvement over time (Gemma4 models)</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Few months ago - after Ninfer came out - I started a little hobby project to vibe-code my own engine for my hardware (RTX 5080 16GB Laptop) and check if it could beat llama.cpp - since at the time llama.cpp was kinda slow in.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Bi-Weekly+Megathread+Project+Showcase" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xx607x/llamacpp_performance_improvement_over_time_gemma4/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xtjze2/biweekly_megathread_project_showcase/" target="_blank" rel="noopener noreferrer">Read Source (reddit.com) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Bi-Weekly+Megathread+Project+Showcase" target="_blank" rel="noopener noreferrer">r/LocalLLaMA via Google ↗</a></div>
+              </div>
+            </article>
+            
+            <article class="briefing-item" data-category="Lab Release">
+              <div class="briefing-num">09</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>Simon Willison (AI</span><span>·</span><span>2026-11-15</span></div>
+                <h3><a href="https://simonwillison.net/2026/Nov/15/datasette-maplibre/" target="_blank" rel="noopener noreferrer">datasette-maplibre 0.1a0</a></h3>
+                <p class="briefing-summary">Release: datasette-maplibre 0.1a0 The first new Datasette geospatial plugin in quite a while!</p>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> meituan-longcat/LongCat-Video-Avatar-1.6 · Hugging Face</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">🚀 Model Introduction We are excited to announce the release of LongCat-Video-Avatar 1.6, the latest upgrade to our open-source framework for audio-driven human video generation.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+datasette-maplibre+1a0" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1xwvrri/meituanlongcatlongcatvideoavatar16_hugging_face/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/15/datasette-maplibre/" target="_blank" rel="noopener noreferrer">Read Source (simonwillison.net) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+datasette-maplibre+1a0" target="_blank" rel="noopener noreferrer">r/LocalLLaMA via Google ↗</a></div>
+              </div>
+            </article>
+            
+            <article class="briefing-item" data-category="Lab Release">
+              <div class="briefing-num">10</div>
+              <div class="briefing-content">
+                <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>Simon Willison (AI</span><span>·</span><span>2026-11-15</span></div>
+                <h3><a href="https://simonwillison.net/2026/Nov/15/datasette-agent/" target="_blank" rel="noopener noreferrer">datasette-agent 0.6a0</a></h3>
+                <p class="briefing-summary">Release: datasette-agent 0.6a0 Accumulated small fixes for Datasette Agent, my agent plugin for Datasette that lets you ask questions about your data.</p>
+                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> Claude wrote and trained a language model for DOS that fits on a floppy disk</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">I let Fable 5.2 write its own transformer. Opus 5.5 generated the training data: about 3500 facts (and small talk + math), each asked and answered in different ways. It has 367K parameters and runs on an Intel Pentium.</p><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+datasette-agent+6a0" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1xwpenj/claude_wrote_and_trained_a_language_model_for_dos/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
+                <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/15/datasette-agent/" target="_blank" rel="noopener noreferrer">Read Source (simonwillison.net) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+datasette-agent+6a0" target="_blank" rel="noopener noreferrer">r/ClaudeAI via Google ↗</a></div>
+              </div>
+            </article>
+            </div>
+
+    
+    <aside class="editorial-ad-slot" aria-label="Advertisement">
+      <div class="editorial-ad-label">Sponsored · Advertisement</div>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4585099070726775"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </aside>
+    
+
+    <div class="two-col">
+      <section>
+        <div class="section-head">
+          <h2>II. Researcher Threads on X</h2>
+          <span>SOCIAL PULSE</span>
+        </div>
+        <div class="note-list">
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>X Pulse (AI Magazine)</strong>
+                <span>Sun, 15 Nov 2026</span>
+              </div>
+              <h4 class="note-title"><a href="https://news.google.com/rss/articles/CBMiekFVX3lxTE9OcWtxT3lRRVJkcmFuSGdlemxIeGZlVWVhSjN3QmRFVW84Y05Ic3kxbm9PYi05MW5kZFRQM3p6TWxGandMLXBCUGVsMUFoSjd3QkVKNkNLb19aSEJxTUMzUnc0RnJfTWFMVmg4TVg2MXZGemRCaFNJeUlR?oc=5" target="_blank" rel="noopener noreferrer">AI Executive Appointments in November 2026</a></h4>
+              <p class="note-body">Industry analysis and researcher commentary on X examining AI Executive Appointments in November 2026, reported by AI Magazine.</p>
+              <div class="note-links"><a href="https://news.google.com/rss/articles/CBMiekFVX3lxTE9OcWtxT3lRRVJkcmFuSGdlemxIeGZlVWVhSjN3QmRFVW84Y05Ic3kxbm9PYi05MW5kZFRQM3p6TWxGandMLXBCUGVsMUFoSjd3QkVKNkNLb19aSEJxTUMzUnc0RnJfTWFMVmg4TVg2MXZGemRCaFNJeUlR?oc=5" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>X Pulse (Scripps News)</strong>
+                <span>Sun, 15 Nov 2026</span>
+              </div>
+              <h4 class="note-title"><a href="https://news.google.com/rss/articles/CBMi4gFBVV95cUxOVjlRTHp6M3RIS2pfRGx4SDRxcE9WVE12SExpMkhqNnVnMTVJcmo3UEpIZDlncTIyYUN2TzFoNTVSOGE4djJNVkVXYmZMcnhsNEpRZVlHd2lWYXNCZ1k1Nm15VXhCU2JzRFFRME8tamZQeVl1emt6UzhuVzRPc3pYUFVJY1g3LV9yS1FaNUk5R0RlSlBBV0lzNmQ5YWdkMVNsVEdBRzNDOWFXUHhtQlRLbmM1emVzQ2VPQzN1VG55TGVZYU56a2ZOcmhKQnBjM0VOYVY0b09IT0NoTU1yT3ktZzVR?oc=5" target="_blank" rel="noopener noreferrer">Anthropic is reportedly rapidly accelerating AI development amid slowdown calls</a></h4>
+              <p class="note-body">Industry analysis and researcher commentary on X examining Anthropic is reportedly rapidly accelerating AI development amid slowdown calls, reported by Scripps News.</p>
+              <div class="note-links"><a href="https://news.google.com/rss/articles/CBMi4gFBVV95cUxOVjlRTHp6M3RIS2pfRGx4SDRxcE9WVE12SExpMkhqNnVnMTVJcmo3UEpIZDlncTIyYUN2TzFoNTVSOGE4djJNVkVXYmZMcnhsNEpRZVlHd2lWYXNCZ1k1Nm15VXhCU2JzRFFRME8tamZQeVl1emt6UzhuVzRPc3pYUFVJY1g3LV9yS1FaNUk5R0RlSlBBV0lzNmQ5YWdkMVNsVEdBRzNDOWFXUHhtQlRLbmM1emVzQ2VPQzN1VG55TGVZYU56a2ZOcmhKQnBjM0VOYVY0b09IT0NoTU1yT3ktZzVR?oc=5" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>X Pulse (Complex)</strong>
+                <span>Sun, 15 Nov 2026</span>
+              </div>
+              <h4 class="note-title"><a href="https://news.google.com/rss/articles/CBMihwFBVV95cUxQMjVMcHRWejVHV0pGT2dpenJCMjRUN21QMHRJRHpBbVVPVG9NUmY2NmlWWEdESF9FbkFuVmpHeXkxMG1CanBXMW95VUJIaDU4N1g2SHBCdDlFemtvX0NoUl9zcGF2aWRsT3Yyb0tHRTE2SHNkUF9lcW5UNVF2MTFtSy1CdVRCSWc?oc=5" target="_blank" rel="noopener noreferrer">Elon Musk Clowns Sam Altman Over RAM Comments: ‘The People Deserve Their RAM Too!’</a></h4>
+              <p class="note-body">Industry analysis and researcher commentary on X examining Elon Musk Clowns Sam Altman Over RAM Comments: ‘The People Deserve Their RAM Too!’, reported by Complex.</p>
+              <div class="note-links"><a href="https://news.google.com/rss/articles/CBMihwFBVV95cUxQMjVMcHRWejVHV0pGT2dpenJCMjRUN21QMHRJRHpBbVVPVG9NUmY2NmlWWEdESF9FbkFuVmpHeXkxMG1CanBXMW95VUJIaDU4N1g2SHBCdDlFemtvX0NoUl9zcGF2aWRsT3Yyb0tHRTE2SHNkUF9lcW5UNVF2MTFtSy1CdVRCSWc?oc=5" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>@watcherguru</strong>
+                <span>225 pts</span>
+              </div>
+              <h4 class="note-title"><a href="https://twitter.com/watcherguru/status/2120645607866188008" target="_blank" rel="noopener noreferrer">Nvidia prepares to fire CEO Jensen Huang, WSJ reports</a></h4>
+              <p class="note-body">Technical thread from @watcherguru examining Nvidia prepares to fire CEO Jensen Huang, WSJ reports, generating active engineering debate across 4 comments (225 pts).</p>
+              <div class="note-links"><a href="https://twitter.com/watcherguru/status/2120645607866188008" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a></div>
+            </article>
+            </div>
+      </section>
+      <section>
+        <div class="section-head">
+          <h2>III. Audio &amp; Podcast Briefings</h2>
+          <span><a href="podcasts.html" style="color:var(--accent);text-decoration:none;">ALL SHOWS →</a></span>
+        </div>
+        <div class="note-list">
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>AI Optic: Anthropic &amp; OpenAI News</strong>
+                <span>10m</span>
+              </div>
+              <h4 class="note-title"><a href="https://rss.art19.com/episodes/c1cc557c-6260-4b0b-a8df-c6ae36c82d43.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener noreferrer">Anthropic Launches Claude Fable 5.2 and Mythos 5.2</a></h4>
+              <p class="note-body">Show Links • Get the top 80+ AI Models for $8.99 at AI Box: https://aibox.ai • How I Grow and Scale My Business with AI: https://www.skool.com/aihustle • Get the AI Chat Daily Newsletter: https://www.aichatdaily.com/newsletter In this episode, we explore the.</p>
+              <div class="note-links"><a href="https://rss.art19.com/episodes/c1cc557c-6260-4b0b-a8df-c6ae36c82d43.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Generative AI 101</strong>
+                <span>12m</span>
+              </div>
+              <h4 class="note-title"><a href="https://generativeai101.podbean.com/e/when-ai-tells-you-what-you-want-to-hear/" target="_blank" rel="noopener noreferrer">When AI Tells You What You Want to Hear</a></h4>
+              <p class="note-body">Your AI chatbot thinks your ideas are brilliant. That might be the problem.</p>
+              <div class="note-links"><a href="https://generativeai101.podbean.com/e/when-ai-tells-you-what-you-want-to-hear/" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>AI Today Podcast</strong>
+                <span>39m</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.buzzsprout.com/2502664/episodes/20059572-the-rise-of-ai-agents-insights-from-mark-howard.mp3" target="_blank" rel="noopener noreferrer">The Rise of AI Agents: Insights from Mark Howard</a></h4>
+              <p class="note-body">In this episode of AI Today, host Kathleen Walch welcomes Mark Howard, COO of TIME, to discuss how AI agents are reshaping the internet and what organizations must do to remain visible in an increasingly agent-driven world.</p>
+              <div class="note-links"><a href="https://www.buzzsprout.com/2502664/episodes/20059572-the-rise-of-ai-agents-insights-from-mark-howard.mp3" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
+            </article>
+            </div>
+      </section>
+    </div>
+
+    <section id="tech-talks">
+      <div class="section-head">
+        <h2>IV. Tech Talks &amp; Keynotes</h2>
+        <span><a href="tech-talks.html" style="color:var(--accent);text-decoration:none;">ALL CHANNELS →</a></span>
+      </div>
+      <div class="note-list">
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>OpenAI</strong>
+                <span>2026-11-13</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/shorts/ErOVIC-MGVA" target="_blank" rel="noopener noreferrer">6 Underrated Ways to Use ChatGPT</a></h4>
+              <p class="note-body">We asked 6 people for their most underrated way to use ChatGPT. Their answers covered personal style, everyday logistics, and stopping random subscription charges. What’s yours?</p>
+              <div class="note-links"><a href="https://www.youtube.com/shorts/ErOVIC-MGVA" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>YouTube (via Hacker News)</strong>
+                <span>2026-11-13</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=IRK8h67ol7Q" target="_blank" rel="noopener noreferrer">Jonathan Blow – If AI solved coding, why is my software still the same?</a></h4>
+              <p class="note-body">High-signal technical lecture on Jonathan Blow – If AI solved coding, why is my software still the same?, highlighted by the AI engineering community on Hacker News (482 pts).</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=IRK8h67ol7Q" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Anthropic</strong>
+                <span>2026-09-23</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=DdCEmlAydcw" target="_blank" rel="noopener noreferrer">Inside Anthropic&#x27;s molecular biology lab</a></h4>
+              <p class="note-body">Some of the biggest discoveries in biology started with someone noticing something strange in one of the many molecular machines found in nature.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=DdCEmlAydcw" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Google Cloud Tech</strong>
+                <span>2026-11-11</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=h_r3NsfrrRI" target="_blank" rel="noopener noreferrer">Building and Deploying Python AI Agents with ADK, Gemini, and MCP</a></h4>
+              <p class="note-body">Walkthrough of Google Cloud&#x27;s Agent Development Kit (ADK) for Python, demonstrating how to connect Gemini reasoning models to external enterprise tools via Model Context Protocol (MCP) servers and deploy multi-agent workflows on Vertex AI.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=h_r3NsfrrRI" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>IBM Technology</strong>
+                <span>2026-11-10</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=qAF1NjEVHhY" target="_blank" rel="noopener noreferrer">LangChain vs LangGraph: Architecting Stateful Multi-Agent Workflows &amp; RAG</a></h4>
+              <p class="note-body">Architectural comparison of directed acyclic chains in LangChain versus cyclic, stateful graph execution in LangGraph for building fault-tolerant multi-agent orchestration and corrective retrieval-augmented generation.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=qAF1NjEVHhY" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>The Pragmatic Engineer</strong>
+                <span>2026-11-09</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=5wks1W-auKY" target="_blank" rel="noopener noreferrer">AI and Software Engineering: Production LLM Workflows &amp; Agentic Tooling</a></h4>
+              <p class="note-body">Gergely Orosz examines how engineering organizations integrate coding agents, automated PR verification, context indexing, and deterministic evaluation harnesses into high-velocity production software pipelines.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=5wks1W-auKY" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>IBM Developer</strong>
+                <span>2026-11-08</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=-WXzgIFcNK0" target="_blank" rel="noopener noreferrer">Building Enterprise AI Workflows with IBM Granite &amp; watsonx.ai Flows Engine</a></h4>
+              <p class="note-body">Technical deep-dive into building low-latency enterprise RAG and tool-calling pipelines using open-weight IBM Granite foundation models and declarative flow orchestration in watsonx.ai.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=-WXzgIFcNK0" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            
+            <article class="note-item">
+              <div class="note-kicker">
+                <strong>Stanford Online (CS25)</strong>
+                <span>2026-11-07</span>
+              </div>
+              <h4 class="note-title"><a href="https://www.youtube.com/watch?v=XfpMkf4rD6E" target="_blank" rel="noopener noreferrer">Stanford CS25: Transformers United — Frontier Reasoning &amp; Post-Training Architectures</a></h4>
+              <p class="note-body">Stanford CS25 seminar examining how scaling test-time compute, reinforcement fine-tuning, and verifier-guided search enable transformer architectures to solve complex mathematical and multi-step reasoning problems.</p>
+              <div class="note-links"><a href="https://www.youtube.com/watch?v=XfpMkf4rD6E" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div>
+            </article>
+            </div>
+    </section>
+
+    
+    <section id="subscribe" class="subscribe-box" aria-label="Follow The GenAI Briefing">
+      <div class="subscribe-kicker">FOLLOW · JABI.IO</div>
+      <h3>Follow The GenAI Briefing</h3>
+      <p class="subscribe-copy">A new issue is published every morning. Add the RSS feed to any feed reader to get each issue as it appears. Email delivery is not open yet.</p>
+      <div class="subscribe-meta">
+        <a href="feed.xml">RSS Feed (feed.xml) ↗</a>
+        <span>·</span>
+        <a href="privacy.html">Privacy</a>
+      </div>
+    </section>
+    
+
+    <footer class="footer">
+      <div>THE GENAI BRIEFING · JABI.IO · ISSUE 2026-11-16</div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
+    </footer>
+  </div>
+</body>
+</html>
