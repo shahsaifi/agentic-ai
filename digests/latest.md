@@ -1,85 +1,84 @@
-# Generative AI Technical Briefing — 2026-11-17
+# Generative AI Technical Briefing — 2026-11-18
 
 ## Top 10 Ranked Briefing
 
-### 1. [Envisioning Agentic Robotics: A New Era of Robotic Systems](https://huggingface.co/papers/2611.18359)
-**Research** (Hugging Face Daily Papers) · 116 pts · *2026-11-12*
-- The release of GPT-6 Astra marks the emergence of a new paradigm in robotics: agentic robotics. Within weeks, frontier models with agentic harnesses matched or exceeded task-specific policies on many embodied benchmarks.
+### 1. [Sage S2.1 Flash Technical Report](https://huggingface.co/papers/2611.21072)
+**Research** (Hugging Face Daily Papers) · 89 pts · *2026-11-15*
+- We introduce Sage S1.5 Flash, a 320-billion-parameter general-purpose mixture-of-experts model designed to reason over scientific evidence and act in interactive environments.
 
-### 2. [Gamer: A Generalist Vision-Language-Action Foundation Model for Long-Horizon Real-Time Game Agent](https://huggingface.co/papers/2611.18397)
-**Research** (Hugging Face Daily Papers) · 93 pts · *2026-11-12*
-- We introduce Gamer, a generalist agent framework built for long-horizon tasks in complex interactive environments. Its end-to-end architecture combines perception, memory management, and multi-step reasoning.
+### 2. [InclusionMed: Benchmarking AI for Inclusive Healthcare](https://huggingface.co/papers/2611.21218)
+**Research** (Hugging Face Daily Papers) · 74 pts · *2026-11-15*
+- Advancing medical AI for inclusive healthcare requires evaluation across diverse healthcare roles, tasks, and care settings, but benchmark coverage remains uneven. We introduce InclusionMed, an open medical AI evaluation initiative for inclusive healthcare.
 
-### 3. [VibePrevisBench: Evaluating Agentic Coding for 4D Scene Generation in Blender](https://huggingface.co/papers/2611.15789)
-**Research** (Hugging Face Daily Papers) · 86 pts · *2026-11-10*
-- Controllable real-world video generation models can condition on a rendered graybox proxy video, which fixes layout, motion and camera. Coding agents can build such videos by reconstructing a 4D scene in Blender, yet no benchmark checks both these videos and the long, multi-shot scenes behind them.
+### 3. [K2-Horizon: A Frontier Fleet of Open Source Language Models](https://huggingface.co/papers/2611.21003)
+**Research** (Hugging Face Daily Papers) · 73 pts · *2026-11-15*
+- We present K2-Horizon, a fleet of six fully open language models, from a 0.9B dense model to a 375B-A23B MoE, built for general-purpose reasoning and agentic work across math and science, software engineering, deep research, office automation, and beyond.
 
-### 4. [MIRIX-2.0: Multi-Agent Memory System](https://huggingface.co/papers/2611.12068)
-**Research** (Hugging Face Daily Papers) · 47 pts · *2026-11-08*
-- Long-term memory lets LLM agents personalize, stay consistent, and reuse what worked before. Parametric memories need training, consolidation can lose details for good, and keeping every record leaves a growing store to search.
+### 4. [AllocFlow: End-to-End Portfolio Trading Action Generation from Raw Market Data](https://huggingface.co/papers/2611.19937)
+**Research** (Hugging Face Daily Papers) · 69 pts · *2026-11-14*
+- Real-world portfolio management requires converting noisy market observations into coordinated, simultaneous allocations across multiple assets under shared capital constraints. Advances in forecasting models and alpha discovery help identify opportunities.
 
-### 5. [Qwen4-Max](https://qwen.ai/blog?id=qwen4-max)
-**Engineering** (Hacker News) · `qwen.ai` · [855 pts on HN](https://news.ycombinator.com/item?id=50513215) · *2026-11-16*
+### 5. [GPT‑6.2 Astra and Sol](https://openai.com/index/introducing-gpt-6-2-astra-sol/)
+**Engineering** (Hacker News) · `openai.com` · [1140 pts on HN](https://news.ycombinator.com/item?id=50535230) · *2026-11-17*
 
-### 6. [How to make almost anything](https://pub.cba.mit.edu/863.26/site/)
-**Engineering** (Hacker News) · `pub.cba.mit.edu` · [853 pts on HN](https://news.ycombinator.com/item?id=50514470) · *2026-11-16*
+### 6. [MAI Code 2 and Code 2 Flash](https://microsoft.ai/news/introducing-mai-code-2-and-mai-code-2-flash/)
+**Engineering** (Hacker News) · `microsoft.ai` · [308 pts on HN](https://news.ycombinator.com/item?id=50535885) · *2026-11-17*
 
-### 7. [Show HN: Gemini 4 Argon plays StarCraft](https://starskirmish.com/bench/v0-2/)
-**Engineering** (Hacker News) · `starskirmish.com` · [254 pts on HN](https://news.ycombinator.com/item?id=50118688) · *2026-10-16*
-- I&#x27;ve refreshed StarSkirmish Bench, a benchmark where LLMs play StarCraft BW by writing code, with results from the flagship models of OpenAI, Anthropic, Google, and Muse
+### 7. [How the Claude Code team thinks about verification](https://claude.dev/blog/how-the-claude-code-team-thinks-about-verification/)
+**Engineering** (Hacker News) · `claude.dev` · [275 pts on HN](https://news.ycombinator.com/item?id=50529612) · *2026-11-17*
 
-### 8. [Best Audio Models - Nov 2026](https://www.reddit.com/r/LocalLLaMA/comments/1xxpxvi/best_audio_models_nov_2026/)
-**Engineering** (Reddit r/LocalLLaMA) · `reddit.com` · *2026-11-16*
-- Its time for another Best Audio Models megathread - its already been 9 months since the last one! Share what your favorite ASR, TTS, STT, Text to Music models are right now and why.
+### 8. [External sandboxes for coding agents](https://simonwillison.net/2026/Nov/17/external-sandboxes-for-coding-agents/)
+**Lab Post** (Simon Willison (AI)) · `simonwillison.net` · *2026-11-17T22:52*
+- External sandboxes for coding agents I've been exploring new ways to sandbox code that is executed by agents, with a focus on making it safer to try out local models without worrying that a mistake or prompt injection attack might cause them to take damaging actions on a machine.
 
-### 9. [llm 0.37.3](https://simonwillison.net/2026/Nov/16/llm/)
-**Lab Post** (Simon Willison (AI)) · `simonwillison.net` · *2026-11-16T23:57*
-- Release: llm 0.37.3 A bug fix release for LLM , mainly to cover a problem with the most recent Homebrew package of the software. Homebrew now ships the latest SQLite, 3.54.1 , which includes a fix that broke LLM's logging code .
+### 9. [GPT‑6.2 Astra and GPT‑6.2 Sol](https://simonwillison.net/2026/Nov/17/gpt62-astra-and-sol/)
+**Lab Post** (Simon Willison (AI)) · `simonwillison.net` · *2026-11-17T22:38*
+- GPT‑6.2 Astra and GPT‑6.2 Sol OpenAI: We’re introducing GPT‑6.2 Astra, our new frontier model for your hardest projects, and GPT‑6.2 Sol, our efficient, versatile model for everyday work. They're available in the API as gpt-6.2-astra and gpt-6.2-sol .
 
-### 10. [Broadening access to AI for scientists](https://openai.com/index/expanding-chatgpt-for-academic-researchers)
-**Lab Post** (OpenAI News) · `openai.com` · *Mon, 16 Nov 2026*
-- We’re expanding our ChatGPT for Academic Researchers program to offer 200,000 researchers worldwide free access to our frontier models.
+### 10. [SPILLWAY: Separating Target Admission from Sanitization to Defend Tool-Using Agents against Prompt Injection](https://huggingface.co/papers/2611.07222)
+**Research** (Hugging Face Daily Papers) · 56 pts · *2026-11-03*
+- Tool-using agents act on email, files, and payments, so an instruction hidden in a web page or a shared document can make an agent send data or money to an attacker.
 
 ---
 
 ## Researcher Threads on X
 
-- **[OpenAI (@OpenAI): Verifiable Rewards & Test-Time Compute Scaling in Reasoning Models](https://x.com/OpenAI/status/1869083124912345601)** — *X.com (@OpenAI)* (485 pts) · *2026-11-10*
-  - Breaks down how reinforcement fine-tuning over programmatic graders and extended chain-of-thought allocation improves reliability on repository-scale debugging and formal synthesis benchmarks.
-- **[Nvidia prepares to fire CEO Jensen Huang, WSJ reports](https://twitter.com/watcherguru/status/2120645607866188008)** — *X.com (@watcherguru)* (225 pts) · *2026-11-11*
-  - Technical thread from @watcherguru examining Nvidia prepares to fire CEO Jensen Huang, WSJ reports, generating active engineering debate across 4 comments (225 pts).
-- **[Claude Fable 5.2](https://twitter.com/claudeai/status/2119867114450268322)** — *X.com (@claudeai)* (33 pts) · *2026-11-09*
-  - Technical thread from @claudeai examining Claude Fable 5.2, generating active engineering debate across 6 comments (33 pts).
-- **[Ex-OpenAI researcher finds Blackwell signatures in open-weight models](https://twitter.com/willdepue/status/2120992457630326841)** — *X.com (@willdepue)* (18 pts) · *2026-11-14*
-  - Technical thread from @willdepue examining Ex-OpenAI researcher finds Blackwell signatures in open-weight models, generating active engineering debate across 1 comments (18 pts).
+- **[GPT-6.2 Astra scores 100% on ARC-AGI-3](https://twitter.com/arcprize/status/2122751233442156678)** — *X.com (@arcprize)* (35 pts) · *2026-11-17*
+  - Technical thread from @arcprize examining GPT-6.2 Astra scores 100% on ARC-AGI-3, generating active engineering debate across 13 comments (35 pts).
+- **[I hate GPT-6.2 Astra](https://twitter.com/theo/status/2122760447103484410)** — *X.com (@theo)* (25 pts) · *2026-11-17*
+  - Technical thread from @theo examining I hate GPT-6.2 Astra, generating active engineering debate across 7 comments (25 pts).
+- **[OVH releases first model with EU public funding and supercomputer access](https://twitter.com/olesovhcom/status/2122573582911869173)** — *X.com (@olesovhcom)* (15 pts) · *2026-11-17*
+  - Technical thread from @olesovhcom examining OVH releases first model with EU public funding and supercomputer access, generating active engineering debate across 0 comments (15 pts).
+- **['Essentially unusable': OpenAI launches GPT-6.2 Astra and Sol to negative reception from AI power users](https://news.google.com/rss/articles/CBMi0AFBVV95cUxOM0p5RXctRUhTQzMxTEdQYnJxaVozUkFlQmJOSEJrQjVfeEdrdDJBcExkcmhEUGpoZTN0dXo3dVhxajVwWlpWdVAyRzNDUTBEdi1rekFrT0l3VlgxMFVic1c1ZG9fTVpaVEh0UzAtOUdGRmtVSDdHdHpHRzRiWGY3QUVndjItemljNG8wZVJrNWo3azFrWTVHQmtWczhTcDdGblJmbjhiOFEyS0pULWNQSG9MVkNLVzhJTjBFaUtGaE16UFA0d1c2YzMtX3Z4Tkdm?oc=5)** — *X Pulse (VentureBeat)* · *Tue, 17 Nov 2026*
+  - Industry analysis and researcher commentary on X examining 'Essentially unusable': OpenAI launches GPT-6.2 Astra and Sol to negative reception from AI power users, reported by VentureBeat.
 
 ---
 
 ## Audio & Podcasts
 
-- **[After Jensen Huang, Who Controls AI Now?](https://generativeai101.podbean.com/e/after-jensen-huang-who-controls-ai-now/)** — **Generative AI 101** (🎧 14m) · *Mon, 16 Nov 2026*
-  - Jensen Huang, the only CEO NVIDIA has ever had, is out after 33 years, following espionage allegations, admitted infidelity, and a board investigation.
-- **[Anthropic Launches Claude Fable 5.2 and Mythos 5.2](https://rss.art19.com/episodes/c1cc557c-6260-4b0b-a8df-c6ae36c82d43.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb)** — **AI Optic: Anthropic & OpenAI News** (🎧 10m) · *Sun, 15 Nov 2026*
-  - Show Links • Get the top 80+ AI Models for $8.99 at AI Box: https://aibox.ai • How I Grow and Scale My Business with AI: https://www.skool.com/aihustle • Get the AI Chat Daily Newsletter: https://www.aichatdaily.com/newsletter In this episode, we explore the.
-- **[The Rise of AI Agents: Insights from Mark Howard](https://www.buzzsprout.com/2502664/episodes/20059572-the-rise-of-ai-agents-insights-from-mark-howard.mp3)** — **AI Today Podcast** (🎧 39m) · *Wed, 11 Nov 2026*
-  - In this episode of AI Today, host Kathleen Walch welcomes Mark Howard, COO of TIME, to discuss how AI agents are reshaping the internet and what organizations must do to remain visible in an increasingly agent-driven world.
+- **[Google's New Models & Their Orchestrator](https://generativeai101.podbean.com/e/googles-new-models-their-orchestrator/)** — **Generative AI 101** (🎧 12m) · *Tue, 17 Nov 2026*
+  - Google just released three new Gemini 4 models (Argon, Carbon, and Hydrogen), and the bigger story is the thing managing them.
+- **[AI Website Side Hustles](https://rss.art19.com/episodes/09e7d0c4-4ea0-4b49-afb8-1d54dd637452.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb)** — **AI Optic: Anthropic & OpenAI News** (🎧 8m) · *Tue, 17 Nov 2026*
+  - Show Links • Get the top 80+ AI Models for $8.99 at AI Box: https://aibox.ai • How I Grow and Scale My Business with AI: https://www.skool.com/aihustle • Get the AI Chat Daily Newsletter: https://www.aichatdaily.com/newsletter In this episode, we examine a.
+- **[Buying Tokens vs Building an AI Factory with Sadeepa Wijesekara - #785](https://twimlai.com/podcast/twimlai/buying-tokens-vs-building-ai-factory)** — **The TWIML AI Podcast** (🎧 58m) · *Tue, 17 Nov 2026*
+  - An AI agent can make many model calls to finish a single job. Some need frontier reasoning. Others can run on an open-weight model, and some involve data that has to stay in-house. How do you decide which inference to buy and which to run yourself?
 
 ---
 
 ## Tech Talks & Keynotes
 
-- **[Deep dive into the Looker CLI](https://www.youtube.com/watch?v=3FmEdUNeqIw)** — **Google Cloud Tech** · *2026-11-16*
-  - The Looker CLI really extends what you can do with Looker and Agents. The tool provides performance reports, continuous development tools, and the entire suite of API endpoints.
-- **[Software Supply Chain Security: What AI Coding Changes](https://www.youtube.com/watch?v=iv32wI3MBpw)** — **IBM Technology** · *2026-11-16*
-  - Learn more about Supply Chain Security here → Your code is only part of what reaches production. Cedric Clyburn explains how dependencies, CI/CD pipelines, open source, and AI-generated code expand the software supply chain.
-- **[How AI Agents Work: Connectors, MCP & Agent Safety | Stanford CS193T Lecture 5 with Cynthia Bailey](https://www.youtube.com/watch?v=ho00IesajkY)** — **Stanford Online (CS25)** · *2026-11-17*
-  - Explore AI courses and programs from Stanford Online: What happens when AI stops just writing and starts acting on your behalf?
-- **[Building Jarvis: JPMC’s Agent Building Assembly Line](https://www.youtube.com/watch?v=VpHYPfvfy0o)** — **LangChain** · *2026-11-16*
-  - David Odomirok, Tony Wu, and Jane Xue of JPMorgan Chase explain Jarvis, which they describe not as a single agent but as an agent-building assembly line, and how, in David's words, the one agent the team took months to build last year now takes minutes.
-- **[“AI has eaten tactical programming”](https://www.youtube.com/shorts/BFI2iykN0Yc)** — **The Pragmatic Engineer** · *2026-11-14*
-  - with Matt Pocock - educator, software engineer & creator of /grill-me See the full episode on The Pragmatic Engineer Podcast.
-- **[What Is AI Slop? Wrong Answers Only](https://www.youtube.com/shorts/o0Kad7f7WRo)** — **IBM Developer** · *2026-11-09*
-  - What is AI slop? Wrong answers only. At IBM TechXchange, Bri Kopecki (@Tech-Cowgirl ) asked people for their best wrong answers. They came up with everything from soulless sourdough starters to raccoons learning to code.
+- **[Build a hidden edit mode for your AI app with reusable agent skills](https://www.youtube.com/watch?v=1fJVOyLmtOI)** — **Google Cloud Tech** · *2026-11-17*
+  - Ever had to click through five screens and wait on your AI agent just to check one small UI change? In this episode of Build It, I show you a hidden developer mode I built into our smart personal trainer app in an afternoon, without writing any code.
+- **[Is AI Really Superintelligence? ANI, AGI & ASI Explained](https://www.youtube.com/watch?v=0MvcuIrects)** — **IBM Technology** · *2026-11-17*
+  - Learn more about Artificial Superintelligence? here → Is today’s AI truly superintelligent, or are we overstating its capabilities? Jeff Crume explains intelligence through perception, thinking, learning, and action, then compares ANI, AGI, and ASI.
+- **[Why the CS curriculum needs “burning down”](https://www.youtube.com/shorts/YFEYYCQIR9A)** — **The Pragmatic Engineer** · *2026-11-17*
+  - with Titus Winters, co-author of Software Engineering at Google See the full episode on The Pragmatic Engineer Podcast.
+- **[Guess These 5 Tech Terms](https://www.youtube.com/shorts/l9F1bNYSQh0)** — **IBM Developer** · *2026-11-17*
+  - “Ethernet, but like… in the air.” 😂 Can they guess the tech terms before time runs out? Play along and see how many you get right.
+- **[Why Do We Need Statisticians in the Age of AI? | Kristin Sainani & Regina Nuzzo](https://www.youtube.com/watch?v=TP4UixmOe-I)** — **Stanford Online (CS25)** · *2026-11-18*
+  - Enrollment is now open! Demystifying Data: A Modern Approach to Statistical Understanding (SOM-XCHE0033) 🔗 Graduate Winter Quarter 🔗 Will AI replace statisticians?
+- **[Automating the ADLC with Engine | Introduction to LangSmith (12/12)](https://www.youtube.com/watch?v=_5ZDkWP8K0c)** — **LangChain** · *2026-11-17*
+  - Every step of the loop so far was done by hand, and that gets slower as tens of traces become thousands. LangSmith Engine automates the ADLC. It clusters your traces into a short list of agent issues and drafts fixes as pull requests against your codebase.
 - **[How I use LLMs](https://www.youtube.com/watch?v=EWvNQjAaOHw)** — **Andrej Karpathy** · *2025-02-27*
   - The example-driven, practical walkthrough of Large Language Models and their growing list of related features, as a new entry to my general audience series on LLMs. In this more practical followup, I take you through the many ways I use LLMs in my own life.
 - **[Inside Anthropic's molecular biology lab](https://www.youtube.com/watch?v=DdCEmlAydcw)** — **Anthropic** · *2026-09-23*
