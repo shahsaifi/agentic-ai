@@ -454,6 +454,7 @@ def test_subscribe_rss_and_adsense_readiness(tmp_path: Path, monkeypatch):
     import xml.etree.ElementTree as ET
 
     monkeypatch.setenv("GOOGLE_ADSENSE_CLIENT_ID", "ca-pub-1234567890123456")
+    monkeypatch.delenv("GOOGLE_ADSENSE_SLOT_ID", raising=False)
 
     md = (
         "# Generative AI Technical Briefing — 2026-11-14\n\n"
@@ -480,15 +481,66 @@ def test_subscribe_rss_and_adsense_readiness(tmp_path: Path, monkeypatch):
     assert "Google AdSense" in privacy_html
     assert "adssettings.google.com" in privacy_html
 
+    trust_pages = ("faq.html", "contact.html", "terms.html", "privacy.html")
+    all_generated_pages = sorted(p.name for p in docs_dir.glob("*.html"))
+    assert "index.html" in all_generated_pages
+    assert "2026-11-14.html" in all_generated_pages
+
+    # State (a): GOOGLE_ADSENSE_CLIENT_ID set, GOOGLE_ADSENSE_SLOT_ID unset/empty
+    for page_name in all_generated_pages:
+        page_html = (docs_dir / page_name).read_text(encoding="utf-8")
+        head_html = page_html.split("</head>", 1)[0]
+        style_pos = head_html.find("<style>")
+        assert style_pos != -1, f"{page_name} missing <style> in <head>"
+
+        # Verify <head> ordering: SEO meta/canonical and AdSense tags appear BEFORE <style>
+        for marker in (
+            '<meta name="description"',
+            '<link rel="canonical"',
+            '<meta name="google-adsense-account" content="ca-pub-1234567890123456">',
+            "adsbygoogle.js?client=ca-pub-1234567890123456",
+        ):
+            pos = head_html.find(marker)
+            assert pos != -1, f"{page_name} missing {marker} in <head>"
+            assert pos < style_pos, f"{page_name}: {marker} must appear before <style>"
+
     for page_name in ("index.html", "2026-11-14.html", "tech-talks.html", "privacy.html"):
         page_html = (docs_dir / page_name).read_text(encoding="utf-8")
-        assert '<meta name="google-adsense-account" content="ca-pub-1234567890123456">' in page_html
-        assert "adsbygoogle.js?client=ca-pub-1234567890123456" in page_html
         assert 'id="subscribe"' in page_html
         assert '<a href="#subscribe">Subscribe</a>' in page_html
 
-    index_html = (docs_dir / "index.html").read_text(encoding="utf-8")
-    assert '<ins class="adsbygoogle"' in index_html
+    for page_name in ("index.html", "2026-11-14.html"):
+        page_html = (docs_dir / page_name).read_text(encoding="utf-8")
+        body_after_style = page_html.split("</style>")[-1]
+        assert '<ins class="adsbygoogle"' not in page_html
+        assert "editorial-ad-slot" not in body_after_style
+
+    # State (b): GOOGLE_ADSENSE_CLIENT_ID set + valid GOOGLE_ADSENSE_SLOT_ID
+    monkeypatch.setenv("GOOGLE_ADSENSE_SLOT_ID", "1234567890")
+    save_markdown_digest(md, digests_dir, timestamp=datetime(2026, 11, 14, 9, 0), docs_dir=docs_dir)
+
+    for page_name in ("index.html", "2026-11-14.html"):
+        page_html = (docs_dir / page_name).read_text(encoding="utf-8")
+        body_after_style = page_html.split("</style>")[-1]
+        assert '<ins class="adsbygoogle"' in body_after_style
+        assert 'data-ad-slot="1234567890"' in body_after_style
+        assert "editorial-ad-slot" in body_after_style
+
+    for page_name in trust_pages:
+        page_html = (docs_dir / page_name).read_text(encoding="utf-8")
+        body_after_style = page_html.split("</style>")[-1]
+        assert '<ins class="adsbygoogle"' not in page_html
+        assert "editorial-ad-slot" not in body_after_style
+
+    # State (c): Invalid GOOGLE_ADSENSE_SLOT_ID values do NOT render <ins class="adsbygoogle"
+    for invalid_slot in ("abc", "123", "12345", "123456789012345678901", "123456abc"):
+        monkeypatch.setenv("GOOGLE_ADSENSE_SLOT_ID", invalid_slot)
+        save_markdown_digest(md, digests_dir, timestamp=datetime(2026, 11, 14, 9, 0), docs_dir=docs_dir)
+        for page_name in ("index.html", "2026-11-14.html"):
+            page_html = (docs_dir / page_name).read_text(encoding="utf-8")
+            body_after_style = page_html.split("</style>")[-1]
+            assert '<ins class="adsbygoogle"' not in page_html, f"invalid slot {invalid_slot!r} rendered <ins>"
+            assert "editorial-ad-slot" not in body_after_style, f"invalid slot {invalid_slot!r} rendered ad wrapper"
 
 
 def test_adsense_prerequisites_crawlability_and_trust_pages(tmp_path: Path, monkeypatch):
@@ -496,6 +548,7 @@ def test_adsense_prerequisites_crawlability_and_trust_pages(tmp_path: Path, monk
     import xml.etree.ElementTree as ET
 
     monkeypatch.setenv("GOOGLE_ADSENSE_CLIENT_ID", "ca-pub-1234567890123456")
+    monkeypatch.setenv("GOOGLE_ADSENSE_SLOT_ID", "1234567890")
     monkeypatch.setenv("CONTACT_EMAIL", "")
 
     md = (
@@ -508,8 +561,12 @@ def test_adsense_prerequisites_crawlability_and_trust_pages(tmp_path: Path, monk
     docs_dir = tmp_path / "docs"
     save_markdown_digest(md, tmp_path / "digests", timestamp=datetime(2026, 11, 14, 9, 0), docs_dir=docs_dir)
 
-    # robots.txt allows crawlers and advertises the sitemap
+    # robots.txt explicitly allows AdSense crawlers + all crawlers and advertises the sitemap
     robots = (docs_dir / "robots.txt").read_text(encoding="utf-8")
+    assert "User-agent: Mediapartners-Google" in robots
+    assert "User-agent: Google-Display-Ads-Bot" in robots
+    assert "User-agent: *" in robots
+    assert "Allow: /" in robots
     assert "Sitemap: https://jabi.io/sitemap.xml" in robots
     assert "Disallow" not in robots
 
@@ -521,7 +578,7 @@ def test_adsense_prerequisites_crawlability_and_trust_pages(tmp_path: Path, monk
                      "https://jabi.io/terms.html", "https://jabi.io/privacy.html"):
         assert expected in locs
 
-    # trust pages exist and every page footer links to all of them
+    # trust pages exist and every page footer links to all of them, with proper <head> ordering
     trust_pages = ("faq.html", "contact.html", "terms.html", "privacy.html")
     for name in trust_pages:
         assert (docs_dir / name).exists()
@@ -531,8 +588,18 @@ def test_adsense_prerequisites_crawlability_and_trust_pages(tmp_path: Path, monk
         for link in ('href="faq.html"', 'href="contact.html"',
                      'href="terms.html"', 'href="privacy.html"'):
             assert link in page, f"{name} missing {link}"
-        assert '<link rel="canonical"' in page
-        assert '<meta name="description"' in page
+        head = page.split("</head>", 1)[0]
+        style_pos = head.find("<style>")
+        assert style_pos != -1
+        for marker in (
+            '<meta name="description"',
+            '<link rel="canonical"',
+            '<meta name="google-adsense-account"',
+            "adsbygoogle.js?client=",
+        ):
+            pos = head.find(marker)
+            assert pos != -1, f"{name} missing {marker}"
+            assert pos < style_pos, f"{name}: {marker} must appear before <style>"
 
     # FAQ has substantial original text
     faq_text = re.sub(r"<[^>]+>", " ", (docs_dir / "faq.html").read_text(encoding="utf-8"))
@@ -552,7 +619,9 @@ def test_adsense_prerequisites_crawlability_and_trust_pages(tmp_path: Path, monk
     for name in ("index.html", "2026-11-14.html"):
         body = (docs_dir / name).read_text(encoding="utf-8").split("</style>")[-1]
         sub_pos = body.find('class="subscribe-box"')
-        for m in re.finditer(r'<ins class="adsbygoogle"', body):
+        matches = list(re.finditer(r'<ins class="adsbygoogle"', body))
+        assert len(matches) >= 1, f"Expected rendered ad slot in {name} when GOOGLE_ADSENSE_SLOT_ID is valid"
+        for m in matches:
             assert abs(m.start() - sub_pos) > 1500
 
 

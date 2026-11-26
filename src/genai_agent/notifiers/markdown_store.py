@@ -1274,20 +1274,24 @@ def _render_adsense_head_snippet() -> str:
     )
 
 
+_ADSENSE_SLOT_RE = re.compile(r"^\d{6,20}$")
+
+
 def _render_editorial_ad_slot() -> str:
-    """Render a single, clearly labeled responsive AdSense unit when `GOOGLE_ADSENSE_CLIENT_ID` is configured."""
+    """Render a single, clearly labeled responsive AdSense unit when both client and slot IDs are configured."""
     client_id = _normalize_adsense_client_id()
-    if not client_id:
-        return ""
     raw_slot = os.getenv("GOOGLE_ADSENSE_SLOT_ID", "").strip()
-    slot_attr = f' data-ad-slot="{html.escape(raw_slot, quote=True)}"' if re.match(r"^\d{6,20}$", raw_slot) else ""
+    if not client_id or not _ADSENSE_SLOT_RE.match(raw_slot):
+        return ""
     safe_client = html.escape(client_id, quote=True)
+    safe_slot = html.escape(raw_slot, quote=True)
     return f"""
     <aside class="editorial-ad-slot" aria-label="Advertisement">
       <div class="editorial-ad-label">Sponsored · Advertisement</div>
       <ins class="adsbygoogle"
            style="display:block"
-           data-ad-client="{safe_client}"{slot_attr}
+           data-ad-client="{safe_client}"
+           data-ad-slot="{safe_slot}"
            data-ad-format="auto"
            data-full-width-responsive="true"></ins>
       <script>(adsbygoogle = window.adsbygoogle || []).push({{}});</script>
@@ -1397,8 +1401,16 @@ def _seo_head(page: str, description: str) -> str:
 
 
 def _render_robots_txt() -> str:
-    """Allow all crawlers (including Googlebot and Mediapartners-Google) and point to the sitemap."""
-    return f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n"
+    """Allow all crawlers (explicitly including Google AdSense crawlers) and point to the sitemap."""
+    return (
+        "User-agent: Mediapartners-Google\n"
+        "Allow: /\n\n"
+        "User-agent: Google-Display-Ads-Bot\n"
+        "Allow: /\n\n"
+        "User-agent: *\n"
+        "Allow: /\n\n"
+        f"Sitemap: {SITE_URL}/sitemap.xml\n"
+    )
 
 
 def _render_sitemap_xml(archive_dates: List[str], latest_date: str) -> str:
@@ -1436,8 +1448,8 @@ def _render_static_page_html(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{html.escape(title)}</title>
-  {EDITORIAL_CSS_AND_JS}{_render_adsense_head_snippet()}
-  {_seo_head(filename, description)}
+  {_seo_head(filename, description)}{_render_adsense_head_snippet()}
+  {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
   <div class="page-wrap">
@@ -1607,8 +1619,8 @@ def _render_privacy_page_html(latest_date: str) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing (jabi.io) — About, Editorial Policy &amp; Privacy</title>
-  {EDITORIAL_CSS_AND_JS}{_render_adsense_head_snippet()}
-  {_seo_head('privacy.html', 'Privacy policy for jabi.io: email, cookies, Google AdSense and reader data.')}
+  {_seo_head('privacy.html', 'Privacy policy for jabi.io: email, cookies, Google AdSense and reader data.')}{_render_adsense_head_snippet()}
+  {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
   <div class="page-wrap">
@@ -2480,9 +2492,8 @@ def _render_daily_digest_html(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — {current_date}</title>
+  {_seo_head(f'{current_date}.html', f'The GenAI Briefing for {current_date}: Top 10 Generative AI research, engineering and community stories with practitioner discussion.')}{_render_adsense_head_snippet()}
   {EDITORIAL_CSS_AND_JS}
-  {_render_adsense_head_snippet()}
-  {_seo_head(f'{current_date}.html', f'The GenAI Briefing for {current_date}: Top 10 Generative AI research, engineering and community stories with practitioner discussion.')}
 </head>
 <body>
   <div class="page-wrap">
@@ -2587,9 +2598,8 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — Daily Research, Engineering &amp; Audio Index</title>
+  {_seo_head('index.html', 'Daily Generative AI technical briefing: ranked research papers, frontier lab engineering, researcher threads, podcasts and YouTube tech talks.')}{_render_adsense_head_snippet()}
   {EDITORIAL_CSS_AND_JS}
-  {_render_adsense_head_snippet()}
-  {_seo_head('index.html', 'Daily Generative AI technical briefing: ranked research papers, frontier lab engineering, researcher threads, podcasts and YouTube tech talks.')}
 </head>
 <body>
   <div class="page-wrap">
@@ -2698,9 +2708,8 @@ def _render_podcasts_page_html(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — Podcasts &amp; Episode Summaries</title>
+  {_seo_head('podcasts.html', 'Generative AI podcast index with recent episode summaries from leading AI engineering and research shows.')}{_render_adsense_head_snippet()}
   {EDITORIAL_CSS_AND_JS}
-  {_render_adsense_head_snippet()}
-  {_seo_head('podcasts.html', 'Generative AI podcast index with recent episode summaries from leading AI engineering and research shows.')}
 </head>
 <body>
   <div class="page-wrap">
@@ -2766,9 +2775,8 @@ def _render_tech_talks_page_html(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — Tech Talks &amp; Keynotes Directory</title>
+  {_seo_head('tech-talks.html', 'Directory of YouTube tech talks and keynotes on LLMs, AI agents, RAG and inference, grouped by channel.')}{_render_adsense_head_snippet()}
   {EDITORIAL_CSS_AND_JS}
-  {_render_adsense_head_snippet()}
-  {_seo_head('tech-talks.html', 'Directory of YouTube tech talks and keynotes on LLMs, AI agents, RAG and inference, grouped by channel.')}
 </head>
 <body>
   <div class="page-wrap">
