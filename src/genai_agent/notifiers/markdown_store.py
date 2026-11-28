@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import html
+import json
 import os
 import re
 from datetime import datetime
@@ -223,13 +224,23 @@ EDITORIAL_CSS_AND_JS = """
       padding: 10px 0;
       margin: 36px 0 20px;
     }
-    .section-head h2 {
+    .section-head h2,
+    .section-head h1.page-h1 {
       font-family: var(--font-mono);
       font-size: 0.78rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin: 0;
+      color: var(--ink);
+    }
+    .page-h1 {
+      font-family: var(--font-display);
+      font-size: 2.05rem;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      margin: 0 0 14px;
       color: var(--ink);
     }
     .section-head span {
@@ -830,6 +841,10 @@ EDITORIAL_CSS_AND_JS = """
         font-size: 2.2rem;
         line-height: 1.05;
       }
+      .page-h1 {
+        font-size: 1.65rem;
+        line-height: 1.18;
+      }
       .masthead-sub {
         font-size: 0.84rem;
         line-height: 1.45;
@@ -1355,6 +1370,7 @@ def _default_x_thread_notes(limit: int = 4) -> List[Dict[str, str]]:
 
 def _render_masthead(active_page: str, latest_date: str, edition_date: str = "") -> str:
     issue_label = f"ISSUE {edition_date or latest_date}" if (edition_date or latest_date) else "DAILY EDITION"
+    title_tag = "h1" if active_page == "index" else "div"
     return f"""
     <header class="masthead">
       <div class="masthead-top">
@@ -1370,17 +1386,17 @@ def _render_masthead(active_page: str, latest_date: str, edition_date: str = "")
         </div>
       </div>
       <div class="masthead-title-row">
-        <h1 class="masthead-title"><a href="index.html" style="display:inline-flex;align-items:center;gap:12px;"><img src="assets/apple-touch-icon.png" alt="jabi.io logo" width="42" height="42" style="border-radius:4px;border:1px solid var(--border);flex-shrink:0;"><span>The GenAI Briefing</span></a></h1>
+        <{title_tag} class="masthead-title"><a href="/" style="display:inline-flex;align-items:center;gap:12px;"><img src="assets/apple-touch-icon.png" alt="jabi.io logo" width="42" height="42" style="border-radius:4px;border:1px solid var(--border);flex-shrink:0;"><span>The GenAI Briefing</span></a></{title_tag}>
         <p class="masthead-sub">Curated research papers, frontier lab engineering, tech talks, researcher threads &amp; audio briefings.</p>
       </div>
       <nav class="masthead-nav">
         <div class="nav-links">
-          <a href="index.html" class="{'active' if active_page == 'index' else ''}">Front Page</a>
+          <a href="/" class="{'active' if active_page == 'index' else ''}">Front Page</a>
           <a href="{latest_date}.html" class="{'active' if active_page == 'daily' else ''}">Latest Issue ({latest_date})</a>
           <a href="guides.html" class="{'active' if active_page == 'guides' else ''}">Guides</a>
           <a href="tech-talks.html" class="{'active' if active_page == 'tech_talks' else ''}">Tech Talks Index</a>
           <a href="podcasts.html" class="{'active' if active_page == 'podcasts' else ''}">Podcasts Index</a>
-          <a href="index.html#archive">Archive</a>
+          <a href="/#archive">Archive</a>
           <a href="#subscribe">Subscribe</a>
         </div>
         <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">
@@ -1570,28 +1586,152 @@ def _footer_trust_links() -> str:
     )
 
 
+def _strip_html_tags(raw_html: str) -> str:
+    """Strip HTML tags and unescape entities for plain-text Schema.org fields."""
+    if not raw_html:
+        return ""
+    return " ".join(html.unescape(re.sub(r"<[^>]+>", " ", raw_html)).split())
+
+
+_TRAILING_DANGLING_WORDS = {
+    "a", "an", "and", "at", "by", "for", "from", "in", "of", "on", "or", "the", "to", "via", "with",
+}
+
+
+def _trim_at_word_boundary(text: str, max_len: int) -> str:
+    """Trim text cleanly at a word boundary without dangling punctuation, unclosed parens, or trailing stopwords."""
+    clean = " ".join((text or "").split()).strip(" :—-,;|")
+    if len(clean) <= max_len:
+        return clean
+    cut = clean[:max_len]
+    sp = cut.rfind(" ")
+    if sp >= max_len // 2:
+        cut = cut[:sp]
+    if cut.count("(") > cut.count(")"):
+        cut = cut[: cut.rfind("(")].rstrip()
+    cut = cut.rstrip(" :—-,;|.")
+    words = cut.split()
+    while len(words) > 2 and words[-1].lower().rstrip(".,;:-") in _TRAILING_DANGLING_WORDS:
+        words.pop()
+    return " ".join(words).rstrip(" :—-,;|.")
+
+
+def _build_daily_seo_meta(current_date: str, top10_items: List[Dict[str, str]]) -> Tuple[str, str]:
+    """Build a concise keyword-rich <title> (~50-68 chars) and unique <meta name='description'> (~135-160 chars)."""
+    suffix = f" — GenAI Briefing ({current_date})"
+    if top10_items:
+        lead_raw = " ".join((top10_items[0].get("title") or "").split())
+        budget = max(20, 68 - len(suffix))
+        if ":" in lead_raw:
+            prefix = lead_raw.split(":", 1)[0].strip()
+            if 12 <= len(prefix) <= budget:
+                short_lead = prefix
+            else:
+                short_lead = _trim_at_word_boundary(lead_raw, budget)
+        else:
+            short_lead = _trim_at_word_boundary(lead_raw, budget)
+        seo_title = f"{short_lead}{suffix}"
+
+        lead_titles = [
+            _trim_at_word_boundary(it.get("title", ""), 52)
+            for it in top10_items[:3]
+            if (it.get("title") or "").strip()
+        ]
+        prefix_desc = f"GenAI Briefing ({current_date}): "
+        joined = "; ".join(lead_titles)
+        candidate = f"{prefix_desc}{joined}"
+        if len(candidate) < 120:
+            candidate = f"{candidate} — plus AI research papers, frontier lab engineering, X threads & tech talks."
+        elif len(candidate) < 142:
+            candidate = f"{candidate} — daily AI research & engineering digest."
+        if len(candidate) > 160:
+            candidate = _trim_at_word_boundary(candidate, 159) + "."
+        seo_desc = candidate
+    else:
+        seo_title = f"The GenAI Briefing — {current_date}"
+        seo_desc = (
+            f"The GenAI Briefing for {current_date}: Top 10 Generative AI research papers, "
+            "frontier lab engineering, researcher threads, podcasts, and tech talks."
+        )
+    return seo_title, seo_desc
+
+
+def _build_guide_seo_title(full_title: str) -> str:
+    """Build a concise <= 68 char SEO <title> for an evergreen guide while keeping the full title in <h1>."""
+    suffix = " — The GenAI Briefing"
+    budget = 68 - len(suffix)
+    base = full_title.split(":", 1)[0].strip() if ":" in full_title else full_title.strip()
+    short_base = _trim_at_word_boundary(base, budget)
+    return f"{short_base}{suffix}"
+
+
+def _render_jsonld_script(payload: Dict[str, Any] | None) -> str:
+    """Serialize Schema.org JSON-LD safely, escaping `</` so it can never break out of `<script>`."""
+    if not payload:
+        return ""
+    raw = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+    safe_json = raw.replace("</", "<\\/")
+    return f'\n  <script type="application/ld+json">{safe_json}</script>'
+
+
+def _schema_organization() -> Dict[str, Any]:
+    return {
+        "@type": "Organization",
+        "@id": f"{SITE_URL}/#organization",
+        "name": "The GenAI Briefing",
+        "url": f"{SITE_URL}/",
+        "logo": f"{SITE_URL}/assets/logo.png",
+    }
+
+
+def _schema_breadcrumbs(items: List[Tuple[str, str]]) -> Dict[str, Any]:
+    return {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": idx,
+                "name": name,
+                "item": url,
+            }
+            for idx, (name, url) in enumerate(items, start=1)
+        ],
+    }
+
+
 def _seo_head(
     page: str,
+    title: str,
     description: str,
     canonical_page: str | None = None,
     noindex: bool = False,
+    og_type: str = "website",
+    jsonld: Dict[str, Any] | None = None,
 ) -> str:
-    """Canonical URL, optional robots noindex, meta description and Open Graph tags."""
+    """Canonical URL, optional robots noindex, meta description, Open Graph, Twitter Card, and JSON-LD."""
     target_page = canonical_page or page
     path = "" if target_page == "index.html" else target_page
     canonical = html.escape(f"{SITE_URL}/{path}", quote=True)
+    safe_title = html.escape(title, quote=True)
     desc = html.escape(description, quote=True)
+    safe_og_type = html.escape(og_type, quote=True)
     robots_line = '\n  <meta name="robots" content="noindex, follow">' if noindex else ""
+    jsonld_line = _render_jsonld_script(jsonld)
     return (
         f'<meta name="description" content="{desc}">{robots_line}\n'
         f'  <link rel="canonical" href="{canonical}">\n'
         f'  <link rel="icon" type="image/png" href="assets/favicon.png">\n'
         f'  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">\n'
-        f'  <meta property="og:type" content="website">\n'
+        f'  <meta property="og:type" content="{safe_og_type}">\n'
         f'  <meta property="og:site_name" content="The GenAI Briefing">\n'
+        f'  <meta property="og:title" content="{safe_title}">\n'
         f'  <meta property="og:url" content="{canonical}">\n'
         f'  <meta property="og:description" content="{desc}">\n'
-        f'  <meta property="og:image" content="{SITE_URL}/assets/logo.png">'
+        f'  <meta property="og:image" content="{SITE_URL}/assets/logo.png">\n'
+        f'  <meta name="twitter:card" content="summary">\n'
+        f'  <meta name="twitter:title" content="{safe_title}">\n'
+        f'  <meta name="twitter:description" content="{desc}">\n'
+        f'  <meta name="twitter:image" content="{SITE_URL}/assets/logo.png">{jsonld_line}'
     )
 
 
@@ -1666,30 +1806,33 @@ def _render_static_page_html(
     body_html: str,
     latest_date: str,
     include_adsense: bool = True,
+    h1_text: str | None = None,
+    jsonld: Dict[str, Any] | None = None,
 ) -> str:
     """Shared layout for About / FAQ / Contact / Terms / Guides. AdSense head snippet is controlled via `include_adsense`."""
     adsense_snippet = _render_adsense_head_snippet() if include_adsense else ""
+    heading = h1_text or kicker
     return f"""<!DOCTYPE html>
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{html.escape(title)}</title>
-  {_seo_head(filename, description)}{adsense_snippet}
+  {_seo_head(filename, title, description, jsonld=jsonld)}{adsense_snippet}
   {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
   <div class="page-wrap">
     {_render_masthead(active_page=page_key, latest_date=latest_date)}
     <div class="section-head">
-      <h2>{html.escape(kicker)}</h2>
+      <h1 class="page-h1">{html.escape(heading)}</h1>
       <span>JABI.IO</span>
     </div>
     {body_html}
     {_render_subscribe_box_html()}
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · {html.escape(kicker.upper())}</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{html.escape(latest_date)}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
+      <div><a href="/">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{html.escape(latest_date)}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
     </footer>
   </div>
 </body>
@@ -1767,15 +1910,37 @@ def _render_about_page_html(latest_date: str) -> str:
             "</div>",
         ]
     )
+    about_title = "About & Editorial Policy — The GenAI Briefing (jabi.io)"
+    about_desc = (
+        "About The GenAI Briefing (jabi.io): editorial mission, source selection, "
+        "AI-assistance disclosure, corrections policy, and advertising independence."
+    )
+    about_jsonld = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "AboutPage",
+                "name": "About & Editorial Policy",
+                "description": about_desc,
+                "url": f"{SITE_URL}/about.html",
+                "publisher": _schema_organization(),
+            },
+            _schema_breadcrumbs([
+                ("Home", f"{SITE_URL}/"),
+                ("About", f"{SITE_URL}/about.html"),
+            ]),
+        ],
+    }
     return _render_static_page_html(
         "about",
         "about.html",
-        "About & Editorial Policy — The GenAI Briefing (jabi.io)",
-        "About The GenAI Briefing (jabi.io): editorial mission, source selection, AI-assistance disclosure, corrections policy, and advertising independence.",
+        about_title,
+        about_desc,
         "About & Editorial Policy",
         body,
         latest_date,
         include_adsense=True,
+        jsonld=about_jsonld,
     )
 
 
@@ -1857,6 +2022,22 @@ def _render_faq_page_html(latest_date: str) -> str:
     for q, a in qa:
         blocks.append(f'<h3 class="note-title">{html.escape(q)}</h3>\n{_p(a)}')
     body = "\n".join(blocks)
+    faq_jsonld = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "url": f"{SITE_URL}/faq.html",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": q,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": _strip_html_tags(a),
+                },
+            }
+            for q, a in qa
+        ],
+    }
     return _render_static_page_html(
         "faq",
         "faq.html",
@@ -1866,6 +2047,7 @@ def _render_faq_page_html(latest_date: str) -> str:
         body,
         latest_date,
         include_adsense=True,
+        jsonld=faq_jsonld,
     )
 
 
@@ -1932,18 +2114,21 @@ def _render_terms_page_html(latest_date: str) -> str:
 def _render_privacy_page_html(latest_date: str, include_adsense: bool = False) -> str:
     """Render `docs/privacy.html` with Privacy, Email, and Google AdSense disclosures. AdSense scripts are omitted by default."""
     adsense_snippet = _render_adsense_head_snippet() if include_adsense else ""
+    privacy_title = "Privacy Policy — The GenAI Briefing (jabi.io)"
+    privacy_desc = "Privacy policy for jabi.io: email, cookies, Google AdSense and reader data."
     return f"""<!DOCTYPE html>
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>The GenAI Briefing (jabi.io) — Privacy Policy</title>
-  {_seo_head('privacy.html', 'Privacy policy for jabi.io: email, cookies, Google AdSense and reader data.')}{adsense_snippet}
+  <title>{html.escape(privacy_title)}</title>
+  {_seo_head('privacy.html', privacy_title, privacy_desc)}{adsense_snippet}
   {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
   <div class="page-wrap">
     {_render_masthead(active_page="privacy", latest_date=latest_date)}
+    <h1 class="page-h1">Privacy Policy — The GenAI Briefing</h1>
 
     <div class="section-head">
       <h2>I. About The GenAI Briefing (jabi.io)</h2>
@@ -1984,7 +2169,7 @@ def _render_privacy_page_html(latest_date: str, include_adsense: bool = False) -
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · PRIVACY POLICY</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
+      <div><a href="/">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
     </footer>
   </div>
 </body>
@@ -2021,15 +2206,38 @@ def _render_guides_index_html(latest_date: str) -> str:
         '</div>'
         f'<div class="guide-list">{"".join(cards)}</div>'
     )
+    guides_title = "Evergreen Engineering Guides — The GenAI Briefing (jabi.io)"
+    guides_desc = (
+        "Original Generative AI engineering guides on agent harnesses, LLM inference and quantization, "
+        "context engineering, production evaluations, and cascaded model routing."
+    )
+    guides_jsonld = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "CollectionPage",
+                "name": "Evergreen Generative AI Engineering Guides",
+                "description": guides_desc,
+                "url": f"{SITE_URL}/guides.html",
+                "publisher": _schema_organization(),
+            },
+            _schema_breadcrumbs([
+                ("Home", f"{SITE_URL}/"),
+                ("Guides", f"{SITE_URL}/guides.html"),
+            ]),
+        ],
+    }
     return _render_static_page_html(
         "guides",
         "guides.html",
-        "Evergreen Engineering Guides — The GenAI Briefing (jabi.io)",
-        "Original Generative AI engineering guides on agent harnesses, LLM inference and quantization, context engineering, production evaluations, and cascaded model routing.",
+        guides_title,
+        guides_desc,
         "Evergreen Engineering Guides",
         body,
         latest_date,
         include_adsense=True,
+        h1_text="Evergreen Generative AI Engineering Guides",
+        jsonld=guides_jsonld,
     )
 
 
@@ -2037,6 +2245,7 @@ def _render_guide_article_html(guide: Dict[str, str], latest_date: str) -> str:
     """Render an individual evergreen guide article page (`docs/{slug}.html`)."""
     slug = guide["slug"]
     filename = f"{slug}.html"
+    seo_title = _build_guide_seo_title(guide["title"])
     rendered_body = _harden_rendered_markdown_html(
         markdown.markdown(
             guide["body_markdown"],
@@ -2055,13 +2264,40 @@ def _render_guide_article_html(guide: Dict[str, str], latest_date: str) -> str:
             f'<span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">({html.escape(other["kicker"])})</span></li>'
         )
 
+    guide_url = f"{SITE_URL}/{filename}"
+    guide_jsonld = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "TechArticle",
+                "headline": guide["title"],
+                "description": guide["description"],
+                "url": guide_url,
+                "datePublished": guide["updated_at"],
+                "dateModified": guide["updated_at"],
+                "author": _schema_organization(),
+                "publisher": _schema_organization(),
+                "image": f"{SITE_URL}/assets/logo.png",
+                "mainEntityOfPage": {
+                    "@type": "WebPage",
+                    "@id": guide_url,
+                },
+            },
+            _schema_breadcrumbs([
+                ("Home", f"{SITE_URL}/"),
+                ("Guides", f"{SITE_URL}/guides.html"),
+                (guide["title"], guide_url),
+            ]),
+        ],
+    }
+
     return f"""<!DOCTYPE html>
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>{html.escape(guide['title'])} — The GenAI Briefing (jabi.io)</title>
-  {_seo_head(filename, guide['description'])}{_render_adsense_head_snippet()}
+  <title>{html.escape(seo_title)}</title>
+  {_seo_head(filename, seo_title, guide['description'], og_type='article', jsonld=guide_jsonld)}{_render_adsense_head_snippet()}
   {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
@@ -2093,7 +2329,7 @@ def _render_guide_article_html(guide: Dict[str, str], latest_date: str) -> str:
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · ENGINEERING GUIDES</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{html.escape(latest_date)}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
+      <div><a href="/">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{html.escape(latest_date)}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
     </footer>
   </div>
 </body>
@@ -2532,6 +2768,48 @@ def _build_editorial_synthesis_html(
     )
 
 
+_GUIDE_TOPIC_KEYWORDS: Dict[str, Tuple[str, ...]] = {
+    "guide-agent-harness-engineering": ("agent", "harness", "tool", "sandbox", "mcp", "coding", "claude code", "orchestrator"),
+    "guide-llm-inference-quantization": ("inference", "quantiz", "kv-cache", "kv cache", "speculative", "latency", "fp8", "vllm", "gpu", "kernel"),
+    "guide-rag-context-engineering": ("rag", "retrieval", "context", "chunk", "rerank", "embedding", "memory", "search", "document"),
+    "guide-llm-evaluation-benchmarks": ("eval", "benchmark", "judge", "leaderboard", "reasoning", "accuracy", "safety", "alignment"),
+    "guide-cascaded-model-routing": ("routing", "cost", "small model", "distill", "cascade", "latency", "open-weight", "gemini", "qwen"),
+}
+
+
+def _render_daily_guides_crosslinks(top10_items: List[Dict[str, str]], limit: int = 3) -> str:
+    """Render a compact Evergreen Engineering Guides cross-link block for daily issues."""
+    if not EVERGREEN_GUIDES:
+        return ""
+    corpus = " ".join(f"{it.get('title', '')} {it.get('summary', '')}" for it in top10_items).lower()
+    scored: List[Tuple[int, int, Dict[str, str]]] = []
+    for idx, g in enumerate(EVERGREEN_GUIDES):
+        kws = _GUIDE_TOPIC_KEYWORDS.get(g["slug"], ())
+        hits = sum(1 for kw in kws if kw in corpus)
+        scored.append((-hits, idx, g))
+    scored.sort(key=lambda x: (x[0], x[1]))
+    selected = [entry[2] for entry in scored[:limit]]
+
+    items_html: List[str] = []
+    for g in selected:
+        items_html.append(
+            f'<li><a href="{html.escape(g["slug"])}.html" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">'
+            f'{html.escape(g["title"])}</a> '
+            f'<span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">({html.escape(g["kicker"])} · {html.escape(g["reading_time"])})</span></li>'
+        )
+    return f"""
+    <section id="evergreen-guides" aria-label="Evergreen Engineering Guides">
+      <div class="section-head">
+        <h2>V. Evergreen Engineering Guides</h2>
+        <span><a href="guides.html" style="color:var(--accent);text-decoration:none;">ALL {len(EVERGREEN_GUIDES)} GUIDES →</a></span>
+      </div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;font-family:var(--font-serif);font-size:0.98rem;max-width:66ch;">
+        {"".join(items_html)}
+      </ul>
+    </section>
+    """
+
+
 def _render_daily_digest_html(
     markdown_content: str,
     title: str,
@@ -2582,6 +2860,7 @@ def _render_daily_digest_html(
     x_html = _render_bullet_notes_html(x_md, kind="x", limit=4)
     pod_html = _render_notes_column_html(pod_notes, "Listen Episode")
     talks_html = _render_bullet_notes_html(talks_md, kind="tech_talk")
+    guides_crosslink_html = _render_daily_guides_crosslinks(top10_items, limit=3)
 
     date_links = " · ".join(
         f'<a href="{d}.html" style="font-weight:{"700" if d == current_date else "400"};color:var(--ink);">{d}</a>'
@@ -2590,19 +2869,40 @@ def _render_daily_digest_html(
 
     is_duplicate = bool(canonical_date and canonical_date != current_date)
     canonical_page = f"{canonical_date}.html" if is_duplicate else f"{current_date}.html"
+    seo_title, seo_desc = _build_daily_seo_meta(current_date, top10_items)
+    daily_jsonld = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "CollectionPage",
+                "name": f"The GenAI Briefing — {current_date}",
+                "headline": seo_title,
+                "description": seo_desc,
+                "url": f"{SITE_URL}/{canonical_page}",
+                "datePublished": current_date,
+                "publisher": _schema_organization(),
+                "image": f"{SITE_URL}/assets/logo.png",
+            },
+            _schema_breadcrumbs([
+                ("Home", f"{SITE_URL}/"),
+                (f"Issue {current_date}", f"{SITE_URL}/{current_date}.html"),
+            ]),
+        ],
+    }
 
     return f"""<!DOCTYPE html>
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>The GenAI Briefing — {current_date}</title>
-  {_seo_head(f'{current_date}.html', f'The GenAI Briefing for {current_date}: Top 10 Generative AI research, engineering and community stories with daily editorial synthesis.', canonical_page=canonical_page, noindex=is_duplicate)}{_render_adsense_head_snippet()}
+  <title>{html.escape(seo_title)}</title>
+  {_seo_head(f'{current_date}.html', seo_title, seo_desc, canonical_page=canonical_page, noindex=is_duplicate, jsonld=daily_jsonld)}{_render_adsense_head_snippet()}
   {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
   <div class="page-wrap">
     {_render_masthead(active_page="daily", latest_date=latest_date, edition_date=current_date)}
+    <h1 class="page-h1">The GenAI Briefing — {html.escape(current_date)}</h1>
 
     <div style="font-family:var(--font-mono);font-size:0.74rem;color:var(--ink-muted);margin-bottom:20px;">
       ISSUES: {date_links}
@@ -2644,11 +2944,13 @@ def _render_daily_digest_html(
       {talks_html}
     </section>
 
+    {guides_crosslink_html}
+
     {_render_subscribe_box_html()}
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · ISSUE {current_date}</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
+      <div><a href="/">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
     </footer>
   </div>
 </body>
@@ -2725,13 +3027,33 @@ def _render_index_portal_html(archive_map: Dict[str, str], allow_network: bool =
             """
         )
 
+    index_title = "The GenAI Briefing — Daily Research, Engineering & Audio Index"
+    index_desc = (
+        "Daily Generative AI technical briefing: ranked research papers, frontier lab engineering, "
+        "evergreen engineering guides, researcher threads, podcasts and YouTube tech talks."
+    )
+    index_jsonld = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebSite",
+                "@id": f"{SITE_URL}/#website",
+                "name": "The GenAI Briefing",
+                "url": f"{SITE_URL}/",
+                "description": index_desc,
+                "publisher": {"@id": f"{SITE_URL}/#organization"},
+            },
+            _schema_organization(),
+        ],
+    }
+
     return f"""<!DOCTYPE html>
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>The GenAI Briefing — Daily Research, Engineering &amp; Audio Index</title>
-  {_seo_head('index.html', 'Daily Generative AI technical briefing: ranked research papers, frontier lab engineering, evergreen engineering guides, researcher threads, podcasts and YouTube tech talks.')}{_render_adsense_head_snippet()}
+  <title>{html.escape(index_title)}</title>
+  {_seo_head('index.html', index_title, index_desc, jsonld=index_jsonld)}{_render_adsense_head_snippet()}
   {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
@@ -2805,7 +3127,7 @@ def _render_index_portal_html(archive_map: Dict[str, str], allow_network: bool =
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · PUBLISHED DAILY</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
+      <div><a href="/">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
     </footer>
   </div>
 </body>
@@ -2845,23 +3167,45 @@ def _render_podcasts_page_html(
             """
         )
 
+    podcasts_title = "AI Engineering Podcasts & Episode Index — The GenAI Briefing"
+    podcasts_desc = (
+        "Generative AI podcast index with recent episode summaries from leading AI engineering and research shows."
+    )
+    podcasts_jsonld = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "CollectionPage",
+                "name": "AI Engineering Podcasts & Episode Index",
+                "description": podcasts_desc,
+                "url": f"{SITE_URL}/podcasts.html",
+                "publisher": _schema_organization(),
+            },
+            _schema_breadcrumbs([
+                ("Home", f"{SITE_URL}/"),
+                ("Podcasts", f"{SITE_URL}/podcasts.html"),
+            ]),
+        ],
+    }
+
     return f"""<!DOCTYPE html>
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>The GenAI Briefing — Podcasts &amp; Episode Summaries</title>
-  {_seo_head('podcasts.html', 'Generative AI podcast index with recent episode summaries from leading AI engineering and research shows.')}{_render_adsense_head_snippet()}
+  <title>{html.escape(podcasts_title)}</title>
+  {_seo_head('podcasts.html', podcasts_title, podcasts_desc, jsonld=podcasts_jsonld)}{_render_adsense_head_snippet()}
   {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
   <div class="page-wrap">
     {_render_masthead(active_page="podcasts", latest_date=latest_date)}
+    <h1 class="page-h1">AI Engineering Podcasts &amp; Episode Index</h1>
     {"".join(show_blocks)}
     {_render_subscribe_box_html()}
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · AUDIO &amp; PODCASTS DIRECTORY</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
+      <div><a href="/">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
     </footer>
   </div>
 </body>
@@ -2912,18 +3256,40 @@ def _render_tech_talks_page_html(
         else ""
     )
 
+    talks_title = "Generative AI Tech Talks & Keynotes — The GenAI Briefing"
+    talks_desc = (
+        "Directory of YouTube tech talks and keynotes on LLMs, AI agents, RAG and inference, grouped by channel."
+    )
+    talks_jsonld = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "CollectionPage",
+                "name": "Generative AI Tech Talks & Keynotes Directory",
+                "description": talks_desc,
+                "url": f"{SITE_URL}/tech-talks.html",
+                "publisher": _schema_organization(),
+            },
+            _schema_breadcrumbs([
+                ("Home", f"{SITE_URL}/"),
+                ("Tech Talks", f"{SITE_URL}/tech-talks.html"),
+            ]),
+        ],
+    }
+
     return f"""<!DOCTYPE html>
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>The GenAI Briefing — Tech Talks &amp; Keynotes Directory</title>
-  {_seo_head('tech-talks.html', 'Directory of YouTube tech talks and keynotes on LLMs, AI agents, RAG and inference, grouped by channel.')}{_render_adsense_head_snippet()}
+  <title>{html.escape(talks_title)}</title>
+  {_seo_head('tech-talks.html', talks_title, talks_desc, jsonld=talks_jsonld)}{_render_adsense_head_snippet()}
   {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
   <div class="page-wrap">
     {_render_masthead(active_page="tech_talks", latest_date=latest_date)}
+    <h1 class="page-h1">Generative AI Tech Talks &amp; Keynotes Directory</h1>
     <div class="editorial-callout">
       <h3>YouTube Tech Talks &amp; Keynotes Directory ({len(channels_data)} Channels)</h3>
       <p>Curated technical keynotes, engineering lightboards, and academic seminars from Google Cloud Tech, IBM Technology, The Pragmatic Engineer, IBM Developer, Stanford CS25, LangChain, Andrej Karpathy, Anthropic, OpenAI, and Google DeepMind.</p>
@@ -2933,7 +3299,7 @@ def _render_tech_talks_page_html(
     {_render_subscribe_box_html()}
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · TECH TALKS &amp; KEYNOTES DIRECTORY</div>
-      <div><a href="index.html">Front Page</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
+      <div><a href="/">Front Page</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{latest_date}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
     </footer>
   </div>
 </body>

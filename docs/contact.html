@@ -10,9 +10,14 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The GenAI Briefing">
+  <meta property="og:title" content="Contact — The GenAI Briefing (jabi.io)">
   <meta property="og:url" content="https://jabi.io/contact.html">
   <meta property="og:description" content="How to contact The GenAI Briefing editorial desk for corrections, source suggestions, and privacy requests.">
   <meta property="og:image" content="https://jabi.io/assets/logo.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Contact — The GenAI Briefing (jabi.io)">
+  <meta name="twitter:description" content="How to contact The GenAI Briefing editorial desk for corrections, source suggestions, and privacy requests.">
+  <meta name="twitter:image" content="https://jabi.io/assets/logo.png">
   
   <meta name="theme-color" id="meta-theme-color" content="#F6F4EF">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -218,13 +223,23 @@
       padding: 10px 0;
       margin: 36px 0 20px;
     }
-    .section-head h2 {
+    .section-head h2,
+    .section-head h1.page-h1 {
       font-family: var(--font-mono);
       font-size: 0.78rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin: 0;
+      color: var(--ink);
+    }
+    .page-h1 {
+      font-family: var(--font-display);
+      font-size: 2.05rem;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      margin: 0 0 14px;
       color: var(--ink);
     }
     .section-head span {
@@ -825,6 +840,10 @@
         font-size: 2.2rem;
         line-height: 1.05;
       }
+      .page-h1 {
+        font-size: 1.65rem;
+        line-height: 1.18;
+      }
       .masthead-sub {
         font-size: 0.84rem;
         line-height: 1.45;
@@ -999,17 +1018,17 @@
         </div>
       </div>
       <div class="masthead-title-row">
-        <h1 class="masthead-title"><a href="index.html" style="display:inline-flex;align-items:center;gap:12px;"><img src="assets/apple-touch-icon.png" alt="jabi.io logo" width="42" height="42" style="border-radius:4px;border:1px solid var(--border);flex-shrink:0;"><span>The GenAI Briefing</span></a></h1>
+        <div class="masthead-title"><a href="/" style="display:inline-flex;align-items:center;gap:12px;"><img src="assets/apple-touch-icon.png" alt="jabi.io logo" width="42" height="42" style="border-radius:4px;border:1px solid var(--border);flex-shrink:0;"><span>The GenAI Briefing</span></a></div>
         <p class="masthead-sub">Curated research papers, frontier lab engineering, tech talks, researcher threads &amp; audio briefings.</p>
       </div>
       <nav class="masthead-nav">
         <div class="nav-links">
-          <a href="index.html" class="">Front Page</a>
+          <a href="/" class="">Front Page</a>
           <a href="2026-11-28.html" class="">Latest Issue (2026-11-28)</a>
           <a href="guides.html" class="">Guides</a>
           <a href="tech-talks.html" class="">Tech Talks Index</a>
           <a href="podcasts.html" class="">Podcasts Index</a>
-          <a href="index.html#archive">Archive</a>
+          <a href="/#archive">Archive</a>
           <a href="#subscribe">Subscribe</a>
         </div>
         <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">
@@ -1019,7 +1038,7 @@
     </header>
     
     <div class="section-head">
-      <h2>Contact</h2>
+      <h1 class="page-h1">Contact</h1>
       <span>JABI.IO</span>
     </div>
     <p class="briefing-summary">To report a factual error, flag a broken link, suggest a primary technical source, or submit a privacy request, contact the editorial desk using either channel below. Please include the issue date and the entry URL when reporting a correction.</p>
@@ -1047,7 +1066,7 @@
     
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · CONTACT</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="2026-11-28.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="guides.html">Guides</a> · <a href="about.html">About</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
+      <div><a href="/">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="2026-11-28.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="guides.html">Guides</a> · <a href="about.html">About</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
     </footer>
   </div>
 </body>

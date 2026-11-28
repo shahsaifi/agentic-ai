@@ -960,6 +960,151 @@ def test_trust_eeat_seo_hygiene_and_duplicate_issue_canonical(tmp_path: Path, mo
         assert "google-adsense-account" in t
 
 
+def _assert_site_seo_invariants(docs_dir: Path, expected_daily_lead_keywords: dict[str, tuple[str, ...]] | None = None) -> None:
+    """Shared SEO invariant assertions for generated and published docs/ sites."""
+    import html as html_mod
+    import json
+    import re
+    import xml.etree.ElementTree as ET
+
+    html_files = sorted(p for p in docs_dir.glob("*.html") if p.name != "google1d91ff2686f20108.html")
+    assert html_files, f"No HTML files found in {docs_dir}"
+
+    for page_path in html_files:
+        name = page_path.name
+        text = page_path.read_text(encoding="utf-8")
+
+        # 1. Single <h1> per page (masthead <h1> on index.html; <div class="masthead-title"> + 1 page <h1> on subpages)
+        h1_matches = re.findall(r"<h1\b[^>]*>.*?</h1>", text, flags=re.S)
+        assert len(h1_matches) == 1, f"{name}: expected exactly 1 <h1>, found {len(h1_matches)}"
+        if name == "index.html":
+            assert '<h1 class="masthead-title">' in text, "index.html must use <h1 class=\"masthead-title\">"
+        else:
+            assert '<div class="masthead-title">' in text, f"{name} must use <div class=\"masthead-title\">"
+
+        # 2. Valid Schema.org JSON-LD (application/ld+json)
+        ld_blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', text, flags=re.S)
+        ld_types: list[str] = []
+        ld_nodes: list[dict] = []
+        for raw_ld in ld_blocks:
+            parsed = json.loads(raw_ld)
+            graph = parsed.get("@graph", [parsed])
+            for node in graph:
+                if isinstance(node, dict):
+                    ld_nodes.append(node)
+                    if "@type" in node:
+                        ld_types.append(node["@type"])
+
+        if name == "index.html":
+            assert "WebSite" in ld_types and "Organization" in ld_types, f"index.html JSON-LD missing WebSite/Organization: {ld_types}"
+        elif name.startswith("guide-"):
+            assert "TechArticle" in ld_types and "BreadcrumbList" in ld_types, f"{name} JSON-LD missing TechArticle/BreadcrumbList: {ld_types}"
+        elif name == "faq.html":
+            assert "FAQPage" in ld_types, f"faq.html JSON-LD missing FAQPage: {ld_types}"
+            faq_node = next(n for n in ld_nodes if n.get("@type") == "FAQPage")
+            entries = faq_node.get("mainEntity", [])
+            assert len(entries) >= 3, f"faq.html FAQPage mainEntity too small: {len(entries)}"
+            for entry in entries:
+                assert entry.get("@type") == "Question"
+                assert entry.get("name")
+                answer = entry.get("acceptedAnswer", {})
+                assert answer.get("@type") == "Answer"
+                answer_text = answer.get("text", "")
+                assert answer_text
+                assert not re.search(r"<[^>]+>", answer_text), f"Raw HTML tag found in FAQ acceptedAnswer.text: {answer_text!r}"
+        elif re.match(r"^\d{4}-\d{2}-\d{2}\.html$", name):
+            assert "CollectionPage" in ld_types and "BreadcrumbList" in ld_types, f"{name} JSON-LD missing CollectionPage/BreadcrumbList: {ld_types}"
+
+        # 3. Titles & Descriptions
+        m_title = re.search(r"<title>(.*?)</title>", text, flags=re.S)
+        assert m_title, f"{name}: missing <title>"
+        page_title = html_mod.unescape(m_title.group(1).strip())
+        m_desc = re.search(r'<meta name="description" content="([^"]*)"', text)
+        assert m_desc and m_desc.group(1).strip(), f"{name}: missing <meta name=\"description\">"
+        page_desc = html_mod.unescape(m_desc.group(1).strip())
+
+        if re.match(r"^\d{4}-\d{2}-\d{2}\.html$", name):
+            date_slug = name[:-5]
+            assert page_title != f"The GenAI Briefing — {date_slug}", f"{name}: bare title without lead story keywords"
+            if expected_daily_lead_keywords and name in expected_daily_lead_keywords:
+                lead_title_kw, lead_desc_kws = expected_daily_lead_keywords[name][0], expected_daily_lead_keywords[name]
+                assert lead_title_kw in page_title, f"{name}: <title> {page_title!r} missing lead keyword {lead_title_kw!r}"
+                for kw in lead_desc_kws:
+                    assert kw in page_desc, f"{name}: meta description {page_desc!r} missing lead story {kw!r}"
+
+        if name.startswith("guide-"):
+            assert len(page_title) <= 68, f"{name}: guide <title> exceeds 68 chars ({len(page_title)}): {page_title!r}"
+            h1_text = html_mod.unescape(re.sub(r"<[^>]+>", "", h1_matches[0]).strip())
+            tech_node = next(n for n in ld_nodes if n.get("@type") == "TechArticle")
+            assert tech_node.get("headline") == h1_text, f"{name}: JSON-LD headline {tech_node.get('headline')!r} != <h1> {h1_text!r}"
+            assert len(h1_text) > len(page_title.split(" — ")[0]), f"{name}: <h1> should preserve full guide title"
+
+        # 4. Open Graph & Twitter Cards
+        for meta_marker in (
+            'property="og:title"',
+            'name="twitter:card"',
+            'name="twitter:title"',
+            'name="twitter:description"',
+            'name="twitter:image"',
+        ):
+            assert meta_marker in text, f"{name}: missing {meta_marker}"
+
+        # 5. Canonical Home Links (zero href="index.html")
+        assert 'href="index.html' not in text, f"{name}: contains legacy href=\"index.html\""
+        assert 'href="/"' in text, f"{name}: missing canonical home link href=\"/\""
+        assert 'href="/#archive"' in text, f"{name}: missing canonical archive link href=\"/#archive\""
+
+        # 6. Daily -> Evergreen Guides Cross-Linking
+        if re.match(r"^\d{4}-\d{2}-\d{2}\.html$", name):
+            assert 'id="evergreen-guides"' in text, f"{name}: missing id=\"evergreen-guides\""
+            guides_sec = text.split('id="evergreen-guides"', 1)[1].split("</section>", 1)[0]
+            assert 'href="guides.html"' in guides_sec, f"{name}: evergreen-guides missing href=\"guides.html\""
+            guide_hrefs = set(re.findall(r'href="(guide-[^"]+\.html)"', guides_sec))
+            assert len(guide_hrefs) == 3, f"{name}: evergreen-guides expected 3 unique guide links, got {len(guide_hrefs)}"
+
+    # Valid sitemap.xml and feed.xml
+    sitemap_root = ET.fromstring((docs_dir / "sitemap.xml").read_text(encoding="utf-8"))
+    sitemap_locs = [el.text for el in sitemap_root.iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
+    assert sitemap_locs and len(sitemap_locs) == len(set(sitemap_locs)), "sitemap.xml empty or has duplicate URLs"
+
+    feed_root = ET.fromstring((docs_dir / "feed.xml").read_text(encoding="utf-8"))
+    assert feed_root.tag == "rss"
+    assert len(feed_root.findall("./channel/item")) >= 1
+
+
+def test_technical_seo_upgrades_generated_site(tmp_path: Path):
+    md = (
+        "# Generative AI Technical Briefing — 2026-11-28\n\n"
+        "## Top 10 Ranked Briefing\n\n"
+        "### 1. [Sparse Attention at Scale](https://arxiv.org/abs/2611.00001)\n"
+        "**Research** (arXiv) · 240 pts · *2026-11-28*\n"
+        "- Evaluates sub-quadratic attention kernels for 1M token context windows.\n\n"
+        "### 2. [Deterministic Agent Harnesses](https://example.com/agent-harness)\n"
+        "**Engineering** (Hacker News) · 180 pts · *2026-11-28*\n"
+        "- Production verification loops for multi-step coding agents.\n\n"
+        "### 3. [FP8 Calibration Tricks](https://example.com/fp8-calibration)\n"
+        "**Systems** (Hugging Face) · 140 pts · *2026-11-28*\n"
+        "- Post-training quantization benchmarks on H200 clusters.\n"
+    )
+    docs_dir = tmp_path / "docs"
+    save_markdown_digest(md, tmp_path / "digests", timestamp=datetime(2026, 11, 28, 9, 0), docs_dir=docs_dir)
+
+    _assert_site_seo_invariants(
+        docs_dir,
+        expected_daily_lead_keywords={
+            "2026-11-28.html": ("Sparse Attention at Scale", "Deterministic Agent Harnesses"),
+        },
+    )
+
+
+def test_published_docs_technical_seo_integrity():
+    repo_docs = Path(__file__).resolve().parent.parent / "docs"
+    if not repo_docs.exists():
+        return
+    _assert_site_seo_invariants(repo_docs)
+
+
+
 
 
 

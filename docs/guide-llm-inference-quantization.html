@@ -3,16 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Production LLM Inference &amp; Quantization: KV-Cache Economics, Low-Bit Calibration, and Decoding Latency — The GenAI Briefing (jabi.io)</title>
+  <title>Production LLM Inference &amp; Quantization — The GenAI Briefing</title>
   <meta name="description" content="Deep dive into production LLM inference and quantization: prefill vs decode bottlenecks, KV-cache memory math, W4A16/FP8/W4A4 trade-offs, and speculative decoding.">
   <link rel="canonical" href="https://jabi.io/guide-llm-inference-quantization.html">
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="article">
   <meta property="og:site_name" content="The GenAI Briefing">
+  <meta property="og:title" content="Production LLM Inference &amp; Quantization — The GenAI Briefing">
   <meta property="og:url" content="https://jabi.io/guide-llm-inference-quantization.html">
   <meta property="og:description" content="Deep dive into production LLM inference and quantization: prefill vs decode bottlenecks, KV-cache memory math, W4A16/FP8/W4A4 trade-offs, and speculative decoding.">
   <meta property="og:image" content="https://jabi.io/assets/logo.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Production LLM Inference &amp; Quantization — The GenAI Briefing">
+  <meta name="twitter:description" content="Deep dive into production LLM inference and quantization: prefill vs decode bottlenecks, KV-cache memory math, W4A16/FP8/W4A4 trade-offs, and speculative decoding.">
+  <meta name="twitter:image" content="https://jabi.io/assets/logo.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Production LLM Inference & Quantization: KV-Cache Economics, Low-Bit Calibration, and Decoding Latency","description":"Deep dive into production LLM inference and quantization: prefill vs decode bottlenecks, KV-cache memory math, W4A16/FP8/W4A4 trade-offs, and speculative decoding.","url":"https://jabi.io/guide-llm-inference-quantization.html","datePublished":"2026-11-28","dateModified":"2026-11-28","author":{"@type":"Organization","@id":"https://jabi.io/#organization","name":"The GenAI Briefing","url":"https://jabi.io/","logo":"https://jabi.io/assets/logo.png"},"publisher":{"@type":"Organization","@id":"https://jabi.io/#organization","name":"The GenAI Briefing","url":"https://jabi.io/","logo":"https://jabi.io/assets/logo.png"},"image":"https://jabi.io/assets/logo.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://jabi.io/guide-llm-inference-quantization.html"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://jabi.io/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://jabi.io/guides.html"},{"@type":"ListItem","position":3,"name":"Production LLM Inference & Quantization: KV-Cache Economics, Low-Bit Calibration, and Decoding Latency","item":"https://jabi.io/guide-llm-inference-quantization.html"}]}]}</script>
   <meta name="google-adsense-account" content="ca-pub-4585099070726775">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4585099070726775" crossorigin="anonymous"></script>
   
@@ -220,13 +226,23 @@
       padding: 10px 0;
       margin: 36px 0 20px;
     }
-    .section-head h2 {
+    .section-head h2,
+    .section-head h1.page-h1 {
       font-family: var(--font-mono);
       font-size: 0.78rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin: 0;
+      color: var(--ink);
+    }
+    .page-h1 {
+      font-family: var(--font-display);
+      font-size: 2.05rem;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      margin: 0 0 14px;
       color: var(--ink);
     }
     .section-head span {
@@ -827,6 +843,10 @@
         font-size: 2.2rem;
         line-height: 1.05;
       }
+      .page-h1 {
+        font-size: 1.65rem;
+        line-height: 1.18;
+      }
       .masthead-sub {
         font-size: 0.84rem;
         line-height: 1.45;
@@ -1001,17 +1021,17 @@
         </div>
       </div>
       <div class="masthead-title-row">
-        <h1 class="masthead-title"><a href="index.html" style="display:inline-flex;align-items:center;gap:12px;"><img src="assets/apple-touch-icon.png" alt="jabi.io logo" width="42" height="42" style="border-radius:4px;border:1px solid var(--border);flex-shrink:0;"><span>The GenAI Briefing</span></a></h1>
+        <div class="masthead-title"><a href="/" style="display:inline-flex;align-items:center;gap:12px;"><img src="assets/apple-touch-icon.png" alt="jabi.io logo" width="42" height="42" style="border-radius:4px;border:1px solid var(--border);flex-shrink:0;"><span>The GenAI Briefing</span></a></div>
         <p class="masthead-sub">Curated research papers, frontier lab engineering, tech talks, researcher threads &amp; audio briefings.</p>
       </div>
       <nav class="masthead-nav">
         <div class="nav-links">
-          <a href="index.html" class="">Front Page</a>
+          <a href="/" class="">Front Page</a>
           <a href="2026-11-28.html" class="">Latest Issue (2026-11-28)</a>
           <a href="guides.html" class="active">Guides</a>
           <a href="tech-talks.html" class="">Tech Talks Index</a>
           <a href="podcasts.html" class="">Podcasts Index</a>
-          <a href="index.html#archive">Archive</a>
+          <a href="/#archive">Archive</a>
           <a href="#subscribe">Subscribe</a>
         </div>
         <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">
@@ -1131,7 +1151,7 @@
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · ENGINEERING GUIDES</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="2026-11-28.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="guides.html">Guides</a> · <a href="about.html">About</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
+      <div><a href="/">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="2026-11-28.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="guides.html">Guides</a> · <a href="about.html">About</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
     </footer>
   </div>
 </body>

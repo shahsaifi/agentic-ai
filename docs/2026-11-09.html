@@ -3,16 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>The GenAI Briefing — 2026-11-09</title>
-  <meta name="description" content="The GenAI Briefing for 2026-11-09: Top 10 Generative AI research, engineering and community stories with daily editorial synthesis.">
+  <title>Random Is Almost Enough? Stable — GenAI Briefing (2026-11-09)</title>
+  <meta name="description" content="GenAI Briefing (2026-11-09): Random Is Almost Enough? Stable and Low-Cost; WeLM-Image: A Unified Image Generation Model; TailSteer: Trajectory-Tail Steering">
   <link rel="canonical" href="https://jabi.io/2026-11-09.html">
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The GenAI Briefing">
+  <meta property="og:title" content="Random Is Almost Enough? Stable — GenAI Briefing (2026-11-09)">
   <meta property="og:url" content="https://jabi.io/2026-11-09.html">
-  <meta property="og:description" content="The GenAI Briefing for 2026-11-09: Top 10 Generative AI research, engineering and community stories with daily editorial synthesis.">
+  <meta property="og:description" content="GenAI Briefing (2026-11-09): Random Is Almost Enough? Stable and Low-Cost; WeLM-Image: A Unified Image Generation Model; TailSteer: Trajectory-Tail Steering">
   <meta property="og:image" content="https://jabi.io/assets/logo.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Random Is Almost Enough? Stable — GenAI Briefing (2026-11-09)">
+  <meta name="twitter:description" content="GenAI Briefing (2026-11-09): Random Is Almost Enough? Stable and Low-Cost; WeLM-Image: A Unified Image Generation Model; TailSteer: Trajectory-Tail Steering">
+  <meta name="twitter:image" content="https://jabi.io/assets/logo.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"The GenAI Briefing — 2026-11-09","headline":"Random Is Almost Enough? Stable — GenAI Briefing (2026-11-09)","description":"GenAI Briefing (2026-11-09): Random Is Almost Enough? Stable and Low-Cost; WeLM-Image: A Unified Image Generation Model; TailSteer: Trajectory-Tail Steering","url":"https://jabi.io/2026-11-09.html","datePublished":"2026-11-09","publisher":{"@type":"Organization","@id":"https://jabi.io/#organization","name":"The GenAI Briefing","url":"https://jabi.io/","logo":"https://jabi.io/assets/logo.png"},"image":"https://jabi.io/assets/logo.png"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://jabi.io/"},{"@type":"ListItem","position":2,"name":"Issue 2026-11-09","item":"https://jabi.io/2026-11-09.html"}]}]}</script>
   <meta name="google-adsense-account" content="ca-pub-4585099070726775">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4585099070726775" crossorigin="anonymous"></script>
   
@@ -220,13 +226,23 @@
       padding: 10px 0;
       margin: 36px 0 20px;
     }
-    .section-head h2 {
+    .section-head h2,
+    .section-head h1.page-h1 {
       font-family: var(--font-mono);
       font-size: 0.78rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin: 0;
+      color: var(--ink);
+    }
+    .page-h1 {
+      font-family: var(--font-display);
+      font-size: 2.05rem;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      margin: 0 0 14px;
       color: var(--ink);
     }
     .section-head span {
@@ -827,6 +843,10 @@
         font-size: 2.2rem;
         line-height: 1.05;
       }
+      .page-h1 {
+        font-size: 1.65rem;
+        line-height: 1.18;
+      }
       .masthead-sub {
         font-size: 0.84rem;
         line-height: 1.45;
@@ -1001,17 +1021,17 @@
         </div>
       </div>
       <div class="masthead-title-row">
-        <h1 class="masthead-title"><a href="index.html" style="display:inline-flex;align-items:center;gap:12px;"><img src="assets/apple-touch-icon.png" alt="jabi.io logo" width="42" height="42" style="border-radius:4px;border:1px solid var(--border);flex-shrink:0;"><span>The GenAI Briefing</span></a></h1>
+        <div class="masthead-title"><a href="/" style="display:inline-flex;align-items:center;gap:12px;"><img src="assets/apple-touch-icon.png" alt="jabi.io logo" width="42" height="42" style="border-radius:4px;border:1px solid var(--border);flex-shrink:0;"><span>The GenAI Briefing</span></a></div>
         <p class="masthead-sub">Curated research papers, frontier lab engineering, tech talks, researcher threads &amp; audio briefings.</p>
       </div>
       <nav class="masthead-nav">
         <div class="nav-links">
-          <a href="index.html" class="">Front Page</a>
+          <a href="/" class="">Front Page</a>
           <a href="2026-11-28.html" class="active">Latest Issue (2026-11-28)</a>
           <a href="guides.html" class="">Guides</a>
           <a href="tech-talks.html" class="">Tech Talks Index</a>
           <a href="podcasts.html" class="">Podcasts Index</a>
-          <a href="index.html#archive">Archive</a>
+          <a href="/#archive">Archive</a>
           <a href="#subscribe">Subscribe</a>
         </div>
         <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">
@@ -1020,6 +1040,7 @@
       </nav>
     </header>
     
+    <h1 class="page-h1">The GenAI Briefing — 2026-11-09</h1>
 
     <div style="font-family:var(--font-mono);font-size:0.74rem;color:var(--ink-muted);margin-bottom:20px;">
       ISSUES: <a href="2026-11-28.html" style="font-weight:400;color:var(--ink);">2026-11-28</a> · <a href="2026-11-27.html" style="font-weight:400;color:var(--ink);">2026-11-27</a> · <a href="2026-11-26.html" style="font-weight:400;color:var(--ink);">2026-11-26</a> · <a href="2026-11-25.html" style="font-weight:400;color:var(--ink);">2026-11-25</a> · <a href="2026-11-24.html" style="font-weight:400;color:var(--ink);">2026-11-24</a> · <a href="2026-11-23.html" style="font-weight:400;color:var(--ink);">2026-11-23</a> · <a href="2026-11-22.html" style="font-weight:400;color:var(--ink);">2026-11-22</a> · <a href="2026-11-21.html" style="font-weight:400;color:var(--ink);">2026-11-21</a> · <a href="2026-11-20.html" style="font-weight:400;color:var(--ink);">2026-11-20</a> · <a href="2026-11-19.html" style="font-weight:400;color:var(--ink);">2026-11-19</a> · <a href="2026-11-18.html" style="font-weight:400;color:var(--ink);">2026-11-18</a> · <a href="2026-11-17.html" style="font-weight:400;color:var(--ink);">2026-11-17</a> · <a href="2026-11-16.html" style="font-weight:400;color:var(--ink);">2026-11-16</a> · <a href="2026-11-15.html" style="font-weight:400;color:var(--ink);">2026-11-15</a> · <a href="2026-11-14.html" style="font-weight:400;color:var(--ink);">2026-11-14</a> · <a href="2026-11-13.html" style="font-weight:400;color:var(--ink);">2026-11-13</a> · <a href="2026-11-12.html" style="font-weight:400;color:var(--ink);">2026-11-12</a> · <a href="2026-11-11.html" style="font-weight:400;color:var(--ink);">2026-11-11</a> · <a href="2026-11-10.html" style="font-weight:400;color:var(--ink);">2026-11-10</a> · <a href="2026-11-09.html" style="font-weight:700;color:var(--ink);">2026-11-09</a> · <a href="2026-11-08.html" style="font-weight:400;color:var(--ink);">2026-11-08</a> · <a href="2026-11-07.html" style="font-weight:400;color:var(--ink);">2026-11-07</a> · <a href="2026-11-06.html" style="font-weight:400;color:var(--ink);">2026-11-06</a>
@@ -1302,6 +1323,18 @@
     </section>
 
     
+    <section id="evergreen-guides" aria-label="Evergreen Engineering Guides">
+      <div class="section-head">
+        <h2>V. Evergreen Engineering Guides</h2>
+        <span><a href="guides.html" style="color:var(--accent);text-decoration:none;">ALL 5 GUIDES →</a></span>
+      </div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;font-family:var(--font-serif);font-size:0.98rem;max-width:66ch;">
+        <li><a href="guide-llm-evaluation-benchmarks.html" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">Evaluating Generative AI Systems in Production: Programmatic Graders, Judge Calibration, and Regression Harnesses</a> <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">(EVALUATION &amp; QUALITY · 7 min read)</span></li><li><a href="guide-cascaded-model-routing.html" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">Cascaded Model Routing &amp; Cost Optimization: Frontier Accuracy at Small-Model Latency</a> <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">(ECONOMICS &amp; ROUTING · 7 min read)</span></li><li><a href="guide-agent-harness-engineering.html" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">Agent Harness Engineering: Tool Loops, Sandboxing, and Deterministic Verification</a> <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">(SYSTEMS ARCHITECTURE · 7 min read)</span></li>
+      </ul>
+    </section>
+    
+
+    
     <section id="subscribe" class="subscribe-box" aria-label="Subscribe to The GenAI Briefing">
       <div class="subscribe-kicker">DAILY EMAIL DIGEST · JABI.IO</div>
       <h3>Receive The GenAI Briefing by Email</h3>
@@ -1323,7 +1356,7 @@
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · ISSUE 2026-11-09</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="guides.html">Guides</a> · <a href="about.html">About</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
+      <div><a href="/">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="guides.html">Guides</a> · <a href="about.html">About</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
     </footer>
   </div>
 </body>
