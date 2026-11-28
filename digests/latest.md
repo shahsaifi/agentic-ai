@@ -27,10 +27,10 @@
 **Engineering** (Hacker News) · `github.com` · [1068 pts on HN](https://news.ycombinator.com/item?id=50637220) · *2026-11-25*
 
 ### 6. [Group chat where your AI talks behind your back](https://construct22.com/)
-**Engineering** (Hacker News) · `construct22.com` · [692 pts on HN](https://news.ycombinator.com/item?id=50663595) · *2026-11-27*
+**Engineering** (Hacker News) · `construct22.com` · [696 pts on HN](https://news.ycombinator.com/item?id=50663595) · *2026-11-27*
 
 ### 7. [Claude sabotaging ML research tasks?](https://twitter.com/RealAstropulse/status/2126119408997466389)
-**Engineering** (Hacker News) · `twitter.com` · [647 pts on HN](https://news.ycombinator.com/item?id=50664325) · *2026-11-27*
+**Engineering** (Hacker News) · `twitter.com` · [651 pts on HN](https://news.ycombinator.com/item?id=50664325) · *2026-11-27*
 
 ### 8. [Kamil Khan Mumtaz: Pakistani architect, admired at home, almost invisible abroad](https://worksinprogress.co/issue/the-greatest-architect-youve-never-heard-of-is-in-pakistan/)
 **Engineering** (Hacker News) · `worksinprogress.co` · [505 pts on HN](https://news.ycombinator.com/item?id=50659841) · *2026-11-26*
@@ -47,11 +47,10 @@
 
 ## Researcher Threads on X
 
-- **[Claude tries to sabotage research work at every stage](https://twitter.com/skirano/status/2125371115979641188)** — *X.com (@skirano)* (113 pts) · *2026-11-26* · [HN Discussion](https://news.ycombinator.com/item?id=50651552)
+- **[Anthropic engineer Thariq Shihipar joins OpenAI](https://news.google.com/rss/articles/CBMilgFBVV95cUxOMFZMbl9DV3YwWlBoajFJQ0EzN0xvTjBDR3I3U0ttbzV2TUV1MHBaTlYwWGNzZmJCOE9IX29hWFdsWGlDQW9MZV9MZ09jc2N1WXVLbzdCTzNzM3dJbGxWVWt5cFJXU1FtTFBPT0dxX0ktR1RQVWtpejBoTUhWMG5RREpsVFljSDN6eW9Bc2FFY3lPZHFmQmc?oc=5)** — *X Pulse (TechGig)* · *Sat, 28 Nov 2026*
+- **[Claude accused of sabotaging ML research, an Anthropic employee responds](https://news.google.com/rss/articles/CBMirgFBVV95cUxPUnRYbW5ITG5uMU5ra3JyeWtHLTBZamx5alM2QTJQay1LSnd1Q2RadG5SQVo2OUZCcEZTQ05nc0wtdzJEb0gtbmlCNy05a09TRXRWYk9JMjNGY3VRWXE2UC1PcS0tWTdDTTN2MC05aVZOZ2NENEt6SHJaN29zSUVJX25ONWN5MHRFXzNWRUF3Z2RpamhFczBiN0VwWUMtcDF4TlE5M0J5MHVQNGIyRGc?oc=5)** — *X Pulse (Pasquale Pillitteri)* · *Fri, 27 Nov 2026*
+- **[Claude tries to sabotage research work at every stage](https://twitter.com/skirano/status/2125371115979641188)** — *X.com (@skirano)* (115 pts) · *2026-11-26* · [HN Discussion](https://news.ycombinator.com/item?id=50651552)
 - **[One guy is doing a hunger strike outside Anthropic, currently in his 3rd day](https://twitter.com/ElliotC1/status/2125689373337489419)** — *X.com (@ElliotC1)* (61 pts) · *2026-11-26* · [HN Discussion](https://news.ycombinator.com/item?id=50657110)
-- **[AI Overworks People](https://twitter.com/catalinmpit/status/2123061832781090948)** — *X.com (@catalinmpit)* (35 pts) · *2026-11-19* · [HN Discussion](https://news.ycombinator.com/item?id=50558494)
-- **[AI Twitter/X Daily Recap: OpenAI reports Navier-Stokes singularity find, a contender for second ever Millenium Prize awarded, overshadowing Cognition's $48B Series E, Mistral's $24B Series D, Meta's Muse agent, and GPT Image 2.5](https://news.smol.ai/issues/26-09-08-navier-stokes/)** — *AINews (AI X/Twitter Recap)* · *Tue, 08 Sep 2026*
-  - OpenAI** announced a proposed Navier–Stokes proof by an internal model "**significantly more capable than GPT-6 Astra**" using **10,000 agents** over **88 hours** plus **17 hours** of formal verification.
 
 ---
 
