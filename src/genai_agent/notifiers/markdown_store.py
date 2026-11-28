@@ -1522,7 +1522,7 @@ def _render_rss_feed_xml(archive_map: Dict[str, str], site_url: str = "https://j
 
 SITE_URL = "https://jabi.io"
 DEFAULT_CONTACT_EMAIL = "editor@jabi.io"
-GITHUB_ISSUES_URL = "https://github.com/sahnawaz/agent-ai/issues"
+GITHUB_ISSUES_URL = "https://github.com/shahsaifi/agentic-ai/issues"
 _EMAIL_RE = re.compile(r"^[^@\s<>\"']+@[^@\s<>\"']+\.[^@\s<>\"']+$")
 
 
@@ -1847,7 +1847,7 @@ def _render_contact_page_html(latest_date: str) -> str:
             _p(f'<strong>Editorial Email:</strong> <a href="mailto:{safe_email}">{safe_email}</a>'),
             _p(
                 "<strong>Public Issue Tracker &amp; Source Suggestions:</strong> "
-                f'<a href="{safe_issues_url}" target="_blank" rel="noopener noreferrer">github.com/sahnawaz/agent-ai/issues ↗</a>'
+                f'<a href="{safe_issues_url}" target="_blank" rel="noopener noreferrer">github.com/shahsaifi/agentic-ai/issues ↗</a>'
             ),
             _p(
                 "Publisher: The GenAI Briefing (jabi.io). Editorial corrections and source suggestions are reviewed "
