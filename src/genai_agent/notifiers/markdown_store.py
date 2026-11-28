@@ -18,6 +18,7 @@ from genai_agent.collectors.tech_talks import (
     fetch_detailed_tech_talks_hub,
 )
 from genai_agent.guides import EVERGREEN_GUIDES
+from genai_agent.weekly import build_weekly_reports
 
 EDITORIAL_CSS_AND_JS = """
   <meta name="theme-color" id="meta-theme-color" content="#F6F4EF">
@@ -773,6 +774,122 @@ EDITORIAL_CSS_AND_JS = """
       margin-bottom: 8px;
     }
 
+    /* Weekly Synthesis Components */
+    .weekly-highlight {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      padding: 12px 16px;
+      margin: 0 0 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border-strong);
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+    }
+    .weekly-highlight-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin-right: 8px;
+    }
+    .weekly-highlight a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .weekly-highlight a:hover {
+      color: var(--accent);
+    }
+    .weekly-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      margin: 8px 0 20px;
+    }
+    .weekly-table th {
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+      padding: 8px 10px 8px 0;
+      border-bottom: 1px solid var(--border-strong);
+    }
+    .weekly-table td {
+      padding: 11px 10px 11px 0;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .weekly-table th.num, .weekly-table td.num {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+    .delta-pos {
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .delta-neg {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .delta-flat {
+      color: var(--ink-muted);
+    }
+    .entity-ledger {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 8px 0 12px;
+    }
+    .entity-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 5px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--ink);
+    }
+    .entity-pill span.cnt {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .weekly-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+    }
+    .weekly-nav a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2px;
+    }
+    .weekly-nav a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
     .footer {
       margin-top: 56px;
       padding-top: 18px;
@@ -922,6 +1039,12 @@ EDITORIAL_CSS_AND_JS = """
         width: auto;
         margin-bottom: 4px;
         color: var(--accent);
+      }
+      .weekly-table {
+        font-size: 0.82rem;
+      }
+      .weekly-table th, .weekly-table td {
+        padding: 8px 6px 8px 0;
       }
       .footer {
         flex-direction: column;
@@ -1394,6 +1517,7 @@ def _render_masthead(active_page: str, latest_date: str, edition_date: str = "")
           <a href="/" class="{'active' if active_page == 'index' else ''}">Front Page</a>
           <a href="{latest_date}.html" class="{'active' if active_page == 'daily' else ''}">Latest Issue ({latest_date})</a>
           <a href="guides.html" class="{'active' if active_page == 'guides' else ''}">Guides</a>
+          <a href="weekly.html" class="{'active' if active_page == 'weekly' else ''}">Weekly</a>
           <a href="tech-talks.html" class="{'active' if active_page == 'tech_talks' else ''}">Tech Talks Index</a>
           <a href="podcasts.html" class="{'active' if active_page == 'podcasts' else ''}">Podcasts Index</a>
           <a href="/#archive">Archive</a>
@@ -1579,6 +1703,7 @@ def _footer_trust_links() -> str:
     """Shared navigation and trust-page links rendered in every page footer."""
     return (
         '<a href="guides.html">Guides</a> · '
+        '<a href="weekly.html">Weekly</a> · '
         '<a href="about.html">About</a> · '
         '<a href="faq.html">FAQ</a> · '
         '<a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · '
@@ -1772,14 +1897,21 @@ def _render_sitemap_xml(
     archive_dates: List[str],
     latest_date: str,
     duplicate_dates: Set[str] | None = None,
+    weekly_reports: List[Dict[str, Any]] | None = None,
 ) -> str:
-    """Render `docs/sitemap.xml` with deduplicated content pages, evergreen guides, directories, and About/FAQ."""
+    """Render `docs/sitemap.xml` with deduplicated content pages, weekly syntheses, evergreen guides, directories, and About/FAQ."""
     dup_set = duplicate_dates or set()
     entries: List[Tuple[str, str]] = [(f"{SITE_URL}/", latest_date)]
     for d in sorted(archive_dates, reverse=True):
         if d == latest_date or d in dup_set:
             continue
         entries.append((f"{SITE_URL}/{d}.html", d))
+    if weekly_reports:
+        entries.append((f"{SITE_URL}/weekly.html", latest_date))
+        for rep in reversed(weekly_reports):
+            wid = rep["week_id"]
+            mod = rep.get("end_date") or latest_date
+            entries.append((f"{SITE_URL}/weekly-{wid}.html", mod))
     entries.append((f"{SITE_URL}/guides.html", latest_date))
     for guide in EVERGREEN_GUIDES:
         entries.append((f"{SITE_URL}/{guide['slug']}.html", guide.get("updated_at") or latest_date))
@@ -2329,6 +2461,397 @@ def _render_guide_article_html(guide: Dict[str, str], latest_date: str) -> str:
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · ENGINEERING GUIDES</div>
+      <div><a href="/">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{html.escape(latest_date)}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
+    </footer>
+  </div>
+</body>
+</html>"""
+
+
+def _build_weekly_seo_meta(report: Dict[str, Any]) -> Tuple[str, str]:
+    """Build a concise <= 68 char keyword-rich <title> and unique <meta name='description'> for a weekly report."""
+    iso_week = report["iso_week"]
+    iso_year = report["iso_year"]
+    date_range = report["date_range_label"]
+    total_items = report["total_items"]
+    days_count = report["days_count"]
+    clusters = report.get("cluster_stats", [])
+
+    top1_short = clusters[0]["short_label"] if len(clusters) > 0 else "AI Engineering"
+    top2_short = clusters[1]["short_label"] if len(clusters) > 1 else "Research"
+
+    candidate = f"Week {iso_week} GenAI Synthesis: {top1_short} & {top2_short} — jabi.io"
+    if len(candidate) > 68:
+        candidate = f"Week {iso_week} GenAI Synthesis: {top1_short} — jabi.io"
+    if len(candidate) > 68:
+        candidate = _trim_at_word_boundary(candidate, 68)
+
+    c1_name = clusters[0]["cluster"] if len(clusters) > 0 else "Frontier Labs"
+    c1_share = clusters[0]["share"] if len(clusters) > 0 else 0.0
+    c2_name = clusters[1]["cluster"] if len(clusters) > 1 else "Agentic Systems"
+    c2_share = clusters[1]["share"] if len(clusters) > 1 else 0.0
+
+    desc = (
+        f"Week {iso_week}, {iso_year} ({date_range}) GenAI synthesis: {total_items} items across "
+        f"{days_count} issues. Top themes: {c1_name} ({c1_share:.0f}%), {c2_name} ({c2_share:.0f}%)."
+    )
+    if len(desc) > 160:
+        desc = _trim_at_word_boundary(desc, 159) + "."
+
+    return candidate, desc
+
+
+def _delta_css_class(delta: float | None) -> str:
+    if delta is None or abs(delta) < 0.5:
+        return "delta-flat"
+    return "delta-pos" if delta > 0 else "delta-neg"
+
+
+def _render_weekly_index_html(
+    weekly_reports: List[Dict[str, Any]],
+    latest_date: str,
+) -> str:
+    """Render `docs/weekly.html` listing all qualifying weekly syntheses in reverse chronological order."""
+    cards: List[str] = []
+    for rep in reversed(weekly_reports):
+        wid = rep["week_id"]
+        iso_week = rep["iso_week"]
+        iso_year = rep["iso_year"]
+        date_range = rep["date_range_label"]
+        dom = rep["dominant_cluster"]
+        delta_cls = _delta_css_class(dom.get("delta"))
+        delta_badge = f'<span class="{delta_cls}">{html.escape(dom["delta_label"])}</span>'
+        top_clusters = rep.get("cluster_stats", [])[:2]
+        cluster_summary = " · ".join(
+            f"{c['cluster']} ({c['share']:.0f}%)" for c in top_clusters if c["count"] > 0
+        )
+        top_ents = ", ".join(
+            f"{e['entity']} ({e['count']})" for e in rep.get("entity_momentum", [])[:4]
+        )
+        signal_line = f"Dominant themes: {cluster_summary}."
+        if top_ents:
+            signal_line += f" Active entities: {top_ents}."
+
+        cards.append(
+            f"""
+            <article class="guide-card">
+              <div class="guide-kicker">
+                <span>WEEK {iso_week:02d}, {iso_year}</span>
+                <span class="muted">· {html.escape(date_range)}</span>
+                <span class="muted">· {rep['days_count']} ISSUES · {rep['total_items']} ITEMS</span>
+                <span class="muted">· WoW: {delta_badge}</span>
+              </div>
+              <h3><a href="weekly-{html.escape(wid)}.html">Weekly GenAI Synthesis — Week {iso_week}, {iso_year} ({html.escape(date_range)})</a></h3>
+              <p class="briefing-summary">{html.escape(signal_line)}</p>
+              <div class="briefing-actions">
+                <a href="weekly-{html.escape(wid)}.html">Read Weekly Synthesis →</a>
+                <a href="{html.escape(rep['end_date'])}.html">Latest Issue in Week ({html.escape(rep['end_date'])}) →</a>
+              </div>
+            </article>
+            """
+        )
+
+    if cards:
+        list_html = f'<div class="guide-list">{"".join(cards)}</div>'
+    else:
+        list_html = (
+            '<p class="briefing-summary">Weekly syntheses are published automatically once an ISO week '
+            "reaches at least five unique daily editions.</p>"
+        )
+
+    body = (
+        '<div class="editorial-callout">'
+        "<h3>Weekly Analytical Ledger</h3>"
+        "<p>Cross-day deduplicated theme distributions, week-over-week shifts, velocity-ranked pivotal "
+        "developments, and entity momentum computed across every qualifying week (&ge; 5 unique daily editions).</p>"
+        "</div>"
+        f"{list_html}"
+    )
+
+    weekly_title = "Weekly GenAI Synthesis Archive — The GenAI Briefing (jabi.io)"
+    weekly_desc = (
+        "Weekly Generative AI analytical syntheses: cross-day theme distributions, week-over-week shifts, "
+        "velocity-ranked pivotal developments, and entity momentum."
+    )
+    weekly_jsonld = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "CollectionPage",
+                "name": "Weekly GenAI Synthesis Archive",
+                "description": weekly_desc,
+                "url": f"{SITE_URL}/weekly.html",
+                "publisher": _schema_organization(),
+            },
+            _schema_breadcrumbs([
+                ("Home", f"{SITE_URL}/"),
+                ("Weekly Synthesis", f"{SITE_URL}/weekly.html"),
+            ]),
+        ],
+    }
+    return _render_static_page_html(
+        "weekly",
+        "weekly.html",
+        weekly_title,
+        weekly_desc,
+        "Weekly GenAI Synthesis",
+        body,
+        latest_date,
+        include_adsense=True,
+        h1_text="Weekly GenAI Synthesis Archive",
+        jsonld=weekly_jsonld,
+    )
+
+
+def _render_weekly_report_html(
+    report: Dict[str, Any],
+    all_reports: List[Dict[str, Any]],
+    latest_date: str,
+) -> str:
+    """Render an individual weekly synthesis report page (`docs/weekly-YYYY-WXX.html`)."""
+    wid = report["week_id"]
+    iso_week = report["iso_week"]
+    iso_year = report["iso_year"]
+    date_range = report["date_range_label"]
+    filename = f"weekly-{wid}.html"
+    h1_text = f"Weekly GenAI Synthesis — Week {iso_week}, {iso_year} ({date_range})"
+    seo_title, seo_desc = _build_weekly_seo_meta(report)
+
+    essay_html = _harden_rendered_markdown_html(
+        markdown.markdown(
+            _strip_emojis(report.get("essay_markdown", "")),
+            extensions=["extra", "sane_lists"],
+        )
+    )
+
+    # Section II: Theme Distribution & Week-over-Week Shifts
+    cluster_rows: List[str] = []
+    for c in report.get("cluster_stats", []):
+        d_cls = _delta_css_class(c.get("delta"))
+        cluster_rows.append(
+            f"""
+            <tr>
+              <td><strong>{html.escape(c['cluster'])}</strong></td>
+              <td class="num">{c['count']}</td>
+              <td class="num">{c['share']:.1f}%</td>
+              <td class="num"><span class="{d_cls}">{html.escape(c['delta_label'])}</span></td>
+            </tr>
+            """
+        )
+
+    # Section III: Top 5 Pivotal Developments (NO verbatim daily summary blurbs)
+    top5_rows: List[str] = []
+    for idx, it in enumerate(report.get("top5", []), start=1):
+        safe_url = _safe_http_url(it["url"])
+        safe_hn = _safe_http_url(it["hn_url"]) if it.get("hn_url") else ""
+        safe_title = html.escape(it["title"])
+        safe_cluster = html.escape(it["cluster"])
+        safe_cat = html.escape(it["category"])
+        safe_src = html.escape(it["source_label"])
+        safe_domain = html.escape(it.get("domain") or "")
+        first_date = it["first_date"]
+        days_feat = it["days_featured"]
+        peak_pts = it["peak_points"]
+        impact = it["impact_score"]
+
+        kicker_bits = [
+            f'<span class="briefing-tag">{safe_cluster}</span>',
+            f"<span>{safe_cat}</span>",
+            f"<span>{safe_src}</span>",
+            f"<span>Impact {impact:.1f}</span>",
+        ]
+        if peak_pts > 0:
+            kicker_bits.append(f"<span>{peak_pts:,} pts</span>")
+        if days_feat > 1:
+            kicker_bits.append(f"<span>Featured {days_feat} days</span>")
+
+        pts_clause = f"recording {peak_pts:,} community points" if peak_pts > 0 else "selected via primary editorial signal"
+        persist_clause = (
+            f"across {days_feat} daily editions (first indexed {first_date})"
+            if days_feat > 1
+            else f"when first indexed on {first_date}"
+        )
+        signal_line = (
+            f"Ranked #{idx} in Week {iso_week} for {it['cluster']} ({it['category']}) via {it['source_label']}, "
+            f"{pts_clause} {persist_clause}."
+        )
+
+        actions: List[str] = [
+            f'<a href="{safe_url}" target="_blank" rel="noopener noreferrer">'
+            f'Read Source{f" ({safe_domain})" if safe_domain else ""} ↗</a>',
+            f'<a href="{html.escape(first_date)}.html">Daily Edition ({html.escape(first_date)}) →</a>',
+        ]
+        if safe_hn and it.get("hn_url") != it.get("url"):
+            actions.append(
+                f'<a href="{safe_hn}" target="_blank" rel="noopener noreferrer">HN Discussion ↗</a>'
+            )
+
+        top5_rows.append(
+            f"""
+            <article class="briefing-item">
+              <div class="briefing-num">{idx:02d}</div>
+              <div class="briefing-content">
+                <div class="briefing-meta">{'<span>·</span>'.join(kicker_bits)}</div>
+                <h3><a href="{safe_url}" target="_blank" rel="noopener noreferrer">{safe_title}</a></h3>
+                <p class="briefing-summary">{html.escape(signal_line)}</p>
+                <div class="briefing-actions">{"".join(actions)}</div>
+              </div>
+            </article>
+            """
+        )
+
+    # Section IV: Entity & Lab Momentum
+    entity_pills = "".join(
+        f'<span class="entity-pill">{html.escape(e["entity"])} <span class="cnt">{e["count"]}</span></span>'
+        for e in report.get("entity_momentum", [])
+    )
+    if not entity_pills:
+        entity_pills = '<span class="entity-pill">Broad Multi-Lab Distribution</span>'
+
+    # Section V: Related Evergreen Guides
+    guide_items = "".join(
+        f'<li><a href="{html.escape(g["slug"])}.html" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">'
+        f'{html.escape(g["title"])}</a> '
+        f'<span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">'
+        f'({html.escape(g["kicker"])} · {html.escape(g["reading_time"])})</span></li>'
+        for g in report.get("related_guides", [])
+    )
+
+    # Previous / Next week navigation
+    week_ids = [r["week_id"] for r in all_reports]
+    pos = week_ids.index(wid) if wid in week_ids else -1
+    prev_rep = all_reports[pos - 1] if pos > 0 else None
+    next_rep = all_reports[pos + 1] if 0 <= pos < len(all_reports) - 1 else None
+
+    prev_link = (
+        f'<a href="weekly-{html.escape(prev_rep["week_id"])}.html">← Week {prev_rep["iso_week"]}, {prev_rep["iso_year"]} ({html.escape(prev_rep["date_range_label"])})</a>'
+        if prev_rep
+        else '<span style="color:var(--ink-muted);">Earliest Qualifying Week</span>'
+    )
+    next_link = (
+        f'<a href="weekly-{html.escape(next_rep["week_id"])}.html">Week {next_rep["iso_week"]}, {next_rep["iso_year"]} ({html.escape(next_rep["date_range_label"])}) →</a>'
+        if next_rep
+        else '<span style="color:var(--ink-muted);">Latest Qualifying Week</span>'
+    )
+
+    report_url = f"{SITE_URL}/{filename}"
+    pub_date = report.get("end_date") or latest_date
+    weekly_jsonld = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "TechArticle",
+                "headline": h1_text,
+                "description": seo_desc,
+                "url": report_url,
+                "datePublished": pub_date,
+                "dateModified": pub_date,
+                "author": _schema_organization(),
+                "publisher": _schema_organization(),
+                "image": f"{SITE_URL}/assets/logo.png",
+                "mainEntityOfPage": {
+                    "@type": "WebPage",
+                    "@id": report_url,
+                },
+            },
+            _schema_breadcrumbs([
+                ("Home", f"{SITE_URL}/"),
+                ("Weekly Synthesis", f"{SITE_URL}/weekly.html"),
+                (f"Week {iso_week}, {iso_year}", report_url),
+            ]),
+        ],
+    }
+
+    return f"""<!DOCTYPE html>
+<html lang="en" data-theme="sage">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{html.escape(seo_title)}</title>
+  {_seo_head(filename, seo_title, seo_desc, og_type='article', jsonld=weekly_jsonld)}{_render_adsense_head_snippet()}
+  {EDITORIAL_CSS_AND_JS}
+</head>
+<body>
+  <div class="page-wrap">
+    {_render_masthead(active_page="weekly", latest_date=latest_date, edition_date=pub_date)}
+    <div style="font-family:var(--font-mono);font-size:0.74rem;color:var(--ink-muted);margin-bottom:14px;">
+      <a href="weekly.html" style="color:var(--accent);text-decoration:none;">← ALL WEEKLY SYNTHESES</a>
+      <span> · {html.escape(wid)} · {report['days_count']} DAILY ISSUES · {report['total_items']} DEDUPLICATED ITEMS</span>
+    </div>
+    <h1 class="page-h1">{html.escape(h1_text)}</h1>
+
+    <section id="editorial-analysis">
+      <div class="section-head">
+        <h2>I. Editorial Analysis</h2>
+        <span>{html.escape(date_range.upper())}</span>
+      </div>
+      <div class="guide-article">
+        {essay_html}
+      </div>
+    </section>
+
+    <section id="theme-distribution">
+      <div class="section-head">
+        <h2>II. Theme Distribution &amp; Week-over-Week Shifts</h2>
+        <span>{report['total_items']} DEDUPLICATED ITEMS</span>
+      </div>
+      <table class="weekly-table">
+        <thead>
+          <tr>
+            <th>Engineering Cluster</th>
+            <th class="num">Items</th>
+            <th class="num">Share %</th>
+            <th class="num">Δ vs. Prior Week</th>
+          </tr>
+        </thead>
+        <tbody>
+          {"".join(cluster_rows)}
+        </tbody>
+      </table>
+    </section>
+
+    <section id="pivotal-developments">
+      <div class="section-head">
+        <h2>III. Top 5 Pivotal Developments</h2>
+        <span>RANKED BY WEEKLY IMPACT SCORE</span>
+      </div>
+      <div class="briefing-list">
+        {"".join(top5_rows)}
+      </div>
+    </section>
+
+    {_render_editorial_ad_slot()}
+
+    <section id="entity-momentum">
+      <div class="section-head">
+        <h2>IV. Entity &amp; Lab Momentum</h2>
+        <span>TITLE &amp; SOURCE MENTIONS</span>
+      </div>
+      <div class="entity-ledger">
+        {entity_pills}
+      </div>
+    </section>
+
+    <section id="related-guides">
+      <div class="section-head">
+        <h2>V. Related Evergreen Guides</h2>
+        <span><a href="guides.html" style="color:var(--accent);text-decoration:none;">ALL {len(EVERGREEN_GUIDES)} GUIDES →</a></span>
+      </div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;font-family:var(--font-serif);font-size:0.98rem;max-width:66ch;">
+        {guide_items}
+      </ul>
+    </section>
+
+    <nav class="weekly-nav" aria-label="Weekly synthesis navigation">
+      <div>{prev_link}</div>
+      <div><a href="weekly.html">All Weekly Syntheses</a></div>
+      <div>{next_link}</div>
+    </nav>
+
+    {_render_subscribe_box_html()}
+
+    <footer class="footer">
+      <div>THE GENAI BRIEFING · JABI.IO · WEEKLY SYNTHESIS ({html.escape(wid)})</div>
       <div><a href="/">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{html.escape(latest_date)}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
     </footer>
   </div>
@@ -2957,7 +3480,11 @@ def _render_daily_digest_html(
 </html>"""
 
 
-def _render_index_portal_html(archive_map: Dict[str, str], allow_network: bool = True) -> str:
+def _render_index_portal_html(
+    archive_map: Dict[str, str],
+    allow_network: bool = True,
+    weekly_reports: List[Dict[str, Any]] | None = None,
+) -> str:
     """Render `docs/index.html` as a high-density, editorial front page + evergreen guides + archive ledger."""
     sorted_dates = sorted(archive_map.keys(), reverse=True)
     latest_date = sorted_dates[0] if sorted_dates else ""
@@ -3047,6 +3574,27 @@ def _render_index_portal_html(archive_map: Dict[str, str], allow_network: bool =
         ],
     }
 
+    weekly_highlight_html = ""
+    if weekly_reports:
+        latest_wk = weekly_reports[-1]
+        wk_wid = latest_wk["week_id"]
+        wk_num = latest_wk["iso_week"]
+        wk_yr = latest_wk["iso_year"]
+        wk_range = latest_wk["date_range_label"]
+        wk_dom = latest_wk["dominant_cluster"]
+        weekly_highlight_html = (
+            '<div class="weekly-highlight" aria-label="Latest Weekly Synthesis">'
+            '<div>'
+            '<span class="weekly-highlight-kicker">LATEST WEEKLY SYNTHESIS</span>'
+            f'<a href="weekly-{html.escape(wk_wid)}.html"><strong>Week {wk_num}, {wk_yr} ({html.escape(wk_range)})</strong></a>'
+            f' — {latest_wk["total_items"]} items · Top cluster: {html.escape(wk_dom["cluster"])} ({html.escape(wk_dom["delta_label"])})'
+            '</div>'
+            '<div style="font-family:var(--font-mono);font-size:0.72rem;">'
+            '<a href="weekly.html" style="text-decoration:none;color:var(--accent);">ALL WEEKLY REPORTS →</a>'
+            '</div>'
+            '</div>'
+        )
+
     return f"""<!DOCTYPE html>
 <html lang="en" data-theme="sage">
 <head>
@@ -3061,6 +3609,7 @@ def _render_index_portal_html(archive_map: Dict[str, str], allow_network: bool =
     {_render_masthead(active_page="index", latest_date=latest_date, edition_date=latest_date)}
 
     {tldr_html}
+    {weekly_highlight_html}
 
     <div class="section-head">
       <h2>I. Lead Briefing — {latest_date} (Top 10)</h2>
@@ -3359,8 +3908,9 @@ def rebuild_docs_site(
     docs_dir: Path | None = None,
     latest_fallback_date: str = "",
     fetch_live_hubs: bool | None = None,
+    allow_gemini_weekly: bool = False,
 ) -> None:
-    """Regenerate all GitHub Pages HTML files, evergreen guides, trust pages, RSS feed, robots.txt, and sitemap.xml."""
+    """Regenerate all GitHub Pages HTML files, weekly syntheses, evergreen guides, trust pages, RSS feed, robots.txt, and sitemap.xml."""
     target_docs = docs_dir if docs_dir is not None else output_dir.parent / "docs"
     target_docs.mkdir(parents=True, exist_ok=True)
     (target_docs / ".nojekyll").write_text("", encoding="utf-8")
@@ -3392,6 +3942,14 @@ def rebuild_docs_site(
     else:
         is_live_docs_build = bool(fetch_live_hubs)
 
+    weekly_reports = build_weekly_reports(
+        archive_map=archive_map,
+        duplicate_dates=set(duplicates.keys()),
+        parse_items_fn=_parse_top10_items,
+        weekly_dir=output_dir / "weekly",
+        allow_gemini=allow_gemini_weekly,
+    )
+
     for arch_date in archive_dates:
         md_text = archive_map[arch_date]
         arch_title = f"The GenAI Briefing — {arch_date}"
@@ -3405,7 +3963,11 @@ def rebuild_docs_site(
         )
         (target_docs / f"{arch_date}.html").write_text(arch_html, encoding="utf-8")
 
-    index_html = _render_index_portal_html(archive_map=archive_map, allow_network=is_live_docs_build)
+    index_html = _render_index_portal_html(
+        archive_map=archive_map,
+        allow_network=is_live_docs_build,
+        weekly_reports=weekly_reports,
+    )
     (target_docs / "index.html").write_text(index_html, encoding="utf-8")
 
     latest_d = archive_dates[-1] if archive_dates else latest_fallback_date
@@ -3413,6 +3975,19 @@ def rebuild_docs_site(
         _render_rss_feed_xml(archive_map=archive_map, site_url=SITE_URL),
         encoding="utf-8",
     )
+    (target_docs / "weekly.html").write_text(
+        _render_weekly_index_html(weekly_reports=weekly_reports, latest_date=latest_d),
+        encoding="utf-8",
+    )
+    for rep in weekly_reports:
+        (target_docs / f"weekly-{rep['week_id']}.html").write_text(
+            _render_weekly_report_html(
+                report=rep,
+                all_reports=weekly_reports,
+                latest_date=latest_d,
+            ),
+            encoding="utf-8",
+        )
     (target_docs / "guides.html").write_text(_render_guides_index_html(latest_d), encoding="utf-8")
     for guide in EVERGREEN_GUIDES:
         (target_docs / f"{guide['slug']}.html").write_text(
@@ -3433,6 +4008,7 @@ def rebuild_docs_site(
             archive_dates=archive_dates,
             latest_date=latest_d,
             duplicate_dates=set(duplicates.keys()),
+            weekly_reports=weekly_reports,
         ),
         encoding="utf-8",
     )

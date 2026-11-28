@@ -1014,6 +1014,10 @@ def _assert_site_seo_invariants(docs_dir: Path, expected_daily_lead_keywords: di
                 assert not re.search(r"<[^>]+>", answer_text), f"Raw HTML tag found in FAQ acceptedAnswer.text: {answer_text!r}"
         elif re.match(r"^\d{4}-\d{2}-\d{2}\.html$", name):
             assert "CollectionPage" in ld_types and "BreadcrumbList" in ld_types, f"{name} JSON-LD missing CollectionPage/BreadcrumbList: {ld_types}"
+        elif name == "weekly.html":
+            assert "CollectionPage" in ld_types and "BreadcrumbList" in ld_types, f"{name} JSON-LD missing CollectionPage/BreadcrumbList: {ld_types}"
+        elif re.match(r"^weekly-\d{4}-W\d{2}\.html$", name):
+            assert "TechArticle" in ld_types and "BreadcrumbList" in ld_types, f"{name} JSON-LD missing TechArticle/BreadcrumbList: {ld_types}"
 
         # 3. Titles & Descriptions
         m_title = re.search(r"<title>(.*?)</title>", text, flags=re.S)
@@ -1038,6 +1042,9 @@ def _assert_site_seo_invariants(docs_dir: Path, expected_daily_lead_keywords: di
             tech_node = next(n for n in ld_nodes if n.get("@type") == "TechArticle")
             assert tech_node.get("headline") == h1_text, f"{name}: JSON-LD headline {tech_node.get('headline')!r} != <h1> {h1_text!r}"
             assert len(h1_text) > len(page_title.split(" — ")[0]), f"{name}: <h1> should preserve full guide title"
+
+        if name == "weekly.html" or re.match(r"^weekly-\d{4}-W\d{2}\.html$", name):
+            assert len(page_title) <= 68, f"{name}: weekly <title> exceeds 68 chars ({len(page_title)}): {page_title!r}"
 
         # 4. Open Graph & Twitter Cards
         for meta_marker in (
@@ -1102,6 +1109,489 @@ def test_published_docs_technical_seo_integrity():
     if not repo_docs.exists():
         return
     _assert_site_seo_invariants(repo_docs)
+
+
+def test_weekly_qualifying_weeks_filter():
+    from genai_agent.weekly import group_qualifying_weeks
+
+    # 2026-W45: 2026-11-06, 2026-11-07 (duplicate), 2026-11-08 -> 2 unique days (< 5, excluded)
+    # 2026-W46: 2026-11-09..2026-11-15 -> 7 unique days (>= 5, included)
+    # 2026-W47: 2026-11-16..2026-11-20 -> 5 unique days (>= 5, included)
+    # 2026-W48: 2026-11-23..2026-11-28 -> 6 unique days (>= 5, included)
+    # 2026-W49: 5 dates where 1 is a duplicate -> 4 unique days (< 5, excluded)
+    archive_map = {
+        "2026-11-06": "md",
+        "2026-11-07": "md",
+        "2026-11-08": "md",
+        "2026-11-09": "md",
+        "2026-11-10": "md",
+        "2026-11-11": "md",
+        "2026-11-12": "md",
+        "2026-11-13": "md",
+        "2026-11-14": "md",
+        "2026-11-15": "md",
+        "2026-11-16": "md",
+        "2026-11-17": "md",
+        "2026-11-18": "md",
+        "2026-11-19": "md",
+        "2026-11-20": "md",
+        "2026-11-23": "md",
+        "2026-11-24": "md",
+        "2026-11-25": "md",
+        "2026-11-26": "md",
+        "2026-11-27": "md",
+        "2026-11-28": "md",
+        "2026-11-30": "md",
+        "2026-12-01": "md",
+        "2026-12-02": "md",
+        "2026-12-03": "md",
+        "2026-12-04": "md",
+    }
+    duplicate_dates = {"2026-11-07", "2026-12-04"}
+
+    qualifying = group_qualifying_weeks(archive_map, duplicate_dates=duplicate_dates, min_days=5)
+    assert list(qualifying.keys()) == ["2026-W46", "2026-W47", "2026-W48"]
+    assert "2026-W45" not in qualifying
+    assert "2026-W49" not in qualifying
+    assert len(qualifying["2026-W46"]) == 7
+    assert len(qualifying["2026-W47"]) == 5
+    assert len(qualifying["2026-W48"]) == 6
+
+
+def test_weekly_analytics_engine_dedup_clusters_deltas_top5_entities_guides(tmp_path: Path):
+    from genai_agent.weekly import WEEKLY_CLUSTERS, analyze_week, build_weekly_reports
+
+    sentinel_summary = "UNIQUE_DAILY_SUMMARY_SENTINEL_NEVER_COPY_VERBATIM_987654"
+
+    # Week 46: tests URL normalization dedup, near-identical title Jaccard dedup, peak_points & days_featured
+    w46_days = {
+        "2026-11-09": [
+            {
+                "title": "Anthropic Agent Harness Engineering for Long-Horizon Tool Use",
+                "url": "https://www.anthropic.com/engineering/agent-harness?utm_source=hn#top",
+                "source": "Anthropic",
+                "domain": "anthropic.com",
+                "category": "Lab Release",
+                "points": "420",
+                "summary": sentinel_summary,
+            },
+            {
+                "title": "FP8 Quantization and KV-Cache Compression for Mamba Inference",
+                "url": "https://arxiv.org/abs/2611.10001",
+                "source": "arXiv",
+                "domain": "arxiv.org",
+                "category": "Research",
+                "points": "260",
+                "summary": "Low-bit quantization benchmark.",
+            },
+        ],
+        "2026-11-10": [
+            # Same normalized URL (no www, no query, trailing slash) with higher points -> must collapse
+            {
+                "title": "Anthropic Agent Harness Engineering for Long-Horizon Tool Use",
+                "url": "https://anthropic.com/engineering/agent-harness/",
+                "source": "Hacker News",
+                "domain": "anthropic.com",
+                "category": "Engineering",
+                "points": "880",
+                "hn_url": "https://news.ycombinator.com/item?id=123456",
+                "summary": sentinel_summary,
+            },
+            # Near-identical title (>= 0.72 Jaccard) with different URL -> must collapse into FP8 item
+            {
+                "title": "FP8 Quantization and KV-Cache Compression for Mamba Inference Models",
+                "url": "https://huggingface.co/papers/2611.10001",
+                "source": "Hugging Face",
+                "domain": "huggingface.co",
+                "category": "Research",
+                "points": "310",
+                "summary": "Mirrored on HF.",
+            },
+        ],
+        "2026-11-11": [
+            {
+                "title": "World Model Diffusion for 3D Spatial Video Generation",
+                "url": "https://deepmind.google/world-model-3d",
+                "source": "DeepMind",
+                "domain": "deepmind.google",
+                "category": "Lab Release",
+                "points": "510",
+                "summary": "3D spatial video diffusion.",
+            },
+        ],
+        "2026-11-12": [
+            {
+                "title": "SWE-Bench Coding Agent Benchmark & Safety Evaluation Arena",
+                "url": "https://openai.com/evals/swe-safety-arena",
+                "source": "OpenAI",
+                "domain": "openai.com",
+                "category": "Lab Release",
+                "points": "390",
+                "summary": "Safety evaluation benchmark.",
+            },
+        ],
+        "2026-11-13": [
+            {
+                "title": "Claude Code Terminal CLI for Autonomous Repository Refactoring",
+                "url": "https://github.com/anthropic/claude-code-cli",
+                "source": "GitHub",
+                "domain": "github.com",
+                "category": "Engineering",
+                "points": "640",
+                "summary": "Autonomous coding agent CLI.",
+            },
+            {
+                "title": "OpenAI GPT-5 Foundation Model Technical Report",
+                "url": "https://openai.com/gpt5-report",
+                "source": "OpenAI",
+                "domain": "openai.com",
+                "category": "Lab Release",
+                "points": "710",
+                "summary": "Frontier lab technical report.",
+            },
+        ],
+    }
+
+    w46 = analyze_week("2026-W46", w46_days, prior_week_stats=None)
+
+    # 8 raw entries across 5 days -> 2 collapsed -> 6 deduplicated items
+    assert w46["total_items"] == 6
+    assert w46["days_count"] == 5
+    assert w46["has_prior_week"] is False
+
+    # Check 6 clusters sum to ~100% and Baseline deltas on first week
+    assert len(w46["cluster_stats"]) == len(WEEKLY_CLUSTERS) == 6
+    share_sum = sum(c["share"] for c in w46["cluster_stats"])
+    assert 99.5 <= share_sum <= 100.5, f"Cluster shares summed to {share_sum}"
+    for row in w46["cluster_stats"]:
+        assert row["delta"] is None
+        assert row["delta_label"] == "Baseline"
+
+    # Top 5 Pivotal Developments: velocity-ranked, tracks days_featured & peak_points, zero verbatim daily summary
+    top5 = w46["top5"]
+    assert len(top5) == 5
+    assert top5[0]["title"] == "Anthropic Agent Harness Engineering for Long-Horizon Tool Use"
+    assert top5[0]["days_featured"] == 2
+    assert top5[0]["peak_points"] == 880
+    assert top5[0]["first_date"] == "2026-11-09"
+    assert top5[0]["url"].startswith("https://")
+    assert set(top5[0]["sources"]) == {"Anthropic", "Hacker News"}
+    # Ensure impact scores are monotonically non-increasing
+    scores = [it["impact_score"] for it in top5]
+    assert scores == sorted(scores, reverse=True)
+    # Zero verbatim copying: no daily summary key or sentinel text stored in top5 records
+    for it in top5:
+        assert "summary" not in it
+        assert "_classify_summary" not in it
+        assert sentinel_summary not in str(it)
+
+    # Entity & Lab Momentum non-empty and 3 Evergreen Guides matched
+    assert len(w46["entity_momentum"]) > 0
+    entity_names = {e["entity"] for e in w46["entity_momentum"]}
+    assert "Anthropic" in entity_names or "OpenAI" in entity_names
+    assert len(w46["related_guides"]) == 3
+    assert len({g["slug"] for g in w46["related_guides"]}) == 3
+
+    # Week 47: heavier on Inference & Quantization -> verify signed WoW deltas
+    w47_days = {
+        "2026-11-16": [
+            {
+                "title": "Int4 Quantization Kernel for Low-Latency LLM Inference",
+                "url": "https://arxiv.org/abs/2611.20001",
+                "source": "arXiv",
+                "domain": "arxiv.org",
+                "category": "Research",
+                "points": "520",
+                "summary": "Quantization kernel.",
+            },
+        ],
+        "2026-11-17": [
+            {
+                "title": "Speculative Decoding and KV-Cache Pruning in Mamba Transformers",
+                "url": "https://arxiv.org/abs/2611.20002",
+                "source": "arXiv",
+                "domain": "arxiv.org",
+                "category": "Research",
+                "points": "480",
+                "summary": "Speculative decoding.",
+            },
+        ],
+        "2026-11-18": [
+            {
+                "title": "Linear Attention DeltaNet State Space Architecture",
+                "url": "https://arxiv.org/abs/2611.20003",
+                "source": "arXiv",
+                "domain": "arxiv.org",
+                "category": "Research",
+                "points": "330",
+                "summary": "Linear attention.",
+            },
+        ],
+        "2026-11-19": [
+            {
+                "title": "Sparse Mixture-of-Experts FP8 Distillation on NVIDIA GPUs",
+                "url": "https://nvidia.com/moe-fp8",
+                "source": "NVIDIA",
+                "domain": "nvidia.com",
+                "category": "Lab Release",
+                "points": "410",
+                "summary": "Sparse MoE FP8.",
+            },
+        ],
+        "2026-11-20": [
+            {
+                "title": "MCP Agent Orchestration Sandbox for Multi-Agent Workflows",
+                "url": "https://anthropic.com/mcp-sandbox",
+                "source": "Anthropic",
+                "domain": "anthropic.com",
+                "category": "Lab Release",
+                "points": "600",
+                "summary": "MCP agent sandbox.",
+            },
+        ],
+    }
+
+    w47 = analyze_week("2026-W47", w47_days, prior_week_stats=w46)
+    assert w47["has_prior_week"] is True
+    w47_share_sum = sum(c["share"] for c in w47["cluster_stats"])
+    assert 99.5 <= w47_share_sum <= 100.5
+
+    w46_by_cluster = {c["cluster"]: c["share"] for c in w46["cluster_stats"]}
+    for row in w47["cluster_stats"]:
+        expected_delta = round(row["share"] - w46_by_cluster[row["cluster"]], 1)
+        assert row["delta"] == expected_delta
+        assert row["delta_label"] != "Baseline"
+        assert row["delta_label"].endswith("%")
+
+    inf_row = next(c for c in w47["cluster_stats"] if c["cluster"] == "Inference, Quantization & Architectures")
+    assert inf_row["delta"] > 0
+    assert inf_row["delta_label"].startswith("+")
+
+    # End-to-end build_weekly_reports chains WoW deltas and attaches essays
+    combined_archive = {d: d for d in list(w46_days.keys()) + list(w47_days.keys())}
+    all_day_items = {**w46_days, **w47_days}
+    reports = build_weekly_reports(
+        archive_map=combined_archive,
+        duplicate_dates=set(),
+        parse_items_fn=lambda day_key: all_day_items[day_key],
+        weekly_dir=tmp_path / "weekly_cache",
+        allow_gemini=False,
+        min_days=5,
+    )
+    assert [r["week_id"] for r in reports] == ["2026-W46", "2026-W47"]
+    assert reports[0]["has_prior_week"] is False
+    assert reports[1]["has_prior_week"] is True
+    for rep in reports:
+        paragraphs = [p.strip() for p in rep["essay_markdown"].split("\n\n") if p.strip()]
+        assert len(paragraphs) == 3
+
+
+def test_weekly_essay_cache_and_deterministic_fallback(tmp_path: Path):
+    from genai_agent.weekly import analyze_week, load_or_generate_weekly_essay
+
+    day_items = {
+        f"2026-11-{day:02d}": [
+            {
+                "title": f"OpenAI Agentic Harness Benchmark Part {day}",
+                "url": f"https://example.com/item-{day}",
+                "source": "Hacker News",
+                "domain": "example.com",
+                "category": "Engineering",
+                "points": str(100 + day * 20),
+                "summary": "Summary text.",
+            }
+        ]
+        for day in range(9, 14)
+    }
+    stats = analyze_week("2026-W46", day_items, prior_week_stats=None)
+    weekly_dir = tmp_path / "digests" / "weekly"
+
+    # 1. Offline deterministic fallback when cache is absent (allow_gemini=False)
+    fallback_essay = load_or_generate_weekly_essay(stats, weekly_dir=weekly_dir, allow_gemini=False)
+    paragraphs = [p.strip() for p in fallback_essay.split("\n\n") if p.strip()]
+    assert len(paragraphs) == 3
+    assert "Week 46, 2026" in paragraphs[0]
+    assert "baseline distribution" in paragraphs[0]
+    assert not (weekly_dir / "2026-W46.md").exists()
+
+    # 2. Cached digests/weekly/{week_id}.md is loaded verbatim (with emojis stripped)
+    weekly_dir.mkdir(parents=True, exist_ok=True)
+    cached_text = (
+        "🚀 Paragraph one cached analytical synthesis for Week 46.\n\n"
+        "Paragraph two examining velocity leaders and signal concentration.\n\n"
+        "Paragraph three detailing production engineering takeaways."
+    )
+    (weekly_dir / "2026-W46.md").write_text(cached_text, encoding="utf-8")
+    loaded = load_or_generate_weekly_essay(stats, weekly_dir=weekly_dir, allow_gemini=False)
+    assert "🚀" not in loaded
+    assert loaded.startswith("Paragraph one cached analytical synthesis for Week 46.")
+    assert len([p for p in loaded.split("\n\n") if p.strip()]) == 3
+
+
+def test_weekly_rendered_html_end_to_end_and_zero_verbatim_copy(tmp_path: Path, monkeypatch):
+    import html as html_mod
+    import re
+    import xml.etree.ElementTree as ET
+
+    monkeypatch.setenv("GOOGLE_ADSENSE_CLIENT_ID", "ca-pub-1234567890123456")
+    monkeypatch.delenv("GOOGLE_ADSENSE_SLOT_ID", raising=False)
+
+    digests_dir = tmp_path / "digests"
+    docs_dir = tmp_path / "docs"
+    sentinel_daily_para = "SENTINEL_DAILY_PARAGRAPH_MUST_NOT_APPEAR_IN_WEEKLY_HTML_4242"
+
+    # 2 unique days in 2026-W45 (must be excluded) + 5 unique days in 2026-W46 (must be generated)
+    dates_w45 = ["2026-11-06", "2026-11-08"]
+    dates_w46 = ["2026-11-09", "2026-11-10", "2026-11-11", "2026-11-12", "2026-11-13"]
+
+    for idx, d in enumerate(dates_w45 + dates_w46, start=1):
+        md = (
+            f"# Generative AI Technical Briefing — {d}\n\n"
+            f"## Top 10 Ranked Briefing\n\n"
+            f"### 1. [Anthropic Agent Harness Evaluation #{idx}](https://example.com/story-{idx})\n"
+            f"**Engineering** (Hacker News) · {200 + idx * 50} pts · *{d}*\n"
+            f"- {sentinel_daily_para} for day {d}.\n\n"
+            f"### 2. [FP8 Quantization Inference Kernel #{idx}](https://arxiv.org/abs/2611.000{idx:02d})\n"
+            f"**Research** (arXiv) · {150 + idx * 30} pts · *{d}*\n"
+            f"- Evaluates low-bit KV cache quantization on H200 GPUs.\n"
+        )
+        save_markdown_digest(md, digests_dir, timestamp=datetime.strptime(d, "%Y-%m-%d"), docs_dir=docs_dir)
+
+    assert (docs_dir / "weekly.html").exists()
+    assert (docs_dir / "weekly-2026-W46.html").exists()
+    assert not (docs_dir / "weekly-2026-W45.html").exists()
+
+    w46_html = (docs_dir / "weekly-2026-W46.html").read_text(encoding="utf-8")
+    # Zero verbatim copying of daily summary paragraphs
+    assert sentinel_daily_para not in w46_html
+    # Top 5 has primary source link and first_date internal daily link
+    assert 'href="https://example.com/story-' in w46_html
+    assert 'href="2026-11-13.html"' in w46_html or 'href="2026-11-09.html"' in w46_html
+
+    # Index links to weekly archive and latest weekly synthesis
+    index_html = (docs_dir / "index.html").read_text(encoding="utf-8")
+    assert 'href="weekly.html"' in index_html
+    assert 'href="weekly-2026-W46.html"' in index_html
+
+    # Sitemap includes weekly.html and weekly-2026-W46.html, excludes weekly-2026-W45.html
+    root = ET.fromstring((docs_dir / "sitemap.xml").read_text(encoding="utf-8"))
+    locs = [el.text for el in root.iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
+    assert "https://jabi.io/weekly.html" in locs
+    assert "https://jabi.io/weekly-2026-W46.html" in locs
+    assert "https://jabi.io/weekly-2026-W45.html" not in locs
+
+    # Full site SEO invariants pass including weekly pages
+    _assert_site_seo_invariants(docs_dir)
+    m_title = re.search(r"<title>(.*?)</title>", w46_html, flags=re.S)
+    assert m_title and len(html_mod.unescape(m_title.group(1).strip())) <= 68
+
+
+def test_published_docs_weekly_synthesis_integrity():
+    import html as html_mod
+    import json
+    import re
+    import xml.etree.ElementTree as ET
+
+    repo_docs = Path(__file__).resolve().parent.parent / "docs"
+    if not repo_docs.exists():
+        return
+
+    emoji_re = re.compile(
+        "["
+        "\U0001F300-\U0001F9FF"
+        "\U0001FA00-\U0001FAFF"
+        "\u2600-\u26FF"
+        "\u2700-\u27BF"
+        "\uFE0F"
+        "]"
+    )
+
+    # Qualifying weeks exist; partial week 2026-W45 does NOT exist
+    weekly_index = repo_docs / "weekly.html"
+    assert weekly_index.exists(), "docs/weekly.html missing"
+    assert not (repo_docs / "weekly-2026-W45.html").exists(), "Partial week docs/weekly-2026-W45.html must not exist"
+
+    expected_weeks = ("weekly-2026-W46.html", "weekly-2026-W47.html", "weekly-2026-W48.html")
+    for wf in expected_weeks:
+        path = repo_docs / wf
+        assert path.exists(), f"Missing qualifying weekly page docs/{wf}"
+        text = path.read_text(encoding="utf-8")
+
+        # Exactly 1 <h1>
+        h1s = re.findall(r"<h1\b[^>]*>.*?</h1>", text, flags=re.S)
+        assert len(h1s) == 1, f"{wf}: expected 1 <h1>, found {len(h1s)}"
+
+        # <title> <= 68 chars
+        m_title = re.search(r"<title>(.*?)</title>", text, flags=re.S)
+        assert m_title, f"{wf}: missing <title>"
+        title_str = html_mod.unescape(m_title.group(1).strip())
+        assert len(title_str) <= 68, f"{wf}: <title> exceeds 68 chars ({len(title_str)}): {title_str!r}"
+
+        # Valid TechArticle + BreadcrumbList JSON-LD
+        ld_blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', text, flags=re.S)
+        assert ld_blocks, f"{wf}: missing JSON-LD"
+        ld_types: list[str] = []
+        for raw_ld in ld_blocks:
+            parsed = json.loads(raw_ld)
+            for node in parsed.get("@graph", [parsed]):
+                if isinstance(node, dict) and "@type" in node:
+                    ld_types.append(node["@type"])
+        assert "TechArticle" in ld_types and "BreadcrumbList" in ld_types, f"{wf}: JSON-LD types={ld_types}"
+
+        # Open Graph + all 4 Twitter Card tags
+        for tag in (
+            'property="og:title"',
+            'name="twitter:card"',
+            'name="twitter:title"',
+            'name="twitter:description"',
+            'name="twitter:image"',
+        ):
+            assert tag in text, f"{wf}: missing {tag}"
+
+        # AdSense head snippet
+        head = text.split("</head>", 1)[0]
+        assert '<meta name="google-adsense-account"' in head, f"{wf}: missing google-adsense-account"
+        assert "adsbygoogle.js?client=" in head, f"{wf}: missing adsbygoogle.js"
+
+        # Native Brevo subscribe box
+        assert 'id="subscribe"' in text, f"{wf}: missing subscribe section"
+        assert "sibforms.com/serve/" in text, f"{wf}: missing Brevo form action"
+        assert 'name="EMAIL"' in text, f"{wf}: missing EMAIL input"
+
+        # Swiss/Editorial mobile + typography standards & zero emojis
+        assert "max-width: 66ch" in text or "max-width:66ch" in text, f"{wf}: missing 66ch measure"
+        assert "viewport-fit=cover" in text, f"{wf}: missing viewport-fit=cover"
+        assert not emoji_re.search(text), f"{wf}: emoji found in rendered HTML"
+
+        # Masthead and footer link to weekly.html
+        header = text.split("<header", 1)[1].split("</header>", 1)[0]
+        footer = text.split("<footer", 1)[1].split("</footer>", 1)[0]
+        assert 'href="weekly.html"' in header, f"{wf}: masthead missing href=\"weekly.html\""
+        assert 'href="weekly.html"' in footer, f"{wf}: footer missing href=\"weekly.html\""
+
+    # docs/weekly.html archive hub checks
+    wi_text = weekly_index.read_text(encoding="utf-8")
+    assert len(re.findall(r"<h1\b[^>]*>.*?</h1>", wi_text, flags=re.S)) == 1
+    assert "viewport-fit=cover" in wi_text
+    assert "max-width: 66ch" in wi_text or "max-width:66ch" in wi_text
+    assert not emoji_re.search(wi_text)
+    for wf in expected_weeks:
+        assert f'href="{wf}"' in wi_text, f"weekly.html missing link to {wf}"
+    assert "weekly-2026-W45.html" not in wi_text
+
+    # docs/index.html links to latest weekly synthesis (weekly-2026-W48.html) and weekly.html
+    index_text = (repo_docs / "index.html").read_text(encoding="utf-8")
+    assert 'href="weekly.html"' in index_text, "index.html missing href=\"weekly.html\""
+    assert 'href="weekly-2026-W48.html"' in index_text, "index.html missing href=\"weekly-2026-W48.html\""
+
+    # docs/sitemap.xml valid XML and includes weekly.html + W46/W47/W48 (excludes W45)
+    sitemap_root = ET.fromstring((repo_docs / "sitemap.xml").read_text(encoding="utf-8"))
+    locs = [el.text for el in sitemap_root.iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
+    assert "https://jabi.io/weekly.html" in locs
+    for wf in expected_weeks:
+        assert f"https://jabi.io/{wf}" in locs, f"sitemap.xml missing https://jabi.io/{wf}"
+    assert "https://jabi.io/weekly-2026-W45.html" not in locs
+
 
 
 

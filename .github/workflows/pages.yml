@@ -58,9 +58,13 @@ jobs:
           if [ "$GITHUB_EVENT_NAME" = "schedule" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] || [ ! -f "digests/${TODAY}_genai_digest.md" ] || ( [ -n "$GEMINI_API_KEY" ] && ! grep -qE "Executive (TL;DR|Summary)" "digests/${TODAY}_genai_digest.md" ); then
             echo "Generating fresh Gemini-synthesized digest and HTML pages for ${TODAY}..."
             genai-agent --quiet
+            if [ -n "$GEMINI_API_KEY" ]; then
+              echo "Generating any missing weekly synthesis essays (cached in digests/weekly/)..."
+              python -c "from pathlib import Path; from genai_agent.notifiers.markdown_store import rebuild_docs_site; rebuild_docs_site(Path('digests'), Path('docs'), allow_gemini_weekly=True)"
+            fi
           else
             echo "Today's digest (${TODAY}) already exists; refreshing HTML pages..."
-            python -c "from pathlib import Path; from genai_agent.notifiers.markdown_store import rebuild_docs_site; rebuild_docs_site(Path('digests'), Path('docs'))"
+            python -c "import os; from pathlib import Path; from genai_agent.notifiers.markdown_store import rebuild_docs_site; rebuild_docs_site(Path('digests'), Path('docs'), allow_gemini_weekly=bool(os.getenv('GEMINI_API_KEY')))"
           fi
 
       - name: Commit auto-generated pages back to repository

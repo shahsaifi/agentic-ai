@@ -775,6 +775,122 @@
       margin-bottom: 8px;
     }
 
+    /* Weekly Synthesis Components */
+    .weekly-highlight {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      padding: 12px 16px;
+      margin: 0 0 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border-strong);
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+    }
+    .weekly-highlight-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin-right: 8px;
+    }
+    .weekly-highlight a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .weekly-highlight a:hover {
+      color: var(--accent);
+    }
+    .weekly-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      margin: 8px 0 20px;
+    }
+    .weekly-table th {
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+      padding: 8px 10px 8px 0;
+      border-bottom: 1px solid var(--border-strong);
+    }
+    .weekly-table td {
+      padding: 11px 10px 11px 0;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .weekly-table th.num, .weekly-table td.num {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+    .delta-pos {
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .delta-neg {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .delta-flat {
+      color: var(--ink-muted);
+    }
+    .entity-ledger {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 8px 0 12px;
+    }
+    .entity-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 5px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--ink);
+    }
+    .entity-pill span.cnt {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .weekly-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+    }
+    .weekly-nav a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2px;
+    }
+    .weekly-nav a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
     .footer {
       margin-top: 56px;
       padding-top: 18px;
@@ -925,6 +1041,12 @@
         margin-bottom: 4px;
         color: var(--accent);
       }
+      .weekly-table {
+        font-size: 0.82rem;
+      }
+      .weekly-table th, .weekly-table td {
+        padding: 8px 6px 8px 0;
+      }
       .footer {
         flex-direction: column;
         gap: 8px;
@@ -1029,6 +1151,7 @@
           <a href="/" class="">Front Page</a>
           <a href="2026-11-28.html" class="active">Latest Issue (2026-11-28)</a>
           <a href="guides.html" class="">Guides</a>
+          <a href="weekly.html" class="">Weekly</a>
           <a href="tech-talks.html" class="">Tech Talks Index</a>
           <a href="podcasts.html" class="">Podcasts Index</a>
           <a href="/#archive">Archive</a>
@@ -1376,7 +1499,7 @@
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · ISSUE 2026-11-26</div>
-      <div><a href="/">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="guides.html">Guides</a> · <a href="about.html">About</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
+      <div><a href="/">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="guides.html">Guides</a> · <a href="weekly.html">Weekly</a> · <a href="about.html">About</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
     </footer>
   </div>
 </body>
