@@ -8,7 +8,7 @@
 ## Top 10 Ranked Briefing
 
 ### 1. [Solve Vision with Code: Coding Agents Are Stronger Visual Reasoners Than Video Models](https://huggingface.co/papers/2611.34813)
-**Research** (Hugging Face Daily Papers) · 59 pts · *2026-11-24*
+**Research** (Hugging Face Daily Papers) · 60 pts · *2026-11-24*
 - Video generation models are increasingly evaluated as visual reasoners: given a first frame and a natural-language prompt, can the model produce the video in which the specified task is carried out?
 
 ### 2. [What a Forecasting Leaderboard Can Establish: Resolution Reporting for Zero-Shot Time-Series Models](https://huggingface.co/papers/2611.31619)
@@ -27,13 +27,13 @@
 **Engineering** (Hacker News) · `github.com` · [1068 pts on HN](https://news.ycombinator.com/item?id=50637220) · *2026-11-25*
 
 ### 6. [Group chat where your AI talks behind your back](https://construct22.com/)
-**Engineering** (Hacker News) · `construct22.com` · [686 pts on HN](https://news.ycombinator.com/item?id=50663595) · *2026-11-27*
+**Engineering** (Hacker News) · `construct22.com` · [691 pts on HN](https://news.ycombinator.com/item?id=50663595) · *2026-11-27*
 
-### 7. [Claude sabotaging ML research tasks?](https://twitter.com/RealAstropulse/status/2126119408997466389)
-**Engineering** (Hacker News) · `twitter.com` · [626 pts on HN](https://news.ycombinator.com/item?id=50664325) · *2026-11-27*
-
-### 8. [Kamil Khan Mumtaz: Pakistani architect, admired at home, almost invisible abroad](https://worksinprogress.co/issue/the-greatest-architect-youve-never-heard-of-is-in-pakistan/)
+### 7. [Kamil Khan Mumtaz: Pakistani architect, admired at home, almost invisible abroad](https://worksinprogress.co/issue/the-greatest-architect-youve-never-heard-of-is-in-pakistan/)
 **Engineering** (Hacker News) · `worksinprogress.co` · [505 pts on HN](https://news.ycombinator.com/item?id=50659841) · *2026-11-26*
+
+### 8. [AMD-specific fork of llama.cpp](https://devnull.land/amd-specific-llama-cpp)
+**Engineering** (Hacker News) · `devnull.land` · [440 pts on HN](https://news.ycombinator.com/item?id=50657265) · *2026-11-26*
 
 ### 9. [Searching for distant planets with Astra](https://openai.com/index/searching-for-distant-planets-with-astra)
 **Lab Post** (OpenAI News) · `openai.com` · *Tue, 24 Nov 2026*
@@ -47,21 +47,21 @@
 
 ## Researcher Threads on X
 
+- **[Claude sabotaging ML research tasks?](https://twitter.com/RealAstropulse/status/2126119408997466389)** — *X.com (@RealAstropulse)* (638 pts) · *2026-11-27* · [HN Discussion](https://news.ycombinator.com/item?id=50664325)
 - **[Anthropic engineer Thariq Shihipar joins OpenAI](https://news.google.com/rss/articles/CBMimwFBVV95cUxQLTB5VXlJQWgwRXJVMVlTRnlxdFhwN2pWU0tmdHdiRE5ta0FseU96V2x0LWZ4cDRNb1BaQ0FIMVNENDh6TGVPc1BNVGdkQjZ1RmJTLURFeC1uT3d1RUVrNkdPc2ZZc3UyZjEwVWExbWF2S1hOLVhDMVBhZG9LUG5OVS1GcDhPeC16bzNlTzc5VlJYVTBFZHV3ZTdkbw?oc=5)** — *X Pulse (TechGig)* · *Fri, 27 Nov 2026*
-- **[Claude tries to sabotage research work at every stage](https://twitter.com/skirano/status/2125371115979641188)** — *X.com (@skirano)* (108 pts) · *2026-11-26* · [HN Discussion](https://news.ycombinator.com/item?id=50651552)
-- **[One guy is doing a hunger strike outside Anthropic, currently in his 3rd day](https://twitter.com/ElliotC1/status/2125689373337489419)** — *X.com (@ElliotC1)* (61 pts) · *2026-11-26* · [HN Discussion](https://news.ycombinator.com/item?id=50657110)
-- **[AI Overworks People](https://twitter.com/catalinmpit/status/2123061832781090948)** — *X.com (@catalinmpit)* (35 pts) · *2026-11-19* · [HN Discussion](https://news.ycombinator.com/item?id=50558494)
+- **[OpenAI's pricing mix-up means most users of its new AI models will hit limits faster](https://news.google.com/rss/articles/CBMilwFBVV95cUxPcGJiZ0ZrLTJYSmZ3d25GeGNZaVpMX3RyRmNtLTctdGUtZGpkVHVOQXJDWGlBdnVhNVhtVGdRTW9qUTg3dWFyeDRZQ3VsQTRzdjJzaHNGNmpYdGV4SWFGS0JyTF9QRWZIWld6WFZXVFV0YjJtZmtmWVRjMDNHT2lqVlIyUTBaRGFjb2dIUVMwWlBuSzJLdkFv?oc=5)** — *X Pulse (Business Insider)* · *Thu, 26 Nov 2026*
+- **[OpenAI cuts GPT-6.2 usage: Astra hits limits 40% faster, Sol 25% faster](https://twitter.com/thsottiaux/status/2125784147889393806)** — *X.com (@thsottiaux)* (509 pts) · *2026-11-26* · [HN Discussion](https://news.ycombinator.com/item?id=50651117)
 
 ---
 
 ## Audio & Podcasts
 
-- **[Inside the AI Training Data Market — Gabe Greenberg, G2i](https://lspace.beehiiv.com/podcast/s/latent_space_the_ai_engineer_podcast/inside_the_ai_training_data_market_gabe_greenberg_g2i)** — **Latent Space (AI Engineer Podcast)** (🎧 32m) · *Fri, 27 Nov 2026*
-  - A frontier lab can pay more for training data it gets to keep exclusive, or take a discount on data another lab can buy too. At AI Engineer CODE, G2i founder Gabe Greenberg tells swyx how labs make that decision, how small pilot orders turn into bigger...
 - **[Bonus Episode: Jensen Huang Reinstated. Yes. The King Returns.](https://generativeai101.podbean.com/e/bonus-episode-jensen-huang-reinstated-yes-the-king-returns/)** — **Generative AI 101** (🎧 14m) · *Mon, 23 Nov 2026*
   - Eleven days after resigning amid national security questions, Jensen Huang is back as NVIDIA’s CEO, and Wall Street responded with a nearly 30 percent premarket surge.
 - **[Creating Lead Generation Tools for Your Business](https://rss.art19.com/episodes/f1fe7c0f-bbb8-415f-b556-2e658ea7a10d.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb)** — **AI Optic: Anthropic & OpenAI News** (🎧 11m) · *Thu, 26 Nov 2026*
   - In this episode, we explore the power of developing free online tools to attract leads for your business.
+- **[How Leaders Can Turn AI into Strategic Advantage: Insights from Vic Chynoweth](https://www.buzzsprout.com/2502664/episodes/20169835-how-leaders-can-turn-ai-into-strategic-advantage-insights-from-vic-chynoweth.mp3)** — **AI Today Podcast** (🎧 30m) · *Wed, 25 Nov 2026*
+  - In this episode of AI Today, host Kathleen Walch speaks with Vic Chynoweth, CEO of Tempo Software, about how AI is transforming project and portfolio management.
 
 ---
 
