@@ -1370,7 +1370,7 @@ def _render_masthead(active_page: str, latest_date: str, edition_date: str = "")
         </div>
       </div>
       <div class="masthead-title-row">
-        <h1 class="masthead-title"><a href="index.html">The GenAI Briefing</a></h1>
+        <h1 class="masthead-title"><a href="index.html" style="display:inline-flex;align-items:center;gap:12px;"><img src="assets/apple-touch-icon.png" alt="jabi.io logo" width="42" height="42" style="border-radius:4px;border:1px solid var(--border);flex-shrink:0;"><span>The GenAI Briefing</span></a></h1>
         <p class="masthead-sub">Curated research papers, frontier lab engineering, tech talks, researcher threads &amp; audio briefings.</p>
       </div>
       <nav class="masthead-nav">
@@ -1563,10 +1563,13 @@ def _seo_head(
     return (
         f'<meta name="description" content="{desc}">{robots_line}\n'
         f'  <link rel="canonical" href="{canonical}">\n'
+        f'  <link rel="icon" type="image/png" href="assets/favicon.png">\n'
+        f'  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">\n'
         f'  <meta property="og:type" content="website">\n'
         f'  <meta property="og:site_name" content="The GenAI Briefing">\n'
         f'  <meta property="og:url" content="{canonical}">\n'
-        f'  <meta property="og:description" content="{desc}">'
+        f'  <meta property="og:description" content="{desc}">\n'
+        f'  <meta property="og:image" content="{SITE_URL}/assets/logo.png">'
     )
 
 
