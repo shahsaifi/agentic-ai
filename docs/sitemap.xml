@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://jabi.io/</loc><lastmod>2026-11-27</lastmod></url>
+  <url><loc>https://jabi.io/</loc><lastmod>2026-11-28</lastmod></url>
+  <url><loc>https://jabi.io/2026-11-27.html</loc><lastmod>2026-11-27</lastmod></url>
   <url><loc>https://jabi.io/2026-11-26.html</loc><lastmod>2026-11-26</lastmod></url>
   <url><loc>https://jabi.io/2026-11-25.html</loc><lastmod>2026-11-25</lastmod></url>
   <url><loc>https://jabi.io/2026-11-24.html</loc><lastmod>2026-11-24</lastmod></url>
@@ -21,14 +22,14 @@
   <url><loc>https://jabi.io/2026-11-09.html</loc><lastmod>2026-11-09</lastmod></url>
   <url><loc>https://jabi.io/2026-11-08.html</loc><lastmod>2026-11-08</lastmod></url>
   <url><loc>https://jabi.io/2026-11-06.html</loc><lastmod>2026-11-06</lastmod></url>
-  <url><loc>https://jabi.io/guides.html</loc><lastmod>2026-11-27</lastmod></url>
+  <url><loc>https://jabi.io/guides.html</loc><lastmod>2026-11-28</lastmod></url>
   <url><loc>https://jabi.io/guide-agent-harness-engineering.html</loc><lastmod>2026-11-28</lastmod></url>
   <url><loc>https://jabi.io/guide-llm-inference-quantization.html</loc><lastmod>2026-11-28</lastmod></url>
   <url><loc>https://jabi.io/guide-rag-context-engineering.html</loc><lastmod>2026-11-28</lastmod></url>
   <url><loc>https://jabi.io/guide-llm-evaluation-benchmarks.html</loc><lastmod>2026-11-28</lastmod></url>
   <url><loc>https://jabi.io/guide-cascaded-model-routing.html</loc><lastmod>2026-11-28</lastmod></url>
-  <url><loc>https://jabi.io/tech-talks.html</loc><lastmod>2026-11-27</lastmod></url>
-  <url><loc>https://jabi.io/podcasts.html</loc><lastmod>2026-11-27</lastmod></url>
-  <url><loc>https://jabi.io/about.html</loc><lastmod>2026-11-27</lastmod></url>
-  <url><loc>https://jabi.io/faq.html</loc><lastmod>2026-11-27</lastmod></url>
+  <url><loc>https://jabi.io/tech-talks.html</loc><lastmod>2026-11-28</lastmod></url>
+  <url><loc>https://jabi.io/podcasts.html</loc><lastmod>2026-11-28</lastmod></url>
+  <url><loc>https://jabi.io/about.html</loc><lastmod>2026-11-28</lastmod></url>
+  <url><loc>https://jabi.io/faq.html</loc><lastmod>2026-11-28</lastmod></url>
 </urlset>
