@@ -217,33 +217,37 @@ _CLUSTER_ENGINEERING_TAKEAWAY: Dict[str, str] = {
 _CLUSTER_TO_GUIDES: Dict[str, Tuple[str, ...]] = {
     "Agentic Systems & Tool Use": (
         "guide-agent-harness-engineering",
-        "guide-rag-context-engineering",
-        "guide-llm-evaluation-benchmarks",
+        "guide-mcp-server-security",
+        "guide-prompt-caching-prefix-reuse",
+        "guide-structured-outputs-decoding",
     ),
     "Inference, Quantization & Architectures": (
         "guide-llm-inference-quantization",
+        "guide-vllm-sglang-serving",
+        "guide-prompt-caching-prefix-reuse",
         "guide-cascaded-model-routing",
-        "guide-rag-context-engineering",
     ),
     "World Models, Video & 3D": (
+        "guide-vllm-sglang-serving",
         "guide-llm-inference-quantization",
         "guide-rag-context-engineering",
-        "guide-llm-evaluation-benchmarks",
     ),
     "Evaluation, Benchmarks & Safety": (
         "guide-llm-evaluation-benchmarks",
-        "guide-agent-harness-engineering",
-        "guide-cascaded-model-routing",
+        "guide-mcp-server-security",
+        "guide-structured-outputs-decoding",
     ),
     "Coding Agents & DevTools": (
         "guide-agent-harness-engineering",
-        "guide-llm-evaluation-benchmarks",
-        "guide-cascaded-model-routing",
+        "guide-mcp-server-security",
+        "guide-prompt-caching-prefix-reuse",
+        "guide-structured-outputs-decoding",
     ),
     "Frontier Labs & Ecosystem": (
         "guide-cascaded-model-routing",
+        "guide-vllm-sglang-serving",
+        "guide-rag-context-engineering",
         "guide-llm-evaluation-benchmarks",
-        "guide-llm-inference-quantization",
     ),
 }
 

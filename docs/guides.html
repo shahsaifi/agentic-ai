@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Evergreen Engineering Guides — The GenAI Briefing (jabi.io)</title>
-  <meta name="description" content="Original Generative AI engineering guides on agent harnesses, LLM inference and quantization, context engineering, production evaluations, and cascaded model routing.">
+  <meta name="description" content="Original Generative AI engineering guides on agent harnesses, MCP security, prompt caching, structured decoding, vLLM/SGLang serving, quantization, RAG, evaluations, and model routing.">
   <link rel="canonical" href="https://jabi.io/guides.html">
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -12,13 +12,13 @@
   <meta property="og:site_name" content="The GenAI Briefing">
   <meta property="og:title" content="Evergreen Engineering Guides — The GenAI Briefing (jabi.io)">
   <meta property="og:url" content="https://jabi.io/guides.html">
-  <meta property="og:description" content="Original Generative AI engineering guides on agent harnesses, LLM inference and quantization, context engineering, production evaluations, and cascaded model routing.">
+  <meta property="og:description" content="Original Generative AI engineering guides on agent harnesses, MCP security, prompt caching, structured decoding, vLLM/SGLang serving, quantization, RAG, evaluations, and model routing.">
   <meta property="og:image" content="https://jabi.io/assets/logo.png">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Evergreen Engineering Guides — The GenAI Briefing (jabi.io)">
-  <meta name="twitter:description" content="Original Generative AI engineering guides on agent harnesses, LLM inference and quantization, context engineering, production evaluations, and cascaded model routing.">
+  <meta name="twitter:description" content="Original Generative AI engineering guides on agent harnesses, MCP security, prompt caching, structured decoding, vLLM/SGLang serving, quantization, RAG, evaluations, and model routing.">
   <meta name="twitter:image" content="https://jabi.io/assets/logo.png">
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"Evergreen Generative AI Engineering Guides","description":"Original Generative AI engineering guides on agent harnesses, LLM inference and quantization, context engineering, production evaluations, and cascaded model routing.","url":"https://jabi.io/guides.html","publisher":{"@type":"Organization","@id":"https://jabi.io/#organization","name":"The GenAI Briefing","url":"https://jabi.io/","logo":"https://jabi.io/assets/logo.png"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://jabi.io/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://jabi.io/guides.html"}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"Evergreen Generative AI Engineering Guides","description":"Original Generative AI engineering guides on agent harnesses, MCP security, prompt caching, structured decoding, vLLM/SGLang serving, quantization, RAG, evaluations, and model routing.","url":"https://jabi.io/guides.html","publisher":{"@type":"Organization","@id":"https://jabi.io/#organization","name":"The GenAI Briefing","url":"https://jabi.io/","logo":"https://jabi.io/assets/logo.png"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://jabi.io/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://jabi.io/guides.html"}]}]}</script>
   <meta name="google-adsense-account" content="ca-pub-4585099070726775">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4585099070726775" crossorigin="anonymous"></script>
   
@@ -1230,6 +1230,58 @@
               <p class="briefing-summary">Architectural patterns for combining fast small models, calibrated uncertainty triggers, and frontier escalation to cut inference spend by 60–80%.</p>
               <div class="briefing-actions">
                 <a href="guide-cascaded-model-routing.html">Read Full Guide →</a>
+              </div>
+            </article>
+            
+            <article class="guide-card">
+              <div class="guide-kicker">
+                <span>06 · AGENT SECURITY</span>
+                <span class="muted">· 8 min read (1,356 words)</span>
+                <span class="muted">· Updated 2026-11-28</span>
+              </div>
+              <h3><a href="guide-mcp-server-security.html">MCP Server Security &amp; Sandboxing: Scoped Credentials, Egress Controls, and Tool Allowlists</a></h3>
+              <p class="briefing-summary">Hardening Model Context Protocol tool servers against indirect prompt injection, credential exfiltration, and lateral movement in production agent fleets.</p>
+              <div class="briefing-actions">
+                <a href="guide-mcp-server-security.html">Read Full Guide →</a>
+              </div>
+            </article>
+            
+            <article class="guide-card">
+              <div class="guide-kicker">
+                <span>07 · INFERENCE ECONOMICS</span>
+                <span class="muted">· 8 min read (1,249 words)</span>
+                <span class="muted">· Updated 2026-11-28</span>
+              </div>
+              <h3><a href="guide-prompt-caching-prefix-reuse.html">Prompt Caching &amp; KV Prefix Reuse: Cache-Stable Agent Prompts for Lower Latency and Cost</a></h3>
+              <p class="briefing-summary">How prefix KV caching works across frontier APIs and self-hosted engines, why subtle prompt jitter destroys hit rates, and how to architect append-only agent contexts.</p>
+              <div class="briefing-actions">
+                <a href="guide-prompt-caching-prefix-reuse.html">Read Full Guide →</a>
+              </div>
+            </article>
+            
+            <article class="guide-card">
+              <div class="guide-kicker">
+                <span>08 · DECODING &amp; RELIABILITY</span>
+                <span class="muted">· 8 min read (1,193 words)</span>
+                <span class="muted">· Updated 2026-11-28</span>
+              </div>
+              <h3><a href="guide-structured-outputs-decoding.html">Structured Outputs &amp; Constrained Decoding: Grammar Enforcement, Schema Design, and Failure Recovery</a></h3>
+              <p class="briefing-summary">How FSM and CFG token masking guarantee valid JSON at decode time, why rigid schemas degrade reasoning accuracy, and how to design resilient extraction pipelines.</p>
+              <div class="briefing-actions">
+                <a href="guide-structured-outputs-decoding.html">Read Full Guide →</a>
+              </div>
+            </article>
+            
+            <article class="guide-card">
+              <div class="guide-kicker">
+                <span>09 · SERVING INFRASTRUCTURE</span>
+                <span class="muted">· 8 min read (1,143 words)</span>
+                <span class="muted">· Updated 2026-11-28</span>
+              </div>
+              <h3><a href="guide-vllm-sglang-serving.html">Production LLM Serving Engines: vLLM, SGLang, Continuous Batching, and Disaggregated Prefill</a></h3>
+              <p class="briefing-summary">Systems architecture for high-throughput open-weight serving—PagedAttention vs. RadixAttention, chunked prefill, parallelism topologies, and KV-aware autoscaling.</p>
+              <div class="briefing-actions">
+                <a href="guide-vllm-sglang-serving.html">Read Full Guide →</a>
               </div>
             </article>
             </div>

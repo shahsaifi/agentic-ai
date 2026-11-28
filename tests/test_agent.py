@@ -593,6 +593,10 @@ def test_adsense_prerequisites_crawlability_and_trust_pages(tmp_path: Path, monk
         "https://jabi.io/guide-rag-context-engineering.html",
         "https://jabi.io/guide-llm-evaluation-benchmarks.html",
         "https://jabi.io/guide-cascaded-model-routing.html",
+        "https://jabi.io/guide-mcp-server-security.html",
+        "https://jabi.io/guide-prompt-caching-prefix-reuse.html",
+        "https://jabi.io/guide-structured-outputs-decoding.html",
+        "https://jabi.io/guide-vllm-sglang-serving.html",
     ):
         assert expected in locs, f"sitemap.xml missing {expected}"
     for excluded in (
@@ -835,7 +839,10 @@ def test_editorial_synthesis_callout_and_fallback_summary(tmp_path: Path):
 
 
 def test_evergreen_guides_generation_and_standards(tmp_path: Path):
+    import html as html_mod
+    import json
     import re
+    import xml.etree.ElementTree as ET
 
     emoji_re = re.compile(
         "["
@@ -852,6 +859,10 @@ def test_evergreen_guides_generation_and_standards(tmp_path: Path):
         "guide-rag-context-engineering.html",
         "guide-llm-evaluation-benchmarks.html",
         "guide-cascaded-model-routing.html",
+        "guide-mcp-server-security.html",
+        "guide-prompt-caching-prefix-reuse.html",
+        "guide-structured-outputs-decoding.html",
+        "guide-vllm-sglang-serving.html",
     )
 
     md = (
@@ -874,6 +885,9 @@ def test_evergreen_guides_generation_and_standards(tmp_path: Path):
     index_html = (docs_dir / "index.html").read_text(encoding="utf-8")
     assert 'href="guides.html"' in index_html
 
+    sitemap_root = ET.fromstring((docs_dir / "sitemap.xml").read_text(encoding="utf-8"))
+    sitemap_locs = {el.text for el in sitemap_root.iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")}
+
     for guide_file in expected_guides:
         path = docs_dir / guide_file
         assert path.exists(), f"Missing generated guide {guide_file}"
@@ -884,11 +898,30 @@ def test_evergreen_guides_generation_and_standards(tmp_path: Path):
         assert 'href="guides.html"' in html
         assert f'href="{guide_file}"' in gi_html
         assert f'href="{guide_file}"' in index_html
+        assert f"https://jabi.io/{guide_file}" in sitemap_locs
+
+        h1s = re.findall(r"<h1\b[^>]*>.*?</h1>", html, flags=re.S)
+        assert len(h1s) == 1, f"{guide_file}: expected 1 <h1>, found {len(h1s)}"
+
+        m_title = re.search(r"<title>(.*?)</title>", html, flags=re.S)
+        assert m_title, f"{guide_file}: missing <title>"
+        title_str = html_mod.unescape(m_title.group(1).strip())
+        assert len(title_str) <= 68, f"{guide_file}: <title> exceeds 68 chars ({len(title_str)}): {title_str!r}"
+
+        ld_blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, flags=re.S)
+        ld_types: list[str] = []
+        for raw_ld in ld_blocks:
+            parsed = json.loads(raw_ld)
+            for node in parsed.get("@graph", [parsed]):
+                if isinstance(node, dict) and "@type" in node:
+                    ld_types.append(node["@type"])
+        assert "TechArticle" in ld_types and "BreadcrumbList" in ld_types, f"{guide_file}: JSON-LD types={ld_types}"
+
         body = re.sub(r"<style[^>]*>.*?</style>", " ", html, flags=re.S)
         body = re.sub(r"<script[^>]*>.*?</script>", " ", body, flags=re.S)
         article = body.split("<article", 1)[1].split("</article>", 1)[0]
         word_count = len(re.sub(r"<[^>]+>", " ", article).split())
-        assert word_count >= 800, f"{guide_file} has only {word_count} words (< 800)"
+        assert word_count >= 840, f"{guide_file} has only {word_count} words (< 840)"
 
 
 def test_trust_eeat_seo_hygiene_and_duplicate_issue_canonical(tmp_path: Path, monkeypatch):
@@ -1591,6 +1624,186 @@ def test_published_docs_weekly_synthesis_integrity():
     for wf in expected_weeks:
         assert f"https://jabi.io/{wf}" in locs, f"sitemap.xml missing https://jabi.io/{wf}"
     assert "https://jabi.io/weekly-2026-W45.html" not in locs
+
+
+def test_load_evergreen_guides_from_content_markdown():
+    from genai_agent.guides import EVERGREEN_GUIDES, load_evergreen_guides
+
+    expected_slugs = [
+        "guide-agent-harness-engineering",
+        "guide-llm-inference-quantization",
+        "guide-rag-context-engineering",
+        "guide-llm-evaluation-benchmarks",
+        "guide-cascaded-model-routing",
+        "guide-mcp-server-security",
+        "guide-prompt-caching-prefix-reuse",
+        "guide-structured-outputs-decoding",
+        "guide-vllm-sglang-serving",
+    ]
+
+    guides = load_evergreen_guides()
+    assert len(guides) == 9
+    assert len(EVERGREEN_GUIDES) == 9
+    assert [g["order"] for g in guides] == list(range(1, 10))
+    assert [g["slug"] for g in guides] == expected_slugs
+
+    for guide in guides:
+        assert guide["title"]
+        assert guide["subtitle"]
+        assert guide["kicker"]
+        assert guide["reading_time"]
+        assert guide["updated_at"]
+        assert guide["description"]
+        assert isinstance(guide["keywords"], list) and len(guide["keywords"]) >= 3
+        assert isinstance(guide["sections"], list) and len(guide["sections"]) >= 3
+        assert guide["body_markdown"].strip()
+
+
+def test_load_evergreen_guides_custom_tmp_dir(tmp_path: Path):
+    from genai_agent.guides import load_evergreen_guides
+
+    # Non-existent directory returns empty list cleanly
+    assert load_evergreen_guides(tmp_path / "does-not-exist") == []
+
+    # Write two out-of-order custom Markdown frontmatter files
+    (tmp_path / "z-second.md").write_text(
+        "---\n"
+        "slug: guide-custom-second\n"
+        "order: 2\n"
+        'title: "Second Custom Guide"\n'
+        "subtitle: 'Deterministic parsing check'\n"
+        "kicker: SYSTEMS NOTE\n"
+        "reading_time: 6 min read\n"
+        "updated_at: 2026-11-28\n"
+        "description: Second guide meta description.\n"
+        "keywords: [kv-cache, vllm, quantization]\n"
+        "---\n\n"
+        "## Architecture Overview\n\n"
+        "First paragraph explaining paged attention.\n\n"
+        "Second paragraph covering continuous batching.\n\n"
+        "## Failure Modes\n\n"
+        "- Watch for memory fragmentation under mixed prefill workloads.\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "a-first.md").write_text(
+        "---\n"
+        "order: 1\n"
+        "title: First Custom Guide\n"
+        "description: Fallback subtitle from description.\n"
+        "keywords: mcp, sandboxing, oauth\n"
+        "---\n\n"
+        "## Scope\n\n"
+        "Minimal frontmatter should default slug to file stem and updated_at cleanly.\n",
+        encoding="utf-8",
+    )
+
+    loaded = load_evergreen_guides(tmp_path)
+    assert len(loaded) == 2
+
+    first, second = loaded
+    assert first["order"] == 1
+    assert first["slug"] == "a-first"
+    assert first["title"] == "First Custom Guide"
+    assert first["subtitle"] == "Fallback subtitle from description."
+    assert first["kicker"] == "ENGINEERING GUIDE"
+    assert first["keywords"] == ["mcp", "sandboxing", "oauth"]
+    assert first["sections"] == [
+        ("Scope", ["Minimal frontmatter should default slug to file stem and updated_at cleanly."])
+    ]
+
+    assert second["order"] == 2
+    assert second["slug"] == "guide-custom-second"
+    assert second["title"] == "Second Custom Guide"
+    assert second["subtitle"] == "Deterministic parsing check"
+    assert second["kicker"] == "SYSTEMS NOTE"
+    assert second["reading_time"] == "6 min read"
+    assert second["updated_at"] == "2026-11-28"
+    assert second["keywords"] == ["kv-cache", "vllm", "quantization"]
+    assert len(second["sections"]) == 2
+    assert second["sections"][0][0] == "Architecture Overview"
+    assert len(second["sections"][0][1]) == 2
+    assert second["sections"][1][0] == "Failure Modes"
+
+
+def test_published_docs_evergreen_guides_integrity():
+    import html as html_mod
+    import json
+    import re
+    import xml.etree.ElementTree as ET
+
+    repo_docs = Path(__file__).resolve().parent.parent / "docs"
+    if not repo_docs.exists():
+        return
+
+    emoji_re = re.compile(
+        "["
+        "\U0001F300-\U0001F9FF"
+        "\U0001FA00-\U0001FAFF"
+        "\u2600-\u26FF"
+        "\u2700-\u27BF"
+        "\uFE0F"
+        "]"
+    )
+    expected_guides = (
+        "guide-agent-harness-engineering.html",
+        "guide-llm-inference-quantization.html",
+        "guide-rag-context-engineering.html",
+        "guide-llm-evaluation-benchmarks.html",
+        "guide-cascaded-model-routing.html",
+        "guide-mcp-server-security.html",
+        "guide-prompt-caching-prefix-reuse.html",
+        "guide-structured-outputs-decoding.html",
+        "guide-vllm-sglang-serving.html",
+    )
+
+    guides_hub = repo_docs / "guides.html"
+    assert guides_hub.exists(), "docs/guides.html missing"
+    hub_text = guides_hub.read_text(encoding="utf-8")
+    assert not emoji_re.search(hub_text), "Emoji found in docs/guides.html"
+
+    sitemap_root = ET.fromstring((repo_docs / "sitemap.xml").read_text(encoding="utf-8"))
+    sitemap_locs = {el.text for el in sitemap_root.iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")}
+
+    for guide_file in expected_guides:
+        path = repo_docs / guide_file
+        assert path.exists(), f"Missing published guide docs/{guide_file}"
+        text = path.read_text(encoding="utf-8")
+
+        # Exactly 1 <h1>
+        h1s = re.findall(r"<h1\b[^>]*>.*?</h1>", text, flags=re.S)
+        assert len(h1s) == 1, f"{guide_file}: expected 1 <h1>, found {len(h1s)}"
+
+        # <title> <= 68 chars
+        m_title = re.search(r"<title>(.*?)</title>", text, flags=re.S)
+        assert m_title, f"{guide_file}: missing <title>"
+        title_str = html_mod.unescape(m_title.group(1).strip())
+        assert len(title_str) <= 68, f"{guide_file}: <title> exceeds 68 chars ({len(title_str)}): {title_str!r}"
+
+        # Valid TechArticle + BreadcrumbList JSON-LD
+        ld_blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', text, flags=re.S)
+        assert ld_blocks, f"{guide_file}: missing JSON-LD"
+        ld_types: list[str] = []
+        for raw_ld in ld_blocks:
+            parsed = json.loads(raw_ld)
+            for node in parsed.get("@graph", [parsed]):
+                if isinstance(node, dict) and "@type" in node:
+                    ld_types.append(node["@type"])
+        assert "TechArticle" in ld_types and "BreadcrumbList" in ld_types, f"{guide_file}: JSON-LD types={ld_types}"
+
+        # Zero emojis
+        assert not emoji_re.search(text), f"Emoji found in docs/{guide_file}"
+
+        # >= 840 words in <article>
+        body = re.sub(r"<style[^>]*>.*?</style>", " ", text, flags=re.S)
+        body = re.sub(r"<script[^>]*>.*?</script>", " ", body, flags=re.S)
+        article = body.split("<article", 1)[1].split("</article>", 1)[0]
+        word_count = len(re.sub(r"<[^>]+>", " ", article).split())
+        assert word_count >= 840, f"docs/{guide_file} has only {word_count} words (< 840)"
+
+        # Linked in docs/guides.html and listed in docs/sitemap.xml
+        assert f'href="{guide_file}"' in hub_text, f"docs/guides.html missing link to {guide_file}"
+        assert f"https://jabi.io/{guide_file}" in sitemap_locs, f"docs/sitemap.xml missing https://jabi.io/{guide_file}"
+
 
 
 

@@ -2340,8 +2340,8 @@ def _render_guides_index_html(latest_date: str) -> str:
     )
     guides_title = "Evergreen Engineering Guides — The GenAI Briefing (jabi.io)"
     guides_desc = (
-        "Original Generative AI engineering guides on agent harnesses, LLM inference and quantization, "
-        "context engineering, production evaluations, and cascaded model routing."
+        "Original Generative AI engineering guides on agent harnesses, MCP security, prompt caching, "
+        "structured decoding, vLLM/SGLang serving, quantization, RAG, evaluations, and model routing."
     )
     guides_jsonld = {
         "@context": "https://schema.org",
@@ -2450,7 +2450,7 @@ def _render_guide_article_html(guide: Dict[str, str], latest_date: str) -> str:
     <section aria-label="Related Engineering Guides">
       <div class="section-head">
         <h2>Related Engineering Guides</h2>
-        <span><a href="guides.html" style="color:var(--accent);text-decoration:none;">ALL 5 GUIDES →</a></span>
+        <span><a href="guides.html" style="color:var(--accent);text-decoration:none;">ALL {len(EVERGREEN_GUIDES)} GUIDES →</a></span>
       </div>
       <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;font-family:var(--font-serif);font-size:0.98rem;">
         {"".join(related_items)}
@@ -3292,11 +3292,15 @@ def _build_editorial_synthesis_html(
 
 
 _GUIDE_TOPIC_KEYWORDS: Dict[str, Tuple[str, ...]] = {
-    "guide-agent-harness-engineering": ("agent", "harness", "tool", "sandbox", "mcp", "coding", "claude code", "orchestrator"),
-    "guide-llm-inference-quantization": ("inference", "quantiz", "kv-cache", "kv cache", "speculative", "latency", "fp8", "vllm", "gpu", "kernel"),
+    "guide-agent-harness-engineering": ("agent", "harness", "tool loop", "coding", "claude code", "orchestrator", "workflow"),
+    "guide-llm-inference-quantization": ("quantiz", "fp8", "int4", "awq", "gptq", "speculative", "kernel", "gpu"),
     "guide-rag-context-engineering": ("rag", "retrieval", "context", "chunk", "rerank", "embedding", "memory", "search", "document"),
-    "guide-llm-evaluation-benchmarks": ("eval", "benchmark", "judge", "leaderboard", "reasoning", "accuracy", "safety", "alignment"),
-    "guide-cascaded-model-routing": ("routing", "cost", "small model", "distill", "cascade", "latency", "open-weight", "gemini", "qwen"),
+    "guide-llm-evaluation-benchmarks": ("eval", "benchmark", "judge", "leaderboard", "reasoning", "accuracy", "alignment"),
+    "guide-cascaded-model-routing": ("routing", "cost", "small model", "distill", "cascade", "open-weight", "gemini", "qwen"),
+    "guide-mcp-server-security": ("mcp", "sandbox", "security", "prompt injection", "credential", "egress", "allowlist", "safety", "leak"),
+    "guide-prompt-caching-prefix-reuse": ("cache", "caching", "prefix", "kv-cache", "kv cache", "ttft", "radix", "long-context"),
+    "guide-structured-outputs-decoding": ("structured", "json", "schema", "grammar", "decoding", "constrained", "tool call", "function call"),
+    "guide-vllm-sglang-serving": ("vllm", "sglang", "serving", "batching", "prefill", "disaggregat", "tensor parallel", "inference", "latency"),
 }
 
 
@@ -3305,9 +3309,9 @@ def _render_daily_guides_crosslinks(top10_items: List[Dict[str, str]], limit: in
     if not EVERGREEN_GUIDES:
         return ""
     corpus = " ".join(f"{it.get('title', '')} {it.get('summary', '')}" for it in top10_items).lower()
-    scored: List[Tuple[int, int, Dict[str, str]]] = []
+    scored: List[Tuple[int, int, Dict[str, Any]]] = []
     for idx, g in enumerate(EVERGREEN_GUIDES):
-        kws = _GUIDE_TOPIC_KEYWORDS.get(g["slug"], ())
+        kws = _GUIDE_TOPIC_KEYWORDS.get(g["slug"]) or tuple(g.get("keywords") or ())
         hits = sum(1 for kw in kws if kw in corpus)
         scored.append((-hits, idx, g))
     scored.sort(key=lambda x: (x[0], x[1]))
@@ -3647,7 +3651,7 @@ def _render_index_portal_html(
     <section id="guides">
       <div class="section-head">
         <h2>V. Evergreen Engineering Guides</h2>
-        <span><a href="guides.html" style="color:var(--accent);text-decoration:none;">ALL 5 DEEP DIVES →</a></span>
+        <span><a href="guides.html" style="color:var(--accent);text-decoration:none;">ALL {len(EVERGREEN_GUIDES)} DEEP DIVES →</a></span>
       </div>
       <div class="guide-list">
         {"".join(guide_cards)}

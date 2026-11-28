@@ -32,6 +32,10 @@
   <url><loc>https://jabi.io/guide-rag-context-engineering.html</loc><lastmod>2026-11-28</lastmod></url>
   <url><loc>https://jabi.io/guide-llm-evaluation-benchmarks.html</loc><lastmod>2026-11-28</lastmod></url>
   <url><loc>https://jabi.io/guide-cascaded-model-routing.html</loc><lastmod>2026-11-28</lastmod></url>
+  <url><loc>https://jabi.io/guide-mcp-server-security.html</loc><lastmod>2026-11-28</lastmod></url>
+  <url><loc>https://jabi.io/guide-prompt-caching-prefix-reuse.html</loc><lastmod>2026-11-28</lastmod></url>
+  <url><loc>https://jabi.io/guide-structured-outputs-decoding.html</loc><lastmod>2026-11-28</lastmod></url>
+  <url><loc>https://jabi.io/guide-vllm-sglang-serving.html</loc><lastmod>2026-11-28</lastmod></url>
   <url><loc>https://jabi.io/tech-talks.html</loc><lastmod>2026-11-28</lastmod></url>
   <url><loc>https://jabi.io/podcasts.html</loc><lastmod>2026-11-28</lastmod></url>
   <url><loc>https://jabi.io/about.html</loc><lastmod>2026-11-28</lastmod></url>
