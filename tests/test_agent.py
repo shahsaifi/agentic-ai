@@ -1805,6 +1805,122 @@ def test_published_docs_evergreen_guides_integrity():
         assert f"https://jabi.io/{guide_file}" in sitemap_locs, f"docs/sitemap.xml missing https://jabi.io/{guide_file}"
 
 
+def test_share_and_cite_bar_on_guides_and_weekly_pages():
+    import re
+
+    repo_docs = Path(__file__).resolve().parent.parent / "docs"
+    if not repo_docs.exists():
+        return
+
+    guide_pages = sorted(p.name for p in repo_docs.glob("guide-*.html"))
+    weekly_pages = sorted(p.name for p in repo_docs.glob("weekly-2026-*.html"))
+    assert len(guide_pages) == 9, f"Expected 9 guide pages, found {len(guide_pages)}"
+    assert len(weekly_pages) == 3, f"Expected 3 weekly pages, found {len(weekly_pages)}"
+
+    share_link_re = re.compile(r'<a\s+class="share-link"\s+([^>]+)>')
+    for page_name in guide_pages + weekly_pages:
+        text = (repo_docs / page_name).read_text(encoding="utf-8")
+        assert '<div class="share-bar"' in text, f"{page_name} missing share-bar"
+        assert "https://x.com/intent/tweet?" in text, f"{page_name} missing X share intent"
+        assert "https://news.ycombinator.com/submitlink?" in text, f"{page_name} missing HN submit link"
+        assert "https://www.linkedin.com/sharing/share-offsite/?" in text, f"{page_name} missing LinkedIn share link"
+        assert 'onclick="copyShareUrl(this)"' in text, f"{page_name} missing copyShareUrl button"
+        assert f'data-copy-url="https://jabi.io/{page_name}"' in text, f"{page_name} copy URL mismatch"
+
+        links = share_link_re.findall(text)
+        assert len(links) == 3, f"{page_name}: expected 3 share-link anchors, found {len(links)}"
+        for attrs in links:
+            assert 'target="_blank"' in attrs, f"{page_name}: share-link missing target=_blank: {attrs}"
+            assert 'rel="noopener noreferrer"' in attrs, f"{page_name}: share-link missing rel=noopener noreferrer: {attrs}"
+
+    for utility_page in ("contact.html", "privacy.html", "terms.html"):
+        text = (repo_docs / utility_page).read_text(encoding="utf-8")
+        assert '<div class="share-bar"' not in text, f"{utility_page} must not render share-bar"
+        assert 'onclick="copyShareUrl(this)"' not in text, f"{utility_page} must not render copyShareUrl button"
+
+
+def test_weekly_rss_feed_xml_and_head_autodiscovery():
+    import xml.etree.ElementTree as ET
+    from email.utils import parsedate_to_datetime
+
+    repo_docs = Path(__file__).resolve().parent.parent / "docs"
+    if not repo_docs.exists():
+        return
+
+    feed_path = repo_docs / "weekly-feed.xml"
+    assert feed_path.exists(), "docs/weekly-feed.xml missing"
+    xml_text = feed_path.read_text(encoding="utf-8")
+
+    root = ET.fromstring(xml_text)
+    assert root.tag == "rss"
+    assert root.attrib.get("version") == "2.0"
+
+    channel = root.find("channel")
+    assert channel is not None
+    atom_ns = "{http://www.w3.org/2005/Atom}"
+    self_link = channel.find(f"{atom_ns}link")
+    assert self_link is not None, "weekly-feed.xml missing <atom:link rel='self'>"
+    assert self_link.attrib.get("rel") == "self"
+    assert self_link.attrib.get("type") == "application/rss+xml"
+    assert self_link.attrib.get("href") == "https://jabi.io/weekly-feed.xml"
+
+    items = channel.findall("item")
+    expected_links = [
+        "https://jabi.io/weekly-2026-W48.html",
+        "https://jabi.io/weekly-2026-W47.html",
+        "https://jabi.io/weekly-2026-W46.html",
+    ]
+    actual_links = [item.findtext("link") for item in items]
+    assert actual_links == expected_links, f"Unexpected weekly-feed.xml items: {actual_links}"
+
+    for item in items:
+        assert item.findtext("title")
+        assert item.findtext("description")
+        guid = item.find("guid")
+        assert guid is not None and guid.attrib.get("isPermaLink") == "true"
+        pub_date_raw = (item.findtext("pubDate") or "").strip()
+        assert pub_date_raw, "Missing <pubDate> in weekly-feed.xml item"
+        parsed_dt = parsedate_to_datetime(pub_date_raw)
+        assert parsed_dt.tzinfo is not None, f"pubDate missing timezone: {pub_date_raw}"
+
+    expected_head_link = (
+        '<link rel="alternate" type="application/rss+xml" '
+        'title="The GenAI Briefing — Weekly Synthesis (jabi.io)" '
+        'href="https://jabi.io/weekly-feed.xml">'
+    )
+    for page_name in ("index.html", "weekly.html", "weekly-2026-W48.html", "guide-agent-harness-engineering.html"):
+        head = (repo_docs / page_name).read_text(encoding="utf-8").split("</head>", 1)[0]
+        assert expected_head_link in head, f"{page_name} <head> missing weekly-feed.xml autodiscovery link"
+
+
+def test_format_guide_teaser_all_evergreen_guides():
+    import re
+    from genai_agent.guides import EVERGREEN_GUIDES, format_guide_teaser
+
+    emoji_re = re.compile(
+        "["
+        "\U0001F300-\U0001F9FF"
+        "\U0001FA00-\U0001FAFF"
+        "\u2600-\u26FF"
+        "\u2700-\u27BF"
+        "\uFE0F"
+        "]"
+    )
+    assert len(EVERGREEN_GUIDES) == 9
+
+    for guide in EVERGREEN_GUIDES:
+        teaser = format_guide_teaser(guide)
+        words = teaser.split()
+        slug = guide["slug"]
+        assert 80 <= len(words) <= 180, f"{slug}: teaser word count {len(words)} outside [80, 180]"
+        assert not emoji_re.search(teaser), f"{slug}: emoji found in teaser"
+        assert guide["title"] in teaser, f"{slug}: title missing from teaser"
+        bullet_lines = [line for line in teaser.splitlines() if line.startswith("- ")]
+        assert len(bullet_lines) == 3, f"{slug}: expected 3 section bullets, found {len(bullet_lines)}"
+        assert f"https://jabi.io/{slug}.html" in teaser, f"{slug}: canonical URL missing from teaser"
+
+
+
 
 
 

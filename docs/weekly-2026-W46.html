@@ -27,6 +27,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="format-detection" content="telephone=no">
   <link rel="alternate" type="application/rss+xml" title="The GenAI Briefing (jabi.io)" href="https://jabi.io/feed.xml">
+  <link rel="alternate" type="application/rss+xml" title="The GenAI Briefing — Weekly Synthesis (jabi.io)" href="https://jabi.io/weekly-feed.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
@@ -891,6 +892,54 @@
       border-bottom-color: var(--accent);
     }
 
+    /* Share & Cite Bar */
+    .share-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 28px 0 8px;
+      padding: 14px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .share-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-right: 4px;
+    }
+    .share-link,
+    .share-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.03em;
+      padding: 5px 10px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: var(--surface);
+      color: var(--ink-secondary);
+      text-decoration: none;
+      cursor: pointer;
+      line-height: 1.3;
+      touch-action: manipulation;
+    }
+    .share-link:hover,
+    .share-copy-btn:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+      background: var(--surface-alt);
+    }
+    .share-copy-btn.copied {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     .footer {
       margin-top: 56px;
       padding-top: 18px;
@@ -1047,6 +1096,19 @@
       .weekly-table th, .weekly-table td {
         padding: 8px 6px 8px 0;
       }
+      .share-bar {
+        gap: 6px;
+        padding: 12px 0;
+      }
+      .share-label {
+        width: 100%;
+        margin-bottom: 2px;
+      }
+      .share-link,
+      .share-copy-btn {
+        min-height: 32px;
+        padding: 5px 9px;
+      }
       .footer {
         flex-direction: column;
         gap: 8px;
@@ -1122,6 +1184,38 @@
       return true;
     }
 
+    function copyShareUrl(btn) {
+      const url = btn.getAttribute('data-copy-url') || window.location.href;
+      const done = () => {
+        const orig = btn.getAttribute('data-orig-label') || btn.textContent;
+        btn.setAttribute('data-orig-label', orig);
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+        clearTimeout(btn._copyTimer);
+        btn._copyTimer = setTimeout(() => {
+          btn.textContent = orig;
+          btn.classList.remove('copied');
+        }, 1800);
+      };
+      const fallbackCopy = () => {
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done).catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', updateControls);
   </script>
 
@@ -1165,7 +1259,8 @@
     
     <div style="font-family:var(--font-mono);font-size:0.74rem;color:var(--ink-muted);margin-bottom:14px;">
       <a href="weekly.html" style="color:var(--accent);text-decoration:none;">← ALL WEEKLY SYNTHESES</a>
-      <span> · 2026-W46 · 7 DAILY ISSUES · 70 DEDUPLICATED ITEMS</span>
+      <span> · 2026-W46 · 7 DAILY ISSUES · 70 DEDUPLICATED ITEMS · </span>
+      <a href="weekly-feed.xml" style="color:var(--accent);text-decoration:none;">Weekly RSS (weekly-feed.xml) ↗</a>
     </div>
     <h1 class="page-h1">Weekly GenAI Synthesis — Week 46, 2026 (Nov 9–15)</h1>
 
@@ -1314,6 +1409,8 @@
         <span class="entity-pill">Agents <span class="cnt">9</span></span><span class="entity-pill">Gemini <span class="cnt">9</span></span><span class="entity-pill">Claude <span class="cnt">7</span></span><span class="entity-pill">OpenAI <span class="cnt">4</span></span><span class="entity-pill">Google <span class="cnt">2</span></span><span class="entity-pill">Quantization <span class="cnt">2</span></span><span class="entity-pill">World Model <span class="cnt">2</span></span><span class="entity-pill">Anthropic <span class="cnt">1</span></span>
       </div>
     </section>
+
+    <div class="share-bar" role="region" aria-label="Share or cite this article"><span class="share-label">Share &amp; Cite</span><a class="share-link" href="https://x.com/intent/tweet?text=Weekly%20GenAI%20Synthesis%20%E2%80%94%20Week%2046%2C%202026%20%28Nov%209%E2%80%9315%29&amp;url=https%3A%2F%2Fjabi.io%2Fweekly-2026-W46.html" target="_blank" rel="noopener noreferrer">Share on X</a><a class="share-link" href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fjabi.io%2Fweekly-2026-W46.html&amp;t=Weekly%20GenAI%20Synthesis%20%E2%80%94%20Week%2046%2C%202026%20%28Nov%209%E2%80%9315%29" target="_blank" rel="noopener noreferrer">Submit to HN</a><a class="share-link" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjabi.io%2Fweekly-2026-W46.html" target="_blank" rel="noopener noreferrer">Share on LinkedIn</a><button type="button" class="share-copy-btn" data-copy-url="https://jabi.io/weekly-2026-W46.html" onclick="copyShareUrl(this)">Copy Link</button></div>
 
     <section id="related-guides">
       <div class="section-head">

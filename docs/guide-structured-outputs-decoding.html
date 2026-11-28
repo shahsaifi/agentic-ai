@@ -27,6 +27,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="format-detection" content="telephone=no">
   <link rel="alternate" type="application/rss+xml" title="The GenAI Briefing (jabi.io)" href="https://jabi.io/feed.xml">
+  <link rel="alternate" type="application/rss+xml" title="The GenAI Briefing — Weekly Synthesis (jabi.io)" href="https://jabi.io/weekly-feed.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
@@ -891,6 +892,54 @@
       border-bottom-color: var(--accent);
     }
 
+    /* Share & Cite Bar */
+    .share-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 28px 0 8px;
+      padding: 14px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .share-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-right: 4px;
+    }
+    .share-link,
+    .share-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.03em;
+      padding: 5px 10px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: var(--surface);
+      color: var(--ink-secondary);
+      text-decoration: none;
+      cursor: pointer;
+      line-height: 1.3;
+      touch-action: manipulation;
+    }
+    .share-link:hover,
+    .share-copy-btn:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+      background: var(--surface-alt);
+    }
+    .share-copy-btn.copied {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     .footer {
       margin-top: 56px;
       padding-top: 18px;
@@ -1047,6 +1096,19 @@
       .weekly-table th, .weekly-table td {
         padding: 8px 6px 8px 0;
       }
+      .share-bar {
+        gap: 6px;
+        padding: 12px 0;
+      }
+      .share-label {
+        width: 100%;
+        margin-bottom: 2px;
+      }
+      .share-link,
+      .share-copy-btn {
+        min-height: 32px;
+        padding: 5px 9px;
+      }
       .footer {
         flex-direction: column;
         gap: 8px;
@@ -1120,6 +1182,38 @@
         return false;
       }
       return true;
+    }
+
+    function copyShareUrl(btn) {
+      const url = btn.getAttribute('data-copy-url') || window.location.href;
+      const done = () => {
+        const orig = btn.getAttribute('data-orig-label') || btn.textContent;
+        btn.setAttribute('data-orig-label', orig);
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+        clearTimeout(btn._copyTimer);
+        btn._copyTimer = setTimeout(() => {
+          btn.textContent = orig;
+          btn.classList.remove('copied');
+        }, 1800);
+      };
+      const fallbackCopy = () => {
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done).catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
     }
 
     window.addEventListener('DOMContentLoaded', updateControls);
@@ -1248,6 +1342,7 @@
 <li>[ ] <code>finish_reason == "length"</code> handled explicitly with bounded retry/repair logic and logged as a distinct alert metric.</li>
 <li>[ ] Production schemas versioned, hashed, and pre-warmed on replica startup to avoid cold compilation TTFT spikes.</li>
 </ul>
+      <div class="share-bar" role="region" aria-label="Share or cite this article"><span class="share-label">Share &amp; Cite</span><a class="share-link" href="https://x.com/intent/tweet?text=Structured%20Outputs%20%26%20Constrained%20Decoding%3A%20Grammar%20Enforcement%2C%20Schema%20Design%2C%20and%20Failure%20Recovery&amp;url=https%3A%2F%2Fjabi.io%2Fguide-structured-outputs-decoding.html" target="_blank" rel="noopener noreferrer">Share on X</a><a class="share-link" href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fjabi.io%2Fguide-structured-outputs-decoding.html&amp;t=Structured%20Outputs%20%26%20Constrained%20Decoding%3A%20Grammar%20Enforcement%2C%20Schema%20Design%2C%20and%20Failure%20Recovery" target="_blank" rel="noopener noreferrer">Submit to HN</a><a class="share-link" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fjabi.io%2Fguide-structured-outputs-decoding.html" target="_blank" rel="noopener noreferrer">Share on LinkedIn</a><button type="button" class="share-copy-btn" data-copy-url="https://jabi.io/guide-structured-outputs-decoding.html" onclick="copyShareUrl(this)">Copy Link</button></div>
     </article>
 
     

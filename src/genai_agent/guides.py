@@ -151,4 +151,72 @@ def load_evergreen_guides(guides_dir: Path | None = None) -> List[Dict[str, Any]
     return guides
 
 
+def _strip_markdown_inline(text: str) -> str:
+    """Convert inline Markdown formatting into clean plain text for syndication teasers."""
+    cleaned = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text or "")
+    cleaned = re.sub(r"[`*_~]+", "", cleaned)
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    return cleaned
+
+
+def _first_sentence(text: str, max_words: int = 24) -> str:
+    """Extract a concise first sentence (or word-bounded clause) from a prose block."""
+    plain = _strip_markdown_inline(text)
+    if not plain:
+        return ""
+    match = re.search(r"^(.+?[.!?])(?:\s|$)", plain)
+    sentence = match.group(1).strip() if match else plain
+    words = sentence.split()
+    if len(words) > max_words:
+        sentence = " ".join(words[:max_words]).rstrip(",;:-") + "..."
+    return sentence
+
+
+def format_guide_teaser(guide: Dict[str, Any], site_url: str = "https://jabi.io") -> str:
+    """Format a ready-to-paste ~150-word non-duplicate syndication teaser with canonical link.
+
+    Designed for sharing on Dev.to, Hashnode, LinkedIn, or Reddit without risking
+    duplicate-content penalties against the canonical evergreen guide on jabi.io.
+    """
+    base = site_url.rstrip("/")
+    slug = str(guide.get("slug") or "").strip()
+    title = _strip_markdown_inline(str(guide.get("title") or slug))
+    summary = _strip_markdown_inline(
+        str(guide.get("description") or guide.get("subtitle") or "")
+    )
+    canonical_url = f"{base}/{slug}.html"
+
+    bullets: List[str] = []
+    sections = guide.get("sections") or []
+    for heading, blocks in sections:
+        if len(bullets) >= 3:
+            break
+        clean_heading = _strip_markdown_inline(str(heading))
+        prose_block = ""
+        for blk in blocks or []:
+            stripped = str(blk).strip()
+            if not stripped or stripped.startswith("|") or stripped.startswith("```"):
+                continue
+            if stripped.startswith(("- ", "* ")):
+                stripped = stripped[2:].strip()
+            prose_block = stripped
+            break
+        takeaway = _first_sentence(prose_block, max_words=22) if prose_block else ""
+        if clean_heading and takeaway:
+            bullets.append(f"- {clean_heading}: {takeaway}")
+        elif clean_heading:
+            bullets.append(f"- {clean_heading}")
+
+    lines: List[str] = [title, ""]
+    if summary:
+        lines.append(summary)
+        lines.append("")
+    if bullets:
+        lines.append("Key engineering takeaways:")
+        lines.extend(bullets)
+        lines.append("")
+    lines.append(f"Read the full engineering guide at {canonical_url}")
+    return "\n".join(lines).strip()
+
+
 EVERGREEN_GUIDES: List[Dict[str, Any]] = load_evergreen_guides()

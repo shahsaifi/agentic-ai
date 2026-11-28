@@ -27,6 +27,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="format-detection" content="telephone=no">
   <link rel="alternate" type="application/rss+xml" title="The GenAI Briefing (jabi.io)" href="https://jabi.io/feed.xml">
+  <link rel="alternate" type="application/rss+xml" title="The GenAI Briefing — Weekly Synthesis (jabi.io)" href="https://jabi.io/weekly-feed.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
@@ -891,6 +892,54 @@
       border-bottom-color: var(--accent);
     }
 
+    /* Share & Cite Bar */
+    .share-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 28px 0 8px;
+      padding: 14px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .share-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-right: 4px;
+    }
+    .share-link,
+    .share-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.03em;
+      padding: 5px 10px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: var(--surface);
+      color: var(--ink-secondary);
+      text-decoration: none;
+      cursor: pointer;
+      line-height: 1.3;
+      touch-action: manipulation;
+    }
+    .share-link:hover,
+    .share-copy-btn:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+      background: var(--surface-alt);
+    }
+    .share-copy-btn.copied {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     .footer {
       margin-top: 56px;
       padding-top: 18px;
@@ -1047,6 +1096,19 @@
       .weekly-table th, .weekly-table td {
         padding: 8px 6px 8px 0;
       }
+      .share-bar {
+        gap: 6px;
+        padding: 12px 0;
+      }
+      .share-label {
+        width: 100%;
+        margin-bottom: 2px;
+      }
+      .share-link,
+      .share-copy-btn {
+        min-height: 32px;
+        padding: 5px 9px;
+      }
       .footer {
         flex-direction: column;
         gap: 8px;
@@ -1122,6 +1184,38 @@
       return true;
     }
 
+    function copyShareUrl(btn) {
+      const url = btn.getAttribute('data-copy-url') || window.location.href;
+      const done = () => {
+        const orig = btn.getAttribute('data-orig-label') || btn.textContent;
+        btn.setAttribute('data-orig-label', orig);
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+        clearTimeout(btn._copyTimer);
+        btn._copyTimer = setTimeout(() => {
+          btn.textContent = orig;
+          btn.classList.remove('copied');
+        }, 1800);
+      };
+      const fallbackCopy = () => {
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done).catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', updateControls);
   </script>
 
@@ -1167,7 +1261,7 @@
       <h1 class="page-h1">Weekly GenAI Synthesis Archive</h1>
       <span>JABI.IO</span>
     </div>
-    <div class="editorial-callout"><h3>Weekly Analytical Ledger</h3><p>Cross-day deduplicated theme distributions, week-over-week shifts, velocity-ranked pivotal developments, and entity momentum computed across every qualifying week (&ge; 5 unique daily editions).</p></div><div class="guide-list">
+    <div class="editorial-callout"><h3>Weekly Analytical Ledger</h3><p>Cross-day deduplicated theme distributions, week-over-week shifts, velocity-ranked pivotal developments, and entity momentum computed across every qualifying week (&ge; 5 unique daily editions).</p><p style="margin-top:10px;font-family:var(--font-mono);font-size:0.74rem;"><a href="weekly-feed.xml" style="color:var(--accent);text-decoration:underline;text-underline-offset:3px;">Weekly RSS (weekly-feed.xml) ↗</a></p></div><div class="guide-list">
             <article class="guide-card">
               <div class="guide-kicker">
                 <span>WEEK 48, 2026</span>

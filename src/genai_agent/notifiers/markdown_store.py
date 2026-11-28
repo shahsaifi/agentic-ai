@@ -4,10 +4,10 @@ import html
 import json
 import os
 import re
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any, Dict, List, Set, Tuple
-from urllib.parse import quote_plus, urlparse
+from urllib.parse import quote, quote_plus, urlparse
 
 import markdown
 
@@ -26,6 +26,7 @@ EDITORIAL_CSS_AND_JS = """
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="format-detection" content="telephone=no">
   <link rel="alternate" type="application/rss+xml" title="The GenAI Briefing (jabi.io)" href="https://jabi.io/feed.xml">
+  <link rel="alternate" type="application/rss+xml" title="The GenAI Briefing — Weekly Synthesis (jabi.io)" href="https://jabi.io/weekly-feed.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
@@ -890,6 +891,54 @@ EDITORIAL_CSS_AND_JS = """
       border-bottom-color: var(--accent);
     }
 
+    /* Share & Cite Bar */
+    .share-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 28px 0 8px;
+      padding: 14px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .share-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-right: 4px;
+    }
+    .share-link,
+    .share-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.03em;
+      padding: 5px 10px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: var(--surface);
+      color: var(--ink-secondary);
+      text-decoration: none;
+      cursor: pointer;
+      line-height: 1.3;
+      touch-action: manipulation;
+    }
+    .share-link:hover,
+    .share-copy-btn:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+      background: var(--surface-alt);
+    }
+    .share-copy-btn.copied {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     .footer {
       margin-top: 56px;
       padding-top: 18px;
@@ -1046,6 +1095,19 @@ EDITORIAL_CSS_AND_JS = """
       .weekly-table th, .weekly-table td {
         padding: 8px 6px 8px 0;
       }
+      .share-bar {
+        gap: 6px;
+        padding: 12px 0;
+      }
+      .share-label {
+        width: 100%;
+        margin-bottom: 2px;
+      }
+      .share-link,
+      .share-copy-btn {
+        min-height: 32px;
+        padding: 5px 9px;
+      }
       .footer {
         flex-direction: column;
         gap: 8px;
@@ -1119,6 +1181,38 @@ EDITORIAL_CSS_AND_JS = """
         return false;
       }
       return true;
+    }
+
+    function copyShareUrl(btn) {
+      const url = btn.getAttribute('data-copy-url') || window.location.href;
+      const done = () => {
+        const orig = btn.getAttribute('data-orig-label') || btn.textContent;
+        btn.setAttribute('data-orig-label', orig);
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+        clearTimeout(btn._copyTimer);
+        btn._copyTimer = setTimeout(() => {
+          btn.textContent = orig;
+          btn.classList.remove('copied');
+        }, 1800);
+      };
+      const fallbackCopy = () => {
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done).catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
     }
 
     window.addEventListener('DOMContentLoaded', updateControls);
@@ -1686,6 +1780,126 @@ def _render_rss_feed_xml(archive_map: Dict[str, str], site_url: str = "https://j
     <link>{base}/</link>
     <atom:link href="{base}/feed.xml" rel="self" type="application/rss+xml" />
     <description>Curated daily Generative AI research papers, frontier lab engineering, researcher threads on X, audio podcasts, and YouTube tech talks.</description>
+    <language>en-us</language>
+{chr(10).join(items_xml)}
+  </channel>
+</rss>
+"""
+
+
+def _render_share_bar_html(page_url: str, page_title: str) -> str:
+    """Render a lightweight Swiss/Editorial share & cite bar with zero third-party tracking scripts."""
+    safe_url = _safe_http_url(page_url)
+    clean_title = _strip_emojis(page_title or "").strip()
+    enc_url = quote(page_url, safe="")
+    enc_title = quote(clean_title, safe="")
+
+    x_href = html.escape(f"https://x.com/intent/tweet?text={enc_title}&url={enc_url}", quote=True)
+    hn_href = html.escape(f"https://news.ycombinator.com/submitlink?u={enc_url}&t={enc_title}", quote=True)
+    li_href = html.escape(f"https://www.linkedin.com/sharing/share-offsite/?url={enc_url}", quote=True)
+
+    return (
+        '<div class="share-bar" role="region" aria-label="Share or cite this article">'
+        '<span class="share-label">Share &amp; Cite</span>'
+        f'<a class="share-link" href="{x_href}" target="_blank" rel="noopener noreferrer">Share on X</a>'
+        f'<a class="share-link" href="{hn_href}" target="_blank" rel="noopener noreferrer">Submit to HN</a>'
+        f'<a class="share-link" href="{li_href}" target="_blank" rel="noopener noreferrer">Share on LinkedIn</a>'
+        f'<button type="button" class="share-copy-btn" data-copy-url="{safe_url}" onclick="copyShareUrl(this)">Copy Link</button>'
+        "</div>"
+    )
+
+
+def _extract_first_markdown_paragraph(markdown_text: str) -> str:
+    """Extract the first prose paragraph from a Markdown essay as clean plain text."""
+    blocks = re.split(r"\n\s*\n", _strip_emojis(markdown_text or "").strip())
+    for blk in blocks:
+        stripped = blk.strip()
+        if not stripped or stripped.startswith("#") or stripped.startswith("|") or stripped.startswith("```"):
+            continue
+        plain = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", stripped)
+        plain = re.sub(r"[`*_~]+", "", plain)
+        plain = re.sub(r"\s+", " ", plain).strip()
+        if plain:
+            return plain
+    return ""
+
+
+def _render_weekly_rss_feed_xml(
+    weekly_reports: List[Dict[str, Any]],
+    site_url: str = "https://jabi.io",
+) -> str:
+    """Render an RSS 2.0 feed (`docs/weekly-feed.xml`) of Weekly GenAI Syntheses."""
+    from datetime import timedelta, timezone
+    from email.utils import format_datetime
+
+    base = site_url.rstrip("/")
+    sgt = timezone(timedelta(hours=8))
+    items_xml: List[str] = []
+
+    for rep in reversed(weekly_reports):
+        wid = str(rep.get("week_id") or "").strip()
+        iso_week = int(rep.get("iso_week") or 1)
+        iso_year = int(rep.get("iso_year") or 2026)
+        date_range = str(rep.get("date_range_label") or wid).strip()
+        report_url = f"{base}/weekly-{wid}.html"
+        item_title = f"Weekly GenAI Synthesis — Week {iso_week}, {iso_year} ({date_range})"
+
+        # Strict RFC-822 pubDate using the Sunday end date of each ISO week at 08:00 +0800
+        try:
+            sunday = date.fromisocalendar(iso_year, iso_week, 7)
+            dt = datetime(sunday.year, sunday.month, sunday.day, 8, 0, 0, tzinfo=sgt)
+            pub_date_rfc822 = format_datetime(dt)
+        except ValueError:
+            end_d = str(rep.get("end_date") or "").strip()
+            try:
+                dt = datetime.strptime(end_d, "%Y-%m-%d").replace(hour=8, minute=0, second=0, tzinfo=sgt)
+                pub_date_rfc822 = format_datetime(dt)
+            except ValueError:
+                pub_date_rfc822 = end_d
+
+        first_para = _extract_first_markdown_paragraph(str(rep.get("essay_markdown") or ""))
+        dom = rep.get("dominant_cluster") or (
+            rep.get("cluster_stats", [{}])[0] if rep.get("cluster_stats") else {}
+        )
+        cluster_name = str(dom.get("cluster") or "").strip()
+        cluster_share = dom.get("share")
+        cluster_delta = str(dom.get("delta_label") or "").strip()
+        top_cluster_clause = ""
+        if cluster_name:
+            share_txt = f" ({cluster_share:.0f}% share" if isinstance(cluster_share, (int, float)) else ""
+            if share_txt and cluster_delta:
+                share_txt += f", {cluster_delta})"
+            elif share_txt:
+                share_txt += ")"
+            top_cluster_clause = f"<p><strong>Top Engineering Cluster:</strong> {html.escape(cluster_name)}{html.escape(share_txt)}</p>"
+
+        desc_parts: List[str] = []
+        if first_para:
+            desc_parts.append(f"<p>{html.escape(first_para)}</p>")
+        if top_cluster_clause:
+            desc_parts.append(top_cluster_clause)
+        desc_parts.append(
+            f'<p><a href="{report_url}">Read the full weekly synthesis &amp; trend table on jabi.io →</a></p>'
+        )
+        desc_html = "".join(desc_parts)
+
+        items_xml.append(
+            f"""    <item>
+      <title>{html.escape(item_title)}</title>
+      <link>{report_url}</link>
+      <guid isPermaLink="true">{report_url}</guid>
+      <pubDate>{html.escape(pub_date_rfc822)}</pubDate>
+      <description>{html.escape(desc_html)}</description>
+    </item>"""
+        )
+
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>The GenAI Briefing — Weekly Synthesis (jabi.io)</title>
+    <link>{base}/weekly.html</link>
+    <atom:link href="{base}/weekly-feed.xml" rel="self" type="application/rss+xml" />
+    <description>Weekly Generative AI analytical syntheses: cross-day deduplicated theme distributions, week-over-week shifts, velocity-ranked pivotal developments, and entity momentum.</description>
     <language>en-us</language>
 {chr(10).join(items_xml)}
   </channel>
@@ -2443,6 +2657,7 @@ def _render_guide_article_html(guide: Dict[str, str], latest_date: str) -> str:
       <h1>{html.escape(guide['title'])}</h1>
       <p class="guide-subtitle">{html.escape(guide['subtitle'])}</p>
       {rendered_body}
+      {_render_share_bar_html(guide_url, guide['title'])}
     </article>
 
     {_render_editorial_ad_slot()}
@@ -2564,6 +2779,9 @@ def _render_weekly_index_html(
         "<h3>Weekly Analytical Ledger</h3>"
         "<p>Cross-day deduplicated theme distributions, week-over-week shifts, velocity-ranked pivotal "
         "developments, and entity momentum computed across every qualifying week (&ge; 5 unique daily editions).</p>"
+        '<p style="margin-top:10px;font-family:var(--font-mono);font-size:0.74rem;">'
+        '<a href="weekly-feed.xml" style="color:var(--accent);text-decoration:underline;text-underline-offset:3px;">Weekly RSS (weekly-feed.xml) ↗</a>'
+        "</p>"
         "</div>"
         f"{list_html}"
     )
@@ -2776,7 +2994,8 @@ def _render_weekly_report_html(
     {_render_masthead(active_page="weekly", latest_date=latest_date, edition_date=pub_date)}
     <div style="font-family:var(--font-mono);font-size:0.74rem;color:var(--ink-muted);margin-bottom:14px;">
       <a href="weekly.html" style="color:var(--accent);text-decoration:none;">← ALL WEEKLY SYNTHESES</a>
-      <span> · {html.escape(wid)} · {report['days_count']} DAILY ISSUES · {report['total_items']} DEDUPLICATED ITEMS</span>
+      <span> · {html.escape(wid)} · {report['days_count']} DAILY ISSUES · {report['total_items']} DEDUPLICATED ITEMS · </span>
+      <a href="weekly-feed.xml" style="color:var(--accent);text-decoration:none;">Weekly RSS (weekly-feed.xml) ↗</a>
     </div>
     <h1 class="page-h1">{html.escape(h1_text)}</h1>
 
@@ -2831,6 +3050,8 @@ def _render_weekly_report_html(
         {entity_pills}
       </div>
     </section>
+
+    {_render_share_bar_html(report_url, h1_text)}
 
     <section id="related-guides">
       <div class="section-head">
@@ -3977,6 +4198,10 @@ def rebuild_docs_site(
     latest_d = archive_dates[-1] if archive_dates else latest_fallback_date
     (target_docs / "feed.xml").write_text(
         _render_rss_feed_xml(archive_map=archive_map, site_url=SITE_URL),
+        encoding="utf-8",
+    )
+    (target_docs / "weekly-feed.xml").write_text(
+        _render_weekly_rss_feed_xml(weekly_reports=weekly_reports, site_url=SITE_URL),
         encoding="utf-8",
     )
     (target_docs / "weekly.html").write_text(
