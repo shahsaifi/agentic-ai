@@ -513,6 +513,8 @@ def test_subscribe_rss_and_adsense_readiness(tmp_path: Path, monkeypatch):
         page_html = (docs_dir / page_name).read_text(encoding="utf-8")
         assert 'id="subscribe"' in page_html
         assert '<a href="#subscribe">Subscribe</a>' in page_html
+        assert 'data-beehiiv-form="787aaa82-e683-49f6-9a3b-3016da1d9905"' in page_html
+        assert "https://jabi.beehiiv.com/subscribe" in page_html
 
     for page_name in ("index.html", "2026-11-14.html"):
         page_html = (docs_dir / page_name).read_text(encoding="utf-8")

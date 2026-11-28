@@ -1447,8 +1447,12 @@ def _render_editorial_ad_slot() -> str:
     """
 
 
+DEFAULT_BEEHIIV_FORM_ID = "787aaa82-e683-49f6-9a3b-3016da1d9905"
+DEFAULT_BEEHIIV_SUBSCRIBE_URL = "https://jabi.beehiiv.com/subscribe"
+
+
 def _render_subscribe_box_html() -> str:
-    """Render the follow box. The email form appears only when `NEWSLETTER_FORM_ACTION` points to a real provider."""
+    """Render the newsletter subscribe box (custom form action via env var, or live Beehiiv Slim Inline embed)."""
     raw_action = os.getenv("NEWSLETTER_FORM_ACTION", "").strip()
     safe_action = _safe_http_url(raw_action) if raw_action else "#"
     if safe_action != "#":
@@ -1468,12 +1472,19 @@ def _render_subscribe_box_html() -> str:
       </div>
     </section>
     """
-    return """
-    <section id="subscribe" class="subscribe-box" aria-label="Follow The GenAI Briefing">
-      <div class="subscribe-kicker">FOLLOW · JABI.IO</div>
-      <h3>Follow The GenAI Briefing</h3>
-      <p class="subscribe-copy">A new issue is published every morning. Add the RSS feed to any feed reader to get each issue as it appears. Email delivery is not open yet.</p>
+    form_id = html.escape(os.getenv("BEEHIIV_FORM_ID", DEFAULT_BEEHIIV_FORM_ID).strip() or DEFAULT_BEEHIIV_FORM_ID)
+    sub_url = _safe_http_url(os.getenv("BEEHIIV_SUBSCRIBE_URL", DEFAULT_BEEHIIV_SUBSCRIBE_URL).strip() or DEFAULT_BEEHIIV_SUBSCRIBE_URL)
+    return f"""
+    <section id="subscribe" class="subscribe-box" aria-label="Subscribe to The GenAI Briefing">
+      <div class="subscribe-kicker">DAILY EMAIL DIGEST · JABI.IO</div>
+      <h3>Receive The GenAI Briefing by Email</h3>
+      <p class="subscribe-copy">The daily Top 10 research papers, frontier lab engineering posts, researcher threads, and tech talks—delivered every morning via Beehiiv. Free, zero spam, one-click unsubscribe.</p>
+      <div class="beehiiv-embed-wrap" style="margin: 14px 0 10px;">
+        <script async src="https://subscribe-forms.beehiiv.com/v3/loader.js" data-beehiiv-form="{form_id}"></script>
+      </div>
       <div class="subscribe-meta">
+        <a href="{sub_url}" target="_blank" rel="noopener noreferrer">Open Subscribe Page ↗</a>
+        <span>·</span>
         <a href="feed.xml">RSS Feed (feed.xml) ↗</a>
         <span>·</span>
         <a href="privacy.html">Privacy</a>
@@ -1800,8 +1811,9 @@ def _render_faq_page_html(latest_date: str) -> str:
         ),
         (
             "How do I follow the briefing?",
-            'Add the RSS feed at <a href="feed.xml">jabi.io/feed.xml</a> to any feed reader. You can also bookmark the '
-            "front page, which always displays the latest edition.",
+            'Subscribe to the free daily email edition using the Beehiiv form at the bottom of any page (or directly at '
+            '<a href="https://jabi.beehiiv.com/subscribe" target="_blank" rel="noopener noreferrer">jabi.beehiiv.com</a>), '
+            'add the RSS feed at <a href="feed.xml">jabi.io/feed.xml</a> to any feed reader, or bookmark the front page.',
         ),
         (
             "Does the site show ads or track me?",
@@ -1921,7 +1933,7 @@ def _render_privacy_page_html(latest_date: str, include_adsense: bool = False) -
       <span>ZERO-SPAM GUARANTEE</span>
     </div>
     <p class="briefing-summary">
-      Readers can follow the daily briefing through our public RSS feed (<a href="feed.xml"><code>https://jabi.io/feed.xml</code></a>). If an email signup is offered, the address you submit is handled by the newsletter provider named on the form and is used only to send The GenAI Briefing; it is never sold. Reading preferences (such as Paper/Sepia/Ink theme palette and font size) are stored locally in your browser via <code>localStorage</code>.
+      Readers can subscribe to the daily email edition via <a href="https://jabi.beehiiv.com/subscribe" target="_blank" rel="noopener noreferrer">Beehiiv</a> or follow our public RSS feed (<a href="feed.xml"><code>https://jabi.io/feed.xml</code></a>). Email addresses submitted through the subscribe form are processed by Beehiiv solely to deliver The GenAI Briefing; they are never sold and include one-click unsubscribe in every issue. Reading preferences (such as Paper/Sepia/Ink theme palette and font size) are stored locally in your browser via <code>localStorage</code>.
     </p>
 
     <div class="section-head">
