@@ -1494,25 +1494,44 @@ def _render_subscribe_box_html() -> str:
 
 
 def _render_rss_feed_xml(archive_map: Dict[str, str], site_url: str = "https://jabi.io") -> str:
-    """Render an RSS 2.0 feed (`docs/feed.xml`) of recent daily issues for email-to-RSS and feed readers."""
+    """Render an RSS 2.0 feed (`docs/feed.xml`) of recent daily issues for RSS-to-Email and feed readers."""
+    from datetime import timezone, timedelta
+    from email.utils import format_datetime
+
     base = site_url.rstrip("/")
+    sgt = timezone(timedelta(hours=8))
     sorted_dates = sorted(archive_map.keys(), reverse=True)
     items_xml: List[str] = []
 
     for d in sorted_dates[:15]:
         top_items = _parse_top10_items(archive_map[d])
-        bullet_lines = [
-            f"<li><a href=\"{_safe_http_url(it['url'])}\">{html.escape(it['title'])}</a> — {html.escape(it['summary'])}</li>"
-            for it in top_items[:10]
-        ]
-        desc_html = f"<ul>{''.join(bullet_lines)}</ul>" if bullet_lines else "Daily Generative AI Technical Briefing."
+        bullet_lines: List[str] = []
+        for it in top_items[:10]:
+            link_html = f'<a href="{_safe_http_url(it["url"])}">{html.escape(it["title"])}</a>'
+            summary_txt = (it.get("summary") or "").strip()
+            if summary_txt:
+                bullet_lines.append(f"<li>{link_html} — {html.escape(summary_txt)}</li>")
+            else:
+                bullet_lines.append(f"<li>{link_html}</li>")
         issue_url = f"{base}/{d}.html"
+        if bullet_lines:
+            desc_html = (
+                f"<ul>{''.join(bullet_lines)}</ul>"
+                f'<p><a href="{issue_url}">Read the full edition, researcher threads, podcasts &amp; tech talks on jabi.io →</a></p>'
+            )
+        else:
+            desc_html = f'<p>Daily Generative AI Technical Briefing. <a href="{issue_url}">Read on jabi.io →</a></p>'
+        try:
+            dt = datetime.strptime(d, "%Y-%m-%d").replace(hour=7, minute=0, second=0, tzinfo=sgt)
+            pub_date_rfc822 = format_datetime(dt)
+        except ValueError:
+            pub_date_rfc822 = html.escape(d)
         items_xml.append(
             f"""    <item>
       <title>The GenAI Briefing — {html.escape(d)}</title>
       <link>{issue_url}</link>
       <guid isPermaLink="true">{issue_url}</guid>
-      <pubDate>{html.escape(d)}T07:00:00+08:00</pubDate>
+      <pubDate>{html.escape(pub_date_rfc822)}</pubDate>
       <description>{html.escape(desc_html)}</description>
     </item>"""
         )
