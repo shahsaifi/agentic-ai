@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>FAQ and Reading Guide — The GenAI Briefing (jabi.io)</title>
-  <meta name="description" content="Frequently asked questions and a reading guide for The GenAI Briefing daily generative AI newsletter.">
+  <meta name="description" content="Frequently asked questions and a reading guide for The GenAI Briefing daily generative AI technical publication.">
   <link rel="canonical" href="https://jabi.io/faq.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The GenAI Briefing">
   <meta property="og:url" content="https://jabi.io/faq.html">
-  <meta property="og:description" content="Frequently asked questions and a reading guide for The GenAI Briefing daily generative AI newsletter.">
+  <meta property="og:description" content="Frequently asked questions and a reading guide for The GenAI Briefing daily generative AI technical publication.">
   <meta name="google-adsense-account" content="ca-pub-4585099070726775">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4585099070726775" crossorigin="anonymous"></script>
   
@@ -335,80 +335,146 @@
       font-weight: 600;
       color: var(--ink);
     }
-    .briefing-reddit {
-      margin: 8px 0 10px;
-      padding: 8px 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      font-family: var(--font-sans);
-      font-size: 0.83rem;
-      line-height: 1.5;
+    .briefing-takeaway {
+      font-family: var(--font-serif);
+      font-size: 0.96rem;
       color: var(--ink-secondary);
+      margin: 0 0 10px;
+      padding: 6px 12px;
+      border-left: 2px solid var(--accent);
+      background: var(--surface);
+      line-height: 1.6;
       max-width: 66ch;
     }
-    .briefing-reddit summary {
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 8px;
-      font-weight: 500;
-      color: var(--ink);
-    }
-    .briefing-reddit summary::-webkit-details-marker {
-      display: none;
-    }
-    .briefing-reddit strong {
+    .briefing-takeaway strong {
       font-family: var(--font-mono);
-      font-size: 0.71rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       color: var(--accent);
       margin-right: 4px;
     }
-    .reddit-toggle {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--accent);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .reddit-body {
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px solid var(--border);
-      font-family: var(--font-serif);
-      font-size: 0.9rem;
-      line-height: 1.55;
-      color: var(--ink-secondary);
-    }
-    .reddit-comment {
-      margin-top: 6px;
-      padding-left: 10px;
-      border-left: 2px solid var(--border);
-      font-size: 0.86rem;
-    }
-    .reddit-footer {
-      margin-top: 8px;
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
+    .guide-list {
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+      flex-direction: column;
     }
-    .briefing-reddit a {
-      color: var(--ink-secondary);
-      text-decoration: underline;
-      text-decoration-color: var(--border);
-      text-underline-offset: 2px;
+    .guide-card {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
     }
-    .briefing-reddit a:hover {
+    .guide-card:last-child {
+      border-bottom: none;
+    }
+    .guide-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       color: var(--accent);
-      text-decoration-color: var(--accent);
+      margin-bottom: 6px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .guide-kicker span.muted {
+      color: var(--ink-muted);
+    }
+    .guide-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.24rem;
+      font-weight: 600;
+      line-height: 1.34;
+      margin: 0 0 8px;
+      max-width: 62ch;
+    }
+    .guide-card h3 a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .guide-card h3 a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .guide-article {
+      max-width: 66ch;
+    }
+    .guide-article h1 {
+      font-family: var(--font-display);
+      font-size: 2.3rem;
+      font-weight: 400;
+      line-height: 1.15;
+      margin: 8px 0 12px;
+      color: var(--ink);
+    }
+    .guide-subtitle {
+      font-family: var(--font-serif);
+      font-size: 1.12rem;
+      color: var(--ink-secondary);
+      line-height: 1.55;
+      margin: 0 0 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-article h2 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      line-height: 1.3;
+      margin: 32px 0 12px;
+      color: var(--ink);
+    }
+    .guide-article h3 {
+      font-family: var(--font-sans);
+      font-size: 1.02rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 24px 0 10px;
+      color: var(--ink);
+    }
+    .guide-article p, .guide-article li {
+      font-family: var(--font-serif);
+      font-size: 1.02rem;
+      line-height: 1.72;
+      color: var(--ink-secondary);
+    }
+    .guide-article p {
+      margin: 0 0 16px;
+    }
+    .guide-article ul, .guide-article ol {
+      margin: 0 0 18px;
+      padding-left: 22px;
+    }
+    .guide-article li {
+      margin-bottom: 8px;
+    }
+    .guide-article code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: var(--surface-alt);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .guide-article table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+    }
+    .guide-article th, .guide-article td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .guide-article th {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      border-bottom: 1px solid var(--border-strong);
     }
     .briefing-actions {
       display: flex;
@@ -939,6 +1005,7 @@
         <div class="nav-links">
           <a href="index.html" class="">Front Page</a>
           <a href="2026-11-27.html" class="">Latest Issue (2026-11-27)</a>
+          <a href="guides.html" class="">Guides</a>
           <a href="tech-talks.html" class="">Tech Talks Index</a>
           <a href="podcasts.html" class="">Podcasts Index</a>
           <a href="index.html#archive">Archive</a>
@@ -955,29 +1022,29 @@
       <span>JABI.IO</span>
     </div>
     <h3 class="note-title">What is The GenAI Briefing?</h3>
-<p class="briefing-summary">A free daily briefing that collects and ranks generative AI research papers, engineering posts, community discussions, podcasts and recorded talks, with short summaries and links to the original sources.</p>
+<p class="briefing-summary">A free daily technical publication (<a href="about.html">read our full editorial policy</a>) that collects, synthesizes, and ranks generative AI research papers, frontier lab engineering posts, practitioner discussions, podcasts, and recorded talks, paired with original long-form engineering guides.</p>
 <h3 class="note-title">Who is it for?</h3>
-<p class="briefing-summary">Software engineers, ML practitioners, researchers and technical leaders who want to follow generative AI without reading dozens of feeds. It assumes technical familiarity and skips introductory explainers.</p>
+<p class="briefing-summary">Software engineers, ML practitioners, researchers, and technical leaders who build or operate generative AI systems in production. It assumes technical familiarity and skips introductory explainers.</p>
 <h3 class="note-title">When is a new issue published?</h3>
-<p class="briefing-summary">Every day at about 06:45 Singapore time (22:45 UTC). Each issue has its own permanent page, and older issues are listed in the archive on the front page.</p>
+<p class="briefing-summary">Every day at about 06:45 Singapore time (22:45 UTC). Each issue has its own permanent archive page, and past issues are indexed in the archive table on the front page.</p>
+<h3 class="note-title">What is the Daily Editorial Synthesis at the top of each issue?</h3>
+<p class="briefing-summary">Above Section I, each issue includes an Executive Summary or Editorial Synthesis highlighting the dominant technical themes across that day's Top 10, the balance of research papers versus engineering discussions, the lead story, and the concrete engineering implication for production teams.</p>
+<h3 class="note-title">What are the Evergreen Engineering Guides?</h3>
+<p class="briefing-summary">Our <a href="guides.html">Evergreen Engineering Guides</a> are original, in-depth technical references covering durable production topics—including agent harness engineering, LLM inference and quantization, context engineering beyond naive RAG, production evaluation harnesses, and cascaded model routing.</p>
 <h3 class="note-title">How do I read a Top 10 entry?</h3>
-<p class="briefing-summary">Each entry shows a category tag (Research, Engineering or Lab Post), the source, the date and a short summary. Below the summary are links to the original article and to the Hacker News discussion when one exists. Use the filter buttons above the list to show only one category.</p>
-<h3 class="note-title">What is the Reddit brief under each story?</h3>
-<p class="briefing-summary">A collapsible note summarizing how practitioners on communities such as r/LocalLLaMA, r/MachineLearning, r/ClaudeAI and r/OpenAI are discussing the topic, with links to search Reddit for the live threads. It is a reading aid, not a statement of fact.</p>
+<p class="briefing-summary">Each entry shows a category tag (Research, Engineering, or Lab Release), the primary source, the date, and a concise summary. Below the summary are direct links to the original source, the Hacker News discussion when available, and a Reddit search link. Use the filter buttons above the list to focus on one category.</p>
 <h3 class="note-title">How are stories chosen?</h3>
-<p class="briefing-summary">An automated agent gathers candidates from public sources, drops anything already featured in a previous issue, and ranks the rest by community reach and the substance of the summary, keeping a balance between research papers, engineering discussion and lab releases.</p>
-<h3 class="note-title">Are the summaries written by AI?</h3>
-<p class="briefing-summary">They are generated automatically from the source text and may be AI-assisted. They are short and always link to the original, so you can verify any claim. Corrections are welcome through the contact page.</p>
+<p class="briefing-summary">An automated pipeline gathers candidates from public primary sources, filters out items already featured in earlier issues, and ranks the remainder by technical substance and community reach while balancing research papers, engineering discussions, and lab releases.</p>
+<h3 class="note-title">Are the summaries AI-assisted, and how do you handle verification and corrections?</h3>
+<p class="briefing-summary">Daily summaries are generated automatically from primary source material and may be AI-assisted. Every entry links directly to the original paper, blog post, or thread for primary-source verification. If you spot an error or broken link, report it via the <a href="contact.html">Contact page</a> and we will review and correct it. See our <a href="about.html">About &amp; Editorial Policy</a> for details.</p>
 <h3 class="note-title">Where can I find talks and podcasts?</h3>
-<p class="briefing-summary">The Tech Talks Index lists recent YouTube talks grouped by channel, and the Podcasts Index lists recent episodes of AI engineering shows. Both are linked in the navigation bar at the top of every page.</p>
+<p class="briefing-summary">The <a href="tech-talks.html">Tech Talks Index</a> lists recent YouTube lectures and keynotes grouped by channel, and the <a href="podcasts.html">Podcasts Index</a> lists recent episodes of AI engineering shows. Both are linked in the navigation bar on every page.</p>
 <h3 class="note-title">How do I follow the briefing?</h3>
-<p class="briefing-summary">Add the RSS feed at jabi.io/feed.xml to any feed reader. Email delivery is not open yet. You can also bookmark the front page, which always shows the latest issue.</p>
+<p class="briefing-summary">Add the RSS feed at <a href="feed.xml">jabi.io/feed.xml</a> to any feed reader. You can also bookmark the front page, which always displays the latest edition.</p>
 <h3 class="note-title">Does the site show ads or track me?</h3>
-<p class="briefing-summary">The site may show clearly labeled ads served by Google AdSense, which uses cookies. Details and opt-out links are in the Privacy Policy. Your theme and font size choices are stored only in your browser.</p>
+<p class="briefing-summary">Content pages may display clearly labeled ads served by Google AdSense, which uses cookies. Details and opt-out links are in the <a href="privacy.html">Privacy Policy</a>. Utility pages (Contact, Terms, Privacy) carry no advertising scripts, and your theme and font-size choices stay in browser localStorage.</p>
 <h3 class="note-title">Is the content free to reuse?</h3>
-<p class="briefing-summary">Headlines and short summaries are provided for reading and discussion. Original articles, papers and videos belong to their authors and are linked, not copied. See the Terms of Service for details.</p>
-<h3 class="note-title">How do I report an error or suggest a source?</h3>
-<p class="briefing-summary">Use the Contact page. Include the issue date and the link to the entry, and we will review it.</p>
+<p class="briefing-summary">Original guides, editorial syntheses, and short summaries are provided for reading and discussion with attribution. Linked papers, articles, and videos belong to their respective authors. See the <a href="terms.html">Terms of Service</a> for details.</p>
     
     <section id="subscribe" class="subscribe-box" aria-label="Follow The GenAI Briefing">
       <div class="subscribe-kicker">FOLLOW · JABI.IO</div>
@@ -992,7 +1059,7 @@
     
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · FAQ AND READING GUIDE</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="2026-11-27.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="2026-11-27.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="guides.html">Guides</a> · <a href="about.html">About</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
     </footer>
   </div>
 </body>

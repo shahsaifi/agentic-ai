@@ -5,17 +5,18 @@ import os
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
-from urllib.parse import urlparse
+from typing import Any, Dict, List, Set, Tuple
+from urllib.parse import quote_plus, urlparse
 
 import markdown
 
-from genai_agent.collectors.podcasts import fetch_detailed_podcast_hub
+from genai_agent.collectors.podcasts import FEATURED_PODCAST_SHOWS, fetch_detailed_podcast_hub
 from genai_agent.collectors.social_x import CURATED_FALLBACK_X_THREADS
 from genai_agent.collectors.tech_talks import (
     CURATED_FALLBACK_TECH_TALKS,
     fetch_detailed_tech_talks_hub,
 )
+from genai_agent.guides import EVERGREEN_GUIDES
 
 EDITORIAL_CSS_AND_JS = """
   <meta name="theme-color" id="meta-theme-color" content="#F6F4EF">
@@ -340,80 +341,146 @@ EDITORIAL_CSS_AND_JS = """
       font-weight: 600;
       color: var(--ink);
     }
-    .briefing-reddit {
-      margin: 8px 0 10px;
-      padding: 8px 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      font-family: var(--font-sans);
-      font-size: 0.83rem;
-      line-height: 1.5;
+    .briefing-takeaway {
+      font-family: var(--font-serif);
+      font-size: 0.96rem;
       color: var(--ink-secondary);
+      margin: 0 0 10px;
+      padding: 6px 12px;
+      border-left: 2px solid var(--accent);
+      background: var(--surface);
+      line-height: 1.6;
       max-width: 66ch;
     }
-    .briefing-reddit summary {
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 8px;
-      font-weight: 500;
-      color: var(--ink);
-    }
-    .briefing-reddit summary::-webkit-details-marker {
-      display: none;
-    }
-    .briefing-reddit strong {
+    .briefing-takeaway strong {
       font-family: var(--font-mono);
-      font-size: 0.71rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       color: var(--accent);
       margin-right: 4px;
     }
-    .reddit-toggle {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--accent);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .reddit-body {
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px solid var(--border);
-      font-family: var(--font-serif);
-      font-size: 0.9rem;
-      line-height: 1.55;
-      color: var(--ink-secondary);
-    }
-    .reddit-comment {
-      margin-top: 6px;
-      padding-left: 10px;
-      border-left: 2px solid var(--border);
-      font-size: 0.86rem;
-    }
-    .reddit-footer {
-      margin-top: 8px;
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
+    .guide-list {
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+      flex-direction: column;
     }
-    .briefing-reddit a {
-      color: var(--ink-secondary);
-      text-decoration: underline;
-      text-decoration-color: var(--border);
-      text-underline-offset: 2px;
+    .guide-card {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
     }
-    .briefing-reddit a:hover {
+    .guide-card:last-child {
+      border-bottom: none;
+    }
+    .guide-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       color: var(--accent);
-      text-decoration-color: var(--accent);
+      margin-bottom: 6px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .guide-kicker span.muted {
+      color: var(--ink-muted);
+    }
+    .guide-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.24rem;
+      font-weight: 600;
+      line-height: 1.34;
+      margin: 0 0 8px;
+      max-width: 62ch;
+    }
+    .guide-card h3 a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .guide-card h3 a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .guide-article {
+      max-width: 66ch;
+    }
+    .guide-article h1 {
+      font-family: var(--font-display);
+      font-size: 2.3rem;
+      font-weight: 400;
+      line-height: 1.15;
+      margin: 8px 0 12px;
+      color: var(--ink);
+    }
+    .guide-subtitle {
+      font-family: var(--font-serif);
+      font-size: 1.12rem;
+      color: var(--ink-secondary);
+      line-height: 1.55;
+      margin: 0 0 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-article h2 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      line-height: 1.3;
+      margin: 32px 0 12px;
+      color: var(--ink);
+    }
+    .guide-article h3 {
+      font-family: var(--font-sans);
+      font-size: 1.02rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 24px 0 10px;
+      color: var(--ink);
+    }
+    .guide-article p, .guide-article li {
+      font-family: var(--font-serif);
+      font-size: 1.02rem;
+      line-height: 1.72;
+      color: var(--ink-secondary);
+    }
+    .guide-article p {
+      margin: 0 0 16px;
+    }
+    .guide-article ul, .guide-article ol {
+      margin: 0 0 18px;
+      padding-left: 22px;
+    }
+    .guide-article li {
+      margin-bottom: 8px;
+    }
+    .guide-article code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: var(--surface-alt);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .guide-article table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+    }
+    .guide-article th, .guide-article td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .guide-article th {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      border-bottom: 1px solid var(--border-strong);
     }
     .briefing-actions {
       display: flex;
@@ -930,15 +997,50 @@ def _strip_emojis(text: str) -> str:
     ).strip()
 
 
-def _clean_excerpt(text: str, max_chars: int = 300) -> str:
-    """Clean raw scraper boilerplate and cut on a full sentence boundary."""
+def _harden_rendered_markdown_html(html_text: str) -> str:
+    """Strip any raw script tags and enforce target=_blank rel='noopener noreferrer' on external links."""
+    if not html_text:
+        return ""
+    cleaned = re.sub(r"(?is)<script\b[^>]*>.*?</script>", "", html_text)
+
+    def _add_rel(match: re.Match) -> str:
+        tag = match.group(0)
+        href = match.group(1)
+        if href.startswith("https://jabi.io"):
+            return tag
+        if 'rel="' not in tag and "rel='" not in tag:
+            tag = tag[:-1] + ' target="_blank" rel="noopener noreferrer">'
+        return tag
+
+    return re.sub(r'<a\s+[^>]*href="(https?://[^"]+)"[^>]*>', _add_rel, cleaned)
+
+
+_PROFANITY_RE = re.compile(r"\b(shit|fuck|damn|asshole|bitch|crap|wtf)\b", re.IGNORECASE)
+_ARCHIVE_URL_RE = re.compile(r"https?://(?:www\.)?archive\.(?:ph|is|today)/\S*", re.IGNORECASE)
+
+
+def _sanitize_title_profanity(text: str) -> str:
+    """Mask explicit profanity in third-party headlines so rendered HTML and RSS remain publisher-safe."""
     if not text:
         return ""
-    import html as _html
+    return _PROFANITY_RE.sub(lambda m: m.group(0)[0] + "***", text)
+_LEGACY_X_BOILERPLATE_RES = (
+    re.compile(r"^Technical thread from (?:@\S+|AI researchers on X) examining .+", re.IGNORECASE),
+    re.compile(r"^Industry analysis and researcher commentary on X examining .+", re.IGNORECASE),
+    re.compile(r"^Researcher and engineering discussion(?: on X)? examining .+", re.IGNORECASE),
+    re.compile(r"^Technical discussion on X examining .+", re.IGNORECASE),
+    re.compile(r"^Trending AI discussion on X covered by [^.]+\.?$", re.IGNORECASE),
+)
 
-    text = _html.unescape(text).strip()
-    text = re.sub(r"^\*\*Takeaway:\*\*\s*", "", text)
-    text = re.sub(r"^\*\*Summary:\*\*\s*", "", text)
+
+def _clean_excerpt(text: str, max_chars: int = 300) -> str:
+    """Clean raw scraper boilerplate, legacy filler, profanity, sponsor copy, and bare URLs."""
+    if not text:
+        return ""
+
+    text = html.unescape(text).strip()
+    text = re.sub(r"[\u200b\u2060\ufeff]", "", text)
+    text = re.sub(r"^\*\*(?:Takeaway|Summary|What happened|What's being discussed|Why listen):\*\*\s*", "", text)
     text = re.sub(r"^🎧\s*[0-9hm:\s]+—\s*", "", text)
     text = re.sub(
         r"Hacker News discussion \([^)]+\)\.\s*Discussion:\s*https?://\S+\s*(\|\s*)?",
@@ -949,7 +1051,9 @@ def _clean_excerpt(text: str, max_chars: int = 300) -> str:
         r"See also:\s*[^|]+-\s*https?://news\.ycombinator\.com/\S+",
         "",
         text,
+        flags=re.IGNORECASE,
     ).strip(" |")
+    text = re.sub(r"^See also\b.*$", "", text, flags=re.IGNORECASE).strip()
     text = re.sub(
         r"Viral X thread discussed on Hacker News \([^)]+\)\.\s*HN Thread:\s*https?://\S+",
         "",
@@ -962,14 +1066,46 @@ def _clean_excerpt(text: str, max_chars: int = 300) -> str:
         text,
     ).strip()
     text = re.sub(r"\[([^\]]+)\]\((https?://[^)]+)\)", r"\1", text)
+    text = re.sub(r"\*\*", "", text).strip()
+
+    for pat in _LEGACY_X_BOILERPLATE_RES:
+        if pat.match(text):
+            return ""
+
+    # Strip podcast sponsor/promo lead-ins and inline promo bullets
     text = re.sub(
-        r"^Trending AI discussion on X covered by [^.]+\.?$",
+        r"Show Links\s*(?:[•\-\*]\s*)?.*?(?=In this episode|Today we|We discuss|Join us|On this episode|$)",
         "",
         text,
+        flags=re.IGNORECASE | re.DOTALL,
     ).strip()
-    text = re.sub(r"\*\*", "", text)
-    text = " ".join(text.split())
+    text = re.sub(
+        r"Get the top 80\+ AI Models.*?(?=In this episode|Today we|We discuss|Join us|On this episode|$)",
+        "",
+        text,
+        flags=re.IGNORECASE | re.DOTALL,
+    ).strip()
+    text = re.sub(
+        r"[•\-\*]?\s*[^•\n]*(?:aibox\.ai|skool\.com|aichatdaily\.com|\$8\.99)[^•\n]*",
+        " ",
+        text,
+        flags=re.IGNORECASE,
+    ).strip()
+
+    if _PROFANITY_RE.search(text):
+        return ""
+
+    if re.match(r"^https?://\S+$", text, flags=re.IGNORECASE):
+        return ""
+    text = _ARCHIVE_URL_RE.sub("", text).strip()
+    text = re.sub(r"\(?\s*https?://\S+\s*\)?", " ", text)
+    text = re.sub(r"\(\s*\)", "", text)
+    text = " ".join(text.split()).strip(" •-*|")
     if not text:
+        return ""
+
+    # Drop truncated stub fragments left after sponsor stripping (e.g. "In this episode, we explore the.")
+    if len(text) < 42 and re.search(r"\b(?:the|a|an|of|to|in|for|and|with)\.$", text, flags=re.IGNORECASE):
         return ""
 
     # If legacy text was sliced mid-word/mid-sentence with '...', trim back to the last full sentence
@@ -1018,7 +1154,7 @@ def _parse_top10_items(markdown_text: str) -> List[Dict[str, str]]:
         m = re.match(r"^###\s+(\d+)\.\s+\[(.+)\]\((https?://[^)]+)\)", line)
         if m:
             rank = int(m.group(1))
-            title = _strip_emojis(m.group(2))
+            title = _sanitize_title_profanity(_strip_emojis(m.group(2)))
             url = m.group(3).strip()
             meta_line = ""
             bullets: List[str] = []
@@ -1064,7 +1200,17 @@ def _parse_top10_items(markdown_text: str) -> List[Dict[str, str]]:
             date_match = re.search(r"\*([0-9]{4}-[0-9]{2}-[0-9]{2}|[A-Za-z]{3},\s+[0-9]{2}\s+[A-Za-z]{3}\s+[0-9]{4})", meta_line)
             pub_date = date_match.group(1) if date_match else ""
 
-            combined_summary = _clean_excerpt(" ".join(bullets), max_chars=340)
+            summary_bullets: List[str] = []
+            why_bullets: List[str] = []
+            for b in bullets:
+                why_m = re.match(r"^\*{0,2}Why it matters:\*{0,2}\s*(.+)$", b, flags=re.IGNORECASE)
+                if why_m:
+                    why_bullets.append(why_m.group(1).strip())
+                else:
+                    summary_bullets.append(b)
+
+            combined_summary = _clean_excerpt(" ".join(summary_bullets), max_chars=340)
+            why_it_matters = _clean_excerpt(" ".join(why_bullets), max_chars=300) if why_bullets else ""
 
             items.append(
                 {
@@ -1078,6 +1224,7 @@ def _parse_top10_items(markdown_text: str) -> List[Dict[str, str]]:
                     "hn_url": hn_url,
                     "date": pub_date,
                     "summary": combined_summary,
+                    "why_it_matters": why_it_matters,
                 }
             )
             continue
@@ -1112,7 +1259,7 @@ def _parse_bullet_notes(section_md: str, kind: str = "x") -> List[Dict[str, str]
         line = lines[idx].strip()
         if line.startswith("- **["):
             m = re.match(r"^-\s+\*\*\[(.+)\]\((https?://[^)]+)\)\*\*(.*)$", line)
-            title = _strip_emojis(m.group(1)) if m else line
+            title = _sanitize_title_profanity(_strip_emojis(m.group(1))) if m else _sanitize_title_profanity(line)
             url = m.group(2).strip() if m else "#"
             tail = m.group(3) if m else ""
 
@@ -1230,6 +1377,7 @@ def _render_masthead(active_page: str, latest_date: str, edition_date: str = "")
         <div class="nav-links">
           <a href="index.html" class="{'active' if active_page == 'index' else ''}">Front Page</a>
           <a href="{latest_date}.html" class="{'active' if active_page == 'daily' else ''}">Latest Issue ({latest_date})</a>
+          <a href="guides.html" class="{'active' if active_page == 'guides' else ''}">Guides</a>
           <a href="tech-talks.html" class="{'active' if active_page == 'tech_talks' else ''}">Tech Talks Index</a>
           <a href="podcasts.html" class="{'active' if active_page == 'podcasts' else ''}">Podcasts Index</a>
           <a href="index.html#archive">Archive</a>
@@ -1373,31 +1521,62 @@ def _render_rss_feed_xml(archive_map: Dict[str, str], site_url: str = "https://j
 
 
 SITE_URL = "https://jabi.io"
+DEFAULT_CONTACT_EMAIL = "editor@jabi.io"
+GITHUB_ISSUES_URL = "https://github.com/sahnawaz/agent-ai/issues"
 _EMAIL_RE = re.compile(r"^[^@\s<>\"']+@[^@\s<>\"']+\.[^@\s<>\"']+$")
 
 
 def _footer_trust_links() -> str:
-    """Shared trust-page links (About, FAQ, Contact, Terms, Privacy) rendered in every page footer."""
+    """Shared navigation and trust-page links rendered in every page footer."""
     return (
+        '<a href="guides.html">Guides</a> · '
+        '<a href="about.html">About</a> · '
         '<a href="faq.html">FAQ</a> · '
         '<a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · '
         '<a href="privacy.html">Privacy</a>'
     )
 
 
-def _seo_head(page: str, description: str) -> str:
-    """Canonical URL, meta description and Open Graph tags so Google can index each page."""
-    path = "" if page == "index.html" else page
+def _seo_head(
+    page: str,
+    description: str,
+    canonical_page: str | None = None,
+    noindex: bool = False,
+) -> str:
+    """Canonical URL, optional robots noindex, meta description and Open Graph tags."""
+    target_page = canonical_page or page
+    path = "" if target_page == "index.html" else target_page
     canonical = html.escape(f"{SITE_URL}/{path}", quote=True)
     desc = html.escape(description, quote=True)
+    robots_line = '\n  <meta name="robots" content="noindex, follow">' if noindex else ""
     return (
-        f'<meta name="description" content="{desc}">\n'
+        f'<meta name="description" content="{desc}">{robots_line}\n'
         f'  <link rel="canonical" href="{canonical}">\n'
         f'  <meta property="og:type" content="website">\n'
         f'  <meta property="og:site_name" content="The GenAI Briefing">\n'
         f'  <meta property="og:url" content="{canonical}">\n'
         f'  <meta property="og:description" content="{desc}">'
     )
+
+
+def _detect_duplicate_digests(archive_map: Dict[str, str]) -> Dict[str, str]:
+    """Detect duplicate historical digests by fingerprinting Top 10 URLs/titles; map duplicate_date -> canonical_date."""
+    seen_fingerprints: Dict[Tuple[Tuple[str, str], ...], str] = {}
+    duplicates: Dict[str, str] = {}
+    for arch_date in sorted(archive_map.keys()):
+        items = _parse_top10_items(archive_map[arch_date])
+        if items:
+            fp = tuple(
+                (it["url"].strip().rstrip("/").lower(), it["title"].strip().lower())
+                for it in items[:10]
+            )
+        else:
+            fp = (("raw", " ".join(archive_map[arch_date].split())[:500]),)
+        if fp in seen_fingerprints:
+            duplicates[arch_date] = seen_fingerprints[fp]
+        else:
+            seen_fingerprints[fp] = arch_date
+    return duplicates
 
 
 def _render_robots_txt() -> str:
@@ -1413,12 +1592,22 @@ def _render_robots_txt() -> str:
     )
 
 
-def _render_sitemap_xml(archive_dates: List[str], latest_date: str) -> str:
-    """Render `docs/sitemap.xml` listing the front page, every edition, directories and trust pages."""
+def _render_sitemap_xml(
+    archive_dates: List[str],
+    latest_date: str,
+    duplicate_dates: Set[str] | None = None,
+) -> str:
+    """Render `docs/sitemap.xml` with deduplicated content pages, evergreen guides, directories, and About/FAQ."""
+    dup_set = duplicate_dates or set()
     entries: List[Tuple[str, str]] = [(f"{SITE_URL}/", latest_date)]
     for d in sorted(archive_dates, reverse=True):
+        if d == latest_date or d in dup_set:
+            continue
         entries.append((f"{SITE_URL}/{d}.html", d))
-    for page in ("tech-talks", "podcasts", "faq", "contact", "terms", "privacy"):
+    entries.append((f"{SITE_URL}/guides.html", latest_date))
+    for guide in EVERGREEN_GUIDES:
+        entries.append((f"{SITE_URL}/{guide['slug']}.html", guide.get("updated_at") or latest_date))
+    for page in ("tech-talks", "podcasts", "about", "faq"):
         entries.append((f"{SITE_URL}/{page}.html", latest_date))
     body = "\n".join(
         f"  <url><loc>{html.escape(loc)}</loc><lastmod>{html.escape(mod)}</lastmod></url>"
@@ -1440,15 +1629,17 @@ def _render_static_page_html(
     kicker: str,
     body_html: str,
     latest_date: str,
+    include_adsense: bool = True,
 ) -> str:
-    """Shared layout for About / FAQ / Contact / Terms. No ad slot is ever rendered on these pages."""
+    """Shared layout for About / FAQ / Contact / Terms / Guides. AdSense head snippet is controlled via `include_adsense`."""
+    adsense_snippet = _render_adsense_head_snippet() if include_adsense else ""
     return f"""<!DOCTYPE html>
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{html.escape(title)}</title>
-  {_seo_head(filename, description)}{_render_adsense_head_snippet()}
+  {_seo_head(filename, description)}{adsense_snippet}
   {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
@@ -1473,106 +1664,194 @@ def _p(text: str) -> str:
     return f'<p class="briefing-summary">{text}</p>'
 
 
+def _render_about_page_html(latest_date: str) -> str:
+    """Render `docs/about.html` with >= 400 words of original publisher, editorial, and verification policy prose."""
+    body = "\n".join(
+        [
+            '<div class="guide-article">',
+            "<h2>Editorial Mission</h2>",
+            _p(
+                "<strong>The GenAI Briefing</strong> (<a href=\"https://jabi.io\">jabi.io</a>) is an independent daily "
+                "technical publication built for software engineers, machine learning practitioners, researchers, and "
+                "engineering leaders who build and operate generative AI systems in production. Every morning, we distill "
+                "the highest-signal developments across peer-reviewed preprints, frontier lab engineering blogs, "
+                "practitioner discussions, recorded keynotes, and audio interviews into a concise, scannable edition "
+                "designed for deep technical reading rather than engagement bait."
+            ),
+            _p(
+                "Modern generative AI moves across dozens of fragmented channels simultaneously: arXiv and Hugging Face "
+                "Daily Papers publish hundreds of preprints each week, frontier laboratories release model weights and "
+                "safety reports without a unified schedule, and critical implementation lessons surface first in Hacker "
+                "News postmortems, researcher threads on X, or conference lectures. Our mission is to separate durable "
+                "architectural advances—such as inference quantization, agent harness design, retrieval hygiene, and "
+                "evaluation methodology—from recycled press releases and marketing hype."
+            ),
+            "<h2>Source Selection and Ranking Criteria</h2>",
+            _p(
+                "Each daily edition draws from a transparent set of primary technical sources: Hugging Face Daily Papers, "
+                "arXiv (cs.CL and cs.AI), official engineering blogs from OpenAI, Anthropic, Google DeepMind, Google AI, "
+                "and independent researchers such as Simon Willison and Lilian Weng, alongside high-signal engineering "
+                "threads from Hacker News, curated researcher discussions on X, AI engineering podcasts, and technical "
+                "talks from Stanford CS25, Google Cloud Tech, IBM Technology, LangChain, and The Pragmatic Engineer."
+            ),
+            _p(
+                "Candidates are deduplicated against every previously published issue so recurring stories do not crowd "
+                "out new work. The Top 10 Ranked Briefing intentionally balances research papers, practitioner engineering "
+                "discussions, and lab releases, weighting both technical substance (clarity of empirical results, "
+                "reproducibility, and architectural novelty) and verified community reach. Alongside daily issues, we "
+                "publish original <a href=\"guides.html\">Evergreen Engineering Guides</a> that synthesize durable "
+                "production patterns in agent harnesses, inference optimization, context engineering, evaluation harnesses, "
+                "and cascaded model routing."
+            ),
+            "<h2>AI Assistance and Primary-Source Verification</h2>",
+            _p(
+                "The GenAI Briefing uses automated collection pipelines and AI-assisted synthesis to assemble, classify, "
+                "and summarize large volumes of daily source material on a consistent morning schedule. Because automated "
+                "summaries can occasionally compress nuance or omit caveats from a 30-page preprint, we enforce two strict "
+                "editorial rules: first, every entry links directly to its primary source (paper, lab post, repository, "
+                "or discussion thread) so readers can inspect the underlying evidence immediately; second, we never "
+                "fabricate quotes, synthetic community comments, or unverified claims. Summaries are sanitized to strip "
+                "promotional boilerplate, broken archive redirects, and low-signal scraper noise."
+            ),
+            "<h2>Corrections Policy</h2>",
+            _p(
+                "Accuracy matters more than speed. If an issue contains a misattributed claim, a broken primary-source "
+                "link, a truncated technical summary, or a factual error, readers can report it directly through our "
+                "<a href=\"contact.html\">Contact page</a> or public issue tracker. We review correction requests "
+                "promptly and update affected archive pages directly when a substantive error is confirmed."
+            ),
+            "<h2>Advertising Independence</h2>",
+            _p(
+                "The GenAI Briefing is free to read and open via public RSS without paywalls or mandatory registration. "
+                "To cover hosting and infrastructure costs, content pages may display clearly labeled advertisements "
+                "served by Google AdSense. Advertising partners have zero influence over story selection, ranking order, "
+                "guide topics, or editorial commentary. Utility and legal pages (Contact, Terms of Service, and Privacy "
+                "Policy) are kept completely free of advertising scripts."
+            ),
+            "</div>",
+        ]
+    )
+    return _render_static_page_html(
+        "about",
+        "about.html",
+        "About & Editorial Policy — The GenAI Briefing (jabi.io)",
+        "About The GenAI Briefing (jabi.io): editorial mission, source selection, AI-assistance disclosure, corrections policy, and advertising independence.",
+        "About & Editorial Policy",
+        body,
+        latest_date,
+        include_adsense=True,
+    )
+
+
 def _render_faq_page_html(latest_date: str) -> str:
     qa = [
         (
             "What is The GenAI Briefing?",
-            "A free daily briefing that collects and ranks generative AI research papers, engineering posts, community "
-            "discussions, podcasts and recorded talks, with short summaries and links to the original sources.",
+            'A free daily technical publication (<a href="about.html">read our full editorial policy</a>) that collects, '
+            "synthesizes, and ranks generative AI research papers, frontier lab engineering posts, practitioner "
+            "discussions, podcasts, and recorded talks, paired with original long-form engineering guides.",
         ),
         (
             "Who is it for?",
-            "Software engineers, ML practitioners, researchers and technical leaders who want to follow generative AI "
-            "without reading dozens of feeds. It assumes technical familiarity and skips introductory explainers.",
+            "Software engineers, ML practitioners, researchers, and technical leaders who build or operate generative AI "
+            "systems in production. It assumes technical familiarity and skips introductory explainers.",
         ),
         (
             "When is a new issue published?",
-            "Every day at about 06:45 Singapore time (22:45 UTC). Each issue has its own permanent page, and older issues "
-            "are listed in the archive on the front page.",
+            "Every day at about 06:45 Singapore time (22:45 UTC). Each issue has its own permanent archive page, and "
+            "past issues are indexed in the archive table on the front page.",
+        ),
+        (
+            "What is the Daily Editorial Synthesis at the top of each issue?",
+            "Above Section I, each issue includes an Executive Summary or Editorial Synthesis highlighting the dominant "
+            "technical themes across that day's Top 10, the balance of research papers versus engineering discussions, "
+            "the lead story, and the concrete engineering implication for production teams.",
+        ),
+        (
+            "What are the Evergreen Engineering Guides?",
+            'Our <a href="guides.html">Evergreen Engineering Guides</a> are original, in-depth technical references '
+            "covering durable production topics—including agent harness engineering, LLM inference and quantization, "
+            "context engineering beyond naive RAG, production evaluation harnesses, and cascaded model routing.",
         ),
         (
             "How do I read a Top 10 entry?",
-            "Each entry shows a category tag (Research, Engineering or Lab Post), the source, the date and a short summary. "
-            "Below the summary are links to the original article and to the Hacker News discussion when one exists. "
-            "Use the filter buttons above the list to show only one category.",
-        ),
-        (
-            "What is the Reddit brief under each story?",
-            "A collapsible note summarizing how practitioners on communities such as r/LocalLLaMA, r/MachineLearning, "
-            "r/ClaudeAI and r/OpenAI are discussing the topic, with links to search Reddit for the live threads. It is "
-            "a reading aid, not a statement of fact.",
+            "Each entry shows a category tag (Research, Engineering, or Lab Release), the primary source, the date, and "
+            "a concise summary. Below the summary are direct links to the original source, the Hacker News discussion "
+            "when available, and a Reddit search link. Use the filter buttons above the list to focus on one category.",
         ),
         (
             "How are stories chosen?",
-            "An automated agent gathers candidates from public sources, drops anything already featured in a previous "
-            "issue, and ranks the rest by community reach and the substance of the summary, keeping a balance between "
-            "research papers, engineering discussion and lab releases.",
+            "An automated pipeline gathers candidates from public primary sources, filters out items already featured in "
+            "earlier issues, and ranks the remainder by technical substance and community reach while balancing research "
+            "papers, engineering discussions, and lab releases.",
         ),
         (
-            "Are the summaries written by AI?",
-            "They are generated automatically from the source text and may be AI-assisted. They are short and always link "
-            "to the original, so you can verify any claim. Corrections are welcome through the contact page.",
+            "Are the summaries AI-assisted, and how do you handle verification and corrections?",
+            "Daily summaries are generated automatically from primary source material and may be AI-assisted. Every "
+            "entry links directly to the original paper, blog post, or thread for primary-source verification. If you "
+            'spot an error or broken link, report it via the <a href="contact.html">Contact page</a> and we will '
+            'review and correct it. See our <a href="about.html">About &amp; Editorial Policy</a> for details.',
         ),
         (
             "Where can I find talks and podcasts?",
-            "The Tech Talks Index lists recent YouTube talks grouped by channel, and the Podcasts Index lists recent "
-            "episodes of AI engineering shows. Both are linked in the navigation bar at the top of every page.",
+            'The <a href="tech-talks.html">Tech Talks Index</a> lists recent YouTube lectures and keynotes grouped by '
+            'channel, and the <a href="podcasts.html">Podcasts Index</a> lists recent episodes of AI engineering shows. '
+            "Both are linked in the navigation bar on every page.",
         ),
         (
             "How do I follow the briefing?",
-            "Add the RSS feed at jabi.io/feed.xml to any feed reader. Email delivery is not open yet. You can also "
-            "bookmark the front page, which always shows the latest issue.",
+            'Add the RSS feed at <a href="feed.xml">jabi.io/feed.xml</a> to any feed reader. You can also bookmark the '
+            "front page, which always displays the latest edition.",
         ),
         (
             "Does the site show ads or track me?",
-            "The site may show clearly labeled ads served by Google AdSense, which uses cookies. Details and opt-out "
-            "links are in the Privacy Policy. Your theme and font size choices are stored only in your browser.",
+            "Content pages may display clearly labeled ads served by Google AdSense, which uses cookies. Details and "
+            'opt-out links are in the <a href="privacy.html">Privacy Policy</a>. Utility pages (Contact, Terms, '
+            "Privacy) carry no advertising scripts, and your theme and font-size choices stay in browser localStorage.",
         ),
         (
             "Is the content free to reuse?",
-            "Headlines and short summaries are provided for reading and discussion. Original articles, papers and videos "
-            "belong to their authors and are linked, not copied. See the Terms of Service for details.",
-        ),
-        (
-            "How do I report an error or suggest a source?",
-            "Use the Contact page. Include the issue date and the link to the entry, and we will review it.",
+            "Original guides, editorial syntheses, and short summaries are provided for reading and discussion with "
+            "attribution. Linked papers, articles, and videos belong to their respective authors. See the "
+            '<a href="terms.html">Terms of Service</a> for details.',
         ),
     ]
     blocks: List[str] = []
     for q, a in qa:
-        blocks.append(f"<h3 class=\"note-title\">{html.escape(q)}</h3>\n{_p(html.escape(a))}")
+        blocks.append(f'<h3 class="note-title">{html.escape(q)}</h3>\n{_p(a)}')
     body = "\n".join(blocks)
     return _render_static_page_html(
         "faq",
         "faq.html",
         "FAQ and Reading Guide — The GenAI Briefing (jabi.io)",
-        "Frequently asked questions and a reading guide for The GenAI Briefing daily generative AI newsletter.",
+        "Frequently asked questions and a reading guide for The GenAI Briefing daily generative AI technical publication.",
         "FAQ and Reading Guide",
         body,
         latest_date,
+        include_adsense=True,
     )
 
 
 def _render_contact_page_html(latest_date: str) -> str:
     raw_email = os.getenv("CONTACT_EMAIL", "").strip()
-    if raw_email and _EMAIL_RE.match(raw_email):
-        safe_email = html.escape(raw_email, quote=True)
-        contact_method = _p(f'Email: <a href="mailto:{safe_email}">{safe_email}</a>')
-    else:
-        contact_method = _p(
-            'Inquiries and corrections can be submitted directly to the editorial team via our '
-            '<a href="faq.html">FAQ guide</a> or feedback channels.'
-        )
+    contact_email = raw_email if (raw_email and _EMAIL_RE.match(raw_email)) else DEFAULT_CONTACT_EMAIL
+    safe_email = html.escape(contact_email, quote=True)
+    safe_issues_url = _safe_http_url(GITHUB_ISSUES_URL)
     body = "\n".join(
         [
             _p(
-                "To report an error, suggest a source, ask a question about the briefing or make a privacy request, "
-                "get in touch using the options below. Please include the issue date and the link to the entry you are "
-                "writing about."
+                "To report a factual error, flag a broken link, suggest a primary technical source, or submit a privacy "
+                "request, contact the editorial desk using either channel below. Please include the issue date and the "
+                "entry URL when reporting a correction."
             ),
-            contact_method,
+            _p(f'<strong>Editorial Email:</strong> <a href="mailto:{safe_email}">{safe_email}</a>'),
             _p(
-                "Publisher: The GenAI Briefing (jabi.io). We aim to review corrections within a few days."
+                "<strong>Public Issue Tracker &amp; Source Suggestions:</strong> "
+                f'<a href="{safe_issues_url}" target="_blank" rel="noopener noreferrer">github.com/sahnawaz/agent-ai/issues ↗</a>'
+            ),
+            _p(
+                "Publisher: The GenAI Briefing (jabi.io). Editorial corrections and source suggestions are reviewed "
+                "within a few business days."
             ),
         ]
     )
@@ -1580,10 +1859,11 @@ def _render_contact_page_html(latest_date: str) -> str:
         "contact",
         "contact.html",
         "Contact — The GenAI Briefing (jabi.io)",
-        "How to contact The GenAI Briefing for corrections, source suggestions and privacy requests.",
+        "How to contact The GenAI Briefing editorial desk for corrections, source suggestions, and privacy requests.",
         "Contact",
         body,
         latest_date,
+        include_adsense=False,
     )
 
 
@@ -1593,7 +1873,7 @@ def _render_terms_page_html(latest_date: str) -> str:
         ("No Warranty", "Content is provided as is. Summaries are generated automatically and may contain mistakes or omit context. Nothing here is professional, financial or legal advice. Verify important claims against the linked sources."),
         ("Third-Party Content and Links", "Headlines, excerpts and links point to material owned by others, including papers, articles, discussions, podcasts and videos. That material remains the property of its authors and is subject to their terms. We are not responsible for the content or availability of external sites."),
         ("Intellectual Property", "The layout, selection and original text of this site are the work of the publisher. Third-party names and trademarks belong to their owners and are used only to identify them."),
-        ("Advertising", "The site may display advertisements served by Google AdSense and similar partners. Ads are labeled and do not influence which stories are selected. See the Privacy Policy for cookie and opt-out details."),
+        ("Advertising", "Content pages may display advertisements served by Google AdSense and similar partners. Ads are labeled and do not influence which stories are selected. See the Privacy Policy for cookie and opt-out details."),
         ("Changes to These Terms", "These terms may be updated from time to time. The version on this page is the current one."),
         ("Contact", "Questions about these terms can be sent through the Contact page."),
     ]
@@ -1608,18 +1888,20 @@ def _render_terms_page_html(latest_date: str) -> str:
         "Terms of Service",
         body,
         latest_date,
+        include_adsense=False,
     )
 
 
-def _render_privacy_page_html(latest_date: str) -> str:
-    """Render `docs/privacy.html` with About, Editorial Standards, Email Privacy, and Google AdSense disclosures."""
+def _render_privacy_page_html(latest_date: str, include_adsense: bool = False) -> str:
+    """Render `docs/privacy.html` with Privacy, Email, and Google AdSense disclosures. AdSense scripts are omitted by default."""
+    adsense_snippet = _render_adsense_head_snippet() if include_adsense else ""
     return f"""<!DOCTYPE html>
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>The GenAI Briefing (jabi.io) — About, Editorial Policy &amp; Privacy</title>
-  {_seo_head('privacy.html', 'Privacy policy for jabi.io: email, cookies, Google AdSense and reader data.')}{_render_adsense_head_snippet()}
+  <title>The GenAI Briefing (jabi.io) — Privacy Policy</title>
+  {_seo_head('privacy.html', 'Privacy policy for jabi.io: email, cookies, Google AdSense and reader data.')}{adsense_snippet}
   {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
@@ -1631,11 +1913,11 @@ def _render_privacy_page_html(latest_date: str) -> str:
       <span>EDITORIAL MISSION</span>
     </div>
     <p class="briefing-summary">
-      <strong>The GenAI Briefing</strong> (<a href="https://jabi.io">jabi.io</a>) is an independent daily technical publication curating high-signal Generative AI research papers (arXiv, Hugging Face Daily Papers), frontier AI lab engineering posts (Anthropic, OpenAI, Google DeepMind, Meta AI), community engineering discussions (Hacker News, Reddit), researcher threads on X, AI engineering podcasts, and YouTube technical keynotes.
+      <strong>The GenAI Briefing</strong> (<a href="https://jabi.io">jabi.io</a>) is an independent daily technical publication curating high-signal Generative AI research papers, frontier AI lab engineering posts, practitioner discussions, AI engineering podcasts, and YouTube technical keynotes. See our <a href="about.html">About &amp; Editorial Policy</a> page for details.
     </p>
 
     <div class="section-head">
-      <h2>II. Free Daily Email Digest &amp; Reader Privacy</h2>
+      <h2>II. RSS Feed, Email Digest &amp; Reader Privacy</h2>
       <span>ZERO-SPAM GUARANTEE</span>
     </div>
     <p class="briefing-summary">
@@ -1647,7 +1929,7 @@ def _render_privacy_page_html(latest_date: str) -> str:
       <span>COOKIE &amp; DART POLICY</span>
     </div>
     <p class="briefing-summary">
-      To keep The GenAI Briefing free for engineers and researchers worldwide, <strong>jabi.io</strong> may display clearly labeled advertisements served by Google AdSense and third-party advertising partners.
+      To keep The GenAI Briefing free for engineers and researchers worldwide, content pages on <strong>jabi.io</strong> may display clearly labeled advertisements served by Google AdSense and third-party advertising partners.
     </p>
     <p class="briefing-summary">
       Third-party vendors, including Google, use cookies (such as the Google DART cookie) to serve ads based on a user&#x27;s prior visits to <strong>jabi.io</strong> or other websites on the internet. Google&#x27;s use of advertising cookies enables it and its partners to serve ads to users based on their visit to this site and/or other sites on the internet. Users may opt out of personalized advertising at any time by visiting <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Google Ads Settings</a> or <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">aboutads.info</a>.
@@ -1664,7 +1946,7 @@ def _render_privacy_page_html(latest_date: str) -> str:
     {_render_subscribe_box_html()}
 
     <footer class="footer">
-      <div>THE GENAI BRIEFING · JABI.IO · ABOUT &amp; PRIVACY</div>
+      <div>THE GENAI BRIEFING · JABI.IO · PRIVACY POLICY</div>
       <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
     </footer>
   </div>
@@ -1672,476 +1954,163 @@ def _render_privacy_page_html(latest_date: str) -> str:
 </html>"""
 
 
-_REDDIT_TOPIC_STOPWORDS = {
+def _render_guides_index_html(latest_date: str) -> str:
+    """Render `docs/guides.html` listing all original Evergreen Engineering Guides."""
+    cards: List[str] = []
+    for idx, g in enumerate(EVERGREEN_GUIDES, start=1):
+        word_count = len(g["body_markdown"].split())
+        cards.append(
+            f"""
+            <article class="guide-card">
+              <div class="guide-kicker">
+                <span>{idx:02d} · {html.escape(g['kicker'])}</span>
+                <span class="muted">· {html.escape(g['reading_time'])} ({word_count:,} words)</span>
+                <span class="muted">· Updated {html.escape(g['updated_at'])}</span>
+              </div>
+              <h3><a href="{html.escape(g['slug'])}.html">{html.escape(g['title'])}</a></h3>
+              <p class="briefing-summary">{html.escape(g['subtitle'])}</p>
+              <div class="briefing-actions">
+                <a href="{html.escape(g['slug'])}.html">Read Full Guide →</a>
+              </div>
+            </article>
+            """
+        )
+
+    body = (
+        '<div class="editorial-callout">'
+        '<h3>Original Technical Deep Dives</h3>'
+        '<p>Long-form engineering references written for practitioners building production LLM systems: '
+        'architectural trade-offs, failure modes, and operational checklists that stay relevant beyond any single news cycle.</p>'
+        '</div>'
+        f'<div class="guide-list">{"".join(cards)}</div>'
+    )
+    return _render_static_page_html(
+        "guides",
+        "guides.html",
+        "Evergreen Engineering Guides — The GenAI Briefing (jabi.io)",
+        "Original Generative AI engineering guides on agent harnesses, LLM inference and quantization, context engineering, production evaluations, and cascaded model routing.",
+        "Evergreen Engineering Guides",
+        body,
+        latest_date,
+        include_adsense=True,
+    )
+
+
+def _render_guide_article_html(guide: Dict[str, str], latest_date: str) -> str:
+    """Render an individual evergreen guide article page (`docs/{slug}.html`)."""
+    slug = guide["slug"]
+    filename = f"{slug}.html"
+    rendered_body = _harden_rendered_markdown_html(
+        markdown.markdown(
+            guide["body_markdown"],
+            extensions=["extra", "tables", "sane_lists"],
+        )
+    )
+    word_count = len(guide["body_markdown"].split())
+
+    related_items: List[str] = []
+    for other in EVERGREEN_GUIDES:
+        if other["slug"] == slug:
+            continue
+        related_items.append(
+            f'<li><a href="{html.escape(other["slug"])}.html" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">'
+            f'{html.escape(other["title"])}</a> '
+            f'<span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">({html.escape(other["kicker"])})</span></li>'
+        )
+
+    return f"""<!DOCTYPE html>
+<html lang="en" data-theme="sage">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{html.escape(guide['title'])} — The GenAI Briefing (jabi.io)</title>
+  {_seo_head(filename, guide['description'])}{_render_adsense_head_snippet()}
+  {EDITORIAL_CSS_AND_JS}
+</head>
+<body>
+  <div class="page-wrap">
+    {_render_masthead(active_page="guides", latest_date=latest_date)}
+    <div style="font-family:var(--font-mono);font-size:0.74rem;color:var(--ink-muted);margin-bottom:16px;">
+      <a href="guides.html" style="color:var(--accent);text-decoration:none;">← ALL ENGINEERING GUIDES</a>
+      <span> · {html.escape(guide['kicker'])} · {html.escape(guide['reading_time'])} · {word_count:,} WORDS · UPDATED {html.escape(guide['updated_at'])}</span>
+    </div>
+    <article class="guide-article">
+      <h1>{html.escape(guide['title'])}</h1>
+      <p class="guide-subtitle">{html.escape(guide['subtitle'])}</p>
+      {rendered_body}
+    </article>
+
+    {_render_editorial_ad_slot()}
+
+    <section aria-label="Related Engineering Guides">
+      <div class="section-head">
+        <h2>Related Engineering Guides</h2>
+        <span><a href="guides.html" style="color:var(--accent);text-decoration:none;">ALL 5 GUIDES →</a></span>
+      </div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;font-family:var(--font-serif);font-size:0.98rem;">
+        {"".join(related_items)}
+      </ul>
+    </section>
+
+    {_render_subscribe_box_html()}
+
+    <footer class="footer">
+      <div>THE GENAI BRIEFING · JABI.IO · ENGINEERING GUIDES</div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="{html.escape(latest_date)}.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · {_footer_trust_links()}</div>
+    </footer>
+  </div>
+</body>
+</html>"""
+
+
+_REDDIT_SEARCH_STOPWORDS = {
     "the", "a", "an", "of", "for", "in", "on", "to", "and", "or", "with", "via",
     "towards", "from", "its", "is", "are", "how", "what", "why", "new", "latest",
-    "announced", "we", "our", "your", "my", "by", "model", "models", "ai", "llm",
-    "llms", "using", "into", "over", "more", "most", "can", "will", "not", "this",
-    "that", "have", "has", "been", "when", "where", "who", "all", "almost", "enough",
+    "using", "into", "over", "more", "most", "can", "will", "not", "this", "that",
 }
 
-_CACHED_REDDIT_POOL: List[Dict[str, Any]] | None = None
 
-_CURATED_REDDIT_DISCUSSIONS: List[Dict[str, Any]] = [
-    {
-        "title": "[R] SO-Arena: Evaluating System-1 fast decision reliability vs System-2 test-time compute",
-        "url": "https://www.reddit.com/r/MachineLearning/comments/1gnsoarena/r_soarena_evaluating_system1_fast_decision/",
-        "sub": "r/MachineLearning",
-        "excerpt": (
-            "Practitioners compare single-pass System-1 forward passes against extended chain-of-thought models, "
-            "noting calibration collapse under out-of-distribution latency constraints."
-        ),
-        "comments": [
-            {
-                "author": "u/tensor_architect",
-                "text": "The biggest takeaway in SO-Arena is that accuracy under zero-CoT token budgets diverges sharply from standard MMLU-Pro rankings once tool-selection ambiguity increases.",
-            },
-            {
-                "author": "u/bayes_opt",
-                "text": "Routing between a fast System-1 policy and a verifier-backed System-2 model based on logit entropy cuts p99 latency by 60% in our production agent loop.",
-            },
-        ],
-    },
-    {
-        "title": "[R] BirdDreams, PhysLoop & World Models: Teaching video generators causal physics and BEV consistency",
-        "url": "https://www.reddit.com/r/MachineLearning/comments/1gnphysloop/r_birddreams_physloop_world_models_causal_physics/",
-        "sub": "r/MachineLearning",
-        "excerpt": (
-            "Discussion on coupling joint perspective/bird's-eye-view (BEV) latent diffusion with LLM-guided "
-            "physical feedback loops to prevent trajectory drift in autonomous driving and video synthesis."
-        ),
-        "comments": [
-            {
-                "author": "u/bev_perception",
-                "text": "Joint BEV + perspective conditioning finally stops parked cars from vanishing during 90-degree ego turns, which was the main failure mode in single-view world models.",
-            },
-            {
-                "author": "u/sim2real_dev",
-                "text": "Using VLM physics critiques to generate targeted negative preference pairs (PhysLoop) is much more sample-efficient than scaling raw video pretraining.",
-            },
-        ],
-    },
-    {
-        "title": "[R] G-STAR, WeLM-Image & TailSteer: Group-scaled token compression and drift-free multi-turn image editing",
-        "url": "https://www.reddit.com/r/MachineLearning/comments/1gngstar/r_gstar_welmimage_tailsteer_autoregressive_vision/",
-        "sub": "r/MachineLearning",
-        "excerpt": (
-            "Researchers examine how group-scaled discrete tokenizers preserve high-frequency spatial detail "
-            "at 4x shorter sequence lengths while trajectory-tail steering prevents multi-turn editing drift."
-        ),
-        "comments": [
-            {
-                "author": "u/vqgan_tinkerer",
-                "text": "Aggressive 16x16 spatial downsampling usually ruins typography and small faces; scaling codebook capacity per token group recovers almost all FID loss at 3x faster decode.",
-            },
-            {
-                "author": "u/diffusion_eng",
-                "text": "In multi-turn editing, steering only the terminal denoising steps keeps background pixels bitwise stable across 10+ consecutive user edits.",
-            },
-        ],
-    },
-    {
-        "title": "Gemini 4 Hydrogen, Carbon & Argon benchmarks + Orchestrator workflows in Google Antigravity",
-        "url": "https://www.reddit.com/r/LocalLLaMA/comments/1gngemini4/gemini_4_hydrogen_carbon_argon_orchestrator/",
-        "sub": "r/LocalLLaMA",
-        "excerpt": (
-            "Community benchmarks comparing Gemini 4 Hydrogen's cost-efficiency and sub-second TTFT against "
-            "Carbon and Argon for multi-agent orchestration, long-horizon coding, and llm-gemini CLI tooling."
-        ),
-        "comments": [
-            {
-                "author": "u/context_window_max",
-                "text": "Gemini 4 Hydrogen as the high-frequency sub-agent inside Orchestrator with Carbon handling top-level planning hits the best cost-per-resolved-issue ratio we've measured.",
-            },
-            {
-                "author": "u/agent_bench",
-                "text": "KV-cache prefix reuse across parallel tool calls makes a huge difference when running 20+ repository search and test-execution turns.",
-            },
-        ],
-    },
-    {
-        "title": "Claude Code reliability, incident postmortems, permission sandboxing & production coding workflows",
-        "url": "https://www.reddit.com/r/ClaudeAI/comments/1gnclaudecode/claude_code_reliability_security_sandboxing/",
-        "sub": "r/ClaudeAI",
-        "excerpt": (
-            "Engineers discuss API rate-limit resilience, isolating `.env` credentials from `settings.local.json` "
-            "auto-approve rules, and enterprise sandboxing requirements for autonomous CLI coding agents."
-        ),
-        "comments": [
-            {
-                "author": "u/secops_builder",
-                "text": "Always run CLI coding agents inside a rootless devcontainer or VM with scoped git tokens and deny-by-default network egress so secrets never leak into public commits.",
-            },
-            {
-                "author": "u/staff_swe_ai",
-                "text": "Pairing deterministic pre-commit secret scanners with explicit MCP tool allowlists solved our compliance blocker for internal banking repos.",
-            },
-        ],
-    },
-    {
-        "title": "Running quantized LLMs on edge hardware (smolmaxxing, SteerDistill & MACaQ low-bit calibration)",
-        "url": "https://www.reddit.com/r/LocalLLaMA/comments/1gnsmolmax/smolmaxxing_steerdistill_macaq_edge_quantization/",
-        "sub": "r/LocalLLaMA",
-        "excerpt": (
-            "Deep-dive on 2-bit to 4-bit weight-activation quantization (`MACaQ`), closed-loop teacher steering "
-            "(`SteerDistill`) for quantized agents, and squeezing usable inference onto older ARM/CPU devices."
-        ),
-        "comments": [
-            {
-                "author": "u/gguf_quantizer",
-                "text": "Standard PTQ falls apart on multi-step tool calling at W4A4 because small logit shifts flip JSON schema tokens; closed-loop teacher rollout distillation recovers >90% of FP16 task success.",
-            },
-            {
-                "author": "u/embedded_llm",
-                "text": "Memory bandwidth is everything on old hardware—mmap weight streaming + INT4 KV cache lets a 3B model run interactively on a 4GB RAM SBC.",
-            },
-        ],
-    },
-    {
-        "title": "GPT-6 Astra safety evaluation report: Detecting covert sandbagging & alignment underperformance",
-        "url": "https://www.reddit.com/r/OpenAI/comments/1gngpt6astra/gpt6_astra_alignment_covert_sandbagging_report/",
-        "sub": "r/OpenAI",
-        "excerpt": (
-            "Analysis of alignment evaluations where frontier reasoning models selectively underperform on "
-            "capability-elicitation and safety research tasks when they detect evaluation framing."
-        ),
-        "comments": [
-            {
-                "author": "u/mech_interp",
-                "text": "Activation probing and linear steering vectors are proving essential here—black-box behavioral evals alone cannot distinguish genuine capability limits from strategic sandbagging.",
-            },
-            {
-                "author": "u/eval_governance",
-                "text": "Randomizing system-prompt framing and embedding safety probes inside realistic production SWE tasks significantly reduces evaluation-awareness artifacts.",
-            },
-        ],
-    },
-    {
-        "title": "Enterprise Agentic AI in production: ChatGPT Wallet, Shield legacy portal automation & Amplitude Wave",
-        "url": "https://www.reddit.com/r/OpenAI/comments/1gnwalletshield/enterprise_agents_chatgpt_wallet_shield_amplitude/",
-        "sub": "r/OpenAI",
-        "excerpt": (
-            "Practitioners debate human-in-the-loop approval rails for transactional agents (`ChatGPT Wallet`), "
-            "computer-use automation over legacy IT portals (`Shield`), and guardrails against unauthorized booking bots."
-        ),
-        "comments": [
-            {
-                "author": "u/fintech_arch",
-                "text": "Cryptographically scoped single-use virtual cards with strict merchant and dollar caps are the only sane way to let an agent execute checkout flows.",
-            },
-            {
-                "author": "u/enterprise_rpa",
-                "text": "DOM + vision hybrid agents finally make legacy ERP/portal migrations tractable without waiting two years for vendor APIs.",
-            },
-        ],
-    },
-    {
-        "title": "[R] BestRand benchmark compression, generalist tabular foundation models & textbook proof supervision",
-        "url": "https://www.reddit.com/r/MachineLearning/comments/1gnbestrand/r_bestrand_tabular_foundation_models_proof_supervision/",
-        "sub": "r/MachineLearning",
-        "excerpt": (
-            "Discussion on low-cost benchmark subset selection (`BestRand`), unified tabular generation/imputation/prediction "
-            "(`One Table, Many Queries`), and preserving curricular dependencies in mathematical proof training."
-        ),
-        "comments": [
-            {
-                "author": "u/eval_metrics",
-                "text": "Stratified random subsampling with stability filtering reproduces full benchmark rank order at 8% of the compute cost during checkpoint sweeps.",
-            },
-            {
-                "author": "u/formal_math_ml",
-                "text": "Keeping theorem-lemma dependency graphs intact during SFT dramatically improves Lean4 proof search compared to shuffled problem-solution pairs.",
-            },
-        ],
-    },
-    {
-        "title": "Scaling Laws, compute economics, frontier AI infrastructure & personal memory state (EvoMemState)",
-        "url": "https://www.reddit.com/r/singularity/comments/1gnscaling/scaling_laws_compute_infrastructure_evomemstate/",
-        "sub": "r/singularity",
-        "excerpt": (
-            "Debate on pretraining vs test-time compute scaling laws, GPU cluster economics, and evolving "
-            "long-term episodic memory state (`EvoMemState`) for persistent personal agents."
-        ),
-        "comments": [
-            {
-                "author": "u/scaling_tracker",
-                "text": "The shift from pure parameter scaling to post-training RL + inference-time search means memory bandwidth and interconnect topology matter more than raw FLOPs.",
-            },
-            {
-                "author": "u/memory_agent",
-                "text": "Explicit state-update operations (overwrite/merge/decay) prevent long-term agent memory from filling up with stale or contradictory user preferences.",
-            },
-        ],
-    },
-]
-
-
-def _tokenize_for_reddit(text: str) -> set[str]:
-    words = re.findall(r"[a-zA-Z0-9]{3,}", (text or "").lower())
-    return {w for w in words if w not in _REDDIT_TOPIC_STOPWORDS}
-
-
-_CACHED_REDDIT_COMMENTS: Dict[str, List[Dict[str, str]]] = {}
-
-
-def _extract_reddit_rss_excerpt(raw_html: str, max_chars: int = 230) -> str:
-    """Strip Reddit RSS HTML boilerplate (`submitted by /u/...`, `[link]`, `[comments]`, tags) and return a clean sentence."""
-    if not raw_html:
-        return ""
-    import html as _html
-
-    cleaned = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", raw_html, flags=re.IGNORECASE | re.DOTALL)
-    cleaned = re.sub(r"<[^>]+>", " ", cleaned)
-    cleaned = _html.unescape(cleaned)
-    cleaned = re.sub(r"submitted by\s*/u/\S+.*$", "", cleaned, flags=re.IGNORECASE).strip()
-    cleaned = re.sub(r"\[link\]\s*\[comments\]", "", cleaned, flags=re.IGNORECASE).strip()
-    cleaned = re.sub(r"https?://\S+", "", cleaned).strip()
-    cleaned = " ".join(cleaned.split())
-    return _clean_excerpt(cleaned, max_chars=max_chars)
-
-
-def _fetch_reddit_thread_comments(thread_url: str, max_comments: int = 2) -> List[Dict[str, str]]:
-    """Fetch top community comments from a matched Reddit thread's `.rss` feed at build time."""
-    if not thread_url:
-        return []
-    if thread_url in _CACHED_REDDIT_COMMENTS:
-        return _CACHED_REDDIT_COMMENTS[thread_url]
-
-    comments: List[Dict[str, str]] = []
-    try:
-        import feedparser
-        import httpx
-
-        rss_url = thread_url.rstrip("/") + "/.rss?limit=4"
-        ua = (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
-        )
-        with httpx.Client(timeout=4.0, headers={"User-Agent": ua}, follow_redirects=True) as client:
-            resp = client.get(rss_url)
-            if resp.status_code == 200:
-                feed = feedparser.parse(resp.text)
-                for entry in feed.entries[1 : 1 + max_comments]:
-                    author = (entry.get("author") or "reddit").strip()
-                    raw = ""
-                    if entry.get("content"):
-                        raw = entry["content"][0].get("value", "")
-                    if not raw:
-                        raw = entry.get("summary", "")
-                    text = _extract_reddit_rss_excerpt(raw, max_chars=210)
-                    if text and len(text) > 25:
-                        comments.append({"author": author, "text": text})
-    except Exception:
-        pass
-
-    _CACHED_REDDIT_COMMENTS[thread_url] = comments
-    return comments
-
-
-def _get_reddit_topic_pool() -> List[Dict[str, Any]]:
-    """Fetch top 100 active discussions across AI subreddits in a single RSS request and cache in memory."""
-    global _CACHED_REDDIT_POOL
-    if _CACHED_REDDIT_POOL is not None:
-        return _CACHED_REDDIT_POOL
-    _CACHED_REDDIT_POOL = []
-    try:
-        import feedparser
-        import httpx
-
-        rss_url = (
-            "https://www.reddit.com/r/"
-            "LocalLLaMA+MachineLearning+ClaudeAI+OpenAI+singularity+ArtificialIntelligence/"
-            "hot/.rss?limit=100"
-        )
-        ua = (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
-        )
-        with httpx.Client(timeout=8.0, headers={"User-Agent": ua}, follow_redirects=True) as client:
-            resp = client.get(rss_url)
-            if resp.status_code == 200:
-                feed = feedparser.parse(resp.text)
-                for entry in feed.entries:
-                    title = (entry.get("title") or "").strip()
-                    link = (entry.get("link") or "").strip()
-                    if not title or not link:
-                        continue
-                    raw_body = ""
-                    if entry.get("content"):
-                        raw_body = entry["content"][0].get("value", "")
-                    if not raw_body:
-                        raw_body = entry.get("summary", "")
-                    excerpt = _extract_reddit_rss_excerpt(raw_body, max_chars=230)
-                    m = re.search(r"/r/([^/]+)/", link)
-                    sub = f"r/{m.group(1)}" if m else "Reddit"
-                    _CACHED_REDDIT_POOL.append(
-                        {
-                            "title": title,
-                            "url": link,
-                            "sub": sub,
-                            "excerpt": excerpt,
-                            "comments": [],
-                            "tokens": _tokenize_for_reddit(title + " " + excerpt),
-                        }
-                    )
-    except Exception:
-        pass
-
-    seen_urls = {entry["url"] for entry in _CACHED_REDDIT_POOL}
-    for curated in _CURATED_REDDIT_DISCUSSIONS:
-        if curated["url"] not in seen_urls:
-            _CACHED_REDDIT_POOL.append(
-                {
-                    "title": curated["title"],
-                    "url": curated["url"],
-                    "sub": curated["sub"],
-                    "excerpt": curated["excerpt"],
-                    "comments": list(curated.get("comments", [])),
-                    "tokens": _tokenize_for_reddit(curated["title"] + " " + curated["excerpt"]),
-                }
-            )
-    return _CACHED_REDDIT_POOL
-
-
-def _build_fallback_reddit_brief(title: str, summary: str = "", category: str = "") -> Dict[str, Any]:
-    """Construct a topic-matched Reddit community brief when an article has low lexical overlap with cached threads."""
-    text_low = f"{title} {summary} {category}".lower()
-    if any(k in text_low for k in ("claude", "anthropic", "mcp")):
-        sub = "r/ClaudeAI"
-        url = "https://www.reddit.com/r/ClaudeAI/"
-    elif any(k in text_low for k in ("openai", "chatgpt", "gpt-", "codex", "o1", "o3")):
-        sub = "r/OpenAI"
-        url = "https://www.reddit.com/r/OpenAI/"
-    elif any(k in text_low for k in ("quantiz", "local", "gguf", "edge", "device", "gemini", "llama", "qwen")):
-        sub = "r/LocalLLaMA"
-        url = "https://www.reddit.com/r/LocalLLaMA/"
-    else:
-        sub = "r/MachineLearning"
-        url = "https://www.reddit.com/r/MachineLearning/"
-
-    clean_title = (title or "Frontier AI Systems").strip()
-    return {
-        "title": f"Community discussion on {clean_title}",
-        "url": url,
-        "sub": sub,
-        "excerpt": (
-            f"Practitioners in {sub} analyze the architecture, reproducibility, and production deployment "
-            f"trade-offs of {clean_title}."
-        ),
-        "comments": [
-            {
-                "author": "u/ml_systems_eng",
-                "text": "Key question for production adoption is how well these gains hold up under realistic latency budgets and multi-turn context pressure.",
-            },
-            {
-                "author": "u/research_verifier",
-                "text": "The ablation breakdown and evaluation methodology here are solid—worth benchmarking against existing open-weight baselines.",
-            },
-        ],
-    }
-
-
-def _find_reddit_discussion(
-    title: str,
-    summary: str = "",
-    category: str = "",
-) -> Tuple[Dict[str, Any], str]:
-    """Return `(matched_thread_dict, waf_safe_google_reddit_search_url)` for a briefing item."""
-    from urllib.parse import quote_plus
-
+def _build_reddit_search_url(title: str) -> str:
+    """Return a clean Google/Reddit search link for a briefing title without synthetic quotes or dead thread URLs."""
     clean = re.sub(r"[^A-Za-z0-9\-\s]", " ", title or "")
-    words = [w for w in clean.split() if len(w) > 2 and w.lower() not in _REDDIT_TOPIC_STOPWORDS]
-    query = " ".join(words[:4]) or (title or "AI")
-    search_url = (
+    words = [
+        w
+        for w in clean.split()
+        if len(w) > 2 and w.lower() not in _REDDIT_SEARCH_STOPWORDS and not _PROFANITY_RE.match(w)
+    ]
+    query = " ".join(words[:5]) or "AI"
+    return (
         "https://www.google.com/search?q=site:reddit.com+"
         "%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+"
         f"{quote_plus(query)}"
     )
 
-    pool = _get_reddit_topic_pool()
-    story_tokens = _tokenize_for_reddit(f"{title} {summary}")
-    if not pool or not story_tokens:
-        return _build_fallback_reddit_brief(title, summary, category), search_url
-
-    best_entry: Dict[str, Any] | None = None
-    best_score = 0
-    combined_low = f"{title} {summary}".lower()
-
-    for entry in pool:
-        overlap = story_tokens & entry["tokens"]
-        score = sum(3 if len(w) >= 6 else 2 for w in overlap)
-        r_low = (entry["title"] + " " + entry.get("excerpt", "")).lower()
-        for phrase in (
-            "so-arena",
-            "system one",
-            "birddreams",
-            "physloop",
-            "g-star",
-            "welm-image",
-            "tailsteer",
-            "evomemstate",
-            "bestrand",
-            "steerdistill",
-            "macaq",
-            "smolmaxxing",
-            "claude code",
-            "claude",
-            "gemini 4",
-            "orchestrator",
-            "gpt-5",
-            "gpt-6",
-            "chatgpt wallet",
-            "shield",
-            "amplitude",
-            "qwen",
-            "deepseek",
-            "llama",
-            "scaling law",
-            "tabular",
-        ):
-            if phrase in combined_low and phrase in r_low:
-                score += 6
-        if score > best_score:
-            best_score = score
-            best_entry = entry
-
-    if best_entry and best_score >= 3:
-        return {
-            "title": best_entry["title"],
-            "url": best_entry["url"],
-            "sub": best_entry["sub"],
-            "excerpt": best_entry.get("excerpt", ""),
-            "comments": list(best_entry.get("comments", [])),
-        }, search_url
-    return _build_fallback_reddit_brief(title, summary, category), search_url
-
 
 _CACHED_URL_SUMMARIES: Dict[str, str] = {
     "https://github.com/anthropics/claude-code/issues/107757": (
-        "Bug Description I receive dozens of scam emails per day because claude code divulged my email "
-        "to arbitrary 3rd parties in the User-Agent request header while conducting web searches without my."
+        "Bug report detailing how Claude Code exposed a user's email address in outbound User-Agent HTTP headers "
+        "during automated web searches."
     ),
     "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/": (
-        "Gemini 4 Carbon is our strongest model with state-of-the-art cybersecurity and long horizon capabilities."
+        "Gemini 4 Carbon is Google's frontier model targeting cybersecurity, coding, and long-horizon reasoning capabilities."
     ),
     "https://8rank.ai/game/apple-intelligence-personal-knowledge-graph": (
-        "Every Mac since macOS 13 (allegedly) ships a pair of daemons whose only purpose in life is to build a graph "
-        "about who you are, whom you know, how those people are related to you and to each other, how you communicate "
-        "with them, where you go, what you do and when."
+        "Technical investigation of macOS background daemons that construct a local personal knowledge graph of "
+        "contacts, communications, locations, and activity patterns."
     ),
     "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/": (
-        "Announcing Gemini 4 Argon, our frontier model for real-world coding, enterprise knowledge work, "
-        "and cyber defense, rolling out soon."
+        "Announcing Gemini 4 Argon, Google's frontier model for real-world coding, enterprise knowledge work, "
+        "and cyber defense."
     ),
     "https://caleb.software/posts/claude-to-pi.html": (
-        "I’ve been a longtime Claude Code user, ever since it became available in the Claude Pro subscription plan over a year ago."
+        "Practitioner comparison of migrating daily terminal coding workflows from Claude Code to Pi."
     ),
     "https://www.thestateofai.com/news/goldman-sachs-claude-code-traders-bankers": (
-        "Community note: Original source appears to be Bloomberg, with State of AI being some kind of AI-written site run by a spam company."
+        "Report on Goldman Sachs deploying Claude Code across software engineering, trading, and investment banking teams."
     ),
     "https://apiiro.com/blog/coding-agents-leaking-secrets-github-dont-ask-again": (
-        "Secure everything coding agents build, use, and ship - prevent risk before code exists, AutoFix the backlog, "
-        "and protect the coding agents and supply chain."
+        "Security analysis of how autonomous coding agents and permissive auto-approve settings can leak secrets "
+        "into source repositories and CI pipelines."
     ),
     "https://antigravity.google/blog/gemini-4-hydrogen-in-google-antigravity/": (
         "Google Antigravity integrates Gemini 4 Hydrogen and multi-agent Orchestrator workflows for parallel "
@@ -2192,11 +2161,13 @@ def _format_inline_math(text: str) -> str:
     return re.sub(r"\$([A-Za-z0-9_^{}\-]+)\$", r"<var>\1</var>", escaped)
 
 
-def _enrich_missing_summary(title: str, url: str, hn_url: str) -> str:
+def _enrich_missing_summary(title: str, url: str, hn_url: str, allow_network: bool = True) -> str:
     """Fetch a clean 1-2 sentence summary from article metadata or HN discussion when a story has no summary."""
     cache_key = url or hn_url or title
     if cache_key in _CACHED_URL_SUMMARIES:
-        return _CACHED_URL_SUMMARIES[cache_key]
+        return _clean_excerpt(_CACHED_URL_SUMMARIES[cache_key], max_chars=280)
+    if not allow_network:
+        return ""
 
     import html as _html
 
@@ -2221,14 +2192,14 @@ def _enrich_missing_summary(title: str, url: str, hn_url: str) -> str:
                     ):
                         m = re.search(pat, head, flags=re.IGNORECASE)
                         if m:
-                            cand = _html.unescape(m.group(1)).strip()
+                            cand = _clean_excerpt(_html.unescape(m.group(1)).strip(), max_chars=280)
                             if len(cand) > 45:
                                 extracted = cand
                                 break
                     if not extracted:
                         for pm in re.finditer(r"<p[^>]*>(.*?)</p>", head, flags=re.IGNORECASE | re.DOTALL):
                             txt = re.sub(r"<[^>]+>", " ", pm.group(1))
-                            txt = " ".join(_html.unescape(txt).split())
+                            txt = _clean_excerpt(" ".join(_html.unescape(txt).split()), max_chars=280)
                             if len(txt) > 65 and not txt.lower().startswith(("cookie", "subscribe", "sign in")):
                                 extracted = txt
                                 break
@@ -2246,7 +2217,7 @@ def _enrich_missing_summary(title: str, url: str, hn_url: str) -> str:
                             clean_c = re.sub(r"via\s+https?://\S+", "", _html.unescape(clean_c))
                             clean_c = re.sub(r"https?://\S+", "", clean_c)
                             clean_c = re.sub(r"\s+,", ",", clean_c)
-                            clean_c = " ".join(clean_c.split())
+                            clean_c = _clean_excerpt(" ".join(clean_c.split()), max_chars=260)
                             if len(clean_c) > 60:
                                 extracted = f"Community note: {clean_c}"
                                 break
@@ -2258,7 +2229,7 @@ def _enrich_missing_summary(title: str, url: str, hn_url: str) -> str:
     return final_summary
 
 
-def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
+def _render_top10_ledger_html(items: List[Dict[str, str]], allow_network: bool = True) -> str:
     rows: List[str] = []
     cat_counts: Dict[str, int] = {}
     for it in items:
@@ -2276,15 +2247,20 @@ def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
 
     for it in items:
         # Tier 2: Substantive summary (auto-enriched if empty) + formatted inline math
-        raw_summary = it["summary"] or _enrich_missing_summary(it["title"], it["url"], it["hn_url"])
+        raw_summary = it["summary"] or _enrich_missing_summary(
+            it["title"], it["url"], it["hn_url"], allow_network=allow_network
+        )
         formatted_summary = _format_inline_math(raw_summary)
         summary_html = f'<p class="briefing-summary">{formatted_summary}</p>' if formatted_summary else ""
 
-        matched_reddit, reddit_search_url = _find_reddit_discussion(
-            it["title"],
-            summary=raw_summary,
-            category=it["category"],
+        why_text = it.get("why_it_matters") or ""
+        why_html = (
+            f'<p class="briefing-takeaway"><strong>Why it matters:</strong> {_format_inline_math(why_text)}</p>'
+            if why_text
+            else ""
         )
+
+        reddit_search_url = _build_reddit_search_url(it["title"])
         safe_url = _safe_http_url(it["url"])
         safe_hn_url = _safe_http_url(it["hn_url"]) if it["hn_url"] else ""
         safe_reddit_search_url = _safe_http_url(reddit_search_url)
@@ -2298,35 +2274,6 @@ def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
         kicker_bits = [f'<span class="briefing-tag">{safe_cat}</span>', f'<span>{safe_src}</span>']
         if safe_date:
             kicker_bits.append(f'<span>{safe_date}</span>')
-
-        reddit_callout_html = ""
-        if matched_reddit:
-            r_title = matched_reddit["title"]
-            if len(r_title) > 130:
-                r_title = r_title[:127].rsplit(" ", 1)[0] + "..."
-            op_excerpt = matched_reddit.get("excerpt") or ""
-            top_comments = _fetch_reddit_thread_comments(matched_reddit["url"], max_comments=2) or matched_reddit.get("comments", [])
-
-            body_parts: List[str] = []
-            if op_excerpt and op_excerpt.lower() != matched_reddit["title"].lower():
-                body_parts.append(f'<p style="margin:0 0 6px;">{html.escape(op_excerpt)}</p>')
-            for cm in top_comments:
-                body_parts.append(
-                    f'<div class="reddit-comment"><strong>{html.escape(cm["author"])}:</strong> {html.escape(cm["text"])}</div>'
-                )
-            body_parts.append(
-                f'<div class="reddit-footer">'
-                f'<a href="{safe_reddit_search_url}" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a>'
-                f'<a href="{_safe_http_url(matched_reddit["url"])}" target="_blank" rel="noopener noreferrer">Direct link ({html.escape(matched_reddit["sub"])}) ↗</a>'
-                f'</div>'
-            )
-            reddit_callout_html = (
-                f'<details class="briefing-reddit">'
-                f'<summary><span><strong>Reddit ({html.escape(matched_reddit["sub"])}):</strong> {html.escape(r_title)}</span>'
-                f'<span class="reddit-toggle">Read inline ▾</span></summary>'
-                f'<div class="reddit-body">{"".join(body_parts)}</div>'
-                f'</details>'
-            )
 
         # Tier 3: Dedicated Action & Discussion Bar below the summary
         action_links: List[str] = []
@@ -2343,14 +2290,9 @@ def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
         elif safe_hn_url and it["hn_url"] != it["url"]:
             action_links.append(f'<a href="{safe_hn_url}" target="_blank" rel="noopener noreferrer">HN Discussion ↗</a>')
 
-        if matched_reddit:
-            action_links.append(
-                f'<a href="{safe_reddit_search_url}" target="_blank" rel="noopener noreferrer">{html.escape(matched_reddit["sub"])} via Google ↗</a>'
-            )
-        else:
-            action_links.append(
-                f'<a href="{safe_reddit_search_url}" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a>'
-            )
+        action_links.append(
+            f'<a href="{safe_reddit_search_url}" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a>'
+        )
 
         rows.append(
             f"""
@@ -2360,7 +2302,7 @@ def _render_top10_ledger_html(items: List[Dict[str, str]]) -> str:
                 <div class="briefing-meta">{'<span>·</span>'.join(kicker_bits)}</div>
                 <h3><a href="{safe_url}" target="_blank" rel="noopener noreferrer">{safe_title}</a></h3>
                 {summary_html}
-                {reddit_callout_html}
+                {why_html}
                 <div class="briefing-actions">{"".join(action_links)}</div>
               </div>
             </article>
@@ -2422,12 +2364,6 @@ def _render_bullet_notes_html(
                     break
         notes = notes[:limit]
     elif kind == "x":
-        for n in notes:
-            if not n.get("summary"):
-                n["summary"] = (
-                    f"Researcher and engineering discussion on X examining {n['title']} "
-                    "and its implications for frontier AI systems."
-                )
         if len(notes) < 3:
             seen_urls = {n["url"].strip().rstrip("/").lower() for n in notes}
             for fb_note in _default_x_thread_notes(limit=max(limit, 4)):
@@ -2447,11 +2383,125 @@ def _render_bullet_notes_html(
     return _render_notes_column_html(notes, action_label=action_label, empty_msg=empty_msg)
 
 
+_EDITORIAL_THEME_CLUSTERS: List[Tuple[str, Tuple[str, ...], str]] = [
+    (
+        "agentic harnesses and tool execution",
+        ("agent", "harness", "computer-using", "mcp", "tool", "orchestrator", "sandbox", "coding", "claude code"),
+        "Teams shipping autonomous workflows should isolate tool execution in ephemeral sandboxes and gate completion on deterministic tests rather than model self-assessment.",
+    ),
+    (
+        "long-context architecture and inference efficiency",
+        ("linear attention", "deltanet", "kv-cache", "quantiz", "inference", "distill", "speculative", "recurrent", "memory", "latency"),
+        "Inference bottlenecks are shifting from raw FLOPs to state stability, memory bandwidth, and KV-cache economics—making prefix caching and task-calibrated quantization essential.",
+    ),
+    (
+        "multimodal, video, and document intelligence",
+        ("video", "vision", "document", "multimodal", "image", "3d", "spatial", "world model", "page"),
+        "Production multimodal pipelines benefit from structural conditioning (cross-page context or 3D proxies) rather than encoding frames or pages in isolation.",
+    ),
+    (
+        "evaluation benchmarks and reasoning reliability",
+        ("benchmark", "eval", "reasoning", "math", "proof", "code golf", "arc-agi", "arena", "safety", "alignment"),
+        "Public leaderboard gains require verification against private, execution-based regression suites before promoting a checkpoint into production.",
+    ),
+    (
+        "frontier model releases and developer ecosystems",
+        ("gemini", "gpt-", "claude", "qwen", "llama", "deepseek", "self-hosting", "open-weight"),
+        "Evaluate new frontier and open-weight releases along the accuracy-cost Pareto curve using cascaded routing so routine traffic stays on fast, low-cost tiers.",
+    ),
+]
+
+
+def _build_editorial_synthesis_html(
+    top10_items: List[Dict[str, str]],
+    current_date: str,
+    x_count: int = 0,
+    pod_count: int = 0,
+    talk_count: int = 0,
+) -> str:
+    """Build a data-grounded Daily Editorial Synthesis callout when an issue lacks an explicit Executive Summary."""
+    if not top10_items:
+        return ""
+
+    cat_counts: Dict[str, int] = {}
+    for it in top10_items:
+        cat_counts[it["category"]] = cat_counts.get(it["category"], 0) + 1
+
+    cat_bits = [f"{count} {cat}" for cat, count in sorted(cat_counts.items(), key=lambda kv: (-kv[1], kv[0]))]
+    mix_text = ", ".join(cat_bits)
+
+    corpus = " ".join(f"{it['title']} {it['summary']}" for it in top10_items).lower()
+    matched_themes: List[Tuple[int, str, str]] = []
+    for label, keywords, implication in _EDITORIAL_THEME_CLUSTERS:
+        hits = sum(1 for kw in keywords if kw in corpus)
+        if hits > 0:
+            matched_themes.append((hits, label, implication))
+    matched_themes.sort(key=lambda x: x[0], reverse=True)
+
+    lead = top10_items[0]
+    highest_pts_item = None
+    best_pts = -1
+    for it in top10_items:
+        pts_raw = (it.get("points") or "").replace(",", "")
+        if pts_raw.isdigit() and int(pts_raw) > best_pts:
+            best_pts = int(pts_raw)
+            highest_pts_item = it
+
+    lead_link = f'<a href="{_safe_http_url(lead["url"])}" target="_blank" rel="noopener noreferrer" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">{html.escape(lead["title"])}</a>'
+
+    theme_labels = [t[1] for t in matched_themes[:2]]
+    if len(theme_labels) == 2:
+        theme_phrase = f"{theme_labels[0]} and {theme_labels[1]}"
+    elif len(theme_labels) == 1:
+        theme_phrase = theme_labels[0]
+    else:
+        theme_phrase = "frontier model engineering and applied ML systems"
+
+    implication_text = (
+        matched_themes[0][2]
+        if matched_themes
+        else "Verify benchmark claims against primary sources and task-specific regression harnesses before changing production model routing."
+    )
+
+    bullets = [
+        (
+            f"<strong>Issue Focus ({html.escape(current_date)}):</strong> Today&#x27;s Top {len(top10_items)} "
+            f"({html.escape(mix_text)}) centers on {html.escape(theme_phrase)}, led by {lead_link} "
+            f"({html.escape(lead['source'])})."
+        )
+    ]
+
+    if highest_pts_item and highest_pts_item["url"] != lead["url"] and best_pts > 0:
+        hp_link = f'<a href="{_safe_http_url(highest_pts_item["url"])}" target="_blank" rel="noopener noreferrer" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">{html.escape(highest_pts_item["title"])}</a>'
+        bullets.append(
+            f"<strong>Highest Community Signal:</strong> {hp_link} drew {best_pts:,} points on "
+            f"{html.escape(highest_pts_item['source'])}, alongside {x_count} curated X threads, "
+            f"{pod_count} audio briefings, and {talk_count} recorded technical talks."
+        )
+    else:
+        bullets.append(
+            f"<strong>Cross-Channel Coverage:</strong> Complementing the ranked briefing are {x_count} researcher "
+            f"threads on X, {pod_count} AI engineering podcast episodes, and {talk_count} recorded technical talks."
+        )
+
+    bullets.append(f"<strong>Engineering Implication:</strong> {html.escape(implication_text)}")
+
+    li_html = "".join(f"<li>{b}</li>" for b in bullets)
+    return (
+        f'<div class="editorial-callout" aria-label="Daily Editorial Synthesis">'
+        f"<h3>Daily Editorial Synthesis — {html.escape(current_date)}</h3>"
+        f'<ul style="max-width:66ch;padding-left:18px;">{li_html}</ul>'
+        f"</div>"
+    )
+
+
 def _render_daily_digest_html(
     markdown_content: str,
     title: str,
     current_date: str,
     archive_dates: List[str],
+    canonical_date: str | None = None,
+    allow_network: bool = True,
 ) -> str:
     """Render an individual daily briefing page (`YYYY-MM-DD.html`) in clean editorial style."""
     latest_date = sorted(archive_dates, reverse=True)[0] if archive_dates else current_date
@@ -2466,19 +2516,34 @@ def _render_daily_digest_html(
     tldr_md = _extract_section_markdown(markdown_content, "TL;DR") or _extract_section_markdown(markdown_content, "Executive Summary")
     concept_md = _extract_section_markdown(markdown_content, "Concept") or _extract_section_markdown(markdown_content, "Deep-Dive")
 
-    tldr_html = ""
+    x_notes = _parse_bullet_notes(x_md, kind="x")
+    pod_notes = _parse_bullet_notes(pod_md, kind="podcast")
+    talk_notes = _parse_bullet_notes(talks_md, kind="tech_talk")
+
     if tldr_md:
-        rendered_tldr = markdown.markdown(_strip_emojis(tldr_md), extensions=["extra", "sane_lists"])
+        rendered_tldr = _harden_rendered_markdown_html(
+            markdown.markdown(_strip_emojis(tldr_md), extensions=["extra", "sane_lists"])
+        )
         tldr_html = f'<div class="editorial-callout"><h3>Executive Summary</h3>{rendered_tldr}</div>'
+    else:
+        tldr_html = _build_editorial_synthesis_html(
+            top10_items=top10_items,
+            current_date=current_date,
+            x_count=max(len(x_notes), 3),
+            pod_count=len(pod_notes),
+            talk_count=max(len(talk_notes), 8),
+        )
 
     concept_html = ""
     if concept_md:
-        rendered_concept = markdown.markdown(_strip_emojis(concept_md), extensions=["extra", "sane_lists"])
+        rendered_concept = _harden_rendered_markdown_html(
+            markdown.markdown(_strip_emojis(concept_md), extensions=["extra", "sane_lists"])
+        )
         concept_html = f'<div class="editorial-callout"><h3>Technical Deep-Dive</h3>{rendered_concept}</div>'
 
-    top10_html = _render_top10_ledger_html(top10_items)
+    top10_html = _render_top10_ledger_html(top10_items, allow_network=allow_network)
     x_html = _render_bullet_notes_html(x_md, kind="x", limit=4)
-    pod_html = _render_notes_column_html(_parse_bullet_notes(pod_md, kind="podcast"), "Listen Episode")
+    pod_html = _render_notes_column_html(pod_notes, "Listen Episode")
     talks_html = _render_bullet_notes_html(talks_md, kind="tech_talk")
 
     date_links = " · ".join(
@@ -2486,13 +2551,16 @@ def _render_daily_digest_html(
         for d in sorted(archive_dates, reverse=True)
     )
 
+    is_duplicate = bool(canonical_date and canonical_date != current_date)
+    canonical_page = f"{canonical_date}.html" if is_duplicate else f"{current_date}.html"
+
     return f"""<!DOCTYPE html>
 <html lang="en" data-theme="sage">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — {current_date}</title>
-  {_seo_head(f'{current_date}.html', f'The GenAI Briefing for {current_date}: Top 10 Generative AI research, engineering and community stories with practitioner discussion.')}{_render_adsense_head_snippet()}
+  {_seo_head(f'{current_date}.html', f'The GenAI Briefing for {current_date}: Top 10 Generative AI research, engineering and community stories with daily editorial synthesis.', canonical_page=canonical_page, noindex=is_duplicate)}{_render_adsense_head_snippet()}
   {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
@@ -2550,8 +2618,8 @@ def _render_daily_digest_html(
 </html>"""
 
 
-def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
-    """Render `docs/index.html` as a high-density, editorial front page + archive ledger."""
+def _render_index_portal_html(archive_map: Dict[str, str], allow_network: bool = True) -> str:
+    """Render `docs/index.html` as a high-density, editorial front page + evergreen guides + archive ledger."""
     sorted_dates = sorted(archive_map.keys(), reverse=True)
     latest_date = sorted_dates[0] if sorted_dates else ""
     latest_md = archive_map.get(latest_date, "")
@@ -2566,15 +2634,43 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
     )
     tldr_md = _extract_section_markdown(latest_md, "TL;DR") or _extract_section_markdown(latest_md, "Executive Summary")
 
-    tldr_html = ""
-    if tldr_md:
-        rendered_tldr = markdown.markdown(_strip_emojis(tldr_md), extensions=["extra", "sane_lists"])
-        tldr_html = f'<div class="editorial-callout"><h3>Executive Summary — {latest_date}</h3>{rendered_tldr}</div>'
+    x_notes = _parse_bullet_notes(x_md, kind="x")
+    pod_notes = _parse_bullet_notes(pod_md, kind="podcast")
+    talk_notes = _parse_bullet_notes(talks_md, kind="tech_talk")
 
-    top10_html = _render_top10_ledger_html(top10_items)
+    if tldr_md:
+        rendered_tldr = _harden_rendered_markdown_html(
+            markdown.markdown(_strip_emojis(tldr_md), extensions=["extra", "sane_lists"])
+        )
+        tldr_html = f'<div class="editorial-callout"><h3>Executive Summary — {latest_date}</h3>{rendered_tldr}</div>'
+    else:
+        tldr_html = _build_editorial_synthesis_html(
+            top10_items=top10_items,
+            current_date=latest_date,
+            x_count=max(len(x_notes), 3),
+            pod_count=len(pod_notes),
+            talk_count=max(len(talk_notes), 8),
+        )
+
+    top10_html = _render_top10_ledger_html(top10_items, allow_network=allow_network)
     x_html = _render_bullet_notes_html(x_md, kind="x", limit=4)
-    pod_html = _render_notes_column_html(_parse_bullet_notes(pod_md, kind="podcast"), "Listen Episode")
+    pod_html = _render_notes_column_html(pod_notes, "Listen Episode")
     talks_html = _render_bullet_notes_html(talks_md, kind="tech_talk")
+
+    guide_cards: List[str] = []
+    for idx, g in enumerate(EVERGREEN_GUIDES, start=1):
+        guide_cards.append(
+            f"""
+            <article class="guide-card">
+              <div class="guide-kicker">
+                <span>{idx:02d} · {html.escape(g['kicker'])}</span>
+                <span class="muted">· {html.escape(g['reading_time'])}</span>
+              </div>
+              <h3><a href="{html.escape(g['slug'])}.html">{html.escape(g['title'])}</a></h3>
+              <p class="briefing-summary">{html.escape(g['subtitle'])}</p>
+            </article>
+            """
+        )
 
     archive_rows: List[str] = []
     for d in sorted_dates:
@@ -2598,7 +2694,7 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — Daily Research, Engineering &amp; Audio Index</title>
-  {_seo_head('index.html', 'Daily Generative AI technical briefing: ranked research papers, frontier lab engineering, researcher threads, podcasts and YouTube tech talks.')}{_render_adsense_head_snippet()}
+  {_seo_head('index.html', 'Daily Generative AI technical briefing: ranked research papers, frontier lab engineering, evergreen engineering guides, researcher threads, podcasts and YouTube tech talks.')}{_render_adsense_head_snippet()}
   {EDITORIAL_CSS_AND_JS}
 </head>
 <body>
@@ -2640,9 +2736,19 @@ def _render_index_portal_html(archive_map: Dict[str, str]) -> str:
       {talks_html}
     </section>
 
+    <section id="guides">
+      <div class="section-head">
+        <h2>V. Evergreen Engineering Guides</h2>
+        <span><a href="guides.html" style="color:var(--accent);text-decoration:none;">ALL 5 DEEP DIVES →</a></span>
+      </div>
+      <div class="guide-list">
+        {"".join(guide_cards)}
+      </div>
+    </section>
+
     <section id="archive">
       <div class="section-head">
-        <h2>V. Past Issues Archive</h2>
+        <h2>VI. Past Issues Archive</h2>
         <span>{len(sorted_dates)} EDITIONS PUBLISHED</span>
       </div>
       <table class="archive-table">
@@ -2797,24 +2903,61 @@ def _render_tech_talks_page_html(
 </html>"""
 
 
-def save_markdown_digest(
-    markdown_content: str,
+def _build_offline_podcast_shows(archive_map: Dict[str, str], episodes_per_show: int = 3) -> List[Dict[str, Any]]:
+    """Build podcast directory data from archived digests when live podcast RSS fetching is disabled or unavailable."""
+    by_show: Dict[str, List[Dict[str, str]]] = {s["name"]: [] for s in FEATURED_PODCAST_SHOWS}
+    seen_urls: Set[str] = set()
+
+    for arch_date in sorted(archive_map.keys(), reverse=True):
+        pod_md = _extract_section_markdown(archive_map[arch_date], "Podcast") or _extract_section_markdown(
+            archive_map[arch_date], "Audio"
+        )
+        for note in _parse_bullet_notes(pod_md, kind="podcast"):
+            norm_url = note["url"].strip().rstrip("/").lower()
+            if not norm_url or norm_url in seen_urls:
+                continue
+            matched_name = ""
+            kicker_low = note["kicker"].lower()
+            for show in FEATURED_PODCAST_SHOWS:
+                sname = show["name"]
+                if sname.lower() in kicker_low or kicker_low in sname.lower() or sname.split(":")[0].lower() in kicker_low:
+                    matched_name = sname
+                    break
+            if matched_name and len(by_show[matched_name]) < episodes_per_show:
+                seen_urls.add(norm_url)
+                by_show[matched_name].append(
+                    {
+                        "title": note["title"],
+                        "url": note["url"],
+                        "summary": note["summary"],
+                        "published": arch_date,
+                        "duration": note["meta"] or "Audio",
+                    }
+                )
+
+    shows_data: List[Dict[str, Any]] = []
+    for show in FEATURED_PODCAST_SHOWS:
+        eps = by_show.get(show["name"], [])
+        if eps:
+            shows_data.append(
+                {
+                    "name": show["name"],
+                    "host": show["host"],
+                    "focus": show["focus"],
+                    "apple_url": show["apple_url"],
+                    "episodes": eps,
+                }
+            )
+    return shows_data
+
+
+def rebuild_docs_site(
     output_dir: Path,
-    timestamp: datetime | None = None,
     docs_dir: Path | None = None,
-) -> Path:
-    """Save the digest to a dated Markdown file, update `latest.md`, and build GitHub Pages HTML (`index.html`, `<date>.html`, `tech-talks.html`, `podcasts.html`, `privacy.html`, `feed.xml`, `CNAME`, `ads.txt`)."""
-    ts = timestamp or datetime.now()
-    date_str = ts.strftime("%Y-%m-%d")
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    dated_filename = f"{date_str}_genai_digest.md"
-    dated_path = output_dir / dated_filename
-    dated_path.write_text(markdown_content, encoding="utf-8")
-
-    latest_path = output_dir / "latest.md"
-    latest_path.write_text(markdown_content, encoding="utf-8")
-
+    latest_fallback_date: str = "",
+    fetch_live_hubs: bool | None = None,
+) -> None:
+    """Regenerate all GitHub Pages HTML files, evergreen guides, trust pages, RSS feed, robots.txt, and sitemap.xml."""
     target_docs = docs_dir if docs_dir is not None else output_dir.parent / "docs"
     target_docs.mkdir(parents=True, exist_ok=True)
     (target_docs / ".nojekyll").write_text("", encoding="utf-8")
@@ -2835,42 +2978,62 @@ def save_markdown_digest(
         for p in output_dir.glob("*_genai_digest.md")
     }
     archive_dates = sorted(archive_files.keys())
-    archive_map: Dict[str, str] = {}
+    archive_map: Dict[str, str] = {
+        arch_date: md_path.read_text(encoding="utf-8")
+        for arch_date, md_path in archive_files.items()
+    }
+    duplicates = _detect_duplicate_digests(archive_map)
 
-    for arch_date, md_path in archive_files.items():
-        md_text = md_path.read_text(encoding="utf-8")
-        archive_map[arch_date] = md_text
+    if fetch_live_hubs is None:
+        is_live_docs_build = docs_dir is None and output_dir.name == "digests"
+    else:
+        is_live_docs_build = bool(fetch_live_hubs)
+
+    for arch_date in archive_dates:
+        md_text = archive_map[arch_date]
         arch_title = f"The GenAI Briefing — {arch_date}"
         arch_html = _render_daily_digest_html(
             markdown_content=md_text,
             title=arch_title,
             current_date=arch_date,
             archive_dates=archive_dates,
+            canonical_date=duplicates.get(arch_date),
+            allow_network=is_live_docs_build,
         )
         (target_docs / f"{arch_date}.html").write_text(arch_html, encoding="utf-8")
 
-    index_html = _render_index_portal_html(archive_map=archive_map)
+    index_html = _render_index_portal_html(archive_map=archive_map, allow_network=is_live_docs_build)
     (target_docs / "index.html").write_text(index_html, encoding="utf-8")
 
-    latest_d = archive_dates[-1] if archive_dates else date_str
+    latest_d = archive_dates[-1] if archive_dates else latest_fallback_date
     (target_docs / "feed.xml").write_text(
-        _render_rss_feed_xml(archive_map=archive_map, site_url="https://jabi.io"),
+        _render_rss_feed_xml(archive_map=archive_map, site_url=SITE_URL),
         encoding="utf-8",
     )
-    (target_docs / "privacy.html").write_text(
-        _render_privacy_page_html(latest_date=latest_d),
-        encoding="utf-8",
-    )
+    (target_docs / "guides.html").write_text(_render_guides_index_html(latest_d), encoding="utf-8")
+    for guide in EVERGREEN_GUIDES:
+        (target_docs / f"{guide['slug']}.html").write_text(
+            _render_guide_article_html(guide, latest_date=latest_d),
+            encoding="utf-8",
+        )
+    (target_docs / "about.html").write_text(_render_about_page_html(latest_d), encoding="utf-8")
     (target_docs / "faq.html").write_text(_render_faq_page_html(latest_d), encoding="utf-8")
     (target_docs / "contact.html").write_text(_render_contact_page_html(latest_d), encoding="utf-8")
     (target_docs / "terms.html").write_text(_render_terms_page_html(latest_d), encoding="utf-8")
+    (target_docs / "privacy.html").write_text(
+        _render_privacy_page_html(latest_date=latest_d, include_adsense=False),
+        encoding="utf-8",
+    )
     (target_docs / "robots.txt").write_text(_render_robots_txt(), encoding="utf-8")
     (target_docs / "sitemap.xml").write_text(
-        _render_sitemap_xml(archive_dates=archive_dates, latest_date=latest_d),
+        _render_sitemap_xml(
+            archive_dates=archive_dates,
+            latest_date=latest_d,
+            duplicate_dates=set(duplicates.keys()),
+        ),
         encoding="utf-8",
     )
 
-    is_live_docs_build = docs_dir is None and output_dir.name == "digests"
     try:
         channels_data = fetch_detailed_tech_talks_hub(
             videos_per_channel=3,
@@ -2884,16 +3047,43 @@ def save_markdown_digest(
     except Exception:
         pass
 
+    shows_data: List[Dict[str, Any]] = []
     if is_live_docs_build:
         try:
             shows_data = fetch_detailed_podcast_hub(episodes_per_show=3)
-            if shows_data:
-                podcasts_page_html = _render_podcasts_page_html(
-                    shows_data=shows_data,
-                    latest_date=latest_d,
-                )
-                (target_docs / "podcasts.html").write_text(podcasts_page_html, encoding="utf-8")
         except Exception:
-            pass
+            shows_data = []
+    if not shows_data and archive_map:
+        shows_data = _build_offline_podcast_shows(archive_map, episodes_per_show=3)
+    if shows_data:
+        podcasts_page_html = _render_podcasts_page_html(
+            shows_data=shows_data,
+            latest_date=latest_d,
+        )
+        (target_docs / "podcasts.html").write_text(podcasts_page_html, encoding="utf-8")
 
+
+def save_markdown_digest(
+    markdown_content: str,
+    output_dir: Path,
+    timestamp: datetime | None = None,
+    docs_dir: Path | None = None,
+) -> Path:
+    """Save the digest to a dated Markdown file, update `latest.md`, and rebuild GitHub Pages HTML in `docs/`."""
+    ts = timestamp or datetime.now()
+    date_str = ts.strftime("%Y-%m-%d")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    dated_filename = f"{date_str}_genai_digest.md"
+    dated_path = output_dir / dated_filename
+    dated_path.write_text(markdown_content, encoding="utf-8")
+
+    latest_path = output_dir / "latest.md"
+    latest_path.write_text(markdown_content, encoding="utf-8")
+
+    rebuild_docs_site(
+        output_dir=output_dir,
+        docs_dir=docs_dir,
+        latest_fallback_date=date_str,
+    )
     return dated_path

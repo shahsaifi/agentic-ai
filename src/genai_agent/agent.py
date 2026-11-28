@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import html
 import logging
 import re
 from datetime import datetime
@@ -35,11 +36,17 @@ Rules:
 """
 
 
+_PROFANITY_RE = re.compile(r"\b(shit|fuck|damn|asshole|bitch|crap|wtf)\b", re.IGNORECASE)
+_ARCHIVE_URL_RE = re.compile(r"https?://(?:www\.)?archive\.(?:ph|is|today)/\S*", re.IGNORECASE)
+
+
 def _clean_sentence_excerpt(text: str, max_chars: int = 280) -> str:
-    """Clean boilerplate and truncate on a complete sentence boundary instead of mid-word."""
+    """Clean boilerplate, junk URLs, profanity, and sponsor copy; truncate on a complete sentence boundary."""
     if not text:
         return ""
-    text = re.sub(r"^🎧\s*[0-9hm:\s]+—\s*", "", text.strip())
+    text = html.unescape(text).strip()
+    text = re.sub(r"[\u200b\u2060\ufeff]", "", text)
+    text = re.sub(r"^🎧\s*[0-9hm:\s]+—\s*", "", text)
     text = re.sub(
         r"Hacker News discussion \([^)]+\)\.\s*Discussion:\s*https?://\S+\s*(\|\s*)?",
         "",
@@ -51,7 +58,34 @@ def _clean_sentence_excerpt(text: str, max_chars: int = 280) -> str:
         text,
     ).strip()
     text = re.sub(r"\s*HN Thread:\s*https?://\S+", "", text).strip()
-    text = " ".join(text.split())
+    text = re.sub(r"^See also\b.*$", "", text, flags=re.IGNORECASE).strip()
+    text = re.sub(
+        r"Show Links\s*(?:[•\-\*]\s*)?.*?(?=In this episode|Today we|We discuss|Join us|On this episode|$)",
+        "",
+        text,
+        flags=re.IGNORECASE | re.DOTALL,
+    ).strip()
+    text = re.sub(
+        r"Get the top 80\+ AI Models.*?(?=In this episode|Today we|We discuss|Join us|On this episode|$)",
+        "",
+        text,
+        flags=re.IGNORECASE | re.DOTALL,
+    ).strip()
+    text = re.sub(
+        r"[•\-\*]?\s*[^•\n]*(?:aibox\.ai|skool\.com|aichatdaily\.com|\$8\.99)[^•\n]*",
+        " ",
+        text,
+        flags=re.IGNORECASE,
+    ).strip()
+    if _PROFANITY_RE.search(text):
+        return ""
+    if re.match(r"^https?://\S+$", text, flags=re.IGNORECASE) or _ARCHIVE_URL_RE.search(text):
+        text = _ARCHIVE_URL_RE.sub("", text).strip()
+        if not text or re.match(r"^https?://\S+$", text, flags=re.IGNORECASE):
+            return ""
+    text = re.sub(r"\(?\s*https?://\S+\s*\)?", " ", text)
+    text = re.sub(r"\(\s*\)", "", text)
+    text = " ".join(text.split()).strip(" •-*|")
     if not text:
         return ""
     if len(text) <= max_chars:
@@ -275,9 +309,47 @@ def build_fallback_markdown(
     lines = [
         f"# Generative AI Technical Briefing — {date_str}",
         "",
-        "## Top 10 Ranked Briefing",
-        "",
     ]
+
+    if top_items:
+        research_n = sum(1 for i in top_items if i.category == SourceCategory.RESEARCH_PAPER)
+        eng_n = sum(1 for i in top_items if i.category == SourceCategory.COMMUNITY_NEWS)
+        lab_n = sum(1 for i in top_items if i.category == SourceCategory.COMPANY_BLOG)
+        lead = top_items[0]
+        top_eng = next((i for i in top_items if i.category == SourceCategory.COMMUNITY_NEWS), None)
+        top_lab = next((i for i in top_items if i.category == SourceCategory.COMPANY_BLOG), None)
+
+        lines.append("## Executive Summary")
+        lines.append(
+            f"- **Lead Technical Signal**: [{lead.title}]({lead.url}) ({lead.source}) heads today's Top {len(top_items)} "
+            f"selection across {research_n} research papers, {eng_n} engineering discussions, and {lab_n} lab posts."
+        )
+        if top_eng and top_eng.url != lead.url:
+            pts_part = f" ({top_eng.score} pts)" if top_eng.score else ""
+            lines.append(
+                f"- **Engineering & Community Focus**: Practitioners on {top_eng.source}{pts_part} centered on "
+                f"[{top_eng.title}]({top_eng.url})."
+            )
+        if top_lab and top_lab.url != lead.url:
+            lines.append(
+                f"- **Lab & Ecosystem Update**: [{top_lab.title}]({top_lab.url}) ({top_lab.source}) highlights "
+                f"production deployment and model ecosystem shifts alongside {len(podcasts)} audio briefings and "
+                f"{len(tech_talks)} recorded technical talks."
+            )
+        elif len(top_items) > 1:
+            second = top_items[1]
+            lines.append(
+                f"- **Secondary Highlight**: [{second.title}]({second.url}) ({second.source}) complements today's "
+                f"coverage across {len(x_posts)} X threads, {len(podcasts)} podcasts, and {len(tech_talks)} tech talks."
+            )
+        lines.append("")
+
+    lines.extend(
+        [
+            "## Top 10 Ranked Briefing",
+            "",
+        ]
+    )
 
     cat_labels = {
         SourceCategory.RESEARCH_PAPER: "Research",
@@ -319,18 +391,11 @@ def build_fallback_markdown(
             hn_url = _extract_hn_discussion_url(xp.summary)
             score_str = f" ({xp.score} pts)" if xp.score else ""
             pub_str = f" · *{xp.published_at}*" if xp.published_at else ""
-            lines.append(f"- **[{xp.title}]({xp.url})** — *{xp.source}*{score_str}{pub_str}")
+            hn_str = f" · [HN Discussion]({hn_url})" if hn_url and hn_url != xp.url else ""
+            lines.append(f"- **[{xp.title}]({xp.url})** — *{xp.source}*{score_str}{pub_str}{hn_str}")
             excerpt = _clean_sentence_excerpt(xp.summary, max_chars=260)
             if excerpt:
                 lines.append(f"  - {excerpt}")
-            elif hn_url:
-                lines.append(
-                    f"  - Researcher and engineering discussion examining {xp.title}, with active debate on [Hacker News]({hn_url})."
-                )
-            else:
-                lines.append(
-                    f"  - Technical discussion on X examining {xp.title} and its implications for production AI systems."
-                )
         lines.append("")
 
     if podcasts:

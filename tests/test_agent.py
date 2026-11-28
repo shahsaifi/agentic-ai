@@ -169,40 +169,24 @@ def test_exclude_previously_published_items(tmp_path: Path):
 
 
 def test_reddit_waf_safe_links_and_rss_sanitization():
-    from genai_agent.notifiers.markdown_store import (
-        _extract_reddit_rss_excerpt,
-        _find_reddit_discussion,
-    )
+    from genai_agent.notifiers import markdown_store as ms
+    from genai_agent.notifiers.markdown_store import _build_reddit_search_url
 
-    matched_curated, search_url = _find_reddit_discussion("Random Is Almost Enough Benchmark Compression via BestRand")
-    assert isinstance(matched_curated, dict)
-    for key in ("sub", "title", "url", "excerpt", "comments"):
-        assert matched_curated.get(key)
-    assert len(matched_curated["comments"]) >= 2
-    assert "reddit.com/r/" not in search_url or "/search/" not in search_url
+    # Synthetic Reddit generators/curated fakes must no longer exist
+    for removed_symbol in (
+        "_extract_reddit_rss_excerpt",
+        "_find_reddit_discussion",
+        "CURATED_REDDIT_DISCUSSIONS",
+    ):
+        assert not hasattr(ms, removed_symbol), f"Synthetic Reddit symbol {removed_symbol} should be removed"
+
+    search_url = _build_reddit_search_url("Random Is Almost Enough: Benchmark Compression via BestRand")
     assert search_url.startswith("https://www.google.com/search?q=site:reddit.com+")
+    assert "/comments/1gn" not in search_url
+    assert "reddit.com/r/" not in search_url
 
-    matched_fallback, fb_search_url = _find_reddit_discussion(
-        "ZetaHyperion: Novel Topological Photonic Kernel Synthesis",
-        summary="A completely novel architecture for optical tensor routing.",
-        category="Research",
-    )
-    assert isinstance(matched_fallback, dict)
-    for key in ("sub", "title", "url", "excerpt", "comments"):
-        assert matched_fallback.get(key)
-    assert len(matched_fallback["comments"]) >= 2
-    assert fb_search_url.startswith("https://www.google.com/search?q=site:reddit.com+")
-
-    raw_rss = (
-        '<table><tr><td><p>When you approve a command in Claude Code, it is saved in settings.local.json.</p>'
-        '</td></tr></table> &#32; submitted by &#32; <a href="https://www.reddit.com/user/test"> /u/test </a> '
-        '<span><a href="https://www.reddit.com/r/ClaudeAI/">[link]</a></span> <span>[comments]</span>'
-    )
-    excerpt = _extract_reddit_rss_excerpt(raw_rss)
-    assert "settings.local.json" in excerpt
-    assert "submitted by" not in excerpt
-    assert "[comments]" not in excerpt
-    assert "<table" not in excerpt
+    fallback_url = _build_reddit_search_url("The and for with from")
+    assert fallback_url.startswith("https://www.google.com/search?q=site:reddit.com+")
 
 
 
@@ -320,8 +304,12 @@ def test_tech_talks_prompt_fallback_and_html_rendering(tmp_path: Path):
         assert '<a href="#tech-talks">Tech Talks</a>' not in content
         assert "Watch on YouTube ↗" in content
         assert "Read Thread on X ↗" in content
-        assert '<details class="briefing-reddit">' in content
-        assert '<div class="reddit-comment">' in content
+        assert "briefing-reddit" not in content
+        assert "reddit-comment" not in content
+        assert "/comments/1gn" not in content
+        assert "Find on Reddit" in content
+        assert "https://www.google.com/search?q=site:reddit.com+" in content
+        assert 'class="editorial-callout"' in content
         assert "No entries recorded for this issue." not in content.split("II. Researcher Threads on X", 1)[1].split("III. Audio", 1)[0]
         assert 'target="_blank" rel="noopener noreferrer"' in content
         assert "viewport-fit=cover" in content
@@ -396,16 +384,23 @@ def test_published_docs_html_integrity():
         assert "Read Thread on X ↗" in text
         assert "viewport-fit=cover" in text
         assert "max-width: 66ch;" in text
-        tech_talks_section = text.split('id="tech-talks"', 1)[1].split("</section>", 1)[0]
-        for channel in required_channels:
-            assert channel in tech_talks_section
+        assert "briefing-reddit" not in text
+        assert "reddit-comment" not in text
+        assert "/comments/1gn" not in text
+        assert "Find on Reddit" in text
+        assert 'class="editorial-callout"' in text
+        if page in ("2026-11-14.html", "2026-11-13.html"):
+            tech_talks_section = text.split('id="tech-talks"', 1)[1].split("</section>", 1)[0]
+            for channel in required_channels:
+                assert channel in tech_talks_section
 
     for latest_page in ("index.html", "2026-11-14.html"):
         latest_text = (repo_docs / latest_page).read_text(encoding="utf-8")
         assert "Read Thread on X ↗" in latest_text
         assert "No entries recorded for this issue." not in latest_text
-        assert latest_text.count('<details class="briefing-reddit">') == 10
-        assert latest_text.count('<div class="reddit-comment">') >= 10
+        assert "briefing-reddit" not in latest_text
+        assert "reddit-comment" not in latest_text
+        assert "Find on Reddit" in latest_text
 
 
 
@@ -481,10 +476,13 @@ def test_subscribe_rss_and_adsense_readiness(tmp_path: Path, monkeypatch):
     assert "Google AdSense" in privacy_html
     assert "adssettings.google.com" in privacy_html
 
-    trust_pages = ("faq.html", "contact.html", "terms.html", "privacy.html")
+    legal_no_ad_pages = ("contact.html", "terms.html", "privacy.html")
+    trust_pages = ("about.html", "faq.html", "contact.html", "terms.html", "privacy.html")
     all_generated_pages = sorted(p.name for p in docs_dir.glob("*.html"))
     assert "index.html" in all_generated_pages
     assert "2026-11-14.html" in all_generated_pages
+    assert "about.html" in all_generated_pages
+    assert "guides.html" in all_generated_pages
 
     # State (a): GOOGLE_ADSENSE_CLIENT_ID set, GOOGLE_ADSENSE_SLOT_ID unset/empty
     for page_name in all_generated_pages:
@@ -493,16 +491,23 @@ def test_subscribe_rss_and_adsense_readiness(tmp_path: Path, monkeypatch):
         style_pos = head_html.find("<style>")
         assert style_pos != -1, f"{page_name} missing <style> in <head>"
 
-        # Verify <head> ordering: SEO meta/canonical and AdSense tags appear BEFORE <style>
-        for marker in (
-            '<meta name="description"',
-            '<link rel="canonical"',
-            '<meta name="google-adsense-account" content="ca-pub-1234567890123456">',
-            "adsbygoogle.js?client=ca-pub-1234567890123456",
-        ):
+        # Every page has SEO meta/canonical BEFORE <style>
+        for marker in ('<meta name="description"', '<link rel="canonical"'):
             pos = head_html.find(marker)
             assert pos != -1, f"{page_name} missing {marker} in <head>"
             assert pos < style_pos, f"{page_name}: {marker} must appear before <style>"
+
+        if page_name in legal_no_ad_pages:
+            assert "google-adsense-account" not in page_html, f"{page_name} must not include google-adsense-account"
+            assert "adsbygoogle.js" not in page_html, f"{page_name} must not include adsbygoogle.js"
+        else:
+            for marker in (
+                '<meta name="google-adsense-account" content="ca-pub-1234567890123456">',
+                "adsbygoogle.js?client=ca-pub-1234567890123456",
+            ):
+                pos = head_html.find(marker)
+                assert pos != -1, f"{page_name} missing {marker} in <head>"
+                assert pos < style_pos, f"{page_name}: {marker} must appear before <style>"
 
     for page_name in ("index.html", "2026-11-14.html", "tech-talks.html", "privacy.html"):
         page_html = (docs_dir / page_name).read_text(encoding="utf-8")
@@ -570,46 +575,74 @@ def test_adsense_prerequisites_crawlability_and_trust_pages(tmp_path: Path, monk
     assert "Sitemap: https://jabi.io/sitemap.xml" in robots
     assert "Disallow" not in robots
 
-    # sitemap is valid XML and lists core + trust pages
+    # sitemap is valid XML, deduplicated (excludes latest_date duplicate and legal utility pages),
+    # and lists core + editorial/evergreen pages
     sitemap = (docs_dir / "sitemap.xml").read_text(encoding="utf-8")
     root = ET.fromstring(sitemap)
     locs = [el.text for el in root.iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
-    for expected in ("https://jabi.io/", "https://jabi.io/2026-11-14.html", "https://jabi.io/faq.html", "https://jabi.io/contact.html",
-                     "https://jabi.io/terms.html", "https://jabi.io/privacy.html"):
-        assert expected in locs
+    for expected in (
+        "https://jabi.io/",
+        "https://jabi.io/about.html",
+        "https://jabi.io/faq.html",
+        "https://jabi.io/guides.html",
+        "https://jabi.io/guide-agent-harness-engineering.html",
+        "https://jabi.io/guide-llm-inference-quantization.html",
+        "https://jabi.io/guide-rag-context-engineering.html",
+        "https://jabi.io/guide-llm-evaluation-benchmarks.html",
+        "https://jabi.io/guide-cascaded-model-routing.html",
+    ):
+        assert expected in locs, f"sitemap.xml missing {expected}"
+    for excluded in (
+        "https://jabi.io/2026-11-14.html",
+        "https://jabi.io/contact.html",
+        "https://jabi.io/terms.html",
+        "https://jabi.io/privacy.html",
+    ):
+        assert excluded not in locs, f"sitemap.xml should exclude {excluded}"
 
     # trust pages exist and every page footer links to all of them, with proper <head> ordering
-    trust_pages = ("faq.html", "contact.html", "terms.html", "privacy.html")
+    legal_no_ad_pages = ("contact.html", "terms.html", "privacy.html")
+    trust_pages = ("about.html", "faq.html", "contact.html", "terms.html", "privacy.html")
     for name in trust_pages:
         assert (docs_dir / name).exists()
-    every_page = ("index.html", "2026-11-14.html", "tech-talks.html") + trust_pages
+    every_page = ("index.html", "2026-11-14.html", "tech-talks.html", "guides.html") + trust_pages
     for name in every_page:
         page = (docs_dir / name).read_text(encoding="utf-8")
-        for link in ('href="faq.html"', 'href="contact.html"',
+        for link in ('href="about.html"', 'href="faq.html"', 'href="contact.html"',
                      'href="terms.html"', 'href="privacy.html"'):
             assert link in page, f"{name} missing {link}"
         head = page.split("</head>", 1)[0]
         style_pos = head.find("<style>")
         assert style_pos != -1
-        for marker in (
-            '<meta name="description"',
-            '<link rel="canonical"',
-            '<meta name="google-adsense-account"',
-            "adsbygoogle.js?client=",
-        ):
+        for marker in ('<meta name="description"', '<link rel="canonical"'):
             pos = head.find(marker)
             assert pos != -1, f"{name} missing {marker}"
             assert pos < style_pos, f"{name}: {marker} must appear before <style>"
+        if name in legal_no_ad_pages:
+            assert "google-adsense-account" not in page
+            assert "adsbygoogle.js" not in page
+        else:
+            for marker in ('<meta name="google-adsense-account"', "adsbygoogle.js?client="):
+                pos = head.find(marker)
+                assert pos != -1, f"{name} missing {marker}"
+                assert pos < style_pos, f"{name}: {marker} must appear before <style>"
 
-    # FAQ has substantial original text
+    # About and FAQ have substantial original text
     faq_text = re.sub(r"<[^>]+>", " ", (docs_dir / "faq.html").read_text(encoding="utf-8"))
     assert len(faq_text.split()) >= 400
+    about_text = re.sub(r"<[^>]+>", " ", (docs_dir / "about.html").read_text(encoding="utf-8"))
+    assert len(about_text.split()) >= 400
 
-    # contact page never exposes a mailto unless CONTACT_EMAIL is configured
-    assert "mailto:" not in (docs_dir / "contact.html").read_text(encoding="utf-8")
+    # contact page defaults to mailto:editor@jabi.io and respects CONTACT_EMAIL override
+    contact_default = (docs_dir / "contact.html").read_text(encoding="utf-8")
+    assert "mailto:editor@jabi.io" in contact_default
+    assert "github.com" in contact_default and "issues" in contact_default
+    contact_body = contact_default.split("</header>", 1)[1].split("<footer", 1)[0]
+    assert 'href="faq.html"' not in contact_body
+
     monkeypatch.setenv("CONTACT_EMAIL", "editor@example.com")
     save_markdown_digest(md, tmp_path / "digests", timestamp=datetime(2026, 11, 14, 9, 0), docs_dir=docs_dir)
-    assert 'mailto:editor@example.com' in (docs_dir / "contact.html").read_text(encoding="utf-8")
+    assert "mailto:editor@example.com" in (docs_dir / "contact.html").read_text(encoding="utf-8")
 
     # ad slots: never on trust pages, never near the subscribe box or other controls
     for name in trust_pages:
@@ -623,6 +656,306 @@ def test_adsense_prerequisites_crawlability_and_trust_pages(tmp_path: Path, monk
         assert len(matches) >= 1, f"Expected rendered ad slot in {name} when GOOGLE_ADSENSE_SLOT_ID is valid"
         for m in matches:
             assert abs(m.start() - sub_pos) > 1500
+
+
+def test_zero_synthetic_reddit_and_x_template_filler(tmp_path: Path, monkeypatch):
+    from genai_agent.collectors import social_x
+    from genai_agent.notifiers.markdown_store import _clean_excerpt
+
+    # 1. Verify _clean_excerpt strips legacy X template filler
+    template_samples = [
+        "Technical thread from @karpathy examining nanoGPT scaling, generating active engineering debate across 120 comments (450 pts).",
+        "Industry analysis and researcher commentary on X examining DeepSeek R2, reported by VentureBeat.",
+        "Researcher and engineering discussion on X examining test-time compute.",
+    ]
+    for sample in template_samples:
+        cleaned = _clean_excerpt(sample)
+        assert "Technical thread from @" not in cleaned
+        assert "Industry analysis and researcher commentary on X examining" not in cleaned
+        assert "Researcher and engineering discussion on X examining" not in cleaned
+
+    # 2. Verify fetch_hn_x_threads never emits template filler
+    class _FakeResp:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "hits": [
+                    {
+                        "title": "Karpathy on agent harnesses",
+                        "url": "https://x.com/karpathy/status/1234567890",
+                        "objectID": "999001",
+                        "points": 320,
+                        "num_comments": 85,
+                        "created_at": "2026-11-27T10:00:00Z",
+                        "story_text": "",
+                    }
+                ]
+            }
+
+    class _FakeClient:
+        def __init__(self, *a, **kw):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def get(self, *a, **kw):
+            return _FakeResp()
+
+    monkeypatch.setattr(social_x.httpx, "Client", _FakeClient)
+    hn_x_items = social_x.fetch_hn_x_threads(limit=2)
+    assert len(hn_x_items) == 1
+    assert "Technical thread from @" not in hn_x_items[0].summary
+
+    # 3. Verify rendered HTML has zero synthetic Reddit blocks and zero X template filler
+    md = (
+        "# Generative AI Technical Briefing — 2026-11-27\n\n"
+        "## Top 10 Ranked Briefing\n\n"
+        "### 1. [Deterministic Agent Harnesses](https://arxiv.org/abs/2611.01234)\n"
+        "**Research** (arXiv) · 180 pts · *2026-11-27*\n"
+        "- Evaluates bounded tool loops and deterministic verification gates.\n\n"
+        "## Notable X Threads\n\n"
+        "- **[Karpathy on agent harnesses](https://x.com/karpathy/status/1234567890)** — *X.com (@karpathy)*\n"
+        "  - Technical thread from @karpathy examining agent harnesses, generating active engineering debate.\n"
+    )
+    docs_dir = tmp_path / "docs"
+    save_markdown_digest(md, tmp_path / "digests", timestamp=datetime(2026, 11, 27, 9, 0), docs_dir=docs_dir)
+    for page in ("index.html", "2026-11-27.html"):
+        html = (docs_dir / page).read_text(encoding="utf-8")
+        assert "briefing-reddit" not in html
+        assert "reddit-comment" not in html
+        assert "/comments/1gn" not in html
+        assert "Find on Reddit" in html
+        assert "https://www.google.com/search?q=site:reddit.com+" in html
+        assert "Technical thread from @" not in html
+        assert "Industry analysis and researcher commentary on X examining" not in html
+        assert "Researcher and engineering discussion on X examining" not in html
+
+
+def test_excerpt_and_podcast_sanitization():
+    from genai_agent.agent import _clean_sentence_excerpt
+    from genai_agent.collectors.podcasts import _strip_html
+    from genai_agent.notifiers.markdown_store import _clean_excerpt
+
+    # Bare URLs, archive.ph, HTML-encoded URLs, See also, profanity
+    junk_cases = [
+        "https://archive.ph/abc123",
+        "https:&#x2F;&#x2F;archive.ph&#x2F;xyz987",
+        "https://example.com/only-a-url",
+        "See also: https://news.ycombinator.com/item?id=12345",
+        "This shit is completely broken in production.",
+        "What the fuck happened to the KV cache benchmark?",
+    ]
+    for raw in junk_cases:
+        assert _clean_sentence_excerpt(raw) == "", f"_clean_sentence_excerpt failed on {raw!r}"
+        assert _clean_excerpt(raw) == "", f"_clean_excerpt failed on {raw!r}"
+
+    # Podcast sponsor ad copy
+    sponsor_desc = (
+        "Show Links • Get the top 80+ AI Models at aibox.ai for $8.99 • "
+        "Join our community at https://www.skool.com/ai-box — "
+        "In this episode we benchmark FP8 quantization on H200 clusters."
+    )
+    for fn in (_clean_sentence_excerpt, _clean_excerpt, _strip_html):
+        cleaned = fn(sponsor_desc)
+        assert "Show Links" not in cleaned
+        assert "aibox.ai" not in cleaned
+        assert "skool.com" not in cleaned
+        assert "$8.99" not in cleaned
+        assert "FP8 quantization" in cleaned
+
+    # Clean legitimate technical sentence preserved
+    good = "Speculative decoding reduces decode latency by 2.1x without altering output distribution."
+    assert _clean_sentence_excerpt(good) == good
+    assert _clean_excerpt(good) == good
+    assert _strip_html(f"<p>{good}</p>") == good
+
+
+def test_editorial_synthesis_callout_and_fallback_summary(tmp_path: Path):
+    items = [
+        NewsItem(
+            title="Sparse Attention at 1M Context",
+            url="https://arxiv.org/abs/2611.09999",
+            source="arXiv",
+            category=SourceCategory.RESEARCH_PAPER,
+            summary="Demonstrates linear-time sparse attention kernels for million-token prefill.",
+            published_at="2026-11-27",
+            score=500,
+        ),
+        NewsItem(
+            title="Show HN: Zero-Copy KV Cache Engine in Rust",
+            url="https://example.com/kv-rust",
+            source="Hacker News",
+            category=SourceCategory.COMMUNITY_NEWS,
+            summary="Systems breakdown of paged KV cache allocation with zero heap fragmentation.",
+            published_at="2026-11-27",
+            score=410,
+        ),
+        NewsItem(
+            title="Anthropic Engineering: Deterministic Eval Harnesses",
+            url="https://www.anthropic.com/engineering/evals",
+            source="Anthropic",
+            category=SourceCategory.COMPANY_BLOG,
+            summary="Production methodology for grading multi-turn coding agents.",
+            published_at="2026-11-27",
+            score=350,
+        ),
+    ]
+
+    fallback_md = build_fallback_markdown(
+        items=items,
+        focus_topics=["Inference", "AI Agents"],
+        date_str="2026-11-27",
+        breakdown={"arXiv": 1, "Hacker News": 1, "Anthropic": 1},
+    )
+    assert "## Executive Summary" in fallback_md
+    assert "Lead Technical Signal" in fallback_md
+    assert "Engineering & Community Focus" in fallback_md
+    assert "Lab & Ecosystem Update" in fallback_md
+    assert fallback_md.find("## Executive Summary") < fallback_md.find("## Top 10 Ranked Briefing")
+
+    docs_dir = tmp_path / "docs"
+    save_markdown_digest(fallback_md, tmp_path / "digests", timestamp=datetime(2026, 11, 27, 9, 0), docs_dir=docs_dir)
+    for page in ("index.html", "2026-11-27.html"):
+        html = (docs_dir / page).read_text(encoding="utf-8")
+        body = html.split("</style>", 1)[1]
+        callout_pos = body.find('class="editorial-callout"')
+        sec1_pos = body.find("<h2>I. ")
+        assert callout_pos != -1, f"{page} missing .editorial-callout"
+        assert sec1_pos != -1, f"{page} missing Section I heading"
+        assert callout_pos < sec1_pos, f"{page}: .editorial-callout must appear above Section I"
+
+
+def test_evergreen_guides_generation_and_standards(tmp_path: Path):
+    import re
+
+    emoji_re = re.compile(
+        "["
+        "\U0001F300-\U0001F9FF"
+        "\U0001FA00-\U0001FAFF"
+        "\u2600-\u26FF"
+        "\u2700-\u27BF"
+        "\uFE0F"
+        "]"
+    )
+    expected_guides = (
+        "guide-agent-harness-engineering.html",
+        "guide-llm-inference-quantization.html",
+        "guide-rag-context-engineering.html",
+        "guide-llm-evaluation-benchmarks.html",
+        "guide-cascaded-model-routing.html",
+    )
+
+    md = (
+        "# Generative AI Technical Briefing — 2026-11-27\n\n"
+        "## Top 10 Ranked Briefing\n\n"
+        "### 1. [Test Frontier Paper](https://arxiv.org/abs/2611.00001)\n"
+        "**Research** (arXiv) · 120 pts · *2026-11-27*\n"
+        "- Rigorous architectural evaluation of test-time compute scaling.\n"
+    )
+    docs_dir = tmp_path / "docs"
+    save_markdown_digest(md, tmp_path / "digests", timestamp=datetime(2026, 11, 27, 9, 0), docs_dir=docs_dir)
+
+    guides_index = docs_dir / "guides.html"
+    assert guides_index.exists()
+    gi_html = guides_index.read_text(encoding="utf-8")
+    assert "viewport-fit=cover" in gi_html
+    assert "max-width: 66ch;" in gi_html
+    assert not emoji_re.search(gi_html)
+
+    index_html = (docs_dir / "index.html").read_text(encoding="utf-8")
+    assert 'href="guides.html"' in index_html
+
+    for guide_file in expected_guides:
+        path = docs_dir / guide_file
+        assert path.exists(), f"Missing generated guide {guide_file}"
+        html = path.read_text(encoding="utf-8")
+        assert "viewport-fit=cover" in html
+        assert "max-width: 66ch;" in html
+        assert not emoji_re.search(html), f"Emoji found in {guide_file}"
+        assert 'href="guides.html"' in html
+        assert f'href="{guide_file}"' in gi_html
+        assert f'href="{guide_file}"' in index_html
+        body = re.sub(r"<style[^>]*>.*?</style>", " ", html, flags=re.S)
+        body = re.sub(r"<script[^>]*>.*?</script>", " ", body, flags=re.S)
+        article = body.split("<article", 1)[1].split("</article>", 1)[0]
+        word_count = len(re.sub(r"<[^>]+>", " ", article).split())
+        assert word_count >= 800, f"{guide_file} has only {word_count} words (< 800)"
+
+
+def test_trust_eeat_seo_hygiene_and_duplicate_issue_canonical(tmp_path: Path, monkeypatch):
+    import xml.etree.ElementTree as ET
+
+    monkeypatch.setenv("GOOGLE_ADSENSE_CLIENT_ID", "ca-pub-1234567890123456")
+    monkeypatch.delenv("CONTACT_EMAIL", raising=False)
+
+    digests_dir = tmp_path / "digests"
+    docs_dir = tmp_path / "docs"
+    digests_dir.mkdir(parents=True, exist_ok=True)
+
+    # Create historical digests where 2026-11-07 duplicates 2026-11-06 Top 10, plus a distinct latest 2026-11-14
+    dup_body = (
+        "## Top 10 Ranked Briefing\n\n"
+        "### 1. [Shared Paper](https://arxiv.org/abs/2611.00006)\n"
+        "**Research** (arXiv) · 120 pts · *2026-11-06*\n"
+        "- Technical evaluation of inference scaling laws.\n"
+    )
+    for d in ("2026-11-06", "2026-11-07"):
+        md = f"# Generative AI Technical Briefing — {d}\n\n{dup_body}"
+        save_markdown_digest(md, digests_dir, timestamp=datetime.strptime(d, "%Y-%m-%d"), docs_dir=docs_dir)
+
+    latest_md = (
+        "# Generative AI Technical Briefing — 2026-11-14\n\n"
+        "## Top 10 Ranked Briefing\n\n"
+        "### 1. [Fresh Latest Paper](https://arxiv.org/abs/2611.00014)\n"
+        "**Research** (arXiv) · 150 pts · *2026-11-14*\n"
+        "- Novel sparse attention benchmark.\n"
+    )
+    save_markdown_digest(latest_md, digests_dir, timestamp=datetime(2026, 11, 14), docs_dir=docs_dir)
+
+    # Duplicate issue 2026-11-07.html carries canonical -> 2026-11-06.html and noindex, follow
+    dup_html = (docs_dir / "2026-11-07.html").read_text(encoding="utf-8")
+    assert '<link rel="canonical" href="https://jabi.io/2026-11-06.html">' in dup_html
+    assert '<meta name="robots" content="noindex, follow">' in dup_html
+
+    # FAQ has no "Reddit brief" and documents Guides + Editorial Synthesis
+    faq_html = (docs_dir / "faq.html").read_text(encoding="utf-8")
+    assert "Reddit brief" not in faq_html
+    assert "Guides" in faq_html or "guides.html" in faq_html
+    assert "Editorial Synthesis" in faq_html
+
+    # sitemap.xml excludes latest (2026-11-14.html), duplicate (2026-11-07.html), and legal pages;
+    # includes 2026-11-06.html, about.html, guides.html, and all 5 guide-*.html
+    root = ET.fromstring((docs_dir / "sitemap.xml").read_text(encoding="utf-8"))
+    locs = [el.text for el in root.iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
+    assert len(locs) == len(set(locs)), "sitemap.xml contains duplicate URLs"
+    assert "https://jabi.io/2026-11-06.html" in locs
+    assert "https://jabi.io/about.html" in locs
+    assert "https://jabi.io/guides.html" in locs
+    for excluded in (
+        "https://jabi.io/2026-11-14.html",
+        "https://jabi.io/2026-11-07.html",
+        "https://jabi.io/contact.html",
+        "https://jabi.io/terms.html",
+        "https://jabi.io/privacy.html",
+    ):
+        assert excluded not in locs, f"sitemap.xml must exclude {excluded}"
+
+    # Legal/utility pages have ZERO AdSense tags; content pages retain them
+    for lp in ("contact.html", "terms.html", "privacy.html"):
+        t = (docs_dir / lp).read_text(encoding="utf-8")
+        assert "adsbygoogle.js" not in t
+        assert "google-adsense-account" not in t
+    for cp in ("index.html", "about.html", "faq.html", "guides.html", "guide-agent-harness-engineering.html"):
+        t = (docs_dir / cp).read_text(encoding="utf-8")
+        assert "adsbygoogle.js" in t
+        assert "google-adsense-account" in t
+
 
 
 

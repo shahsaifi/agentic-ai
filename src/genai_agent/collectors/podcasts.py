@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import html
 import logging
 import re
 from typing import Any, Dict, List
@@ -65,10 +66,38 @@ DEFAULT_PODCAST_FEEDS: Dict[str, str] = {
 
 
 def _strip_html(text: str) -> str:
-    clean = re.sub(r"<[^>]+>", " ", text or "")
+    clean = html.unescape(text or "")
+    clean = re.sub(r"[\u200b\u2060\ufeff]", "", clean)
+    clean = re.sub(r"<[^>]+>", " ", clean)
+    # Remove leading Show Links / sponsor promo blocks
+    clean = re.sub(
+        r"Show Links\s*(?:[•\-\*]\s*)?.*?(?=In this episode|Today we|We discuss|Join us|On this episode|$)",
+        "",
+        clean,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    clean = re.sub(
+        r"Get the top 80\+ AI Models.*?(?=In this episode|Today we|We discuss|Join us|On this episode|$)",
+        "",
+        clean,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
     # Remove boilerplate ad/sponsor footers if present
-    clean = re.split(r"This episode is brought to you by|See Privacy Policy|Support the show", clean)[0]
-    return " ".join(clean.split())
+    clean = re.split(
+        r"This episode is brought to you by|See Privacy Policy|Support the show",
+        clean,
+        flags=re.IGNORECASE,
+    )[0]
+    # Strip inline sponsor promo segments and bare URLs
+    clean = re.sub(
+        r"[•\-\*]?\s*[^•\n]*(?:aibox\.ai|skool\.com|aichatdaily\.com|\$8\.99)[^•\n]*",
+        " ",
+        clean,
+        flags=re.IGNORECASE,
+    )
+    clean = re.sub(r"\(?\s*https?://\S+\s*\)?", " ", clean)
+    clean = re.sub(r"\(\s*\)", "", clean)
+    return " ".join(clean.split()).strip(" •-*|")
 
 
 def _format_duration(raw: str) -> str:

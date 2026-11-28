@@ -162,6 +162,11 @@ def fetch_hn_x_threads(limit: int = 6) -> List[NewsItem]:
 
         handle_m = re.search(r"(?:twitter\.com|x\.com)/([A-Za-z0-9_]+)", story_url)
         author_label = f"@{handle_m.group(1)}" if handle_m else "AI researchers on X"
+        raw_story_text = _strip_html(hit.get("story_text") or "").strip()
+        if raw_story_text and not re.match(r"^https?://\S+$", raw_story_text):
+            summary_text = f"{raw_story_text[:320]} HN Thread: {hn_url}"
+        else:
+            summary_text = f"HN Thread: {hn_url}"
 
         items.append(
             NewsItem(
@@ -169,10 +174,7 @@ def fetch_hn_x_threads(limit: int = 6) -> List[NewsItem]:
                 url=story_url,
                 source=f"X.com ({author_label})",
                 category=SourceCategory.SOCIAL_X,
-                summary=(
-                    f"Technical thread from {author_label} examining {title}, generating active "
-                    f"engineering debate across {comments} comments ({points} pts). HN Thread: {hn_url}"
-                ),
+                summary=summary_text,
                 published_at=created_at,
                 score=points,
                 tags=["x.com", "twitter", "viral-thread"],
@@ -252,16 +254,27 @@ def fetch_google_news_x_discussions(days: int = 3, limit: int = 4) -> List[NewsI
                 continue
 
             clean_headline = re.sub(r"\s+-\s+[^-]+$", "", title).strip()
+            raw_desc = _strip_html(entry.get("summary") or entry.get("description") or "").strip()
+            # Google News RSS descriptions often just echo the headline + source title; only keep if genuinely substantive
+            norm_headline = re.sub(r"\W+", "", clean_headline.lower())
+            norm_desc = re.sub(r"\W+", "", raw_desc.lower())
+            if (
+                raw_desc
+                and len(raw_desc) >= 60
+                and norm_desc != norm_headline
+                and not norm_desc.startswith(norm_headline + re.sub(r"\W+", "", source_title.lower()))
+            ):
+                snippet = raw_desc[:320]
+            else:
+                snippet = ""
+
             items.append(
                 NewsItem(
                     title=clean_headline,
                     url=link,
                     source=f"X Pulse ({source_title})",
                     category=SourceCategory.SOCIAL_X,
-                    summary=(
-                        f"Industry analysis and researcher commentary on X examining {clean_headline}, "
-                        f"reported by {source_title}."
-                    ),
+                    summary=snippet,
                     published_at=published,
                     tags=["x.com", "social-pulse"],
                 )

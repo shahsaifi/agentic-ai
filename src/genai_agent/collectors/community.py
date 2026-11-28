@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import html
 import logging
 import re
 import time
@@ -17,9 +18,29 @@ REDDIT_USER_AGENT = "macOS:genai-learning-agent:v0.1.0 (educational AI news dige
 DEFAULT_USER_AGENT = "GenAILearningAgent/0.1 (+https://github.com/genai-learning-agent)"
 
 
+_PROFANITY_RE = re.compile(r"\b(shit|fuck|damn|asshole|bitch|crap|wtf)\b", re.IGNORECASE)
+_ARCHIVE_LINK_RE = re.compile(r"https?://(?:www\.)?archive\.(?:ph|is|today)/\S*", re.IGNORECASE)
+
+
 def _strip_html(text: str) -> str:
-    clean = re.sub(r"<[^>]+>", " ", text or "")
+    clean = html.unescape(text or "")
+    clean = re.sub(r"<[^>]+>", " ", clean)
     return " ".join(clean.split())
+
+
+def _is_junk_hn_story_text(text: str) -> bool:
+    if not text:
+        return True
+    stripped = text.strip()
+    if re.match(r"^https?://\S+$", stripped, flags=re.IGNORECASE):
+        return True
+    if _ARCHIVE_LINK_RE.search(stripped):
+        return True
+    if re.match(r"^See also\b", stripped, flags=re.IGNORECASE):
+        return True
+    if _PROFANITY_RE.search(stripped):
+        return True
+    return False
 
 
 def fetch_hacker_news_ai(days: int = 2, limit: int = 8) -> List[NewsItem]:
@@ -65,7 +86,9 @@ def fetch_hacker_news_ai(days: int = 2, limit: int = 8) -> List[NewsItem]:
 
         summary = f"Hacker News discussion ({points} points, {num_comments} comments). Discussion: {hn_url}"
         if hit.get("story_text"):
-            summary += " | " + _strip_html(hit["story_text"])[:400]
+            clean_story_text = _strip_html(hit["story_text"])[:400]
+            if not _is_junk_hn_story_text(clean_story_text):
+                summary += " | " + clean_story_text
 
         items.append(
             NewsItem(

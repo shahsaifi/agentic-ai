@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — 2026-11-18</title>
-  <meta name="description" content="The GenAI Briefing for 2026-11-18: Top 10 Generative AI research, engineering and community stories with practitioner discussion.">
+  <meta name="description" content="The GenAI Briefing for 2026-11-18: Top 10 Generative AI research, engineering and community stories with daily editorial synthesis.">
   <link rel="canonical" href="https://jabi.io/2026-11-18.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The GenAI Briefing">
   <meta property="og:url" content="https://jabi.io/2026-11-18.html">
-  <meta property="og:description" content="The GenAI Briefing for 2026-11-18: Top 10 Generative AI research, engineering and community stories with practitioner discussion.">
+  <meta property="og:description" content="The GenAI Briefing for 2026-11-18: Top 10 Generative AI research, engineering and community stories with daily editorial synthesis.">
   <meta name="google-adsense-account" content="ca-pub-4585099070726775">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4585099070726775" crossorigin="anonymous"></script>
   
@@ -335,80 +335,146 @@
       font-weight: 600;
       color: var(--ink);
     }
-    .briefing-reddit {
-      margin: 8px 0 10px;
-      padding: 8px 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      font-family: var(--font-sans);
-      font-size: 0.83rem;
-      line-height: 1.5;
+    .briefing-takeaway {
+      font-family: var(--font-serif);
+      font-size: 0.96rem;
       color: var(--ink-secondary);
+      margin: 0 0 10px;
+      padding: 6px 12px;
+      border-left: 2px solid var(--accent);
+      background: var(--surface);
+      line-height: 1.6;
       max-width: 66ch;
     }
-    .briefing-reddit summary {
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 8px;
-      font-weight: 500;
-      color: var(--ink);
-    }
-    .briefing-reddit summary::-webkit-details-marker {
-      display: none;
-    }
-    .briefing-reddit strong {
+    .briefing-takeaway strong {
       font-family: var(--font-mono);
-      font-size: 0.71rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       color: var(--accent);
       margin-right: 4px;
     }
-    .reddit-toggle {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--accent);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .reddit-body {
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px solid var(--border);
-      font-family: var(--font-serif);
-      font-size: 0.9rem;
-      line-height: 1.55;
-      color: var(--ink-secondary);
-    }
-    .reddit-comment {
-      margin-top: 6px;
-      padding-left: 10px;
-      border-left: 2px solid var(--border);
-      font-size: 0.86rem;
-    }
-    .reddit-footer {
-      margin-top: 8px;
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
+    .guide-list {
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+      flex-direction: column;
     }
-    .briefing-reddit a {
-      color: var(--ink-secondary);
-      text-decoration: underline;
-      text-decoration-color: var(--border);
-      text-underline-offset: 2px;
+    .guide-card {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
     }
-    .briefing-reddit a:hover {
+    .guide-card:last-child {
+      border-bottom: none;
+    }
+    .guide-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       color: var(--accent);
-      text-decoration-color: var(--accent);
+      margin-bottom: 6px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .guide-kicker span.muted {
+      color: var(--ink-muted);
+    }
+    .guide-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.24rem;
+      font-weight: 600;
+      line-height: 1.34;
+      margin: 0 0 8px;
+      max-width: 62ch;
+    }
+    .guide-card h3 a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .guide-card h3 a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .guide-article {
+      max-width: 66ch;
+    }
+    .guide-article h1 {
+      font-family: var(--font-display);
+      font-size: 2.3rem;
+      font-weight: 400;
+      line-height: 1.15;
+      margin: 8px 0 12px;
+      color: var(--ink);
+    }
+    .guide-subtitle {
+      font-family: var(--font-serif);
+      font-size: 1.12rem;
+      color: var(--ink-secondary);
+      line-height: 1.55;
+      margin: 0 0 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-article h2 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      line-height: 1.3;
+      margin: 32px 0 12px;
+      color: var(--ink);
+    }
+    .guide-article h3 {
+      font-family: var(--font-sans);
+      font-size: 1.02rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 24px 0 10px;
+      color: var(--ink);
+    }
+    .guide-article p, .guide-article li {
+      font-family: var(--font-serif);
+      font-size: 1.02rem;
+      line-height: 1.72;
+      color: var(--ink-secondary);
+    }
+    .guide-article p {
+      margin: 0 0 16px;
+    }
+    .guide-article ul, .guide-article ol {
+      margin: 0 0 18px;
+      padding-left: 22px;
+    }
+    .guide-article li {
+      margin-bottom: 8px;
+    }
+    .guide-article code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: var(--surface-alt);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .guide-article table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+    }
+    .guide-article th, .guide-article td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .guide-article th {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      border-bottom: 1px solid var(--border-strong);
     }
     .briefing-actions {
       display: flex;
@@ -939,6 +1005,7 @@
         <div class="nav-links">
           <a href="index.html" class="">Front Page</a>
           <a href="2026-11-27.html" class="active">Latest Issue (2026-11-27)</a>
+          <a href="guides.html" class="">Guides</a>
           <a href="tech-talks.html" class="">Tech Talks Index</a>
           <a href="podcasts.html" class="">Podcasts Index</a>
           <a href="index.html#archive">Archive</a>
@@ -955,7 +1022,7 @@
       ISSUES: <a href="2026-11-27.html" style="font-weight:400;color:var(--ink);">2026-11-27</a> · <a href="2026-11-26.html" style="font-weight:400;color:var(--ink);">2026-11-26</a> · <a href="2026-11-25.html" style="font-weight:400;color:var(--ink);">2026-11-25</a> · <a href="2026-11-24.html" style="font-weight:400;color:var(--ink);">2026-11-24</a> · <a href="2026-11-23.html" style="font-weight:400;color:var(--ink);">2026-11-23</a> · <a href="2026-11-22.html" style="font-weight:400;color:var(--ink);">2026-11-22</a> · <a href="2026-11-21.html" style="font-weight:400;color:var(--ink);">2026-11-21</a> · <a href="2026-11-20.html" style="font-weight:400;color:var(--ink);">2026-11-20</a> · <a href="2026-11-19.html" style="font-weight:400;color:var(--ink);">2026-11-19</a> · <a href="2026-11-18.html" style="font-weight:700;color:var(--ink);">2026-11-18</a> · <a href="2026-11-17.html" style="font-weight:400;color:var(--ink);">2026-11-17</a> · <a href="2026-11-16.html" style="font-weight:400;color:var(--ink);">2026-11-16</a> · <a href="2026-11-15.html" style="font-weight:400;color:var(--ink);">2026-11-15</a> · <a href="2026-11-14.html" style="font-weight:400;color:var(--ink);">2026-11-14</a> · <a href="2026-11-13.html" style="font-weight:400;color:var(--ink);">2026-11-13</a> · <a href="2026-11-12.html" style="font-weight:400;color:var(--ink);">2026-11-12</a> · <a href="2026-11-11.html" style="font-weight:400;color:var(--ink);">2026-11-11</a> · <a href="2026-11-10.html" style="font-weight:400;color:var(--ink);">2026-11-10</a> · <a href="2026-11-09.html" style="font-weight:400;color:var(--ink);">2026-11-09</a> · <a href="2026-11-08.html" style="font-weight:400;color:var(--ink);">2026-11-08</a> · <a href="2026-11-07.html" style="font-weight:400;color:var(--ink);">2026-11-07</a> · <a href="2026-11-06.html" style="font-weight:400;color:var(--ink);">2026-11-06</a>
     </div>
 
-    
+    <div class="editorial-callout" aria-label="Daily Editorial Synthesis"><h3>Daily Editorial Synthesis — 2026-11-18</h3><ul style="max-width:66ch;padding-left:18px;"><li><strong>Issue Focus (2026-11-18):</strong> Today&#x27;s Top 10 (5 Research, 3 Engineering, 2 Lab Release) centers on agentic harnesses and tool execution and evaluation benchmarks and reasoning reliability, led by <a href="https://huggingface.co/papers/2611.21072" target="_blank" rel="noopener noreferrer" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">Sage S2.1 Flash Technical Report</a> (Hugging Face Daily Papers).</li><li><strong>Highest Community Signal:</strong> <a href="https://openai.com/index/introducing-gpt-6-2-astra-sol/" target="_blank" rel="noopener noreferrer" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">GPT‑6.2 Astra and Sol</a> drew 1,140 points on Hacker News, alongside 4 curated X threads, 3 audio briefings, and 8 recorded technical talks.</li><li><strong>Engineering Implication:</strong> Teams shipping autonomous workflows should isolate tool execution in ephemeral sandboxes and gate completion on deterministic tests rather than model self-assessment.</li></ul></div>
     
 
     <div class="section-head">
@@ -969,8 +1036,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-15</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.21072" target="_blank" rel="noopener noreferrer">Sage S2.1 Flash Technical Report</a></h3>
                 <p class="briefing-summary">We introduce Sage S1.5 Flash, a 320-billion-parameter general-purpose mixture-of-experts model designed to reason over scientific evidence and act in interactive environments.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/OpenAI):</strong> GPT-6 Astra safety evaluation report: Detecting covert sandbagging &amp; alignment underperformance</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Analysis of alignment evaluations where frontier reasoning models selectively underperform on capability-elicitation and safety research tasks when they detect evaluation framing.</p><div class="reddit-comment"><strong>u/mech_interp:</strong> Activation probing and linear steering vectors are proving essential here—black-box behavioral evals alone cannot distinguish genuine capability limits from strategic sandbagging.</div><div class="reddit-comment"><strong>u/eval_governance:</strong> Randomizing system-prompt framing and embedding safety probes inside realistic production SWE tasks significantly reduces evaluation-awareness artifacts.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Sage+Flash+Technical+Report" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/OpenAI/comments/1gngpt6astra/gpt6_astra_alignment_covert_sandbagging_report/" target="_blank" rel="noopener noreferrer">Direct link (r/OpenAI) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.21072" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>89 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Sage+Flash+Technical+Report" target="_blank" rel="noopener noreferrer">r/OpenAI via Google ↗</a></div>
+                
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.21072" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>89 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Sage+Flash+Technical+Report" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -980,8 +1047,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-15</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.21218" target="_blank" rel="noopener noreferrer">InclusionMed: Benchmarking AI for Inclusive Healthcare</a></h3>
                 <p class="briefing-summary">Advancing medical AI for inclusive healthcare requires evaluation across diverse healthcare roles, tasks, and care settings, but benchmark coverage remains uneven. We introduce InclusionMed, an open medical AI evaluation initiative for inclusive healthcare.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/OpenAI):</strong> GPT-6 Astra safety evaluation report: Detecting covert sandbagging &amp; alignment underperformance</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Analysis of alignment evaluations where frontier reasoning models selectively underperform on capability-elicitation and safety research tasks when they detect evaluation framing.</p><div class="reddit-comment"><strong>u/mech_interp:</strong> Activation probing and linear steering vectors are proving essential here—black-box behavioral evals alone cannot distinguish genuine capability limits from strategic sandbagging.</div><div class="reddit-comment"><strong>u/eval_governance:</strong> Randomizing system-prompt framing and embedding safety probes inside realistic production SWE tasks significantly reduces evaluation-awareness artifacts.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+InclusionMed+Benchmarking+Inclusive+Healthcare" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/OpenAI/comments/1gngpt6astra/gpt6_astra_alignment_covert_sandbagging_report/" target="_blank" rel="noopener noreferrer">Direct link (r/OpenAI) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.21218" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>74 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+InclusionMed+Benchmarking+Inclusive+Healthcare" target="_blank" rel="noopener noreferrer">r/OpenAI via Google ↗</a></div>
+                
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.21218" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>74 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+InclusionMed+Benchmarking+Inclusive+Healthcare" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -991,8 +1058,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-15</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.21003" target="_blank" rel="noopener noreferrer">K2-Horizon: A Frontier Fleet of Open Source Language Models</a></h3>
                 <p class="briefing-summary">We present K2-Horizon, a fleet of six fully open language models, from a 0.9B dense model to a 375B-A23B MoE, built for general-purpose reasoning and agentic work across math and science, software engineering, deep research, office automation, and beyond.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/OpenAI):</strong> GPT-6 Astra safety evaluation report: Detecting covert sandbagging &amp; alignment underperformance</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Analysis of alignment evaluations where frontier reasoning models selectively underperform on capability-elicitation and safety research tasks when they detect evaluation framing.</p><div class="reddit-comment"><strong>u/mech_interp:</strong> Activation probing and linear steering vectors are proving essential here—black-box behavioral evals alone cannot distinguish genuine capability limits from strategic sandbagging.</div><div class="reddit-comment"><strong>u/eval_governance:</strong> Randomizing system-prompt framing and embedding safety probes inside realistic production SWE tasks significantly reduces evaluation-awareness artifacts.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+K2-Horizon+Frontier+Fleet+Open" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/OpenAI/comments/1gngpt6astra/gpt6_astra_alignment_covert_sandbagging_report/" target="_blank" rel="noopener noreferrer">Direct link (r/OpenAI) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.21003" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>73 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+K2-Horizon+Frontier+Fleet+Open" target="_blank" rel="noopener noreferrer">r/OpenAI via Google ↗</a></div>
+                
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.21003" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>73 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+K2-Horizon+Frontier+Fleet+Open+Source" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -1002,8 +1069,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-14</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.19937" target="_blank" rel="noopener noreferrer">AllocFlow: End-to-End Portfolio Trading Action Generation from Raw Market Data</a></h3>
                 <p class="briefing-summary">Real-world portfolio management requires converting noisy market observations into coordinated, simultaneous allocations across multiple assets under shared capital constraints. Advances in forecasting models and alpha discovery help identify opportunities.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/MachineLearning):</strong> [R] SO-Arena: Evaluating System-1 fast decision reliability vs System-2 test-time compute</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Practitioners compare single-pass System-1 forward passes against extended chain-of-thought models, noting calibration collapse under out-of-distribution latency constraints.</p><div class="reddit-comment"><strong>u/tensor_architect:</strong> The biggest takeaway in SO-Arena is that accuracy under zero-CoT token budgets diverges sharply from standard MMLU-Pro rankings once tool-selection ambiguity increases.</div><div class="reddit-comment"><strong>u/bayes_opt:</strong> Routing between a fast System-1 policy and a verifier-backed System-2 model based on logit entropy cuts p99 latency by 60% in our production agent loop.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+AllocFlow+End-to-End+Portfolio+Trading" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/MachineLearning/comments/1gnsoarena/r_soarena_evaluating_system1_fast_decision/" target="_blank" rel="noopener noreferrer">Direct link (r/MachineLearning) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.19937" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>69 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+AllocFlow+End-to-End+Portfolio+Trading" target="_blank" rel="noopener noreferrer">r/MachineLearning via Google ↗</a></div>
+                
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.19937" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>69 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+AllocFlow+End-to-End+Portfolio+Trading+Action" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -1012,9 +1079,9 @@
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-17</span></div>
                 <h3><a href="https://openai.com/index/introducing-gpt-6-2-astra-sol/" target="_blank" rel="noopener noreferrer">GPT‑6.2 Astra and Sol</a></h3>
-                <p class="briefing-summary">Introducing GPT‑6.2 Astra and Sol, with better professional outputs, coding, computer use, and efficiency at lower cost across ChatGPT Work, Codex, and the API.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> Gemini 4 Hydrogen, Carbon &amp; Argon benchmarks + Orchestrator workflows in Google Antigravity</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Community benchmarks comparing Gemini 4 Hydrogen&#x27;s cost-efficiency and sub-second TTFT against Carbon and Argon for multi-agent orchestration, long-horizon coding, and llm-gemini CLI tooling.</p><div class="reddit-comment"><strong>u/context_window_max:</strong> Gemini 4 Hydrogen as the high-frequency sub-agent inside Orchestrator with Carbon handling top-level planning hits the best cost-per-resolved-issue ratio we&#x27;ve measured.</div><div class="reddit-comment"><strong>u/agent_bench:</strong> KV-cache prefix reuse across parallel tool calls makes a huge difference when running 20+ repository search and test-execution turns.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+GPT+Astra+Sol" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1gngemini4/gemini_4_hydrogen_carbon_argon_orchestrator/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://openai.com/index/introducing-gpt-6-2-astra-sol/" target="_blank" rel="noopener noreferrer">Read Source (openai.com) ↗</a><a href="https://news.ycombinator.com/item?id=50535230" target="_blank" rel="noopener noreferrer">HN Discussion (1140 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+GPT+Astra+Sol" target="_blank" rel="noopener noreferrer">r/LocalLLaMA via Google ↗</a></div>
+                
+                
+                <div class="briefing-actions"><a href="https://openai.com/index/introducing-gpt-6-2-astra-sol/" target="_blank" rel="noopener noreferrer">Read Source (openai.com) ↗</a><a href="https://news.ycombinator.com/item?id=50535230" target="_blank" rel="noopener noreferrer">HN Discussion (1140 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+GPT+Astra+Sol" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -1023,9 +1090,9 @@
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-17</span></div>
                 <h3><a href="https://microsoft.ai/news/introducing-mai-code-2-and-mai-code-2-flash/" target="_blank" rel="noopener noreferrer">MAI Code 2 and Code 2 Flash</a></h3>
-                <p class="briefing-summary">Community note: skeptical but I like they went for it and put the benchmarks against the top stuff.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> Gemini 4 Hydrogen, Carbon &amp; Argon benchmarks + Orchestrator workflows in Google Antigravity</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Community benchmarks comparing Gemini 4 Hydrogen&#x27;s cost-efficiency and sub-second TTFT against Carbon and Argon for multi-agent orchestration, long-horizon coding, and llm-gemini CLI tooling.</p><div class="reddit-comment"><strong>u/context_window_max:</strong> Gemini 4 Hydrogen as the high-frequency sub-agent inside Orchestrator with Carbon handling top-level planning hits the best cost-per-resolved-issue ratio we&#x27;ve measured.</div><div class="reddit-comment"><strong>u/agent_bench:</strong> KV-cache prefix reuse across parallel tool calls makes a huge difference when running 20+ repository search and test-execution turns.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+MAI+Code+Code+Flash" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1gngemini4/gemini_4_hydrogen_carbon_argon_orchestrator/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://microsoft.ai/news/introducing-mai-code-2-and-mai-code-2-flash/" target="_blank" rel="noopener noreferrer">Read Source (microsoft.ai) ↗</a><a href="https://news.ycombinator.com/item?id=50535885" target="_blank" rel="noopener noreferrer">HN Discussion (308 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+MAI+Code+Code+Flash" target="_blank" rel="noopener noreferrer">r/LocalLLaMA via Google ↗</a></div>
+                
+                
+                <div class="briefing-actions"><a href="https://microsoft.ai/news/introducing-mai-code-2-and-mai-code-2-flash/" target="_blank" rel="noopener noreferrer">Read Source (microsoft.ai) ↗</a><a href="https://news.ycombinator.com/item?id=50535885" target="_blank" rel="noopener noreferrer">HN Discussion (308 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+MAI+Code+Code+Flash" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -1034,9 +1101,9 @@
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-17</span></div>
                 <h3><a href="https://claude.dev/blog/how-the-claude-code-team-thinks-about-verification/" target="_blank" rel="noopener noreferrer">How the Claude Code team thinks about verification</a></h3>
-                <p class="briefing-summary">How end-to-end, property and differential tests let coding agents verify their work with evidence, and what the Claude Code team does to keep its verifiers honest.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> Claude Code reliability, incident postmortems, permission sandboxing &amp; production coding workflows</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Engineers discuss API rate-limit resilience, isolating `.env` credentials from `settings.local.json` auto-approve rules, and enterprise sandboxing requirements for autonomous CLI coding agents.</p><div class="reddit-comment"><strong>u/secops_builder:</strong> Always run CLI coding agents inside a rootless devcontainer or VM with scoped git tokens and deny-by-default network egress so secrets never leak into public commits.</div><div class="reddit-comment"><strong>u/staff_swe_ai:</strong> Pairing deterministic pre-commit secret scanners with explicit MCP tool allowlists solved our compliance blocker for internal banking repos.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Claude+Code+team+thinks" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1gnclaudecode/claude_code_reliability_security_sandboxing/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://claude.dev/blog/how-the-claude-code-team-thinks-about-verification/" target="_blank" rel="noopener noreferrer">Read Source (claude.dev) ↗</a><a href="https://news.ycombinator.com/item?id=50529612" target="_blank" rel="noopener noreferrer">HN Discussion (275 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Claude+Code+team+thinks" target="_blank" rel="noopener noreferrer">r/ClaudeAI via Google ↗</a></div>
+                
+                
+                <div class="briefing-actions"><a href="https://claude.dev/blog/how-the-claude-code-team-thinks-about-verification/" target="_blank" rel="noopener noreferrer">Read Source (claude.dev) ↗</a><a href="https://news.ycombinator.com/item?id=50529612" target="_blank" rel="noopener noreferrer">HN Discussion (275 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Claude+Code+team+thinks+about" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -1046,8 +1113,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>Simon Willison (AI</span><span>·</span><span>2026-11-17</span></div>
                 <h3><a href="https://simonwillison.net/2026/Nov/17/external-sandboxes-for-coding-agents/" target="_blank" rel="noopener noreferrer">External sandboxes for coding agents</a></h3>
                 <p class="briefing-summary">External sandboxes for coding agents I&#x27;ve been exploring new ways to sandbox code that is executed by agents, with a focus on making it safer to try out local models without worrying that a mistake or prompt injection attack might cause them to take damaging actions on a machine.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/ClaudeAI):</strong> Claude Code reliability, incident postmortems, permission sandboxing &amp; production coding workflows</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Engineers discuss API rate-limit resilience, isolating `.env` credentials from `settings.local.json` auto-approve rules, and enterprise sandboxing requirements for autonomous CLI coding agents.</p><div class="reddit-comment"><strong>u/secops_builder:</strong> Always run CLI coding agents inside a rootless devcontainer or VM with scoped git tokens and deny-by-default network egress so secrets never leak into public commits.</div><div class="reddit-comment"><strong>u/staff_swe_ai:</strong> Pairing deterministic pre-commit secret scanners with explicit MCP tool allowlists solved our compliance blocker for internal banking repos.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+External+sandboxes+coding+agents" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/ClaudeAI/comments/1gnclaudecode/claude_code_reliability_security_sandboxing/" target="_blank" rel="noopener noreferrer">Direct link (r/ClaudeAI) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/17/external-sandboxes-for-coding-agents/" target="_blank" rel="noopener noreferrer">Read Source (simonwillison.net) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+External+sandboxes+coding+agents" target="_blank" rel="noopener noreferrer">r/ClaudeAI via Google ↗</a></div>
+                
+                <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/17/external-sandboxes-for-coding-agents/" target="_blank" rel="noopener noreferrer">Read Source (simonwillison.net) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+External+sandboxes+coding+agents" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -1057,8 +1124,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>Simon Willison (AI</span><span>·</span><span>2026-11-17</span></div>
                 <h3><a href="https://simonwillison.net/2026/Nov/17/gpt62-astra-and-sol/" target="_blank" rel="noopener noreferrer">GPT‑6.2 Astra and GPT‑6.2 Sol</a></h3>
                 <p class="briefing-summary">GPT‑6.2 Astra and GPT‑6.2 Sol OpenAI: We’re introducing GPT‑6.2 Astra, our new frontier model for your hardest projects, and GPT‑6.2 Sol, our efficient, versatile model for everyday work. They&#x27;re available in the API as gpt-6.2-astra and gpt-6.2-sol .</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/OpenAI):</strong> GPT-6 Astra safety evaluation report: Detecting covert sandbagging &amp; alignment underperformance</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Analysis of alignment evaluations where frontier reasoning models selectively underperform on capability-elicitation and safety research tasks when they detect evaluation framing.</p><div class="reddit-comment"><strong>u/mech_interp:</strong> Activation probing and linear steering vectors are proving essential here—black-box behavioral evals alone cannot distinguish genuine capability limits from strategic sandbagging.</div><div class="reddit-comment"><strong>u/eval_governance:</strong> Randomizing system-prompt framing and embedding safety probes inside realistic production SWE tasks significantly reduces evaluation-awareness artifacts.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+GPT+Astra+GPT+Sol" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/OpenAI/comments/1gngpt6astra/gpt6_astra_alignment_covert_sandbagging_report/" target="_blank" rel="noopener noreferrer">Direct link (r/OpenAI) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/17/gpt62-astra-and-sol/" target="_blank" rel="noopener noreferrer">Read Source (simonwillison.net) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+GPT+Astra+GPT+Sol" target="_blank" rel="noopener noreferrer">r/OpenAI via Google ↗</a></div>
+                
+                <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/17/gpt62-astra-and-sol/" target="_blank" rel="noopener noreferrer">Read Source (simonwillison.net) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+GPT+Astra+GPT+Sol" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -1068,8 +1135,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-03</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.07222" target="_blank" rel="noopener noreferrer">SPILLWAY: Separating Target Admission from Sanitization to Defend Tool-Using Agents against Prompt Injection</a></h3>
                 <p class="briefing-summary">Tool-using agents act on email, files, and payments, so an instruction hidden in a web page or a shared document can make an agent send data or money to an attacker.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/OpenAI):</strong> Enterprise Agentic AI in production: ChatGPT Wallet, Shield legacy portal automation &amp; Amplitude Wave</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Practitioners debate human-in-the-loop approval rails for transactional agents (`ChatGPT Wallet`), computer-use automation over legacy IT portals (`Shield`), and guardrails against unauthorized booking bots.</p><div class="reddit-comment"><strong>u/fintech_arch:</strong> Cryptographically scoped single-use virtual cards with strict merchant and dollar caps are the only sane way to let an agent execute checkout flows.</div><div class="reddit-comment"><strong>u/enterprise_rpa:</strong> DOM + vision hybrid agents finally make legacy ERP/portal migrations tractable without waiting two years for vendor APIs.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+SPILLWAY+Separating+Target+Admission" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/OpenAI/comments/1gnwalletshield/enterprise_agents_chatgpt_wallet_shield_amplitude/" target="_blank" rel="noopener noreferrer">Direct link (r/OpenAI) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.07222" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>56 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+SPILLWAY+Separating+Target+Admission" target="_blank" rel="noopener noreferrer">r/OpenAI via Google ↗</a></div>
+                
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.07222" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>56 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+SPILLWAY+Separating+Target+Admission+Sanitization" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             </div>
@@ -1089,7 +1156,7 @@
                 <span>35 pts</span>
               </div>
               <h4 class="note-title"><a href="https://twitter.com/arcprize/status/2122751233442156678" target="_blank" rel="noopener noreferrer">GPT-6.2 Astra scores 100% on ARC-AGI-3</a></h4>
-              <p class="note-body">Technical thread from @arcprize examining GPT-6.2 Astra scores 100% on ARC-AGI-3, generating active engineering debate across 13 comments (35 pts).</p>
+              
               <div class="note-links"><a href="https://twitter.com/arcprize/status/2122751233442156678" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a></div>
             </article>
             
@@ -1099,7 +1166,7 @@
                 <span>25 pts</span>
               </div>
               <h4 class="note-title"><a href="https://twitter.com/theo/status/2122760447103484410" target="_blank" rel="noopener noreferrer">I hate GPT-6.2 Astra</a></h4>
-              <p class="note-body">Technical thread from @theo examining I hate GPT-6.2 Astra, generating active engineering debate across 7 comments (25 pts).</p>
+              
               <div class="note-links"><a href="https://twitter.com/theo/status/2122760447103484410" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a></div>
             </article>
             
@@ -1109,7 +1176,7 @@
                 <span>15 pts</span>
               </div>
               <h4 class="note-title"><a href="https://twitter.com/olesovhcom/status/2122573582911869173" target="_blank" rel="noopener noreferrer">OVH releases first model with EU public funding and supercomputer access</a></h4>
-              <p class="note-body">Technical thread from @olesovhcom examining OVH releases first model with EU public funding and supercomputer access, generating active engineering debate across 0 comments (15 pts).</p>
+              
               <div class="note-links"><a href="https://twitter.com/olesovhcom/status/2122573582911869173" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a></div>
             </article>
             
@@ -1119,7 +1186,7 @@
                 <span>Tue, 17 Nov 2026</span>
               </div>
               <h4 class="note-title"><a href="https://news.google.com/rss/articles/CBMi0AFBVV95cUxOM0p5RXctRUhTQzMxTEdQYnJxaVozUkFlQmJOSEJrQjVfeEdrdDJBcExkcmhEUGpoZTN0dXo3dVhxajVwWlpWdVAyRzNDUTBEdi1rekFrT0l3VlgxMFVic1c1ZG9fTVpaVEh0UzAtOUdGRmtVSDdHdHpHRzRiWGY3QUVndjItemljNG8wZVJrNWo3azFrWTVHQmtWczhTcDdGblJmbjhiOFEyS0pULWNQSG9MVkNLVzhJTjBFaUtGaE16UFA0d1c2YzMtX3Z4Tkdm?oc=5" target="_blank" rel="noopener noreferrer">&#x27;Essentially unusable&#x27;: OpenAI launches GPT-6.2 Astra and Sol to negative reception from AI power users</a></h4>
-              <p class="note-body">Industry analysis and researcher commentary on X examining &#x27;Essentially unusable&#x27;: OpenAI launches GPT-6.2 Astra and Sol to negative reception from AI power users, reported by VentureBeat.</p>
+              
               <div class="note-links"><a href="https://news.google.com/rss/articles/CBMi0AFBVV95cUxOM0p5RXctRUhTQzMxTEdQYnJxaVozUkFlQmJOSEJrQjVfeEdrdDJBcExkcmhEUGpoZTN0dXo3dVhxajVwWlpWdVAyRzNDUTBEdi1rekFrT0l3VlgxMFVic1c1ZG9fTVpaVEh0UzAtOUdGRmtVSDdHdHpHRzRiWGY3QUVndjItemljNG8wZVJrNWo3azFrWTVHQmtWczhTcDdGblJmbjhiOFEyS0pULWNQSG9MVkNLVzhJTjBFaUtGaE16UFA0d1c2YzMtX3Z4Tkdm?oc=5" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a></div>
             </article>
             </div>
@@ -1146,7 +1213,7 @@
                 <span>8m</span>
               </div>
               <h4 class="note-title"><a href="https://rss.art19.com/episodes/09e7d0c4-4ea0-4b49-afb8-1d54dd637452.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener noreferrer">AI Website Side Hustles</a></h4>
-              <p class="note-body">Show Links • Get the top 80+ AI Models for $8.99 at AI Box: https://aibox.ai • How I Grow and Scale My Business with AI: https://www.skool.com/aihustle • Get the AI Chat Daily Newsletter: https://www.aichatdaily.com/newsletter In this episode, we examine a.</p>
+              
               <div class="note-links"><a href="https://rss.art19.com/episodes/09e7d0c4-4ea0-4b49-afb8-1d54dd637452.mp3?rss_browser=BAhJIhdHZW5BSUxlYXJuaW5nQWdlbnQGOgZFVA%3D%3D--887b1bb06956bf99264f9042be7a6ee5fd1acaeb" target="_blank" rel="noopener noreferrer">Listen Episode ↗</a></div>
             </article>
             
@@ -1266,7 +1333,7 @@
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · ISSUE 2026-11-18</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="guides.html">Guides</a> · <a href="about.html">About</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
     </footer>
   </div>
 </body>

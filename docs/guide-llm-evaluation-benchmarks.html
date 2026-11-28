@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="sage">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Evaluating Generative AI Systems in Production: Programmatic Graders, Judge Calibration, and Regression Harnesses — The GenAI Briefing (jabi.io)</title>
+  <meta name="description" content="Engineering guide to LLM evaluation in production: building golden datasets, programmatic graders, calibrating LLM-as-a-judge against human labels, and CI regression harnesses.">
+  <link rel="canonical" href="https://jabi.io/guide-llm-evaluation-benchmarks.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The GenAI Briefing">
+  <meta property="og:url" content="https://jabi.io/guide-llm-evaluation-benchmarks.html">
+  <meta property="og:description" content="Engineering guide to LLM evaluation in production: building golden datasets, programmatic graders, calibrating LLM-as-a-judge against human labels, and CI regression harnesses.">
+  <meta name="google-adsense-account" content="ca-pub-4585099070726775">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4585099070726775" crossorigin="anonymous"></script>
+  
+  <meta name="theme-color" id="meta-theme-color" content="#F6F4EF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="alternate" type="application/rss+xml" title="The GenAI Briefing (jabi.io)" href="https://jabi.io/feed.xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+  <style>
+    /* Default: Warm Archival Paper (FT / Anthropic / Stripe Press inspired) */
+    :root, [data-theme="sage"] {
+      --bg: #F6F4EF;
+      --surface: #FDFCF9;
+      --surface-alt: #EFECE5;
+      --ink: #121211;
+      --ink-secondary: #2B2926;
+      --ink-muted: #6B6860;
+      --border: #DCD7CC;
+      --border-strong: #121211;
+      --accent: #9E2A2B;
+      --accent-hover: #7A1C1D;
+      --link: #1D4ED8;
+      --font-serif: 'Newsreader', Georgia, serif;
+      --font-display: 'Instrument Serif', 'Newsreader', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --base-size: 17px;
+    }
+
+    [data-theme="sepia"] {
+      --bg: #F2E9D8;
+      --surface: #F9F3E6;
+      --surface-alt: #E8DEC8;
+      --ink: #221B15;
+      --ink-secondary: #382E26;
+      --ink-muted: #6E5F52;
+      --border: #D5C7B0;
+      --border-strong: #221B15;
+      --accent: #8C2D19;
+      --accent-hover: #692010;
+      --link: #0F5257;
+    }
+
+    [data-theme="dark"] {
+      --bg: #111214;
+      --surface: #18191C;
+      --surface-alt: #202226;
+      --ink: #F2F0EA;
+      --ink-secondary: #D0CDC4;
+      --ink-muted: #8A877F;
+      --border: #2B2D31;
+      --border-strong: #F2F0EA;
+      --accent: #E07A5F;
+      --accent-hover: #F29C85;
+      --link: #7AA2F7;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html {
+      font-size: var(--base-size);
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      overflow-x: hidden;
+    }
+    body {
+      font-family: var(--font-serif);
+      background-color: var(--bg);
+      color: var(--ink);
+      line-height: 1.72;
+      margin: 0;
+      padding:
+        env(safe-area-inset-top, 0px)
+        max(20px, env(safe-area-inset-right, 20px))
+        calc(72px + env(safe-area-inset-bottom, 0px))
+        max(20px, env(safe-area-inset-left, 20px));
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .page-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Editorial Masthead */
+    .masthead {
+      padding-top: 20px;
+      margin-bottom: 32px;
+    }
+    .masthead-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .ctrl-btn {
+      background: none;
+      border: none;
+      padding: 2px 4px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      cursor: pointer;
+    }
+    .ctrl-btn:hover, .ctrl-btn.active {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      font-weight: 600;
+    }
+
+    .masthead-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 22px 0 18px;
+      border-bottom: 2px solid var(--border-strong);
+    }
+    .masthead-title {
+      font-family: var(--font-display);
+      font-size: 3.1rem;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .masthead-title a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .masthead-sub {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--ink-secondary);
+      margin: 0;
+    }
+
+    .masthead-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .nav-links a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 5px;
+      text-decoration-thickness: 1.5px;
+    }
+
+    /* Section Headers */
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-top: 1px solid var(--border-strong);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 0;
+      margin: 36px 0 20px;
+    }
+    .section-head h2 {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0;
+      color: var(--ink);
+    }
+    .section-head span {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+
+    /* Category Filter Bar */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 8px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-pill {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 5px 11px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink-secondary);
+      cursor: pointer;
+      border-radius: 3px;
+      touch-action: manipulation;
+    }
+    .filter-pill:hover, .filter-pill.active {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* Editorial Briefing Ledger (Top 10 List) */
+    .briefing-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .briefing-item {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 16px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .briefing-item:last-child {
+      border-bottom: none;
+    }
+    .briefing-num {
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--accent);
+      padding-top: 2px;
+    }
+    .briefing-content {
+      min-width: 0;
+    }
+    .briefing-content h3 {
+      font-family: var(--font-serif);
+      font-size: 1.28rem;
+      font-weight: 600;
+      line-height: 1.34;
+      letter-spacing: -0.01em;
+      margin: 0 0 8px;
+      max-width: 62ch;
+    }
+    .briefing-content h3 a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .briefing-content h3 a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .briefing-meta {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+      margin-bottom: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 8px;
+      align-items: center;
+      line-height: 1.4;
+    }
+    .briefing-tag {
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .briefing-summary {
+      font-family: var(--font-serif);
+      font-size: 1.02rem;
+      color: var(--ink-secondary);
+      margin: 0 0 10px;
+      line-height: 1.68;
+      max-width: 66ch;
+    }
+    .briefing-summary var {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .briefing-takeaway {
+      font-family: var(--font-serif);
+      font-size: 0.96rem;
+      color: var(--ink-secondary);
+      margin: 0 0 10px;
+      padding: 6px 12px;
+      border-left: 2px solid var(--accent);
+      background: var(--surface);
+      line-height: 1.6;
+      max-width: 66ch;
+    }
+    .briefing-takeaway strong {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      margin-right: 4px;
+    }
+    .guide-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .guide-card {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-card:last-child {
+      border-bottom: none;
+    }
+    .guide-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      margin-bottom: 6px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .guide-kicker span.muted {
+      color: var(--ink-muted);
+    }
+    .guide-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.24rem;
+      font-weight: 600;
+      line-height: 1.34;
+      margin: 0 0 8px;
+      max-width: 62ch;
+    }
+    .guide-card h3 a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .guide-card h3 a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .guide-article {
+      max-width: 66ch;
+    }
+    .guide-article h1 {
+      font-family: var(--font-display);
+      font-size: 2.3rem;
+      font-weight: 400;
+      line-height: 1.15;
+      margin: 8px 0 12px;
+      color: var(--ink);
+    }
+    .guide-subtitle {
+      font-family: var(--font-serif);
+      font-size: 1.12rem;
+      color: var(--ink-secondary);
+      line-height: 1.55;
+      margin: 0 0 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-article h2 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      line-height: 1.3;
+      margin: 32px 0 12px;
+      color: var(--ink);
+    }
+    .guide-article h3 {
+      font-family: var(--font-sans);
+      font-size: 1.02rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 24px 0 10px;
+      color: var(--ink);
+    }
+    .guide-article p, .guide-article li {
+      font-family: var(--font-serif);
+      font-size: 1.02rem;
+      line-height: 1.72;
+      color: var(--ink-secondary);
+    }
+    .guide-article p {
+      margin: 0 0 16px;
+    }
+    .guide-article ul, .guide-article ol {
+      margin: 0 0 18px;
+      padding-left: 22px;
+    }
+    .guide-article li {
+      margin-bottom: 8px;
+    }
+    .guide-article code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: var(--surface-alt);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .guide-article table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+    }
+    .guide-article th, .guide-article td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .guide-article th {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      border-bottom: 1px solid var(--border-strong);
+    }
+    .briefing-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+    }
+    .briefing-actions a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1px;
+    }
+    .briefing-actions a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* Two-Column Editorial Split for X Threads & Podcasts */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      margin-top: 12px;
+    }
+    .two-col > section {
+      min-width: 0;
+    }
+    .note-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .note-item {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .note-item:last-child {
+      border-bottom: none;
+    }
+    .note-kicker {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+      margin-bottom: 4px;
+    }
+    .note-kicker strong {
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .note-title {
+      font-family: var(--font-sans);
+      font-size: 0.96rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 0 0 6px;
+    }
+    .note-title a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .note-title a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .note-body {
+      font-family: var(--font-serif);
+      font-size: 0.92rem;
+      color: var(--ink-secondary);
+      margin: 0 0 8px;
+      line-height: 1.55;
+      max-width: 66ch;
+    }
+    .note-links {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      display: flex;
+      gap: 14px;
+    }
+    .note-links a {
+      color: var(--ink-secondary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .note-links a:hover {
+      color: var(--ink);
+    }
+
+    /* Archive Table */
+    .archive-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+    }
+    .archive-table th {
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+      padding: 8px 12px 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .archive-table td {
+      padding: 14px 12px 14px 0;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .archive-date {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 600;
+      white-space: nowrap;
+      width: 130px;
+    }
+    .archive-date a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .archive-date a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .archive-leads {
+      color: var(--ink-secondary);
+      line-height: 1.5;
+    }
+    .archive-leads a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-decoration-color: var(--border);
+      text-underline-offset: 3px;
+    }
+    .archive-leads a:hover {
+      text-decoration-color: var(--ink);
+    }
+
+    /* Callout Box for Executive Summary / Concept Deep-Dive */
+    .editorial-callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 20px 24px;
+      margin: 20px 0 28px;
+    }
+    .editorial-callout h3 {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin: 0 0 10px;
+    }
+    .editorial-callout ul, .editorial-callout p {
+      margin: 0;
+      font-size: 0.96rem;
+      color: var(--ink-secondary);
+    }
+    .editorial-callout li {
+      margin-bottom: 8px;
+    }
+
+    /* Free Daily Email Digest Subscribe Box */
+    .subscribe-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--border-strong);
+      border-left: 3px solid var(--accent);
+      padding: 22px 24px;
+      margin: 36px 0 28px;
+    }
+    .subscribe-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .subscribe-box h3 {
+      font-family: var(--font-serif);
+      font-size: 1.24rem;
+      font-weight: 600;
+      margin: 0 0 6px;
+      color: var(--ink);
+    }
+    .subscribe-copy {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--ink-secondary);
+      margin: 0 0 14px;
+      line-height: 1.6;
+      max-width: 66ch;
+    }
+    .subscribe-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .subscribe-input {
+      flex: 1 1 260px;
+      max-width: 380px;
+      padding: 9px 12px;
+      font-family: var(--font-sans);
+      font-size: 16px;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      outline: none;
+    }
+    .subscribe-input:focus {
+      border-color: var(--accent);
+    }
+    .subscribe-btn {
+      padding: 10px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--bg);
+      background: var(--ink);
+      border: 1px solid var(--ink);
+      border-radius: 3px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .subscribe-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .subscribe-meta {
+      font-family: var(--font-mono);
+      font-size: 0.71rem;
+      color: var(--ink-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+    }
+    .subscribe-meta a {
+      color: var(--ink-secondary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .subscribe-status {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-top: 8px;
+      display: none;
+    }
+
+    /* Non-intrusive Google AdSense Editorial Sponsorship Slot */
+    .editorial-ad-slot {
+      margin: 56px 0;
+      clear: both;
+      padding: 14px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .editorial-ad-label {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+    }
+
+    .footer {
+      margin-top: 56px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+    .footer a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* iPhone & Mobile Safari Optimizations */
+    @media (max-width: 760px) {
+      body {
+        padding:
+          env(safe-area-inset-top, 0px)
+          max(16px, env(safe-area-inset-right, 16px))
+          calc(56px + env(safe-area-inset-bottom, 0px))
+          max(16px, env(safe-area-inset-left, 16px));
+        line-height: 1.6;
+      }
+      .masthead {
+        padding-top: 14px;
+        margin-bottom: 22px;
+      }
+      .masthead-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding-bottom: 10px;
+      }
+      .controls {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .ctrl-btn {
+        min-height: 32px;
+        padding: 4px 8px;
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        touch-action: manipulation;
+      }
+      .ctrl-btn.active {
+        border-color: var(--ink);
+        background: var(--surface-alt);
+        text-decoration: none;
+      }
+      .masthead-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 16px 0 14px;
+      }
+      .masthead-title {
+        font-size: 2.2rem;
+        line-height: 1.05;
+      }
+      .masthead-sub {
+        font-size: 0.84rem;
+        line-height: 1.45;
+      }
+      .masthead-nav {
+        padding: 8px 0;
+      }
+      .nav-links {
+        width: 100%;
+        gap: 14px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+        padding-bottom: 2px;
+      }
+      .nav-links a {
+        display: inline-block;
+        padding: 4px 0;
+      }
+      .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        margin: 26px 0 14px;
+      }
+      .briefing-item {
+        grid-template-columns: 28px 1fr;
+        gap: 10px;
+        padding: 15px 0;
+      }
+      .briefing-content h3 {
+        font-size: 1.12rem;
+        line-height: 1.35;
+      }
+      .briefing-summary {
+        font-size: 0.94rem;
+        line-height: 1.56;
+      }
+      .two-col {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .editorial-callout {
+        padding: 14px 16px;
+        margin: 14px 0 20px;
+      }
+      .subscribe-box {
+        padding: 16px;
+        margin: 24px 0 20px;
+      }
+      .subscribe-input {
+        max-width: 100%;
+        width: 100%;
+      }
+      .subscribe-btn {
+        width: 100%;
+      }
+      /* Stack Archive Table cleanly on iPhone screens */
+      .archive-table thead {
+        display: none;
+      }
+      .archive-table, .archive-table tbody, .archive-table tr, .archive-table td {
+        display: block;
+        width: 100%;
+      }
+      .archive-table tr {
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .archive-table td {
+        padding: 2px 0;
+        border-bottom: none;
+      }
+      .archive-date {
+        width: auto;
+        margin-bottom: 4px;
+        color: var(--accent);
+      }
+      .footer {
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 40px;
+      }
+    }
+  </style>
+  <script>
+    const THEME_COLORS = {
+      sage: '#F6F4EF',
+      sepia: '#F2E9D8',
+      dark: '#111214'
+    };
+
+    function applyThemeColorMeta(theme) {
+      const meta = document.getElementById('meta-theme-color');
+      if (meta && THEME_COLORS[theme]) {
+        meta.setAttribute('content', THEME_COLORS[theme]);
+      }
+    }
+
+    (function() {
+      const savedTheme = localStorage.getItem('genai_theme') || 'sage';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      applyThemeColorMeta(savedTheme);
+      const savedSize = localStorage.getItem('genai_fontsize');
+      if (savedSize) {
+        document.documentElement.style.setProperty('--base-size', savedSize + 'px');
+      }
+    })();
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('genai_theme', theme);
+      applyThemeColorMeta(theme);
+      updateControls();
+    }
+
+    function adjustFontSize(delta) {
+      const current = parseFloat(localStorage.getItem('genai_fontsize') || '16.5');
+      const next = Math.min(20, Math.max(14.5, current + delta));
+      localStorage.setItem('genai_fontsize', next);
+      document.documentElement.style.setProperty('--base-size', next + 'px');
+    }
+
+    function updateControls() {
+      const theme = document.documentElement.getAttribute('data-theme') || 'sage';
+      applyThemeColorMeta(theme);
+      document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-theme-btn') === theme);
+      });
+    }
+
+    function filterBriefing(cat) {
+      document.querySelectorAll('[data-filter-pill]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-filter-pill') === cat);
+      });
+      document.querySelectorAll('.briefing-item').forEach(item => {
+        const itemCat = item.getAttribute('data-category') || '';
+        item.style.display = (cat === 'all' || itemCat === cat) ? '' : 'none';
+      });
+    }
+
+    function handleSubscribe(event) {
+      const form = event.target;
+      const action = (form.getAttribute('action') || '').trim();
+      const input = form.querySelector('input[type="email"]');
+      const email = input ? input.value.trim() : '';
+      if (!action || action === '#' || !email.includes('@')) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    }
+
+    window.addEventListener('DOMContentLoaded', updateControls);
+  </script>
+
+</head>
+<body>
+  <div class="page-wrap">
+    
+    <header class="masthead">
+      <div class="masthead-top">
+        <div>THE GENERATIVE AI TECHNICAL BRIEFING · ISSUE 2026-11-27</div>
+        <div class="controls">
+          <span>PALETTE:</span>
+          <button class="ctrl-btn" data-theme-btn="sage" onclick="setTheme('sage')">Paper</button>
+          <button class="ctrl-btn" data-theme-btn="sepia" onclick="setTheme('sepia')">Sepia</button>
+          <button class="ctrl-btn" data-theme-btn="dark" onclick="setTheme('dark')">Ink</button>
+          <span>·</span>
+          <button class="ctrl-btn" onclick="adjustFontSize(-0.5)">A-</button>
+          <button class="ctrl-btn" onclick="adjustFontSize(0.5)">A+</button>
+        </div>
+      </div>
+      <div class="masthead-title-row">
+        <h1 class="masthead-title"><a href="index.html">The GenAI Briefing</a></h1>
+        <p class="masthead-sub">Curated research papers, frontier lab engineering, tech talks, researcher threads &amp; audio briefings.</p>
+      </div>
+      <nav class="masthead-nav">
+        <div class="nav-links">
+          <a href="index.html" class="">Front Page</a>
+          <a href="2026-11-27.html" class="">Latest Issue (2026-11-27)</a>
+          <a href="guides.html" class="active">Guides</a>
+          <a href="tech-talks.html" class="">Tech Talks Index</a>
+          <a href="podcasts.html" class="">Podcasts Index</a>
+          <a href="index.html#archive">Archive</a>
+          <a href="#subscribe">Subscribe</a>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">
+          JABI.IO · DAILY EDITION
+        </div>
+      </nav>
+    </header>
+    
+    <div style="font-family:var(--font-mono);font-size:0.74rem;color:var(--ink-muted);margin-bottom:16px;">
+      <a href="guides.html" style="color:var(--accent);text-decoration:none;">← ALL ENGINEERING GUIDES</a>
+      <span> · EVALUATION &amp; QUALITY · 7 min read · 938 WORDS · UPDATED 2026-11-28</span>
+    </div>
+    <article class="guide-article">
+      <h1>Evaluating Generative AI Systems in Production: Programmatic Graders, Judge Calibration, and Regression Harnesses</h1>
+      <p class="guide-subtitle">How engineering teams replace vibe checks and saturated public leaderboards with deterministic CI gates, calibrated LLM judges, and online telemetry.</p>
+      <h2>Why Public Benchmarks Mislead Production Teams</h2>
+<p>Public leaderboards such as MMLU-Pro, SWE-bench, or GPQA are useful for tracking broad frontier capabilities, but they are poor predictors of whether a specific model or prompt change will improve your production system. Three structural gaps separate public benchmarks from real deployments:</p>
+<ol>
+<li><strong>Distribution Mismatch</strong>: Production traffic contains messy inputs, domain jargon, proprietary schemas, partial context, and adversarial edge cases that never appear in academic benchmarks.</li>
+<li><strong>Contamination and Overfitting</strong>: Frontier checkpoints may have seen public benchmark items or close paraphrases during pretraining or post-training, inflating scores without improving out-of-distribution robustness.</li>
+<li><strong>System vs. Model Scope</strong>: Users experience the entire system—retriever, prompt template, tool harness, post-processor, and model together. A model that scores higher in isolation can still regress end-to-end performance if its tool-calling formatting or verbosity breaks downstream parsers.</li>
+</ol>
+<p>Reliable AI engineering requires owning a private, continuously evolving evaluation harness wired directly into CI/CD.</p>
+<h2>Designing a Three-Tier Grading Architecture</h2>
+<p>Not every property of an LLM output requires an expensive model judge. Structure your evaluators from fastest and most deterministic to most nuanced:</p>
+<h3>Tier 1: Programmatic and Reference-Based Graders</h3>
+<p>Always prefer deterministic code checks wherever a specification is verifiable:</p>
+<ul>
+<li><strong>Structural Contracts</strong>: JSON schema validation, SQL/Python AST parsing, regex format compliance, and required citation ID verification.</li>
+<li><strong>Execution-Based Verification</strong>: Running generated code against unit tests, executing generated SQL against a seeded sandbox database and comparing result sets, or checking tool-call argument types against API contracts.</li>
+<li><strong>Operational Guardrails</strong>: Latency ceilings, output token bounds, PII redaction checks, and forbidden-string filters.</li>
+</ul>
+<p>Programmatic graders run in milliseconds, cost zero tokens, and never suffer from judge variance.</p>
+<h3>Tier 2: Calibrated LLM-as-a-Judge</h3>
+<p>For open-ended criteria—such as summary faithfulness, tone adherence, or root-cause completeness—a well-designed LLM judge scales far beyond manual review. However, naive prompts ("rate this answer 1 to 10") produce noisy, uncalibrated scores plagued by verbosity bias, position bias, and self-preference bias.</p>
+<p>Make LLM judges trustworthy through four engineering disciplines:</p>
+<ol>
+<li><strong>Binary or Narrow Rubrics Over 1–10 Scales</strong>: Ask targeted pass/fail questions ("Does the summary introduce any numerical claim not supported by the source context?") or use a tightly defined 3-point rubric with concrete anchor examples.</li>
+<li><strong>Chain-of-Thought Before Verdict</strong>: Require the judge to extract supporting or contradicting quotes first, then emit the structured verdict.</li>
+<li><strong>Position-Swapping for Pairwise Comparisons</strong>: When comparing Candidate A against Candidate B, evaluate both <code>(A, B)</code> and <code>(B, A)</code> orders and treat disagreements as ties to eliminate order bias.</li>
+<li><strong>Measure Judge Agreement Against Human Labels</strong>: Label 100–200 stratified examples with domain experts and compute Cohen's kappa or precision/recall of the judge against human ground truth. Iterate on the judge prompt until agreement exceeds your threshold (typically &gt;= 0.80) before trusting it in CI.</li>
+</ol>
+<h3>Tier 3: Human Error Analysis and Production Telemetry</h3>
+<p>Automated evals only catch failure modes you already know to test. Schedule weekly error-analysis sessions where engineers inspect 30–50 real production traces—especially user retries, thumbs-down events, escalated tickets, and tool-loop timeouts. Classify each failure into an explicit taxonomy (retrieval miss, prompt ambiguity, schema drift, hallucinated citation, tool timeout, or model reasoning error) so engineering time goes toward the highest-frequency root cause rather than speculative prompt tweaks. Every recurring failure mode discovered during trace review should be converted into a new test case and added to the golden suite.</p>
+<h2>Online Shadow Testing and Canary Rollouts</h2>
+<p>Offline golden sets catch known regressions, but live user traffic always surfaces novel edge cases. Before promoting a new model checkpoint, system prompt, or retrieval index to 100% of production traffic, run a staged rollout:</p>
+<ol>
+<li><strong>Shadow Replay</strong>: Mirror a 5–10% sample of live requests asynchronously to the candidate pipeline and run both Tier-1 programmatic graders and calibrated judges on the paired outputs without affecting user-facing latency.</li>
+<li><strong>Canary Traffic with Automated Rollback</strong>: Route 5% of live traffic to the candidate while monitoring business and system guardrails—p95 latency, JSON parse failure rate, escalation rate, and user retry rate. Roll back automatically if any guardrail breaches its control limit.</li>
+<li><strong>Versioned Trace Archival</strong>: Tag every production trace with the exact model ID, prompt commit hash, retriever index version, and tool schema version so regressions can be bisected deterministically weeks later.</li>
+</ol>
+<h2>Managing Nondeterminism and Regression Gates</h2>
+<p>Even at <code>temperature=0</code>, floating-point non-associativity in batched GPU kernels and Mixture-of-Experts routing can introduce subtle output variance. Treat evaluation scores as statistical estimates rather than noiseless constants:</p>
+<ul>
+<li><strong>Stratified Golden Sets</strong>: Maintain a fast smoke suite (50–100 high-signal cases) that runs on every pull request in under two minutes, and a comprehensive nightly suite (500–2,000 cases) covering long-tail regressions and adversarial inputs.</li>
+<li><strong>Multi-Trial Pass Rates</strong>: For stochastic agentic tasks, report both <code>pass@k</code> (capability ceiling) and <code>pass^k</code> (consistency across <em>k</em> independent trials). Production reliability depends on <code>pass^k</code>, not lucky single-run wins.</li>
+<li><strong>Slice-Level Reporting</strong>: Never gate solely on an aggregate average. A +3% overall improvement can hide a -15% regression on a critical customer segment, language, or tool category. Track metrics by task slice and fail builds when any critical slice drops below its floor.</li>
+</ul>
+<h2>Evaluation Harness Checklist</h2>
+<ul>
+<li>[ ] Private golden dataset version-controlled alongside code and refreshed monthly from real failure traces.</li>
+<li>[ ] Tier-1 deterministic graders verify schemas, citations, execution results, and latency bounds.</li>
+<li>[ ] LLM-as-a-judge rubrics use binary/narrow criteria and are calibrated against human-labeled ground truth.</li>
+<li>[ ] Pairwise judges run position-swapped evaluations to eliminate ordering bias.</li>
+<li>[ ] CI runs a fast smoke eval on every prompt, retriever, or model change; full suite runs nightly.</li>
+<li>[ ] Metrics tracked per task slice and reported with variance across repeated trials for agentic loops.</li>
+</ul>
+    </article>
+
+    
+
+    <section aria-label="Related Engineering Guides">
+      <div class="section-head">
+        <h2>Related Engineering Guides</h2>
+        <span><a href="guides.html" style="color:var(--accent);text-decoration:none;">ALL 5 GUIDES →</a></span>
+      </div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;font-family:var(--font-serif);font-size:0.98rem;">
+        <li><a href="guide-agent-harness-engineering.html" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">Agent Harness Engineering: Tool Loops, Sandboxing, and Deterministic Verification</a> <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">(SYSTEMS ARCHITECTURE)</span></li><li><a href="guide-llm-inference-quantization.html" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">Production LLM Inference &amp; Quantization: KV-Cache Economics, Low-Bit Calibration, and Decoding Latency</a> <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">(INFERENCE SYSTEMS)</span></li><li><a href="guide-rag-context-engineering.html" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">Context Engineering Beyond Naive RAG: Hybrid Retrieval, Reranking, and Long-Context Hygiene</a> <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">(RETRIEVAL &amp; CONTEXT)</span></li><li><a href="guide-cascaded-model-routing.html" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">Cascaded Model Routing &amp; Cost Optimization: Frontier Accuracy at Small-Model Latency</a> <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-muted);">(ECONOMICS &amp; ROUTING)</span></li>
+      </ul>
+    </section>
+
+    
+    <section id="subscribe" class="subscribe-box" aria-label="Follow The GenAI Briefing">
+      <div class="subscribe-kicker">FOLLOW · JABI.IO</div>
+      <h3>Follow The GenAI Briefing</h3>
+      <p class="subscribe-copy">A new issue is published every morning. Add the RSS feed to any feed reader to get each issue as it appears. Email delivery is not open yet.</p>
+      <div class="subscribe-meta">
+        <a href="feed.xml">RSS Feed (feed.xml) ↗</a>
+        <span>·</span>
+        <a href="privacy.html">Privacy</a>
+      </div>
+    </section>
+    
+
+    <footer class="footer">
+      <div>THE GENAI BRIEFING · JABI.IO · ENGINEERING GUIDES</div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="2026-11-27.html">Latest Issue</a> · <a href="feed.xml">RSS Feed</a> · <a href="guides.html">Guides</a> · <a href="about.html">About</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
+    </footer>
+  </div>
+</body>
+</html>

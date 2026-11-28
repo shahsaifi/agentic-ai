@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The GenAI Briefing — 2026-11-12</title>
-  <meta name="description" content="The GenAI Briefing for 2026-11-12: Top 10 Generative AI research, engineering and community stories with practitioner discussion.">
+  <meta name="description" content="The GenAI Briefing for 2026-11-12: Top 10 Generative AI research, engineering and community stories with daily editorial synthesis.">
   <link rel="canonical" href="https://jabi.io/2026-11-12.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The GenAI Briefing">
   <meta property="og:url" content="https://jabi.io/2026-11-12.html">
-  <meta property="og:description" content="The GenAI Briefing for 2026-11-12: Top 10 Generative AI research, engineering and community stories with practitioner discussion.">
+  <meta property="og:description" content="The GenAI Briefing for 2026-11-12: Top 10 Generative AI research, engineering and community stories with daily editorial synthesis.">
   <meta name="google-adsense-account" content="ca-pub-4585099070726775">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4585099070726775" crossorigin="anonymous"></script>
   
@@ -335,80 +335,146 @@
       font-weight: 600;
       color: var(--ink);
     }
-    .briefing-reddit {
-      margin: 8px 0 10px;
-      padding: 8px 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      font-family: var(--font-sans);
-      font-size: 0.83rem;
-      line-height: 1.5;
+    .briefing-takeaway {
+      font-family: var(--font-serif);
+      font-size: 0.96rem;
       color: var(--ink-secondary);
+      margin: 0 0 10px;
+      padding: 6px 12px;
+      border-left: 2px solid var(--accent);
+      background: var(--surface);
+      line-height: 1.6;
       max-width: 66ch;
     }
-    .briefing-reddit summary {
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 8px;
-      font-weight: 500;
-      color: var(--ink);
-    }
-    .briefing-reddit summary::-webkit-details-marker {
-      display: none;
-    }
-    .briefing-reddit strong {
+    .briefing-takeaway strong {
       font-family: var(--font-mono);
-      font-size: 0.71rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       color: var(--accent);
       margin-right: 4px;
     }
-    .reddit-toggle {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--accent);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .reddit-body {
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px solid var(--border);
-      font-family: var(--font-serif);
-      font-size: 0.9rem;
-      line-height: 1.55;
-      color: var(--ink-secondary);
-    }
-    .reddit-comment {
-      margin-top: 6px;
-      padding-left: 10px;
-      border-left: 2px solid var(--border);
-      font-size: 0.86rem;
-    }
-    .reddit-footer {
-      margin-top: 8px;
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
+    .guide-list {
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+      flex-direction: column;
     }
-    .briefing-reddit a {
-      color: var(--ink-secondary);
-      text-decoration: underline;
-      text-decoration-color: var(--border);
-      text-underline-offset: 2px;
+    .guide-card {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
     }
-    .briefing-reddit a:hover {
+    .guide-card:last-child {
+      border-bottom: none;
+    }
+    .guide-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       color: var(--accent);
-      text-decoration-color: var(--accent);
+      margin-bottom: 6px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .guide-kicker span.muted {
+      color: var(--ink-muted);
+    }
+    .guide-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.24rem;
+      font-weight: 600;
+      line-height: 1.34;
+      margin: 0 0 8px;
+      max-width: 62ch;
+    }
+    .guide-card h3 a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .guide-card h3 a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .guide-article {
+      max-width: 66ch;
+    }
+    .guide-article h1 {
+      font-family: var(--font-display);
+      font-size: 2.3rem;
+      font-weight: 400;
+      line-height: 1.15;
+      margin: 8px 0 12px;
+      color: var(--ink);
+    }
+    .guide-subtitle {
+      font-family: var(--font-serif);
+      font-size: 1.12rem;
+      color: var(--ink-secondary);
+      line-height: 1.55;
+      margin: 0 0 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-article h2 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      line-height: 1.3;
+      margin: 32px 0 12px;
+      color: var(--ink);
+    }
+    .guide-article h3 {
+      font-family: var(--font-sans);
+      font-size: 1.02rem;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 24px 0 10px;
+      color: var(--ink);
+    }
+    .guide-article p, .guide-article li {
+      font-family: var(--font-serif);
+      font-size: 1.02rem;
+      line-height: 1.72;
+      color: var(--ink-secondary);
+    }
+    .guide-article p {
+      margin: 0 0 16px;
+    }
+    .guide-article ul, .guide-article ol {
+      margin: 0 0 18px;
+      padding-left: 22px;
+    }
+    .guide-article li {
+      margin-bottom: 8px;
+    }
+    .guide-article code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: var(--surface-alt);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .guide-article table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+    }
+    .guide-article th, .guide-article td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .guide-article th {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      border-bottom: 1px solid var(--border-strong);
     }
     .briefing-actions {
       display: flex;
@@ -939,6 +1005,7 @@
         <div class="nav-links">
           <a href="index.html" class="">Front Page</a>
           <a href="2026-11-27.html" class="active">Latest Issue (2026-11-27)</a>
+          <a href="guides.html" class="">Guides</a>
           <a href="tech-talks.html" class="">Tech Talks Index</a>
           <a href="podcasts.html" class="">Podcasts Index</a>
           <a href="index.html#archive">Archive</a>
@@ -955,7 +1022,7 @@
       ISSUES: <a href="2026-11-27.html" style="font-weight:400;color:var(--ink);">2026-11-27</a> · <a href="2026-11-26.html" style="font-weight:400;color:var(--ink);">2026-11-26</a> · <a href="2026-11-25.html" style="font-weight:400;color:var(--ink);">2026-11-25</a> · <a href="2026-11-24.html" style="font-weight:400;color:var(--ink);">2026-11-24</a> · <a href="2026-11-23.html" style="font-weight:400;color:var(--ink);">2026-11-23</a> · <a href="2026-11-22.html" style="font-weight:400;color:var(--ink);">2026-11-22</a> · <a href="2026-11-21.html" style="font-weight:400;color:var(--ink);">2026-11-21</a> · <a href="2026-11-20.html" style="font-weight:400;color:var(--ink);">2026-11-20</a> · <a href="2026-11-19.html" style="font-weight:400;color:var(--ink);">2026-11-19</a> · <a href="2026-11-18.html" style="font-weight:400;color:var(--ink);">2026-11-18</a> · <a href="2026-11-17.html" style="font-weight:400;color:var(--ink);">2026-11-17</a> · <a href="2026-11-16.html" style="font-weight:400;color:var(--ink);">2026-11-16</a> · <a href="2026-11-15.html" style="font-weight:400;color:var(--ink);">2026-11-15</a> · <a href="2026-11-14.html" style="font-weight:400;color:var(--ink);">2026-11-14</a> · <a href="2026-11-13.html" style="font-weight:400;color:var(--ink);">2026-11-13</a> · <a href="2026-11-12.html" style="font-weight:700;color:var(--ink);">2026-11-12</a> · <a href="2026-11-11.html" style="font-weight:400;color:var(--ink);">2026-11-11</a> · <a href="2026-11-10.html" style="font-weight:400;color:var(--ink);">2026-11-10</a> · <a href="2026-11-09.html" style="font-weight:400;color:var(--ink);">2026-11-09</a> · <a href="2026-11-08.html" style="font-weight:400;color:var(--ink);">2026-11-08</a> · <a href="2026-11-07.html" style="font-weight:400;color:var(--ink);">2026-11-07</a> · <a href="2026-11-06.html" style="font-weight:400;color:var(--ink);">2026-11-06</a>
     </div>
 
-    
+    <div class="editorial-callout" aria-label="Daily Editorial Synthesis"><h3>Daily Editorial Synthesis — 2026-11-12</h3><ul style="max-width:66ch;padding-left:18px;"><li><strong>Issue Focus (2026-11-12):</strong> Today&#x27;s Top 10 (4 Engineering, 4 Research, 2 Lab Release) centers on long-context architecture and inference efficiency and agentic harnesses and tool execution, led by <a href="https://huggingface.co/papers/2611.14210" target="_blank" rel="noopener noreferrer" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">Tree-Ising: Repairing Language Models with Bit-Level Ising Edits</a> (Hugging Face Daily Papers).</li><li><strong>Highest Community Signal:</strong> <a href="https://pietromiotti.com/latest/maya-site" target="_blank" rel="noopener noreferrer" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">My AI agents found an unmapped Maya site?</a> drew 939 points on Hacker News, alongside 3 curated X threads, 2 audio briefings, and 8 recorded technical talks.</li><li><strong>Engineering Implication:</strong> Inference bottlenecks are shifting from raw FLOPs to state stability, memory bandwidth, and KV-cache economics—making prefix caching and task-calibrated quantization essential.</li></ul></div>
     
 
     <div class="section-head">
@@ -969,8 +1036,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-09</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.14210" target="_blank" rel="noopener noreferrer">Tree-Ising: Repairing Language Models with Bit-Level Ising Edits</a></h3>
                 <p class="briefing-summary">Weight-space programming, introduced in recent MIT work by Takehi et al., enables a frontier LLM agent to read a network&#x27;s weights and write a repair.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> Running quantized LLMs on edge hardware (smolmaxxing, SteerDistill &amp; MACaQ low-bit calibration)</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Deep-dive on 2-bit to 4-bit weight-activation quantization (`MACaQ`), closed-loop teacher steering (`SteerDistill`) for quantized agents, and squeezing usable inference onto older ARM/CPU devices.</p><div class="reddit-comment"><strong>u/gguf_quantizer:</strong> Standard PTQ falls apart on multi-step tool calling at W4A4 because small logit shifts flip JSON schema tokens; closed-loop teacher rollout distillation recovers &gt;90% of FP16 task success.</div><div class="reddit-comment"><strong>u/embedded_llm:</strong> Memory bandwidth is everything on old hardware—mmap weight streaming + INT4 KV cache lets a 3B model run interactively on a 4GB RAM SBC.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Tree-Ising+Repairing+Language+Bit-Level" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1gnsmolmax/smolmaxxing_steerdistill_macaq_edge_quantization/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.14210" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>77 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Tree-Ising+Repairing+Language+Bit-Level" target="_blank" rel="noopener noreferrer">r/LocalLLaMA via Google ↗</a></div>
+                
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.14210" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>77 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Tree-Ising+Repairing+Language+Models+Bit-Level" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -980,8 +1047,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-09</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.14033" target="_blank" rel="noopener noreferrer">Few-Step Streaming Video Generation via Condition Shifting</a></h3>
                 <p class="briefing-summary">Few-step sampling reduces the cost of streaming video generation. Distribution Matching Distillation (DMD) supervises few-step generators with a separate fake-score network, which adds training memory and computation and must track the evolving generator.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/MachineLearning):</strong> [R] BestRand benchmark compression, generalist tabular foundation models &amp; textbook proof supervision</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Discussion on low-cost benchmark subset selection (`BestRand`), unified tabular generation/imputation/prediction (`One Table, Many Queries`), and preserving curricular dependencies in mathematical proof training.</p><div class="reddit-comment"><strong>u/eval_metrics:</strong> Stratified random subsampling with stability filtering reproduces full benchmark rank order at 8% of the compute cost during checkpoint sweeps.</div><div class="reddit-comment"><strong>u/formal_math_ml:</strong> Keeping theorem-lemma dependency graphs intact during SFT dramatically improves Lean4 proof search compared to shuffled problem-solution pairs.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Few-Step+Streaming+Video+Generation" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/MachineLearning/comments/1gnbestrand/r_bestrand_tabular_foundation_models_proof_supervision/" target="_blank" rel="noopener noreferrer">Direct link (r/MachineLearning) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.14033" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>67 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Few-Step+Streaming+Video+Generation" target="_blank" rel="noopener noreferrer">r/MachineLearning via Google ↗</a></div>
+                
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.14033" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>67 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Few-Step+Streaming+Video+Generation+Condition" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -991,8 +1058,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-08</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.12885" target="_blank" rel="noopener noreferrer">World In-Context Learning for Agentic Robot Manipulation</a></h3>
                 <p class="briefing-summary">Trained action policies write manipulation skill into network weights, tying what is learned to the distribution it is learned from.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/MachineLearning):</strong> [R] SO-Arena: Evaluating System-1 fast decision reliability vs System-2 test-time compute</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Practitioners compare single-pass System-1 forward passes against extended chain-of-thought models, noting calibration collapse under out-of-distribution latency constraints.</p><div class="reddit-comment"><strong>u/tensor_architect:</strong> The biggest takeaway in SO-Arena is that accuracy under zero-CoT token budgets diverges sharply from standard MMLU-Pro rankings once tool-selection ambiguity increases.</div><div class="reddit-comment"><strong>u/bayes_opt:</strong> Routing between a fast System-1 policy and a verifier-backed System-2 model based on logit entropy cuts p99 latency by 60% in our production agent loop.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+World+In-Context+Learning+Agentic" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/MachineLearning/comments/1gnsoarena/r_soarena_evaluating_system1_fast_decision/" target="_blank" rel="noopener noreferrer">Direct link (r/MachineLearning) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.12885" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>65 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+World+In-Context+Learning+Agentic" target="_blank" rel="noopener noreferrer">r/MachineLearning via Google ↗</a></div>
+                
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.12885" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>65 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+World+In-Context+Learning+Agentic+Robot" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -1002,8 +1069,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Research</span><span>·</span><span>Hugging Face Daily Papers</span><span>·</span><span>2026-11-09</span></div>
                 <h3><a href="https://huggingface.co/papers/2611.14320" target="_blank" rel="noopener noreferrer">Don&#x27;t Just Trust Your Memory: Evidence-Linked Memory Reduces Memory-Induced Degradation in LLM Agents</a></h3>
                 <p class="briefing-summary">External memory enables LLM agents to improve from experience by distilling trajectories of past tasks into concise lessons for new tasks.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/singularity):</strong> Scaling Laws, compute economics, frontier AI infrastructure &amp; personal memory state (EvoMemState)</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Debate on pretraining vs test-time compute scaling laws, GPU cluster economics, and evolving long-term episodic memory state (`EvoMemState`) for persistent personal agents.</p><div class="reddit-comment"><strong>u/scaling_tracker:</strong> The shift from pure parameter scaling to post-training RL + inference-time search means memory bandwidth and interconnect topology matter more than raw FLOPs.</div><div class="reddit-comment"><strong>u/memory_agent:</strong> Explicit state-update operations (overwrite/merge/decay) prevent long-term agent memory from filling up with stale or contradictory user preferences.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Don+Just+Trust+Memory" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/singularity/comments/1gnscaling/scaling_laws_compute_infrastructure_evomemstate/" target="_blank" rel="noopener noreferrer">Direct link (r/singularity) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.14320" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>57 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Don+Just+Trust+Memory" target="_blank" rel="noopener noreferrer">r/singularity via Google ↗</a></div>
+                
+                <div class="briefing-actions"><a href="https://huggingface.co/papers/2611.14320" target="_blank" rel="noopener noreferrer">Read Source (huggingface.co) ↗</a><span>57 pts</span><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Don+Just+Trust+Your+Memory" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -1012,9 +1079,9 @@
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-11</span></div>
                 <h3><a href="https://pietromiotti.com/latest/maya-site" target="_blank" rel="noopener noreferrer">My AI agents found an unmapped Maya site?</a></h3>
-                <p class="briefing-summary">AI agents analyzed public lidar data overnight and found a Maya site under the jungle. It turned out archaeologists had mapped it already, but it wasn&#x27;t in Mexico&#x27;s official register yet.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/MachineLearning):</strong> [R] SO-Arena: Evaluating System-1 fast decision reliability vs System-2 test-time compute</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Practitioners compare single-pass System-1 forward passes against extended chain-of-thought models, noting calibration collapse under out-of-distribution latency constraints.</p><div class="reddit-comment"><strong>u/tensor_architect:</strong> The biggest takeaway in SO-Arena is that accuracy under zero-CoT token budgets diverges sharply from standard MMLU-Pro rankings once tool-selection ambiguity increases.</div><div class="reddit-comment"><strong>u/bayes_opt:</strong> Routing between a fast System-1 policy and a verifier-backed System-2 model based on logit entropy cuts p99 latency by 60% in our production agent loop.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+agents+found+unmapped+Maya" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/MachineLearning/comments/1gnsoarena/r_soarena_evaluating_system1_fast_decision/" target="_blank" rel="noopener noreferrer">Direct link (r/MachineLearning) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://pietromiotti.com/latest/maya-site" target="_blank" rel="noopener noreferrer">Read Source (pietromiotti.com) ↗</a><a href="https://news.ycombinator.com/item?id=50452455" target="_blank" rel="noopener noreferrer">HN Discussion (939 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+agents+found+unmapped+Maya" target="_blank" rel="noopener noreferrer">r/MachineLearning via Google ↗</a></div>
+                
+                
+                <div class="briefing-actions"><a href="https://pietromiotti.com/latest/maya-site" target="_blank" rel="noopener noreferrer">Read Source (pietromiotti.com) ↗</a><a href="https://news.ycombinator.com/item?id=50452455" target="_blank" rel="noopener noreferrer">HN Discussion (939 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+agents+found+unmapped+Maya+site" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -1023,9 +1090,9 @@
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-11</span></div>
                 <h3><a href="https://github.com/aws/aws-emulator" target="_blank" rel="noopener noreferrer">AWS emulator</a></h3>
-                <p class="briefing-summary">https://www.aboutamazon.com/news/aws/how-autonomous-ai-agent...</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/MachineLearning):</strong> [R] BirdDreams, PhysLoop &amp; World Models: Teaching video generators causal physics and BEV consistency</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Discussion on coupling joint perspective/bird&#x27;s-eye-view (BEV) latent diffusion with LLM-guided physical feedback loops to prevent trajectory drift in autonomous driving and video synthesis.</p><div class="reddit-comment"><strong>u/bev_perception:</strong> Joint BEV + perspective conditioning finally stops parked cars from vanishing during 90-degree ego turns, which was the main failure mode in single-view world models.</div><div class="reddit-comment"><strong>u/sim2real_dev:</strong> Using VLM physics critiques to generate targeted negative preference pairs (PhysLoop) is much more sample-efficient than scaling raw video pretraining.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+AWS+emulator" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/MachineLearning/comments/1gnphysloop/r_birddreams_physloop_world_models_causal_physics/" target="_blank" rel="noopener noreferrer">Direct link (r/MachineLearning) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://github.com/aws/aws-emulator" target="_blank" rel="noopener noreferrer">Read Source (github.com) ↗</a><a href="https://news.ycombinator.com/item?id=50456631" target="_blank" rel="noopener noreferrer">HN Discussion (717 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+AWS+emulator" target="_blank" rel="noopener noreferrer">r/MachineLearning via Google ↗</a></div>
+                
+                
+                <div class="briefing-actions"><a href="https://github.com/aws/aws-emulator" target="_blank" rel="noopener noreferrer">Read Source (github.com) ↗</a><a href="https://news.ycombinator.com/item?id=50456631" target="_blank" rel="noopener noreferrer">HN Discussion (717 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+AWS+emulator" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -1034,9 +1101,9 @@
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-10</span></div>
                 <h3><a href="https://9to5mac.com/2026/11/10/apple-has-new-mac-app-coming-to-make-running-local-ai-models-easy/" target="_blank" rel="noopener noreferrer">Apple has new Mac app coming to make running local AI models easy</a></h3>
-                <p class="briefing-summary">Leaker Aaron Perris has discovered evidence of a new Mac app in the works at Apple that makes it easy to run local AI models.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> Running quantized LLMs on edge hardware (smolmaxxing, SteerDistill &amp; MACaQ low-bit calibration)</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Deep-dive on 2-bit to 4-bit weight-activation quantization (`MACaQ`), closed-loop teacher steering (`SteerDistill`) for quantized agents, and squeezing usable inference onto older ARM/CPU devices.</p><div class="reddit-comment"><strong>u/gguf_quantizer:</strong> Standard PTQ falls apart on multi-step tool calling at W4A4 because small logit shifts flip JSON schema tokens; closed-loop teacher rollout distillation recovers &gt;90% of FP16 task success.</div><div class="reddit-comment"><strong>u/embedded_llm:</strong> Memory bandwidth is everything on old hardware—mmap weight streaming + INT4 KV cache lets a 3B model run interactively on a 4GB RAM SBC.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Apple+Mac+app+coming" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1gnsmolmax/smolmaxxing_steerdistill_macaq_edge_quantization/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://9to5mac.com/2026/11/10/apple-has-new-mac-app-coming-to-make-running-local-ai-models-easy/" target="_blank" rel="noopener noreferrer">Read Source (9to5mac.com) ↗</a><a href="https://news.ycombinator.com/item?id=50446520" target="_blank" rel="noopener noreferrer">HN Discussion (518 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Apple+Mac+app+coming" target="_blank" rel="noopener noreferrer">r/LocalLLaMA via Google ↗</a></div>
+                
+                
+                <div class="briefing-actions"><a href="https://9to5mac.com/2026/11/10/apple-has-new-mac-app-coming-to-make-running-local-ai-models-easy/" target="_blank" rel="noopener noreferrer">Read Source (9to5mac.com) ↗</a><a href="https://news.ycombinator.com/item?id=50446520" target="_blank" rel="noopener noreferrer">HN Discussion (518 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Apple+has+Mac+app+coming" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -1045,9 +1112,9 @@
               <div class="briefing-content">
                 <div class="briefing-meta"><span class="briefing-tag">Engineering</span><span>·</span><span>Hacker News</span><span>·</span><span>2026-11-11</span></div>
                 <h3><a href="https://michael.bacarella.com/2026/11/10/false-smoke-alarm-jane-street-datacenter/" target="_blank" rel="noopener noreferrer">A false smoke alarm almost drowned Jane Street&#x27;s only NYC datacenter</a></h3>
-                <p class="briefing-summary">A war story from Jane Street’s systems team: a false smoke alarm, a datacenter with no cooling, and a sprint to pull every power cord before the sprinklers went off</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/MachineLearning):</strong> Community discussion on A false smoke alarm almost drowned Jane Street&#x27;s only NYC datacenter</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Practitioners in r/MachineLearning analyze the architecture, reproducibility, and production deployment trade-offs of A false smoke alarm almost drowned Jane Street&#x27;s only NYC datacenter.</p><div class="reddit-comment"><strong>u/ml_systems_eng:</strong> Key question for production adoption is how well these gains hold up under realistic latency budgets and multi-turn context pressure.</div><div class="reddit-comment"><strong>u/research_verifier:</strong> The ablation breakdown and evaluation methodology here are solid—worth benchmarking against existing open-weight baselines.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+false+smoke+alarm+drowned" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/MachineLearning/" target="_blank" rel="noopener noreferrer">Direct link (r/MachineLearning) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://michael.bacarella.com/2026/11/10/false-smoke-alarm-jane-street-datacenter/" target="_blank" rel="noopener noreferrer">Read Source (michael.bacarella.com) ↗</a><a href="https://news.ycombinator.com/item?id=50455394" target="_blank" rel="noopener noreferrer">HN Discussion (430 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+false+smoke+alarm+drowned" target="_blank" rel="noopener noreferrer">r/MachineLearning via Google ↗</a></div>
+                
+                
+                <div class="briefing-actions"><a href="https://michael.bacarella.com/2026/11/10/false-smoke-alarm-jane-street-datacenter/" target="_blank" rel="noopener noreferrer">Read Source (michael.bacarella.com) ↗</a><a href="https://news.ycombinator.com/item?id=50455394" target="_blank" rel="noopener noreferrer">HN Discussion (430 pts) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+false+smoke+alarm+almost+drowned" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -1057,8 +1124,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>Simon Willison (AI</span><span>·</span><span>2026-11-11</span></div>
                 <h3><a href="https://simonwillison.net/2026/Nov/11/gemini-decisions-api/" target="_blank" rel="noopener noreferrer">Gemini Decisions API</a></h3>
                 <p class="briefing-summary">Gemini Decisions API Google join Jev and OpenAI in the decision model category with &quot;Gemini Decision 1&quot;. This new model API is almost identical to Jev: it supports the same three types of questions (yes/no, choice, and rubric-scoring) and even reuses Jev&#x27;s term &quot;Noul&quot; for a yes/no question.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/LocalLLaMA):</strong> Gemini 4 Hydrogen, Carbon &amp; Argon benchmarks + Orchestrator workflows in Google Antigravity</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Community benchmarks comparing Gemini 4 Hydrogen&#x27;s cost-efficiency and sub-second TTFT against Carbon and Argon for multi-agent orchestration, long-horizon coding, and llm-gemini CLI tooling.</p><div class="reddit-comment"><strong>u/context_window_max:</strong> Gemini 4 Hydrogen as the high-frequency sub-agent inside Orchestrator with Carbon handling top-level planning hits the best cost-per-resolved-issue ratio we&#x27;ve measured.</div><div class="reddit-comment"><strong>u/agent_bench:</strong> KV-cache prefix reuse across parallel tool calls makes a huge difference when running 20+ repository search and test-execution turns.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Gemini+Decisions+API" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/LocalLLaMA/comments/1gngemini4/gemini_4_hydrogen_carbon_argon_orchestrator/" target="_blank" rel="noopener noreferrer">Direct link (r/LocalLLaMA) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/11/gemini-decisions-api/" target="_blank" rel="noopener noreferrer">Read Source (simonwillison.net) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Gemini+Decisions+API" target="_blank" rel="noopener noreferrer">r/LocalLLaMA via Google ↗</a></div>
+                
+                <div class="briefing-actions"><a href="https://simonwillison.net/2026/Nov/11/gemini-decisions-api/" target="_blank" rel="noopener noreferrer">Read Source (simonwillison.net) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+Gemini+Decisions+API" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             
@@ -1068,8 +1135,8 @@
                 <div class="briefing-meta"><span class="briefing-tag">Lab Release</span><span>·</span><span>OpenAI News</span><span>·</span><span>Wed, 11 Nov 2026</span></div>
                 <h3><a href="https://openai.com/index/chatgpt-plus-for-veterans" target="_blank" rel="noopener noreferrer">ChatGPT Plus for veterans and servicemembers</a></h3>
                 <p class="briefing-summary">More than 20,000 veterans and transitioning service members have claimed a free year of ChatGPT Plus. See how they use it to prepare for civilian careers.</p>
-                <details class="briefing-reddit"><summary><span><strong>Reddit (r/OpenAI):</strong> Enterprise Agentic AI in production: ChatGPT Wallet, Shield legacy portal automation &amp; Amplitude Wave</span><span class="reddit-toggle">Read inline ▾</span></summary><div class="reddit-body"><p style="margin:0 0 6px;">Practitioners debate human-in-the-loop approval rails for transactional agents (`ChatGPT Wallet`), computer-use automation over legacy IT portals (`Shield`), and guardrails against unauthorized booking bots.</p><div class="reddit-comment"><strong>u/fintech_arch:</strong> Cryptographically scoped single-use virtual cards with strict merchant and dollar caps are the only sane way to let an agent execute checkout flows.</div><div class="reddit-comment"><strong>u/enterprise_rpa:</strong> DOM + vision hybrid agents finally make legacy ERP/portal migrations tractable without waiting two years for vendor APIs.</div><div class="reddit-footer"><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+ChatGPT+Plus+veterans+servicemembers" target="_blank" rel="noopener noreferrer">Search topic on Google/Reddit ↗</a><a href="https://www.reddit.com/r/OpenAI/comments/1gnwalletshield/enterprise_agents_chatgpt_wallet_shield_amplitude/" target="_blank" rel="noopener noreferrer">Direct link (r/OpenAI) ↗</a></div></div></details>
-                <div class="briefing-actions"><a href="https://openai.com/index/chatgpt-plus-for-veterans" target="_blank" rel="noopener noreferrer">Read Source (openai.com) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+ChatGPT+Plus+veterans+servicemembers" target="_blank" rel="noopener noreferrer">r/OpenAI via Google ↗</a></div>
+                
+                <div class="briefing-actions"><a href="https://openai.com/index/chatgpt-plus-for-veterans" target="_blank" rel="noopener noreferrer">Read Source (openai.com) ↗</a><a href="https://www.google.com/search?q=site:reddit.com+%28r%2FLocalLLaMA+OR+r%2FMachineLearning+OR+r%2FClaudeAI+OR+r%2FOpenAI+OR+r%2Fsingularity%29+ChatGPT+Plus+veterans+servicemembers" target="_blank" rel="noopener noreferrer">Find on Reddit ↗</a></div>
               </div>
             </article>
             </div>
@@ -1089,7 +1156,7 @@
                 <span>225 pts</span>
               </div>
               <h4 class="note-title"><a href="https://twitter.com/watcherguru/status/2120645607866188008" target="_blank" rel="noopener noreferrer">Nvidia prepares to fire CEO Jensen Huang, WSJ reports</a></h4>
-              <p class="note-body">Researcher and engineering discussion on X examining Nvidia prepares to fire CEO Jensen Huang, WSJ reports and its implications for frontier AI systems.</p>
+              
               <div class="note-links"><a href="https://twitter.com/watcherguru/status/2120645607866188008" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a><a href="https://news.ycombinator.com/item?id=50459776" target="_blank" rel="noopener noreferrer">HN Thread ↗</a></div>
             </article>
             
@@ -1099,7 +1166,7 @@
                 <span>Wed, 11 Nov 2026</span>
               </div>
               <h4 class="note-title"><a href="https://news.google.com/rss/articles/CBMiakFVX3lxTE40Z0huRHpoOFVMb1oxREZNaGNLWjJFUExKVUp3MEV4dWlvTGNiTFdBY0lMa2JSNldvYklhYkQ5RHF5X1dpNDRhYkR4cUlxSFY5dEYtRWl1U2Jpcm9qR0VQZUlIc25kSXBjRGc?oc=5" target="_blank" rel="noopener noreferrer">Is Your Altcoin on the List? Crypto Exchange Gemini Names 2026’s 10 Biggest Losers - BeInCrypto</a></h4>
-              <p class="note-body">Researcher and engineering discussion on X examining Is Your Altcoin on the List? Crypto Exchange Gemini Names 2026’s 10 Biggest Losers - BeInCrypto and its implications for frontier AI systems.</p>
+              
               <div class="note-links"><a href="https://news.google.com/rss/articles/CBMiakFVX3lxTE40Z0huRHpoOFVMb1oxREZNaGNLWjJFUExKVUp3MEV4dWlvTGNiTFdBY0lMa2JSNldvYklhYkQ5RHF5X1dpNDRhYkR4cUlxSFY5dEYtRWl1U2Jpcm9qR0VQZUlIc25kSXBjRGc?oc=5" target="_blank" rel="noopener noreferrer">Read Thread on X ↗</a></div>
             </article>
             
@@ -1256,7 +1323,7 @@
 
     <footer class="footer">
       <div>THE GENAI BRIEFING · JABI.IO · ISSUE 2026-11-12</div>
-      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
+      <div><a href="index.html">Front Page</a> · <a href="tech-talks.html">Tech Talks Index</a> · <a href="podcasts.html">Podcasts Index</a> · <a href="feed.xml">RSS Feed</a> · <a href="guides.html">Guides</a> · <a href="about.html">About</a> · <a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></div>
     </footer>
   </div>
 </body>
